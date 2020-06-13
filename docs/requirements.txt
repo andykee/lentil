@@ -1,0 +1,2 @@
+sphinx>=3.0
+git+git://github.com/andykee/candle-sphinx-theme#egg=candle-sphinx-theme

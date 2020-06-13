@@ -1,0 +1,31 @@
+\documentclass{standalone}
+\usepackage{tikz}
+
+
+\usetikzlibrary{positioning,shapes,arrows}
+
+\begin{document}
+\tikzstyle{class}=[rectangle, thick, draw=black, minimum height=1.2cm, minimum width=1cm] 
+\tikzstyle{arrow}=[->, >=latex, thick]
+\tikzstyle{line}=[-, thick]
+        
+\begin{tikzpicture}[node distance=1cm, auto]
+      
+    \node (light) [class] {\texttt{light(flux, ts)}};
+    \node (dark) [class, below=of light] {\texttt{dark(ts)}};
+    \node (sum) [circle,right=of dark, draw=black, inner sep=0pt,minimum size=8pt, thick] {$+$};
+    \node (cosmic) [class, below=of dark] {\texttt{cosmic\_rays(ts)}};
+    \node (diffusion) [class, right=of sum] {\texttt{charge\_diffusion(e)}};
+    \node (offset) [class, right=of diffusion] {\texttt{offset(e)}};
+    \node (readout) [class, right=of offset] {\texttt{readout(e)}};
+    
+    \draw[arrow] (light.east) -| node [midway, right, align=center] {\scriptsize e$^-$} (sum.north);
+    \draw[arrow] (dark.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (sum.west);
+    \draw[arrow] (cosmic.east) -| node [midway, right, align=center] {\scriptsize e$^-$} (sum.south);
+    \draw[arrow] (sum.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (diffusion.west);
+    \draw[arrow] (diffusion.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (offset.west);
+    \draw[arrow] (offset.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (readout.west);
+    \draw[arrow] (readout.east) -- ++(1,0) node [midway, above, align=center] {\scriptsize DN};
+
+\end{tikzpicture}
+\end{document}

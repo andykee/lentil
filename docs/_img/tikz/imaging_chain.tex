@@ -1,0 +1,50 @@
+\documentclass{standalone}
+\usepackage{tikz}
+
+
+\usetikzlibrary{positioning,shapes,arrows}
+
+\begin{document}
+\tikzstyle{class}=[rectangle, thick, draw=black, minimum height=1.2cm] 
+\tikzstyle{arrow}=[->, >=latex, thick]
+\tikzstyle{line}=[-, thick]
+        
+\begin{tikzpicture}[node distance=1.5cm, auto]
+       
+    \node (scene) [class] {Scene};
+    \node (optical-trans) [class, right=of scene] {\begin{tabular}{c} Optical \\ transmission \end{tabular}};
+    \node (sample) [class, right=of optical-trans] {\begin{tabular}{c} Sample \\ spectrum \end{tabular}};
+    \node (diffraction) [class, right=4cm of sample] {Diffraction};
+    \node (optical-state) [class, below=of diffraction] {\begin{tabular}{c} Optical \\ state \end{tabular}};
+    \node (dynamics-ts) [class, left=of optical-state] {\begin{tabular}{c} Dynamics \\ (timeseries) \end{tabular}};
+
+    \node (aux01) [text height=1.2cm, below=of sample] {};
+
+    \node (integrate-flux) [class, below=of aux01] {\begin{tabular}{c} Integrate \& \\ apply photon \\ flux \end{tabular}};
+    \node (integrate) [class, below=of integrate-flux] {Integrate};
+    \node (detector) [class, right=of integrate] {Detector};
+    \node (dynamics-stat) [class, below=of detector] {\begin{tabular}{c} Dynamics \\ (statistical, \\ LOS) \end{tabular}};
+        
+    \draw[arrow] (scene.east) -- node [midway, above, align=center] {\scriptsize ph/s/$\lambda$} (optical-trans.west);
+    \draw[arrow] (optical-trans.east) -- node [midway, above, align=center] {\scriptsize ph/s/$\lambda$} (sample.west);
+    \draw[arrow] (sample.east) -- node [midway, above, align=center] {\scriptsize $\lambda$} (diffraction.west);
+        
+    \draw[arrow] (optical-state.north) -- node [midway, left] {\scriptsize $Ae^{-j\frac{2\pi}{\lambda}\theta}$} (diffraction.south);
+    \draw[arrow] (dynamics-ts.east) -- (optical-state.west);
+    
+    \node (aux02) [text width=0cm, right=of diffraction] {};
+    \node (aux03) [text width=0cm, right=7.1cm of integrate-flux] {};
+    \draw[line] (diffraction.east) -- (aux02.center);
+    %\node [right=1.8cm of optical-state] {\scriptsize intensity/$\lambda$};
+    \draw[line] (aux02.center) -- (aux03.center);
+    \draw[arrow] (aux03.center) -- node [midway, above, align=center] {\scriptsize intensity/$\lambda$} (integrate-flux.east);
+
+    \draw[arrow] (sample.south) -- node [midway, left] {\scriptsize ph/s/$\lambda$} (integrate-flux.north);
+    \draw[arrow] (integrate-flux.south) -- node [midway, left] {\scriptsize ph/s/$\lambda$} (integrate.north);
+    \draw[arrow] (integrate.east) -- node [midway, above, align=center] {\scriptsize ph/$\lambda$} (detector.west);
+    \draw[arrow] (dynamics-stat.north) -- (detector.south);
+
+    \draw[arrow] (detector.east) -- ++(1,0) node [right] {DN};
+
+\end{tikzpicture}
+\end{document}
