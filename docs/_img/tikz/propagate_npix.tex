@@ -1,0 +1,54 @@
+\documentclass{standalone}
+\usepackage{tikz}
+
+\definecolor{viridisblue}{RGB}{68,1,84}
+\definecolor{viridisyellow}{RGB}{253,231,37}
+\definecolor{viridisgreen}{RGB}{35,138,141}
+
+\begin{document}
+
+\begin{tikzpicture}[z={(1cm,0cm)},x={(0.5cm,-0.4cm)}, y={(0cm,1cm)}, scale=1]
+
+    % constants
+    \def\zimg{8}
+    
+    % coordinate system 
+    \coordinate (0) at (0,0,0);
+    \coordinate (2) at (0,0,\zimg);
+   
+    % optical axis
+    \draw[dashed, color=gray] (0) -- +(0,0,1);
+    \draw[dashed, color=darkgray] (0,0,1) -- (0,0,9.5);
+    
+
+    % Aperture plane
+    \draw[color=gray] (-2,0,0) -- (0,0,\zimg);
+    \draw[color=gray] (2,0,0) -- (0,0,\zimg);
+    \draw[color=gray] (0,-2,0) -- (0,0,\zimg);
+    \draw[color=gray] (0,2,0) -- (0,0,\zimg);
+    
+    \draw[thick, fill=gray, fill opacity=0.1] (0,0) circle [radius=2];
+    \draw[color=gray] (-2,0,0) -- (2,0,0);
+    \draw[color=gray] (0,-2,0) -- (0,2,0);
+    
+    \draw[dashed, color=darkgray] (0) -- +(0,0,-1.5);  % left side of optical axis
+
+    \node [align=left] at (0,-3.5,0) {Pupil plane};
+
+    % Observation plane 
+    \draw [thick,fill=gray,fill opacity=0.1] (-2,-2,\zimg) -- (2,-2,\zimg) -- (2,2,\zimg) -- (-2,2,\zimg) -- cycle; 
+    \draw[color=gray] (-2,0,\zimg) -- (2,0,\zimg);
+    \draw[color=gray] (0,-2,0\zimg) -- (0,2,\zimg);
+    
+    % npix
+    \draw[latex-] (1.5,-1.5,\zimg) -- (1.8,-1.75,6.5);
+    \node [align=center, left] at (1.8,-1.75,6.5) {\texttt{npix x npix}};
+    
+    \node [align=center] at (0,-3.5,\zimg) {Detector plane};
+    
+    % psf location
+    \draw[fill=red, opacity=0.6] (0,0,\zimg) circle [radius=0.125];
+    
+\end{tikzpicture}
+
+\end{document}

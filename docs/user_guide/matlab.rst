@@ -1,0 +1,166 @@
+************************
+Using Lentil with MATLAB
+************************
+
+.. _configuring-matlab:
+
+Configuring MATLAB to use the correct version of Python
+=======================================================
+MATLAB automatically selects and loads a Python version when you type a Python command.
+It commonly defaults to using Python 2.7, which is not at all what we want. We need to
+tell MATLAB where to find the correct version of Python (>=3.7). For MATLAB r2020a or
+later:
+
+.. code-block:: matlab
+
+    pyenv('Version', '/path/to/python3/executable')
+
+For MATLAB r2019b or earlier:
+
+.. code-block:: matlab
+
+    pyversion '/path/to/python3/executable'
+
+The Python version can be set temporarily by executing the above command when MATLAB
+launches or automatically by adding the command to your ``startup.m`` file.
+
+.. note::
+    If you're using virtual environments to manage different Lentil models, the
+    ``pyenv/pyversion`` configuration specified above won't work. Instead, you'll need
+    to call ``pyenv/pyversion`` with the correct virtual environment version before
+    working with a model. Don't forget to call the MKL conflict fix as well. This is
+    annoying. Sorry about that. It's a MATLAB "feature".
+
+.. warning::
+    Once you've set ``pyenv/pyversion`` within a MATLAB session, the only way to change
+    it is to restart MATLAB. This means that if you're working with virtual
+    environments to manage different models, you'll have to restart MATLAB each time you
+    want to switch models. This is annoying. Sorry about that. It's a MATLAB "feature".
+
+For more help on setting MATLAB's Python version, see
+`System and Configuration Requirements <https://www.mathworks.com/help/matlab/matlab_external/system-and-configuration-requirements.html>`_.
+
+
+Resolving MKL Conflicts
+-----------------------
+MATLAB doesn't always load the correct libraries the underlying Python code relies on.
+In particular, there seems to be some confusion about when to load MKL. There is no
+telltale sign this has occurred. Sometimes MATLAB crashes while other times Python
+method calls will error out with messages that may or may not be useful. The following
+command will clear up MATLAB's confusion by handing control of which libraries Python
+needs back to Python:
+
+.. code-block:: matlab
+
+    py.sys.setdlopenflags(int32(10));
+
+This command sets the ``RTLD_NOW`` and ``RTLD_DEEPBIND`` flags when the active Python
+instance calls ``dlopen()`` `[1]`_ `[2]`_ `[3]`_. Note that this command is Unix only
+and must be called before the Python interpreter is loaded within MATLAB but after
+``pyenv/pyversion`` is set, making it a prime candidate for inclusion in ``startup.m``.
+
+.. _[1]: https://www.mathworks.com/matlabcentral/answers/327193-calling-python-module-from-matlab-causes-segmentation-fault-in-h5py#answer_296569
+.. _[2]: http://man7.org/linux/man-pages/man3/dlopen.3.html
+.. _[3]: https://docs.python.org/3.6/library/sys.html#sys.setdlopenflags
+
+
+
+MATLAB Lentil Interface
+=======================
+
+Calling Python libraries from MATLAB is as simple as configuring MATLAB to use the
+appropriate Python implementation and prepending the Python command with ``py.``. Before
+using Lentil in MATLAB, be sure that you you have
+:ref:`configured MATLAB to use the correct version of Python installed on your system
+<configuring-matlab>`
+
+
+Working with NumPy Arrays in MATLAB
+-----------------------------------
+Many Lentil methods return numpy arrays. Unfortunately, MATLAB does not fully
+understand numpy arrays. Two scripts are included in the ``matlab`` directory to convert
+back and forth between NumPy arrays and MATLAB matrices:
+
+* `mat2ndarray <https://github.com/andykee/lentil/blob/master/matlab/mat2ndarray.m>`_
+* `ndarray2mat <https://github.com/andykee/lentil/blob/master/matlab/ndarray2mat.m>`_
+
+
+Interacting directly with Lentil from MATLAB
+--------------------------------------------
+It is possible to interact directly with Lentil within MATLAB. For example, we can
+create a simple :func:`~util.circle` mask with:
+
+.. code-block:: matlab
+
+    >> mask = py.lentil.util.circle([int16(256),int16(256)],int16(128));
+
+Note that MATLAB `automatically does type conversion <https://www.mathworks.com/help/matlab/matlab_external/passing-data-to-python.html>`_ when MATLAB data is passed to Python but because MATLAB's default numeric type is double-precision floating point, we need to explicitly convert the ``shape`` and ``radius`` parameters to ints before passing them to Python.
+
+This approach is fine for debugging and some light usage, but more robust and
+user-friendly solutions require developing a MATLAB interface.
+
+Developing a MATLAB interface to a Lentil model
+-----------------------------------------------
+The easiest way to provide a MATLAB interface to an underlying Lentil model is to
+develop a separate MATLAB class that mimics the interface of a Lentil class and handles
+any data formatting issues that arise between MATLAB and Python. In this way, the model
+logic all resides within the Python code, and the MATLAB code is only responsible for
+managing the interface between languages. An example following this approach is
+available here.
+
+When deploying a MATLAB interface to a Lentil model, it may be convenient to duplicate
+the ``mat2ndarray.m`` and ``ndarray2mat.m`` scripts in the project's local ``matlab``
+directory alongside the ``.m`` interfaces. This simplifies the end user experience
+because it does not require any additional path modification or management to use the
+model.
+
+For an example, see: :ref:`cookbook-matlab`.
+
+Finally, a few links that may be helpful when developing a MATLAB interface:
+
+* `Calling Python functions from MATLAB <https://www.mathworks.com/help/matlab/matlab_external/python-function-arguments.html>`_
+* `Passing a Python function kwargs from MATLAB <https://www.mathworks.com/help/matlab/ref/pyargs.html>`_
+
+.. warning::
+
+    It is not fully understood what happens when you wrap a call to a Python object in a
+    ``parfor`` loop in MATLAB. Buyer beware.
+
+
+Troubleshooting
+===============
+
+Debugging MATLAB's Undefined variable "py" or function "py.command" error
+-------------------------------------------------------------------------
+1. Make sure Python is loaded and working:
+
+.. code-block:: matlab
+
+   >> py.print('test')
+
+   test
+
+2. Make sure Lentil is loaded and working:
+
+.. code-block:: matlab
+
+    >> mask = py.lentil.util.circle([int16(256),int16(256)],int16(128));
+
+3. Verify there are no import errors in the Python code by importing Lentil and any
+custom models in a Python interpreter:
+
+.. code-block:: pycon
+
+    >>> import lentil
+    >>> import <<your-model>>
+
+For more hints, see the MATLAB documentation on `Undefined variable "py" or function
+"py.command" <https://www.mathworks.com/help/matlab/matlab_external/undefined-variable-py-or-function-py-command.html>`_
+
+Useful Links
+============
+
+* `MATLAB Examples <../examples>`_
+* `Handling Data Returned from Python <https://www.mathworks.com/help/matlab/matlab_external/handling-data-returned-from-python.html>`_
+* `Limitations to Python Support <https://www.mathworks.com/help/matlab/matlab_external/limitations-to-python-support.html>`_
+* `Reloading Modified User-Defined Python Modules <https://www.mathworks.com/help/matlab/matlab_external/call-modified-python-module.html>`_

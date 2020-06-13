@@ -1,0 +1,45 @@
+\documentclass{standalone}
+\usepackage{tikz}
+
+\begin{document}
+
+\begin{tikzpicture}[scale=1]
+    
+
+    % object
+    %\begin{scope}[rotate around={30:(0,0,1)}]
+    %    \draw[fill=white] (0,0,1) circle[radius=0.5];
+    %    \draw[fill=white] (0,0,1) -- (0,-0.2,1.95) -- (0,0.2,2.05) -- cycle;
+    %    \draw[fill=white] (0,0,2) circle[radius=0.18];
+    %\end{scope}
+    
+    \begin{scope}[rotate around={37.5:(0,0)}]
+        \draw[fill=white] (0,0) ellipse (0.2 and 0.5);
+        \draw[fill=white] (0,0) -- (1,-0.25) -- (1,0.25) -- cycle;
+        \draw[fill=white] (1,0) ellipse (0.1 and 0.248);
+        \draw[dashed] (0,0) -- (0.88, 0);
+        \draw[-latex] (1,0) -- +(.5,0);
+    \end{scope}
+    \node at (0,-0.65) {dA};
+    \node at (0.55,1.15) {d$\Omega$};
+
+    \begin{scope}[rotate around={146.5:(10,0)}]
+        \draw[fill=white] (10,0) ellipse (0.2 and 0.5);
+        
+        \draw[fill=white] (10,0) -- (11,-0.25) -- (11,0.25) -- cycle;
+        \draw[fill=white] (11,0) ellipse (0.1 and 0.248);
+        \draw[dashed] (10,0) -- (10.88, 0);
+        \draw[-latex] (11,0) -- +(.5,0);
+    \end{scope}
+    \node at (10,-0.65) {dA$'$};
+    \node at (9.45,1.15) {d$\Omega '$};
+ 
+
+    %\draw[thick] (6.6,-0.4) -- (6.6,0.6) -- (7,0.4) -- (7,-0.6) -- cycle;
+    \draw (0,0) -- +(10,0);
+    \draw[-latex] (10.3,0) -- +(1.25,0);
+
+
+\end{tikzpicture}
+
+\end{document}

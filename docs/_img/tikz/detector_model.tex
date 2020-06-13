@@ -1,0 +1,63 @@
+\documentclass{standalone}
+\usepackage{tikz}
+
+
+\usetikzlibrary{positioning,shapes,arrows}
+
+\begin{document}
+\tikzstyle{class}=[rectangle, thick, draw=black, minimum height=1.2cm, minimum width=1cm] 
+\tikzstyle{arrow}=[->, >=latex, thick]
+\tikzstyle{line}=[-, thick]
+        
+\begin{tikzpicture}[node distance=1cm, auto]
+       
+    \node (scene) [class] {Scene};
+    \node (ts) [class, right=of scene] {ts};
+    \node (QE) [class, right=of ts] {$\eta$};
+    \node (pixelate) [class, right=of QE] {\begin{tabular}{c} Rebin \& \\ pixelate \end{tabular}};
+    \node (shot2) [class, right=of pixelate] {$\sigma_{\mbox{shot}}$};
+    \node (prnu) [class, right=of shot2] {PRNU};
+    \node (aux-light) [text height=2cm, right=of prnu] {};
+
+    \node (sum1) [circle,below=of aux-light, draw=black, inner sep=0pt,minimum size=8pt, thick] {$+$};
+    
+    \node (dcnu) [class, left=of sum1] {DSNU};
+    \node (shot3) [class, left=of dcnu] {$\sigma_{\mbox{shot}}$};
+    \node (ts2) [class, left=of shot3] {ts};
+    \node (dark) [class, left=of ts2] {Dark signal};
+
+    \node (diffusion) [class, right=of sum1] {\begin{tabular}{c} Charge \\ diffusion \end{tabular}};
+    \node (offsetfpn) [class, right=of diffusion] {Offset FPN};
+    \node (sum2) [circle, right=of offsetfpn, draw=black, inner sep=0pt,minimum size=8pt, thick] {$+$};
+    \node (read) [class, above=of sum2] {$\sigma_{\mbox{read}}$};
+    \node (count) [class, below=of sum2] {\begin{tabular}{c} Count \& \\ saturate \end{tabular}};
+    \node (gain) [class, below=of count] {$\displaystyle \frac{1}{K}$};
+    \node (quant) [class, below=of gain] {Quantization};
+
+
+    \draw[arrow] (scene.east) -- node [midway, above, align=center] {\scriptsize ph/s} (ts.west);
+    \draw[arrow] (ts.east) -- node [midway, above, align=center] {\scriptsize ph} (QE.west);
+    \draw[arrow] (QE.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (pixelate.west);
+    \draw[arrow] (pixelate.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (shot2.west);
+    \draw[arrow] (shot2.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (prnu.west);
+    \draw[line] (prnu.east) -- (aux-light.center);
+    \draw[arrow] (aux-light.center) -- node [midway, left] {\scriptsize e$^-$} (sum1.north);
+    
+    \draw[arrow] (dark.east) -- node [midway, above, align=center] {\scriptsize e$^-$/s} (ts2.west);
+    \draw[arrow] (ts2.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (shot3.west);
+    \draw[arrow] (shot3.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (dcnu.west);
+    \draw[arrow] (dcnu.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (sum1.west);
+
+
+    \draw[arrow] (sum1.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (diffusion.west);
+    \draw[arrow] (diffusion.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (offsetfpn.west);
+    \draw[arrow] (offsetfpn.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (sum2.west);
+
+    \draw[arrow] (read.south) -- node [midway, left] {\scriptsize e$^-$} (sum2.north);
+    \draw[arrow] (sum2.south) -- node [midway, left] {\scriptsize e$^-$} (count.north);
+    \draw[arrow] (count.south) -- node [midway, left] {\scriptsize e$^-$} (gain.north);
+    \draw[arrow] (gain.south) -- node [midway, left] {\scriptsize DN} (quant.north);
+    \draw[arrow] (quant.south) -- ++(0,-1) node [below] {\scriptsize DN};
+
+\end{tikzpicture}
+\end{document}
