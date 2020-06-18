@@ -199,8 +199,13 @@ class Plane:
 
     @property
     def shape(self):
-        """Plane dimensions computed from :attr:`mask`"""
-        return self.mask.shape
+        """Plane dimensions computed from :attr:`mask`. Returns None if :attr:`mask`
+        is None.
+        """
+        if self.mask is None:
+            return None
+        else:
+            return self.mask.shape
 
     def copy(self):
         """Return a copy."""
