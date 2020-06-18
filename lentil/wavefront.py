@@ -55,6 +55,7 @@ class Wavefront:
         self.focal_length = np.inf
 
         self.tilt = []  # List of pre-propagation tilts
+        self.pixel_shift = []
 
     def __str__(self):
         return np.str(self.data)

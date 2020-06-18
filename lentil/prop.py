@@ -232,67 +232,37 @@ class Propagate:
         output = np.zeros(output_shape)
 
         # We also need a temporary array to place the chips and compute intensity
-        output_tmp = np.zeros(oversample_shape, dtype=np.complex128)
+        _output = np.zeros(oversample_shape, dtype=np.complex128)
 
         for n, (wl, wt) in enumerate(zip(wave, weight)):
             if wt > 0:
                 w = self.input_wavefront(wl)
                 w = self._propagate_mono(w, npix_chip, oversample, tilt)
 
-                if w.depth == 1:
-                    # Compute intensity in place
-                    # Note that w.data remains a complex ndarray
-                    w.data = np.power(np.abs(w.data, out=w.data), 2, out=w.data)
+                for d in range(w.depth):
 
-                    # TODO: clean up the shift handling here.
-                    # We need a better way to default to zero shift. The same thing
-                    # needs to be done in the below block if w.depth > 1. This is
-                    # just a temporary quick and dirty fix
-                    if hasattr(w, '_shift'):
-                        # The shift term is given in terms of (x,y) but it is easier to
-                        # place the chip if we're working in terms of (r,c).
-                        shift = np.flip(w._shift[0], axis=0)
-                    else:
-                        shift = [0, 0]
+                    # The shift term is given in terms of (x,y) but we place the chip in
+                    # terms of (r,c)
+                    # TODO: I think this will break if the last plane isn't a Detector
+                    shift = np.flip(w.pixel_shift[d], axis=0)
 
-                    # Apply the weight
-                    w.data *= wt
-
-                    # Place the chip
+                    # Compute the chip location
                     canvas_slice, chip_slice = _chip_insertion_slices(oversample_shape,
-                                                                      (w.data.shape[1], w.shape[2]),
+                                                                      (w.data.shape[1], w.data.shape[2]),
                                                                       shift)
 
+                    # Insert the complex result in the output
                     if canvas_slice:
-                        # We've already computed the intensity and applied the weight so we
-                        # can just place the real portion of w.data into the right place
-                        # in output
-                        if flatten:
-                            output[canvas_slice] += w.data[0].real[chip_slice]
-                        else:
-                            output[n, canvas_slice[0], canvas_slice[1]] += w.data[0].real[chip_slice]
+                        _output[canvas_slice] += w.data[d, chip_slice[0], chip_slice[1]]
 
+                # Compute intensity
+                if flatten:
+                    output += np.abs(_output).real**2 * wt
                 else:
-                    for d in range(w.depth):
+                    output[n] = np.abs(_output).real**2 * wt
 
-                        # The shift term is given in terms of (x,y) but it is easier to
-                        # place the chip if we're working in terms of (r,c).
-                        shift = np.flip(w._shift[d], axis=0)
-
-                        # Place the chip
-                        canvas_slice, chip_slice = _chip_insertion_slices(oversample_shape, (w.data.shape[1], w.shape[2]),
-                                                                      shift)
-
-                        if canvas_slice:
-                            output_tmp[canvas_slice] += w.data[d, chip_slice[0], chip_slice[1]]
-
-                    # Compute intensity
-                    if flatten:
-                        output += (np.abs(output_tmp).real**2 * wt)
-                    else:
-                        output[n] = (np.abs(output_tmp).real**2 * wt)
-
-                    output_tmp[:] = 0
+                # Zero out the local output array
+                _output[:] = 0
 
         if rebin:
             output = util.rebin(output, oversample)
@@ -362,18 +332,17 @@ class Propagate:
                 if isinstance(next_plane, Detector):
 
                     shift = w.shift(next_plane.pixelscale, oversample)
+                    w.tilt = []
 
-                    # Integer portion of the shift that will be added back into
-                    # self.tilt if it is nonzero
-                    fix_shift = np.fix(shift)
+                    # Integer portion of the shift that will be accounted for
+                    # later
+                    w.pixel_shift = np.fix(shift)
 
                     # Residual subpixel portion of the shift that is passed to
                     # the DFT
-                    res_shift = shift - fix_shift
+                    res_shift = shift - w.pixel_shift
 
                     w.propagate_dft(next_plane.pixelscale, npix, oversample, res_shift)
-
-                    w._shift = fix_shift
 
                 # Pupil to Image propagation
                 else:
