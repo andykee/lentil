@@ -600,7 +600,12 @@ class LensletArray(Plane):
     pass
 
 
-class Rotate:
+class Tilt(Plane):
+    """Base class for representing a phase tilt term."""
+    pass
+
+
+class Rotate(Plane):
     """Rotate a Wavefront by a specified angle
 
     Parameters
@@ -617,21 +622,16 @@ class Rotate:
     ----
     If the angle is an even multiple of 90 degrees, ``numpy.rot90`` is used to
     perform the rotation rather than ``scipy.ndimage.rotate``. In this case,
-    the order parameter is irrelevant because no interpolation occurrs.
+    the order parameter is irrelevant because no interpolation occurs.
 
     """
     def __init__(self, angle=0, unit='degrees', order=3):
+        super().__init__()
+
         if unit == 'radians':
             angle *= 180/np.pi
         self.angle = angle
         self.order = order
-
-    def __repr__(self):
-        return self.name + '()'
-
-    @property
-    def name(self):
-        return self.__class__.__name__
 
     def cache_propagate(self):
         pass
@@ -662,7 +662,7 @@ class Rotate:
         return wavefront
 
 
-class Flip:
+class Flip(Plane):
     """Flip a wavefront along specified axis
 
     Parameters
@@ -675,6 +675,7 @@ class Flip:
     """
 
     def __init__(self, axis=None):
+        super().__init__()
 
         if axis is None:
             # The first dimension of wavefront.data is depth so we actually want
@@ -686,13 +687,6 @@ class Flip:
             # add one to whatever axes are provided to make the flip operation
             # behave as expected.
             self.axis = np.asarray(axis) + 1
-
-    def __repr__(self):
-        return self.name + '()'
-
-    @property
-    def name(self):
-        return self.__class__.__name__
 
     def cache_propagate(self):
         pass
@@ -733,17 +727,6 @@ class Conic(Plane):
     pass
 
 
-class Tilt(Plane):
-    """Base class for representing a phase tilt term."""
-    pass
-
-
-class Surf(Plane):
-    """Base class for representing an optical element with an arbitrary phase
-    term defined by a gridded surface.
-
-    """
-    pass
 
 #    def Q(self, wave, pixelscale, oversample=1):
 #        return (self.f_number*wave*oversample)/pixelscale
