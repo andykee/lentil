@@ -7,10 +7,9 @@ from lentil.cache import Cache
 from lentil.modeltools import (cached_property, iterable_amplitude,
                                 iterable_mask, iterable_phase, iterable_segmask)
 from lentil import util
-from lentil.wavefront import Angle
 
 __all__ = ['Plane', 'Pupil', 'Image', 'Detector', 'DispersiveShift', 'Grism',
-           'LensletArray', 'Rotate', 'Flip']
+           'LensletArray', 'Tilt', 'Rotate', 'Flip']
 
 
 class Plane:
@@ -343,7 +342,7 @@ class Plane:
             phase = phase - phase_tilt
 
             # Set the wavefront angle
-            wavefront.tilt.extend([Angle(x=t[1], y=t[2])])
+            wavefront.tilt.extend([Tilt(x=t[1], y=t[2])])
 
             # Compute and apply the phasor
             wavefront = self._multiply_phase(amplitude, phase, wavefront)
@@ -372,7 +371,7 @@ class Plane:
             # Set the tilt term
             # Create a wavefront.Angle object for each segment and put them all in a
             # list
-            wavefront.tilt.append([Angle(x=t[seg, 1], y=t[seg, 2]) for seg in range(self.nseg)])
+            wavefront.tilt.append([Tilt(x=t[seg, 1], y=t[seg, 2]) for seg in range(self.nseg)])
 
         return wavefront
 
@@ -608,8 +607,45 @@ class LensletArray(Plane):
 
 
 class Tilt(Plane):
-    """Base class for representing a phase tilt term."""
-    pass
+    """Object for representing tilt in terms of an angle
+
+    Parameters
+    ----------
+    x : float
+        x tilt in radians
+
+    y : float
+        y tilt in radians
+
+    """
+    def __init__(self, x, y):
+        super().__init__()
+        self.x = x
+        self.y = y
+
+    def shift(self, xs=0, ys=0, z=0, **kwargs):
+        """Compute image plane shift due to this angular tilt
+
+        Parameters
+        ----------
+        xs : float
+            Incoming x shift in meters. Default is 0.
+
+        ys : float
+            Incoming y shift in meters. Default is 0.
+
+        z : float
+            Propagation distance
+
+        Returns
+        -------
+        shift : tuple
+            Updated x and y shift terms
+
+        """
+        x = xs + (z * self.x)
+        y = ys + (z * self.y)
+        return x, y
 
 
 class Rotate(Plane):

@@ -33,11 +33,6 @@ class Wavefront:
 
         and return an updated x and y shift.
 
-    See Also
-    --------
-    * :class:`Angle`
-    * :class:`Shift`
-
     """
     def __init__(self, wavelength, shape=None, pixelscale=None, planetype=None):
 
@@ -215,44 +210,3 @@ class Wavefront:
             data[d] = dft2(self.data[d], alpha, npix, shift[d])
 
         self.data = data
-
-
-class Angle:
-    """Object for representing wavefront tilt in terms of an angle
-
-    Parameters
-    ----------
-    x : float
-        x tilt in radians
-
-    y : float
-        y tilt in radians
-
-    """
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def shift(self, xs=0, ys=0, z=0, **kwargs):
-        """Compute image plane shift due to this angular tilt
-
-        Parameters
-        ----------
-        xs : float
-            Incoming x shift in meters. Default is 0.
-
-        ys : float
-            Incoming y shift in meters. Default is 0.
-
-        z : float
-            Propagation distance
-
-        Returns
-        -------
-        shift : tuple
-            Updated x and y shift terms
-
-        """
-        x = xs + (z * self.x)
-        y = ys + (z * self.y)
-        return x, y

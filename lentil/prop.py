@@ -1,7 +1,7 @@
 import numpy as np
 
 from lentil import util
-from lentil.plane import Pupil, Image, Detector, Plane
+from lentil.plane import Pupil, Image, Detector
 from lentil.wavefront import Wavefront
 
 __all__ = ['propagate']
