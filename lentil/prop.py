@@ -1,7 +1,8 @@
 import numpy as np
 
 from lentil import util
-from lentil.plane import Pupil, Image, Detector
+from lentil import fourier
+from lentil.plane import Pupil, Image, Detector, Tilt, Rotate, Flip
 from lentil.wavefront import Wavefront
 
 __all__ = ['propagate']
@@ -196,8 +197,11 @@ class Propagate:
 
         """
 
-        # TODO: need to update this to make it work for SimpleOS if npix=None
-        # Make a shape property that returns the size of the first plane maybe?
+        # TODO: move all this setup into __enter__:
+        #   * npix
+        #   * npix_chip
+        #   * wave
+        #   * weight
         if npix is None:
             npix = self.planes[-1].shape
         npix = np.asarray(npix)
@@ -234,7 +238,7 @@ class Propagate:
 
         for n, (wl, wt) in enumerate(zip(wave, weight)):
             if wt > 0:
-                w = self.input_wavefront(wl)
+                w = _input_wavefront(self.planes, wl)
                 w = self._propagate_mono(w, npix_chip, oversample, tilt)
 
                 for d in range(w.depth):
@@ -302,71 +306,69 @@ class Propagate:
             w = plane.multiply(w, tilt)
 
             # Now, we propagate to the next plane in the optical system
-            # (next_plane).
 
-            # If we're at the end of the list of planes, next_plane will be None
-            if next_plane is None:
-                continue
+            # TODO: figure out how/when to accumulate tilt
 
-            # If the two planes are of the same type, do nothing
-            if (w.planetype == 'pupil') and isinstance(next_plane, Pupil):
-                continue
-
-            if (w.planetype == 'image') and isinstance(next_plane, Image):
-                continue
-
-            # This block enables the behavior of inserting a non-Pupil or Image plane
-            # in the list of planes and having its multiply() method called, but not
-            # changing any of the Wavefront's fundamental properties like planetype or
-            # focal length.
-            #
-            # Use cases are Rotation, Flip, Grism, and probably more
-            #if isinstance(next_plane, Plane):
-            #    continue
-
-            # Pupil to image propagation
             if (w.planetype == 'pupil') and isinstance(next_plane, Image):
-                # Pupil to Detector propagation
                 if isinstance(next_plane, Detector):
-
-                    shift = w.shift(next_plane.pixelscale, oversample)
-                    w.tilt = []
-
-                    # Integer portion of the shift that will be accounted for
-                    # later
-                    w.pixel_shift = np.fix(shift)
-
-                    # Residual subpixel portion of the shift that is passed to
-                    # the DFT
-                    res_shift = shift - w.pixel_shift
-
-                    w.propagate_dft(next_plane.pixelscale, npix, oversample, res_shift)
-
-                # Pupil to Image propagation
+                    w = _propagate_pupil_detector(w, next_plane.pixelscale, npix, oversample)
                 else:
                     pass
-
-            # Image to pupil propagation
             elif (w.planetype == 'image') and isinstance(next_plane, Pupil):
                 pass
-
-            # Everything else is invalid
-            #else:
-            #    raise TypeError('Unsupported propagation type ', w.planetype, ' to ', next_plane)
+            elif (w.planetype == 'pupil') and isinstance(next_plane, Pupil):
+                continue
+            elif (w.planetype == 'image') and isinstance(next_plane, Image):
+                continue
+            elif isinstance(next_plane, (Tilt, Rotate, Flip)):
+                continue
+            else:
+                raise TypeError('Unsupported propagation type ', w.planetype, ' to ', next_plane)
 
         return w
 
-    def input_wavefront(self, wave):
 
-        # TODO: need to be robust against the fact that the first plane may be a
-        # source or tilt only object and therefor insufficient to fully set up
-        # the wavefront object
-        #  * let shape be None. If shape is None, Wavefront.data should just be 1
+def _propagate_pupil_detector(w, detector_pixelscale, npix, oversample):
 
-        return Wavefront(wave,
-                         pixelscale=self.planes[0].pixelscale,
-                         shape=self.planes[0].shape,
-                         planetype=None)
+    shift = w.shift(detector_pixelscale, oversample)
+    w.tilt = []
+
+    # Integer portion of the shift that will be accounted for
+    # later
+    w.pixel_shift = np.fix(shift)
+
+    # Residual subpixel portion of the shift that is passed to
+    # the DFT
+    res_shift = shift - w.pixel_shift
+
+    npix = npix * oversample
+
+    alpha = (w.pixelscale * detector_pixelscale) / (w.wavelength * w.focal_length * oversample)
+
+    data = np.zeros((w.depth, npix[0], npix[1]), dtype=np.complex128)
+
+    assert shift.shape[0] == w.depth, \
+        'Dimension mismatch between tilt and wavefront depth'
+
+    for d in range(w.depth):
+        data[d] = fourier.dft2(w.data[d], alpha, npix, res_shift[d])
+
+    w.data = data
+
+    return w
+
+
+def _input_wavefront(planes, wave):
+
+    # TODO: need to be robust against the fact that the first plane may be a
+    # source or tilt only object and therefor insufficient to fully set up
+    # the wavefront object
+    #  * let shape be None. If shape is None, Wavefront.data should just be 1
+
+    return Wavefront(wave,
+                     pixelscale=planes[0].pixelscale,
+                     shape=planes[0].shape,
+                     planetype=None)
 
 
 class _iterate_planes:
