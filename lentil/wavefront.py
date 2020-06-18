@@ -255,39 +255,3 @@ class Angle:
         x = xs + (z * self.x)
         y = ys + (z * self.y)
         return x, y
-
-
-class Shift:
-    """Object for representing wavefront tilt in terms of a physical shift
-
-    Parameters
-    ----------
-    x : float
-        x shift in meters
-
-    y : float
-        y shift in meters
-
-    """
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def shift(self, xs=0, ys=0, **kwargs):
-        """Compute image plane shift due to this wavefront shift
-
-        Parameters
-        ----------
-        xs : float
-            Incoming x shift in meters. Default is 0.
-
-        ys : float
-            Incoming y shift in meters. Default is 0.
-
-        Returns
-        -------
-        shift : tuple
-            Updated x and y shift terms
-
-        """
-        return self.x + xs, self.y + ys

@@ -7,7 +7,7 @@ from lentil.cache import Cache
 from lentil.modeltools import (cached_property, iterable_amplitude,
                                 iterable_mask, iterable_phase, iterable_segmask)
 from lentil import util
-from lentil.wavefront import Angle, Shift
+from lentil.wavefront import Angle
 
 __all__ = ['Plane', 'Pupil', 'Image', 'Detector', 'DispersiveShift', 'Grism',
            'LensletArray', 'Rotate', 'Flip']
