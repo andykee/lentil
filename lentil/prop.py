@@ -1,5 +1,3 @@
-from itertools import tee, chain, islice
-
 import numpy as np
 
 from lentil import util
@@ -298,7 +296,7 @@ class Propagate:
             Resulting complex field propagated though the optical system.
 
         """
-        for plane, next_plane in _planes(self.planes):
+        for plane, next_plane in _iterate_planes(self.planes):
 
             # Multiply by the current plane
             w = plane.multiply(w, tilt)
@@ -358,7 +356,6 @@ class Propagate:
 
         return w
 
-
     def input_wavefront(self, wave):
 
         # TODO: need to be robust against the fact that the first plane may be a
@@ -372,17 +369,23 @@ class Propagate:
                          planetype=None)
 
 
-def _planes(iterable):
-    # this is a slightly modified version of https://stackoverflow.com/a/1012089
-    # note that we don't include the last None in nexts (included in the SO
-    # answer), because we're fine not executing from the last plane to nothing
-    #
-    # Update for v0.6.2: We've now included the second [None] to allow handling
-    # of unique situations where we actually want to loop from the last plane
-    # to nothing. Propagate._propagate_mono has been adjusted accordingly
-    items, nexts = tee(iterable, 2)
-    nexts = chain(islice(nexts, 1, None), [None])
-    return zip(items, nexts)
+class _iterate_planes:
+    def __init__(self, planes):
+        self.planes = planes
+        self.length = len(planes)
+        self.n = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.n < self.length-1:
+            plane = self.planes[self.n]
+            next_plane = self.planes[self.n+1]
+            self.n += 1
+            return plane, next_plane
+        else:
+            raise StopIteration()
 
 
 def _chip_insertion_slices(npix_canvas, npix_chip, shift):
