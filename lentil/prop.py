@@ -2,7 +2,7 @@ import numpy as np
 
 from lentil import util
 from lentil import fourier
-from lentil.plane import Pupil, Image, Detector, Tilt, Rotate, Flip
+from lentil.plane import Pupil, Image, Detector, Plane
 from lentil.wavefront import Wavefront
 
 __all__ = ['propagate']
@@ -320,7 +320,7 @@ class Propagate:
                 continue
             elif (w.planetype == 'image') and isinstance(next_plane, Image):
                 continue
-            elif isinstance(next_plane, (Tilt, Rotate, Flip)):
+            elif isinstance(next_plane, Plane):
                 continue
             else:
                 raise TypeError('Unsupported propagation type ', w.planetype, ' to ', next_plane)
