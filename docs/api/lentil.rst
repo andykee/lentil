@@ -38,6 +38,7 @@ Coordinate Transformations
 ==========================
 .. autosummary::
 
+    lentil.Tilt
     lentil.Rotate
     lentil.Flip
 
@@ -46,13 +47,10 @@ Coordinate Transformations
     :members:
 
 .. autoclass:: lentil.Pupil
-    :members:
 
 .. autoclass:: lentil.Image
-    :members:
 
 .. autoclass:: lentil.Detector
-    :members:
 
 .. autoclass:: lentil.FPA
     :members:
@@ -61,12 +59,11 @@ Coordinate Transformations
     :members:
 
 .. autoclass:: lentil.Grism
-    :members:
 
 .. autofunction:: lentil.propagate
 
+.. autoclass:: lentil.Tilt
+
 .. autoclass:: lentil.Rotate
-    :members:
 
 .. autoclass:: lentil.Flip
-    :members:

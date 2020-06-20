@@ -37,14 +37,6 @@ lentil.wavefront
 .. autosummary::
 
     lentil.wavefront.Wavefront
-    lentil.wavefront.Angle
-    lentil.wavefront.Shift
 
 .. autoclass:: lentil.wavefront.Wavefront
-    :members:
-
-.. autoclass:: lentil.wavefront.Angle
-    :members:
-
-.. autoclass:: lentil.wavefront.Shift
     :members:

@@ -147,36 +147,25 @@ planes:
     >>> import lentil
     >>> import matplotlib.pyplot as plt
     >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 128), diameter=1,
-                         focal_length=10, pixelscale=1/256)
+    ...                      focal_length=10, pixelscale=1/256)
     >>> detector = lentil.Detector(pixelscale=5e-6, shape=(1024, 1024))
-    >>> psf = lentil.propagate([pupil, detector], wave=650e-9, npix=(128, 128))
-    >>> plt.imshow(psf)
+    >>> psf = lentil.propagate([pupil, detector], wave=650e-9, npix=(64, 64))
+    >>> plt.imshow(psf, origin='lower')
+
+.. image:: ../_static/img/psf_64.png
+    :width: 300px
 
 it is simple to see the effect of introducing a tilted wavefront into the system:
 
 .. code-block:: pycon
 
-import lentil.plane    >>> tilt = lentil.Tilt(x=-5e-6, y=2e-6)
-    >>> psf = lentil.propagate([tilt, pupil, detector], wave=650e-9, npix=(128, 128))
-    >>> plt.imshow(psf)
-import lentil.plane    >>> tilt = lentil.Tilt(x=-5e-6, y=2e-6)
-    >>> psf = lentil.propagate([tilt, pupil, detector], wave=650e-9, npix=(128, 128))
-    >>> plt.imshow(psf)
-import lentil.plane    >>> tilt = lentil.Tilt(x=-5e-6, y=2e-6)
-    >>> psf = lentil.propagate([tilt, pupil, detector], wave=650e-9, npix=(128, 128))
-    >>> plt.imshow(psf)
-import lentil.plane    >>> tilt = lentil.Tilt(x=-5e-6, y=2e-6)
-    >>> psf = lentil.propagate([tilt, pupil, detector], wave=650e-9, npix=(128, 128))
-    >>> plt.imshow(psf)
-import lentil.plane    >>> tilt = lentil.plane.Tilt(x=-5e-6, y=2e-6)
-    >>> psf = lentil.propagate([tilt, pupil, detector], wave=650e-9, npix=(128, 128))
-    >>> plt.imshow(psf)
-import lentil.plane    >>> tilt = lentil.plane.Tilt(x=-5e-6, y=2e-6)
-    >>> psf = lentil.propagate([tilt, pupil, detector], wave=650e-9, npix=(128, 128))
-    >>> plt.imshow(psf)
+    >>> import lentil.plane
     >>> tilt = lentil.Tilt(x=-5e-6, y=2e-6)
-    >>> psf = lentil.propagate([tilt, pupil, detector], wave=650e-9, npix=(128, 128))
-    >>> plt.imshow(psf)
+    >>> psf = lentil.propagate([tilt, pupil, detector], wave=650e-9, npix=(64, 64))
+    >>> plt.imshow(psf, origin='lower')
+
+.. image:: ../_static/img/psf_64_tilt.png
+    :width: 300px
 
 Plane Transformations
 =====================
