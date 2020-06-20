@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import monocle as mo
+import lentil
 
 # Define some system parameters
 diameter = 1
@@ -27,7 +27,7 @@ mtf_axis_px = mtf_axis_mm * du/1e-3  # cycles/px
 
 # Compute the analytical optical MTF
 s = (mtf_axis_px*wave*f_number)/du
-s_valid = s[s<1]
+s_valid = s[s < 1]
 mtf_valid = 2/np.pi*(np.arccos(s_valid)-s_valid*np.sqrt(1-s_valid**2))
 mtf_optics = np.zeros_like(s)
 mtf_optics[0:s_valid.shape[0]] = mtf_valid
@@ -52,27 +52,27 @@ plt.style.use('ggplot')
 npix_pup_rad = npix/2
 npix_pup_diam = npix_pup_rad * 2
 dx = diameter/npix_pup_diam
-amp = mo.util.circle((npix,npix),npix_pup_rad)
+amp = lentil.util.circle((npix, npix), npix_pup_rad)
 alpha = (dx*du)/(wave*focal_length*oversample)
 
 # Compute the optical MTF from a Monocle-generated PSF
-psf = np.abs(mo.fourier.dft2(amp, alpha, npix=npix)**2)
+psf = np.abs(lentil.fourier.dft2(amp, alpha, npix=npix)**2)
 psf = psf/np.max(psf)
 mtf_optics_mo = np.abs(np.fft.fft2(psf))
 mtf_optics_mo = mtf_optics_mo/np.max(mtf_optics_mo)
-mtf_optics_mo = mtf_optics_mo[0,0:mtf_optics_mo.shape[0]//2]
+mtf_optics_mo = mtf_optics_mo[0, 0:mtf_optics_mo.shape[0]//2]
 
 # Now apply Monocle's pixellation method and compute the system MTF
-pixel_mtf = mo.convolvable.Pixel()
+pixel_mtf = lentil.convolvable.Pixel()
 psf_px = pixel_mtf(psf, oversample=oversample)
 mtf_sys_mo = np.abs(np.fft.fft2(psf_px))
 mtf_sys_mo = mtf_sys_mo/np.max(mtf_sys_mo)
-mtf_sys_mo = mtf_sys_mo[0,0:mtf_sys_mo.shape[0]//2]
+mtf_sys_mo = mtf_sys_mo[0, 0:mtf_sys_mo.shape[0]//2]
 
 # Finally, we'll grab the Pixel kernel to make sure it matches the
 # analytic pixel MTF
 mtf_px_mo = np.abs(pixel_mtf.kernel(mtf_axis_px, mtf_axis_px, 1))
-mtf_px_mo = mtf_px_mo[0,:]
+mtf_px_mo = mtf_px_mo[0, :]
 
 #plt.plot(mtf_axis_px, mtf_optics_mo, label='optics')
 #plt.plot(mtf_axis_px, mtf_px_mo, label='pixel')
