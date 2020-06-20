@@ -623,6 +623,11 @@ class Tilt(Plane):
         self.x = x
         self.y = y
 
+    def multiply(self, wavefront, tilt):
+        wavefront = super().multiply(wavefront, tilt)
+        wavefront.tilt.extend([self])
+        return wavefront
+
     def shift(self, xs=0, ys=0, z=0, **kwargs):
         """Compute image plane shift due to this angular tilt
 

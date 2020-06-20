@@ -1,3 +1,5 @@
+from operator import itemgetter
+
 import numpy as np
 
 from lentil import util
@@ -121,6 +123,17 @@ class Propagate:
         # over the list of planes (which would be slow to perform with each
         # monochromatic wavefront propagation.)
 
+        # Compute the wavefront shape required to support propagation through the
+        # provided list of planes
+
+        # The current approach is to find the maximum row and column dimensions of
+        # only the Pupil elements in self.planes. This whole approach will have to
+        # change once we support more complicated multi-plane propagations.
+
+        shapes = [plane.shape for plane in self.planes if isinstance(plane, Pupil)]
+        self.npix_wavefront = (max(shapes, key=itemgetter(0))[0],
+                               max(shapes, key=itemgetter(1))[1])
+
         # Loop over the planes to build caches and identify any dispersive
         # elements
         for plane in self.planes:
@@ -238,7 +251,9 @@ class Propagate:
 
         for n, (wl, wt) in enumerate(zip(wave, weight)):
             if wt > 0:
-                w = _input_wavefront(self.planes, wl)
+                w = Wavefront(wavelength=wl, pixelscale=None,
+                              shape=self.npix_wavefront, planetype=None)
+
                 w = self._propagate_mono(w, npix_chip, oversample, tilt)
 
                 for d in range(w.depth):
@@ -356,19 +371,6 @@ def _propagate_pupil_detector(w, detector_pixelscale, npix, oversample):
     w.data = data
 
     return w
-
-
-def _input_wavefront(planes, wave):
-
-    # TODO: need to be robust against the fact that the first plane may be a
-    # source or tilt only object and therefor insufficient to fully set up
-    # the wavefront object
-    #  * let shape be None. If shape is None, Wavefront.data should just be 1
-
-    return Wavefront(wave,
-                     pixelscale=planes[0].pixelscale,
-                     shape=planes[0].shape,
-                     planetype=None)
 
 
 class _iterate_planes:
