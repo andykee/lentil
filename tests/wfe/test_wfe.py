@@ -10,4 +10,4 @@ def test_translation_defocus():
     phase = lentil.wfe.translation_defocus(mask, f_number, translation)
     pv_defocus = translation/(8*f_number**2)
 
-    assert pv_defocus == np.max(phase) - np.min(phase)
+    assert np.abs(pv_defocus) == np.abs(np.max(phase) - np.min(phase))
