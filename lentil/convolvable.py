@@ -196,8 +196,8 @@ class Jitter(Convolvable):
         x = np.fft.fftfreq(img.shape[1])
         y = np.fft.fftfreq(img.shape[0])
         kernel = self.kernel(x, y, scale, oversample)
-
-        return np.abs(self.convolve(img, kernel))
+        out = np.abs(self.convolve(img, kernel))
+        return out * np.sum(img)/np.sum(out)  # rescale to preserve input weight
 
     def kernel(self, x, y, scale, oversample):
         xx, yy = np.meshgrid(x, y)
@@ -291,8 +291,8 @@ class Smear(Convolvable):
         x = np.fft.fftfreq(img.shape[1])
         y = np.fft.fftfreq(img.shape[0])
         kernel = self.kernel(x, y, distance, angle, oversample)
-
-        return np.abs(self.convolve(img, kernel))
+        out = np.abs(self.convolve(img, kernel))
+        return out * np.sum(img)/np.sum(out)  # rescale to preserve input weight
 
     def kernel(self, x, y, distance, angle, oversample):
         xx, yy = np.meshgrid(x, y)
