@@ -15,4 +15,4 @@ import sys
 if sys.hexversion < 0x030700F0:
     raise ImportError('Lentil requires Python >= 3.7')
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
