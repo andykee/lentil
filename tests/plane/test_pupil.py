@@ -22,3 +22,10 @@ def test_wavefront_pupil_multiply():
     assert np.array_equal(w.data[0], phasor)
     assert w.planetype == 'pupil'
     assert w.focal_length == p.focal_length
+
+
+def test_f_number():
+    p = lentil.Pupil()
+    p.diameter = np.random.normal(loc=1)
+    p.focal_length = np.random.normal(loc=10)
+    assert p.f_number == p.focal_length/p.diameter
