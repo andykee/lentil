@@ -44,27 +44,6 @@ class Cache:
         except KeyError:
             return default
 
-    def get_or_set(self, key, default):
-        """Set a cache value only if it doesn't already exist in the cache
-        and return the cached value.
-
-        Parameters
-        ----------
-        key : string
-
-        default : object
-
-        Returns
-        -------
-        value
-            Cached value
-
-        """
-
-        if key not in self.keys():
-            self._cache[key] = default
-        return self._cache[key]
-
     def add(self, key, value):
         """Set a cache value only if it doesn't already exist in the cache.
 
