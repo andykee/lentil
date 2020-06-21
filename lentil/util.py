@@ -416,14 +416,6 @@ def pixelscale_nyquist(wave, f_number):
     return f_number * wave / 2
 
 
-def angle2shift(angle, z, pixelscale):
-    return (angle*z)/pixelscale
-
-
-def shift2angle(shift, z, pixelscale):
-    return (shift*pixelscale)/z
-
-
 def make_index(mat):
     """Create a sparse coordinate list (COO) index dictionary.
 

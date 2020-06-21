@@ -118,6 +118,6 @@ def translation_defocus(mask, f_number, translation):
     return z4*mask*coeff
 
 
-def kolmogorov_wfe():
-    """Wavefront error representing a turbulent phase screen."""
-    pass
+# def kolmogorov_wfe():
+#     """Wavefront error representing a turbulent phase screen."""
+#     pass

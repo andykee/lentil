@@ -1,7 +1,4 @@
-import copy
 import numpy as np
-
-from lentil.fourier import dft2
 
 
 class Wavefront:
@@ -51,17 +48,6 @@ class Wavefront:
 
         self.tilt = []  # List of pre-propagation tilts
         self.pixel_shift = []
-
-    def __str__(self):
-        return np.str(self.data)
-
-    def __repr__(self):
-        name = self.__class__.__name__
-        data = np.array2string(self.data, prefix=name + '(', separator=',')
-        return name + '(' + data + ')'
-
-    def __imul__(self, other):
-        return other.__mul__(self)
 
     @property
     def data(self):
@@ -158,7 +144,3 @@ class Wavefront:
                                                           wavelength=self.wavelength)
 
         return (shift/pixelscale) * oversample
-
-    def copy(self):
-        """Return a copy of the Wavefront object"""
-        return copy.deepcopy(self)

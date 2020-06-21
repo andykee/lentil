@@ -1,5 +1,3 @@
-import copy
-
 import numpy as np
 from scipy import ndimage
 
@@ -75,11 +73,6 @@ class Plane:
     @pixelscale.setter
     def pixelscale(self, value):
         self._pixelscale = value
-
-    @property
-    def name(self):
-        """Plane name"""
-        return self.__class__.__name__
 
     @property
     def cache(self):
@@ -205,12 +198,6 @@ class Plane:
             return None
         else:
             return self.mask.shape
-
-    def copy(self):
-        """Return a copy."""
-        plane = copy.deepcopy(self)
-        plane.cache.clear()
-        return plane
 
     @cached_property
     def ptt_vector(self):

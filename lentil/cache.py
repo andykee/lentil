@@ -5,12 +5,6 @@ class Cache:
     def __init__(self):
         self._cache = {}
 
-    def __repr__(self):
-        return self._cache.__repr__()
-
-    def __str__(self):
-        return self._cache.__str__()
-
     def set(self, key, value):
         """Set a cache value.
 
