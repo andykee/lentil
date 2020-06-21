@@ -2,6 +2,15 @@ import numpy as np
 import lentil
 
 
+def test_power_spectrum_wfe():
+    mask = lentil.util.circlemask((256, 256), 128)
+    rms = 50e-9
+    phase = lentil.wfe.power_spectrum(mask, pixelscale=1/256, rms=rms,
+                                      half_power_freq=5, exp=3)
+
+    assert np.std(phase[np.nonzero(phase)])/rms >= 0.8
+
+
 def test_translation_defocus():
     mask = lentil.util.circlemask((256, 256), 128)
     f_number = np.random.normal(10)
