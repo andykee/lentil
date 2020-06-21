@@ -143,9 +143,12 @@ class Plane:
         if self._mask is not None:
             return self._mask
         else:
-            mask = self.amplitude
-            mask[mask != 0] = 1
-            return mask
+            if self.amplitude is not None:
+                mask = self.amplitude
+                mask[mask != 0] = 1
+                return mask
+            else:
+                return None
 
     @mask.setter
     def mask(self, value):
@@ -211,7 +214,7 @@ class Plane:
         """
 
         # if there's no mask, we just set ptt_vector to None and move on
-        if self.shape == () and self.segmask is None:
+        if (self.shape == () or self.shape is None) and self.segmask is None:
             ptt_vector = None
         else:
             # compute unmasked piston, tip, tilt vector
