@@ -182,7 +182,8 @@ def iterable_segmask(iterable):
     if all(plane.segmask is None for plane in iterable):
         return None
     else:
-        segmask = np.ones_like(iterable[0].segmask)
+        segmask = np.array(1)
         for plane in iterable:
-            segmask = segmask * plane.segmask
+            if plane.segmask is not None:
+                segmask = segmask * plane.segmask
         return segmask
