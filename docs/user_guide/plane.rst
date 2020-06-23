@@ -159,8 +159,7 @@ it is simple to see the effect of introducing a tilted wavefront into the system
 
 .. code-block:: pycon
 
-    >>> import lentil.plane
-    >>> tilt = lentil.Tilt(x=-5e-6, y=2e-6)
+    >>> tilt = lentil.Tilt(x=10e-6, y=-5e-6)
     >>> psf = lentil.propagate([tilt, pupil, detector], wave=650e-9, npix=(64, 64))
     >>> plt.imshow(psf, origin='lower')
 
@@ -170,6 +169,12 @@ it is simple to see the effect of introducing a tilted wavefront into the system
 Plane Transformations
 =====================
 
+Rotate
+------
+
+
+Flip
+----
 
 Active Optics and Deformable Mirrors
 ====================================
