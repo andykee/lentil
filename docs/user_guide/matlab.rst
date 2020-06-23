@@ -77,12 +77,12 @@ using Lentil in MATLAB, be sure that you you have
 
 Working with NumPy Arrays in MATLAB
 -----------------------------------
-Many Lentil methods return numpy arrays. Unfortunately, MATLAB does not fully
-understand numpy arrays. Two scripts are included in the ``matlab`` directory to convert
-back and forth between NumPy arrays and MATLAB matrices:
+Many Lentil methods return NumPy arrays. Unfortunately, MATLAB does not fully
+understand this datatype. The two MATLAB functions provided below can be used to easily
+convert back and forth between NumPy arrays and MATLAB matrices:
 
-* `mat2ndarray <https://github.com/andykee/lentil/blob/master/matlab/mat2ndarray.m>`_
-* `ndarray2mat <https://github.com/andykee/lentil/blob/master/matlab/ndarray2mat.m>`_
+* `mat2ndarray <../_static/matlab/mat2ndarray.m>`_
+* `ndarray2mat <../_static/matlab/ndarray2mat.m>`_
 
 
 Interacting directly with Lentil from MATLAB
