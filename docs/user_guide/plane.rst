@@ -168,13 +168,48 @@ it is simple to see the effect of introducing a tilted wavefront into the system
 
 Plane Transformations
 =====================
+The plane transformation examples below are used to modify the following image:
+
+.. code-block:: pycon
+
+    >>> import lentil
+    >>> import matplotlib.pyplot as plt
+    >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 128), diameter=1,
+    ...                      focal_length=10, pixelscale=1/256)
+    >>> detector = lentil.Detector(pixelscale=5e-6, shape=(1024, 1024))
+    >>> psf = lentil.propagate([pupil, detector], wave=650e-9, npix=(128, 128))
+    >>> plt.imshow(psf, origin='lower')
+
+
+.. image:: ../_static/img/psf_coma.png
+    :width: 300px
 
 Rotate
 ------
+:class:`~lentil.Rotate` can be used to rotate a Wavefront by an arbitrary amount:
 
+.. code-block:: pycon
+
+    >>> rotation = lentil.Rotate(angle=30, unit='degrees')
+    >>> psf = lentil.propagate([pupil, rotation, detector], wave=650e-9, npix=(128, 128))
+    >>> plt.imshow(psf, origin='lower')
+
+.. image:: ../_static/img/psf_coma_rotate.png
+    :width: 300px
 
 Flip
 ----
+:class:`~lentil.Flip` can be used to flip a Wavefront about its axes:
+
+.. code-block:: pycon
+
+    >>> flip = lentil.Flip(axis=1)
+    >>> psf = lentil.propagate([pupil, flip, detector], wave=650e-9, npix=(128, 128))
+    >>> plt.imshow(psf, origin='lower')
+
+.. image:: ../_static/img/psf_coma_flip.png
+    :width: 300px
+
 
 Active Optics and Deformable Mirrors
 ====================================
