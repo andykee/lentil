@@ -668,7 +668,7 @@ class Rotate(Plane):
 
         if unit == 'radians':
             angle *= 180/np.pi
-        self.angle = angle
+        self.angle = -angle
         self.order = order
 
     def cache_propagate(self):
