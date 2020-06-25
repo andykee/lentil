@@ -92,6 +92,8 @@ any optical effect, they are represented by clean ``Plane()`` objects.
 
 .. code-block:: python3
 
+    import lentil
+
     from examplemodel.planes import Pupil, Grism
     from examplemodel.detector import Detector
     from examplemodel import radiometry
@@ -100,8 +102,8 @@ any optical effect, they are represented by clean ``Plane()`` objects.
         def __init__(self):
             self._pupil = Pupil()
             self._detector = Detector()
-            self._filters = {'OPEN': mo.Plane(),
-                             'F420N': mo.Plane(),
+            self._filters = {'OPEN': lentil.Plane(),
+                             'F420N': lentil.Plane(),
                              'GRISM': Grism()}
 
             self.filter = 'OPEN'
