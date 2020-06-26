@@ -63,7 +63,7 @@ class Plane:
         cls._cache = Cache()
 
     def __repr__(self):
-        return self.name + '()'
+        return f'{self.__class__.__name__}()'
 
     @property
     def pixelscale(self):
