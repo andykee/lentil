@@ -2,6 +2,38 @@ import numpy as np
 import lentil
 
 
+# cached property --------------------------------------------------------------
+def test_cached_property_no_cache():
+    p = lentil.Pupil(diameter=1, focal_length=1, pixelscale=1, phase=5)
+    assert p.phase == 5
+
+
+def test_cached_property_cache():
+    p = lentil.Pupil(diameter=1, focal_length=1, pixelscale=1, phase=5)
+    p.cache.set('phase', 12)
+    assert p.phase == 12
+
+
+# normalize_power --------------------------------------------------------------
+amp = lentil.util.circle((512, 512), 256)
+
+
+def test_amp_norm():
+    # make sure we're not starting with an already normalized array!
+    assert np.sum(np.abs(amp)**2) != 1.0
+
+
+def test_normalize_power():
+    amp_norm = lentil.modeltools.normalize_power(amp)
+    assert np.isclose(np.sum(np.abs(amp_norm)**2), 1.0)
+
+
+def test_normalize_power_2():
+    amp_norm = lentil.modeltools.normalize_power(amp, power=2)
+    assert np.isclose(np.sum(np.abs(amp_norm)**2), 2.0)
+
+
+# plane iterables --------------------------------------------------------------
 class RandomPlane(lentil.Plane):
     def __init__(self):
         super().__init__()
