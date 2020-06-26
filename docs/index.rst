@@ -61,5 +61,5 @@ functions of segmented aperture telescopes.
 
     changes
     Issues <https://github.com/andykee/lentil/issues>
-    about
+    contributing
     License <https://github.com/andykee/lentil/blob/master/LICENSE.rst>
