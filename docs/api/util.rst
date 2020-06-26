@@ -12,7 +12,6 @@ Image Manipulation
     lentil.util.pad
     lentil.util.rebin
     lentil.util.rescale
-    lentil.util.coordinates
 
 Shapes
 ------

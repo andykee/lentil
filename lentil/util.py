@@ -2,8 +2,6 @@ import numpy as np
 from scipy.ndimage.interpolation import map_coordinates
 
 
-
-
 def circle(shape, radius, center=(0, 0)):
     """Compute a circle with anti-aliasing.
 
@@ -275,34 +273,6 @@ def mesh(shape, shift=(0, 0)):
     y = np.arange(shape[0]) - np.floor(shape[0]/2.0) - shift[0]
 
     return np.meshgrid(x, y)
-
-
-def coordinates(shape, pixelscale):
-    """Generate physical coordinates for an array.
-
-    Parameters
-    ----------
-    shape : tuple
-
-    pixelscale : float or tuple of floats
-
-    Returns
-    -------
-    y, x : array_like
-        Coordinates in meters
-
-    """
-    y, x = np.indices(shape, dtype=float)
-
-    if np.isscalar(pixelscale):
-        pixelscale_x, pixelscale_y = pixelscale, pixelscale
-    else:
-        pixelscale_x, pixelscale_y = pixelscale
-
-    y -= (shape[0] - 1)/2
-    x -= (shape[1] - 1)/2
-
-    return pixelscale_y * y, pixelscale_x * x
 
 
 def rescale(img, scale, shape=None, mask=None, order=3, mode='nearest',
