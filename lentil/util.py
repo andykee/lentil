@@ -330,7 +330,9 @@ def rescale(img, scale, shape=None, mask=None, order=3, mode='nearest',
     img = np.asarray(img)
 
     if mask is None:
-        mask = np.zeros_like(img)
+        # take the real portion to ensure that even if img is complex, mask will
+        # be real
+        mask = np.zeros_like(img).real
         mask[img != 0] = 1
 
     if shape is None:
@@ -353,12 +355,11 @@ def rescale(img, scale, shape=None, mask=None, order=3, mode='nearest',
         out = np.zeros(shape, dtype=np.complex128)
         out.real = map_coordinates(img.real, [yy, xx], order=order, mode=mode)
         out.imag = map_coordinates(img.imag, [yy, xx], order=order, mode=mode)
-        if unitary:
-            out /= scale
     else:
         out = map_coordinates(img, [yy, xx], order=order, mode=mode)
-        if unitary:
-            out /= scale**2
+
+    if unitary:
+        out *= np.sum(img)/np.sum(out)
 
     out *= mask
 
