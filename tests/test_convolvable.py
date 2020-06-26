@@ -37,3 +37,10 @@ def test_smear_unitary():
     distance = 2
     b = s(a, distance)
     assert np.isclose(np.sum(a), np.sum(b))
+
+
+def test_pixel_unitary():
+    a = np.random.uniform(low=0, high=1, size=(100, 100))
+    pixel_sampling = lentil.convolvable.Pixel()
+    b = pixel_sampling(a, oversample=1)
+    assert np.isclose(np.sum(a), np.sum(b))

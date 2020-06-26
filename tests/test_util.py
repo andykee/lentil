@@ -28,6 +28,12 @@ def test_rebin_cube():
     assert np.array_equal(img_rebinned, img_rebinned_expected)
 
 
+def test_rescale_unitary():
+    a = np.random.uniform(low=0, high=1, size=(100, 100))
+    b = lentil.util.rescale(a, scale=0.5, order=3, mode='nearest', unitary=True)
+    assert np.isclose(np.sum(a), np.sum(b))
+
+
 def test_mesh_nonsquare():
     xx, yy = lentil.util.mesh((256, 512))
     assert xx.shape == (256, 512)
