@@ -1,180 +1,204 @@
 import warnings
 
 import numpy as np
-from scipy import signal
+import scipy.signal
+import scipy.ndimage
 
-from lentil import util
+import lentil.radiometry
 
-__all__ = ['Gain', 'PolynomialGain', 'ShotNoise', 'GaussianShotNoise',
-           'DarkCurrent', 'ReadNoise', 'Rule07DarkCurrent', 'FPN', 'RandomFPN',
-           'NormalFPN', 'UniformFPN', 'LognormalFPN', 'PRNU', 'DarkCurrentFPN',
-           'PixelOffsetFPN', 'ColumnOffsetFPN', 'ChargeDiffusion', 'Defect',
-           'PixelMask', 'CosmicRay']
+__all__ = ['collect_charge', 'collect_charge_bayer', 'pixelate', 'adc',
+           'shot_noise', 'charge_diffusion', 'rule07_dark_current',
+           'cosmic_rays']
 
 
-class Windowable:
-    """Base class for representing data that can have a specific sub-window
-    extracted.
+def collect_charge(img, wave, qe, waveunit='nm'):
+    """Convert photon count (or flux) to electron count (or flux) by
+    applying the detector's wavelength-dependent quantum efficiency.
 
     Parameters
     ----------
-    data : float or array_like
-        Windowable data.
+    img : array_like
+        The photons presented to the sensor. Should have shape (nwave,
+        nrows, ncols)
+
+    wave : array_like
+        Wavelengths corresponding to each slice in ``count``. The length of
+        ``wave`` must be equal to the number of samples ``nwave`` in ``count``.
+
+    qe : {:class:`lentil.radiometry.Spectrum` array_like, or scalar}
+        Quantum efficiency used to convert detected photons to electrons.
+
+    waveunit : str, optional
+        Units of ``wave``. Defaults is ``nm``
+
+    Returns
+    -------
+    img : ndarray
+        Electron count or flux
+
+    Notes
+    -----
+    The units of ``count`` don't really matter, as long as the user is aware
+    that this method converts photons per whatever to electrons per
+    whatever. Whatever is nothing for counts and seconds for flux.
 
     """
 
-    def __init__(self, data):
-        self.data = np.asarray(data)
+    img = np.asarray(img)
+    if img.ndim == 2:
+        img = img[np.newaxis, ...]
 
-    def window(self, shape=None, window=None):
-        """Return an appropriately sized, potentially windowed :attr:`data`
-        array.
+    qe = qe_asarray(qe, wave, waveunit)
 
-        Parameters
-        ----------
-        shape : array_like or None, optional
-            Output shape given as (nrows, ncols). If ``None`` (default), an
-            uncropped array is returned.
-
-        window : array_like or None, optional
-            Indices of :attr:`data` array to return given as (r_start, r_end,
-            c_start, c_end). This definition follows standard numpy indexing.
-
-        Returns
-        -------
-        data : ndarray
-            Trimmed and windowed :attr:`data` array
-
-        Notes
-        -----
-        * If ``data`` is a single value (data.size == 1), self.data is returned
-          regardless of what ``shape`` and ``window`` are.
-        * If ``shape`` is given but ``window`` is ``None``, the returned ndarray
-          is trimmed about the center of the array using
-          :func:`lentil.util.pad`.
-        * If ``window`` is given but ``shape`` is ``None``, the returned ndarray
-          is extracted from :attr:`data` according to the indices in ``window``
-        * If both ``shape`` and ``window`` are given, the returned ndarray is
-          extracted from :attr:`data` according to the indices in ``window`` and
-          the following expressions must be true:
-
-        .. code::
-
-            shape[0] = (window[1] - window[0]) = (r_end - r_start)
-            shape[1] = (window[3] - window[2]) = (c_end - c_start)
-
-        """
-        if self.data.size == 1:
-            return self.data
-
-        if shape is None and window is None:
-            # return the entire array
-            return self.data
-
-        elif window is not None:
-            if shape is not None:
-                # ensure consistency
-                assert (window[1] - window[0]) == shape[0]
-                assert (window[3] - window[2]) == shape[1]
-            # return the windowed array.
-            # Note that numpy implicitly handles a third dimension if one is
-            # present
-            return self.data[window[0]:window[1], window[2]:window[3]]
-
-        else:  # shape is None
-            # return the padded array
-            # The same comment about numpy implicitly handling a third dimension
-            # (see above) holds true here, although in this case the logic
-            # resides in pad
-            return util.pad(self.data, shape)
+    return np.einsum('ijk,i->jk', img, qe)
 
 
-class Gain(Windowable):
-    """Linear gain model.
+def collect_charge_bayer(img, wave, qe_red, qe_green, qe_blue, bayer_pattern, oversample=1, waveunit='nm'):
+    """Convert photon count (or flux) to electron count (or flux) by
+    applying the detector's wavelength-dependent quantum efficiency.
+    Additional processing is performed to apply separate QE curves and
+    location masks for the separate red, green, and blue channels.
 
     Parameters
     ----------
-    gain : float or array_like
-        Conversion gain in DN/e-. If specified as a single value, it is applied
-        uniformly. If specified as an array, it is assumed to provide a
-        pixel-by-pixel gain map.
+    img : array_like
+        The photons presented to the sensor. Should have shape (nwave,
+        nrows, ncols)
 
-    saturation_capacity : int or None
-        Electron count resulting in pixel saturation. If None, pixels will not
-        saturate. This is obviously nonphysical, but can be useful for testing
-        or debugging.
+    wave : array_like
+        Wavelengths corresponding to each slice in ``count``. The length of
+        ``wave`` must be equal to the first dimension in ``count``.
 
-    dtype : data-type or None, optional
-        Output data-type. If None (default), no data-type casting is performed.
+    qe_red : {:class:`lentil.radiometry.Spectrum, array_like, scalar}
+        Red channel quantum efficiency
+
+    qe_green : {:class:`lentil.radiometry.Spectrum, array_like, scalar}
+        Green channel quantum efficiency
+
+    qe_blue : {:class:`lentil.radiometry.Spectrum, array_like, scalar}
+        Blue channel quantum efficiency
+
+    bayer_pattern : array-like
+        A description of the detector's Bayer pattern. Each value represents
+        the position of the red, green, and blue pixels starting with the upper-
+    #left corner of the image and moving left-to-right, top-to-bottom.` For
+    #example, ``'GBRG'`` represents the following Bayer pattern:
+
+    oversample : int, optional
+        Oversampling factor present in ``count``. Default is 1.
+
+    waveunit : str, optional
+        Units of ``wave``. Defaults is ``nm``
+
+    Returns
+    -------
+    img : ndarray
+        Electron count or flux
+
+    Notes
+    -----
+    The units of ``count`` don't really matter, as long as the user is aware
+    that this method converts photons per whatever to electrons per
+    whatever. Whatever is nothing for counts and seconds for flux.
+
+    """
+
+    img = np.asarray(img)
+    if img.ndim == 2:
+        img = img[np.newaxis, ...]
+
+    qe_red = qe_asarray(qe_red, wave, waveunit)
+    qe_green = qe_asarray(qe_green, wave, waveunit)
+    qe_blue = qe_asarray(qe_blue, wave, waveunit)
+
+    bayer_pattern = np.char.upper(bayer_pattern)
+    red_kernel = np.where(bayer_pattern == 'R', 1, 0)
+    green_kernel = np.where(bayer_pattern == 'G', 1, 0)
+    blue_kernel = np.where(bayer_pattern == 'B', 1, 0)
+
+    nrow = img.shape[1] // oversample
+    ncol = img.shape[2] // oversample
+
+    # build up the bayer image. we do this one channel at a time, and then
+    # accumulate the individual channels into one final frame
+    qe_red = qe_red.sample(wave, waveunit=waveunit)
+    red_mosaic = np.tile(red_kernel, (nrow // red_kernel.shape[0], ncol // red_kernel.shape[1]))
+    red_mosaic = scipy.ndimage.zoom(red_mosaic, oversample, order=0, mode='wrap')
+    red_e = np.einsum('ijk,i->jk', img, qe_red) * red_mosaic
+
+    qe_green = qe_green.sample(wave, waveunit=waveunit)
+    green_mosaic = np.tile(green_kernel, (nrow // green_kernel.shape[0], ncol // green_kernel.shape[1]))
+    green_mosaic = scipy.ndimage.zoom(green_mosaic, oversample, order=0, mode='wrap')
+    green_e = np.einsum('ijk,i->jk', img, qe_green) * green_mosaic
+
+    qe_blue = qe_blue.sample(wave, waveunit=waveunit)
+    blue_mosaic = np.tile(blue_kernel, (nrow // blue_kernel.shape[0], ncol // blue_kernel.shape[1]))
+    blue_mosaic = scipy.ndimage.zoom(blue_mosaic, oversample, order=0, mode='wrap')
+    blue_e = np.einsum('ijk,i->jk', img, qe_blue) * blue_mosaic
+
+    return red_e + green_e + blue_e
+
+
+def qe_asarray(qe, wave, waveunit):
+    # Ensure qe is well-formed
+    wave = np.asarray(wave)
+    if not isinstance(qe, lentil.radiometry.Spectrum):
+        qe = np.asarray(qe)
+        if np.isscalar(qe):
+            qe = qe*np.ones(wave.size)
+        else:
+            assert qe.size == wave.size
+    else:
+        qe = qe.sample(wave, waveunit=waveunit)
+    return qe
+
+
+def pixelate(img, oversample):
+    """Convolve an image with the pixel MTF before rescaling to native sampling
+
+    Parameters
+    ----------
+    img : array_like
+        Input image
+
+    oversample : int
+        Number of times `img` is oversampled
+
+    Returns
+    -------
+    img : ndarray
+        Rescaled image with pixel MTF applied
 
     Note
     ----
-    The saturation capacity should not be confused with the full-well capacity.
-    Saturation capacity is typically smaller than the full well capacity because
-    the signal is clipped before the physical saturation of the pixel is
-    reached.
+    :func:`pixelate` should only be used if ``oversample`` > 2
+
     """
 
-    def __init__(self, gain, saturation_capacity, dtype=None):
-        super().__init__(gain)
-        self.saturation_capacity = saturation_capacity
-        self.dtype = dtype
-
-    def __call__(self, img, window=None, warn_saturate=False):
-        """Apply gain model to an array
-
-        Parameters
-        ---------
-        img : ndarray
-            Array of electron counts
-
-        window : array_like or None, optional
-            Indices of gain to return given as (r_start, r_end, c_start, c_end).
-            This definition follows standard Numpy indexing.
-
-        warn_saturate : bool, optional
-            Raise a warning when pixels saturate. Default is False.
-
-        Returns
-        -------
-        img : ndarray
-            Array of DN
-
-        """
-        # enforce the saturation limit
-        if self.saturation_capacity:
-
-            if warn_saturate:
-                if self.check_saturate(img):
-                    warnings.warn('Frame has saturated pixels.')
-
-            # Apply the saturation limit
-            img[img > self.saturation_capacity] = self.saturation_capacity
-
-        # convert to DN
-        return np.floor(img * self.gain(img.shape, window), dtype=self.dtype)
-
-    def gain(self, shape=None, window=None):
-        """Return a trimmed and/or windowed representation of the gain model."""
-        return self.window(shape, window)
-
-    def check_saturate(self, img):
-        if np.any(img > self.saturation_capacity):
-            return True
-        else:
-            return False
+    pixel_sampling = lentil.convolvable.Pixel()
+    img = pixel_sampling(img, oversample)
+    return lentil.util.rescale(img, 1/oversample, order=3, mode='nearest', unitary=True)
 
 
-class PolynomialGain(Gain):
-    """Gain model defined by polynomial coefficients.
+def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
+    """Analog to digital conversion
 
     Parameters
     ----------
-    gain : array_like
-        Conversion gain in DN/e-. Can be specified in two ways:
+    img : ndarray
+        Array of electron counts
+
+    gain : saclar or array_like
+        Conversion gain in DN/e-. Can be specified in multiple ways:
+
+            * As a scalar term applied globally to each pixel
 
             * As a one-dimensional array of polynomial coefficients applied
               globally to each pixel
+
+            * As a two-dimensional array of pixel-by-pixel scalar gain applied
+              individually to each pixel
+
             * As a three-dimensional array of pixel-by-pixel gain where the
               first dimension gives polynomial coefficients of each pixel
 
@@ -183,8 +207,16 @@ class PolynomialGain(Gain):
         saturate. This is obviously nonphysical, but can be useful for testing
         or debugging.
 
+    warn_saturate : bool, optional
+        Raise a warning when pixels saturate. Default is False.
+
     dtype : data-type or None, optional
         Output data-type. If None (default), no data-type casting is performed.
+
+    Returns
+    -------
+    img : ndarray
+        Array of DN
 
     Note
     ----
@@ -195,297 +227,100 @@ class PolynomialGain(Gain):
 
     """
 
-    def __init__(self, gain, saturation_capacity, dtype=None):
+    img = np.asarray(img)
 
-        gain = np.asarray(gain)
-        if not np.any([gain.ndim == 1, gain.ndim == 3]):
-            raise ValueError
+    # Enforce saturation capacity
+    if saturation_capacity:
+        if warn_saturate:
+            if np.any(img > saturation_capacity):
+                warnings.warn('Frame has saturated pixels.')
 
-        super().__init__(gain, saturation_capacity, dtype)
+        # Apply the saturation limit
+        img[img > saturation_capacity] = saturation_capacity
 
-    def __call__(self, img, window=None, warn_saturate=False):
-        """Apply gain model to an array
+    # Determine the polynomial order
+    gain = np.asarray(gain)
+    if gain.ndim in [0, 2]:
+        if gain.ndim == 0:
+            gain = gain[..., np.newaxis]
+        model_order = 1
+    elif gain.ndim in [1, 3]:
+        model_order = gain.shape[0]
+    else:
+        raise ValueError
 
-        Parameters
-        ---------
-        img : ndarray
-            Array of electron counts
+    # Prepare a cube of electron counts to apply the polynomial gain to
+    img_cube = np.repeat(img[np.newaxis, :, :], model_order, axis=0)
+    for order in np.arange(model_order, 1, -1):
+        d = model_order - order
+        img_cube[d] = img_cube[d]**order
 
-        window : array_like or None, optional
-            Indices of gain to return given as (r_start, r_end, c_start, c_end).
-            This definition follows standard Numpy indexing.
+    # Apply the gain model and convert to DN
+    if gain.ndim == 1:
+        img = np.einsum('ijk,i->jk', img_cube, gain)
+    elif gain.ndim == 2:
+        img = np.einsum('ijk,jk->jk', img_cube, gain)
+    else:
+        # gain.ndim == 3
+        img = np.einsum('ijk,ijk->jk', img_cube, gain)
 
-        warn_saturate : bool, optional
-            Raise a warning when pixels saturate. Default is False.
-
-        Returns
-        -------
-        img : ndarray
-            Array of DN
-
-        """
-        # enforce the saturation limit
-        if self.saturation_capacity:
-
-            if warn_saturate:
-                if self.check_saturate(img):
-                    warnings.warn('Frame has saturated pixels.')
-
-            # Apply the saturation limit
-            img[img > self.saturation_capacity] = self.saturation_capacity
-
-        # Determine the polynomial order
-        if self.data.ndim == 1:
-            model_order = self.data.shape[0]
-        else:
-            model_order = self.data.shape[2]
-
-        # Prepare a cube of electron counts to apply the polynomial gain to
-        img_cube = np.repeat(img[:, :, np.newaxis], model_order-1, axis=2)
-        for order in np.arange(model_order-1, 0, -1):
-            d = model_order - order - 1
-            img_cube[..., d] = img_cube[..., d]**order
-
-        # Get the appropriately sized and windowed gain model
-        gain_model = self.gain(img.shape, window)
-
-        # Apply the gain model and convert to DN
-        if self.data.ndim == 1:
-            gain, offset = gain_model[0:-1], gain_model[-1]
-            return np.einsum('ijk,k->ij', img_cube, gain) + offset
-        else:
-            # self.data.ndim == 3
-            gain, offset = gain_model[..., 0:-1], gain_model[..., -1]
-            return np.einsum('ijk,ijk->ij', img_cube, gain) + offset
-
-    def gain(self, shape=None, window=None):
-        """Return a trimmed and/or windowed representation of the gain model."""
-        if self.data.ndim == 1:
-            # we have a global nonlinear gain where the shape and window don't
-            # matter
-            return self.data
-        else:
-            # self.data.ndim == 3
-            return self.window(shape, window)
+    return np.floor(img, dtype=dtype)
 
 
-class RandomNoise:
-    """Base class for all radiometry of random noise with an optional
-    user-definable seed.
-
-    If a seed is provided, an instance of ``numpy.random.RandomState`` is
-    created and all random numbers are generated from this object in a
-    repeatable (but still random) way. If no seed is provided, random numbers
-    are generated using the appropriate ``numpy.random`` distribution.
+def shot_noise(img, method='poisson', seed=None):
+    r"""Apply shot noise to an image
 
     Parameters
     ----------
+    img : array_like
+        Array of counts
+
+    method : 'poisson' or 'gaussian'
+        Noise method.
+
     seed : None, int, or array_like, optional
-        Random seed used to initialize ``numpy.random.RandomState``. If
-        ``None``, no random number generator object is created.
+        Seed for random number generator. If ``None`` (default), the Numpy
+        default is used.
 
-    Attributes
-    ----------
-    rng : numpy.random.RandomState or None
-        Random number generator object. If ``seed`` is ``None``, ``rng`` will
-        also be ``None``
+    Returns
+    -------
+    img : ndarray
+        Array of noisy counts
+
+    Note
+    ----
+    For sufficiently large values of :math:`\lambda`,  (say :math:`\lambda >
+    1000`), the Normal(:math:`\mu = \lambda`, :math:`\sigma^2 = \lambda`)
+    distribution is an excellent approximation to the Poisson(:math:`\lambda`)
+    distribution and is about 25% faster to compute.
+
     """
+    assert method in {'poisson', 'gaussian'}
 
-    def __init__(self, seed=None):
-        self.seed = seed
-
+    if method == 'poisson':
         if seed:
-            self.rng = np.random.RandomState(seed)
+            rng = np.random.RandomState(seed)
+            img = rng.poisson(img)
         else:
-            self.rng = None
-
-
-class ShotNoise(RandomNoise):
-    r"""Shot noise modeled by a Poisson process.
-
-    Parameters
-    ----------
-    seed : None, int, or array_like, optional
-        Seed for random number generator. If ``None`` (default), the Numpy
-        default is used.
-
-    Note
-    ----
-    For sufficiently large values of :math:`\lambda`,  (say :math:`\lambda >
-    1000`), the Normal(:math:`\mu = \lambda`, :math:`\sigma^2 = \lambda`)
-    distribution is an excellent approximation to the Poisson(:math:`\lambda`)
-    distribution and is about 25% faster to compute.
-
-    See Also
-    --------
-    :class:`~lentil.detector.GaussianShotNoise` Shot noise modeled by a normal
-    distribution
-
-    """
-
-    def __init__(self, seed=None):
-        super().__init__(seed)
-
-    def __call__(self, img):
-        """Apply shot noise model to an array
-
-        Parameters
-        ---------
-        img : ndarray
-            Array of electron counts
-
-        Returns
-        -------
-        img : ndarray
-            Array of noisy electron counts
-
-        """
-        if self.rng:
-            return self.rng.poisson(img)
+            img = np.random.poisson(img)
+    else:
+        if seed:
+            rng = np.random.RandomState(seed)
+            img = rng.normal(scale=img, size=img)
         else:
-            return np.random.poisson(img)
+            img = np.random.normal(scale=img, size=img)
+    return img
 
 
-class GaussianShotNoise(RandomNoise):
-    r"""Shot noise modeled by a normal distribution.
+def charge_diffusion(img, sigma, oversample=1):
+    """Apply charge diffusion represented by a Gaussian blur"""
 
-    Parameters
-    ----------
-    seed : None, int, or array_like, optional
-        Seed for random number generator. If ``None`` (default), the Numpy
-        default is used.
-
-    Note
-    ----
-    For sufficiently large values of :math:`\lambda`,  (say :math:`\lambda >
-    1000`), the Normal(:math:`\mu = \lambda`, :math:`\sigma^2 = \lambda`)
-    distribution is an excellent approximation to the Poisson(:math:`\lambda`)
-    distribution and is about 25% faster to compute.
-
-    See Also
-    --------
-    :class:`~lentil.detector.ShotNoise` Shot noise modeled by a Poisson process
-
-    """
-
-    def __init__(self, seed=None):
-        super().__init__(seed)
-
-    def __call__(self, img):
-        """Apply shot noise model to an array
-
-        Parameters
-        ---------
-        img : ndarray
-            Array of electron counts
-
-        Returns
-        -------
-        img : ndarray
-            Array of noisy electron counts
-
-        """
-        if self.rng:
-            return self.rng.normal(loc=img, scale=img)
-        else:
-            return np.random.normal(loc=img, scale=img)
+    kernel = lentil.util.gaussian2d(3*oversample, sigma)
+    return scipy.signal.convolve2d(img, kernel, mode='same')
 
 
-class ReadNoise(RandomNoise):
-    """Read noise model.
-
-    Parameters
-    ----------
-    electrons : int
-        Read noise per frame
-
-    seed : None, int, or array_like, optional
-        Seed for random number generator. If ``None`` (default), the Numpy
-        default is used.
-
-    """
-    def __init__(self, electrons, seed=None):
-        super().__init__(seed)
-        self.electrons = electrons
-
-    def __call__(self, frame):
-        if self.rng:
-            noise = self.rng.normal(loc=0.0, scale=self.electrons, size=frame.shape)
-        else:
-            noise = np.random.normal(loc=0.0, scale=self.electrons, size=frame.shape)
-        return frame + noise
-
-
-class DarkSignal(Windowable):
-    """Base class for representing a dark signal.
-
-    Parameters
-    ----------
-    value : float, or array_like
-        Dark signal value. If specified as a single value, it is applied
-        uniformly. If specified as an array, it is assumed to provide a
-        pixel-by-pixel map.
-
-    """
-    def __init__(self, value):
-        super().__init__(value)
-
-    def __call__(self, shape, window=None):
-        """Create dark signal array
-
-        Parameters
-        ---------
-        shape : array_like
-            Dimensions of dark signal array to create
-
-        window : array_like or None, optional
-            Indices of dark signal to return given as (r_start, r_end, c_start,
-            c_end). This definition follows standard Numpy indexing.
-
-        Returns
-        -------
-        dark_signal : ndarray
-            Dark signal array
-
-        """
-        # Return ones * the dark() value in the event that a single value is
-        # provided (and thus returned by dark)
-        dark_signal = self.dark(shape, window) * np.ones(shape)
-
-        return dark_signal
-
-    def dark(self, shape, window):
-        return self.window(shape, window)
-
-
-class DarkCurrent(DarkSignal):
-    """Generic dark current model.
-
-    Parameters
-    ----------
-    rate : float or array_like
-        Dark current rate in electrons/sec/px. If specified as a single value,
-        it is applied uniformly. If specified as an array, it is assumed to
-        provide a pixel-by-pixel map.
-
-    See Also
-    --------
-    :class:`~lentil.detector.Rule07DarkCurrent` Rule 07 dark current model for
-    IR detectors
-
-    """
-
-    def __init__(self, rate):
-        super().__init__(rate)
-
-    @property
-    def rate(self):
-        return self.data
-
-
-class Rule07DarkCurrent(DarkCurrent):
-    """Model for representing dark current in HgCdTe infrared detectors using
-    Rule 07.
+def rule07_dark_current(temperature, cutoff_wavelength, pixelscale, shape=1):
+    """Compute dark current in HgCdTe infrared detectors using Rule 07.
 
     Parameters
     ----------
@@ -498,6 +333,14 @@ class Rule07DarkCurrent(DarkCurrent):
     pixelscale : float
         Size of one pixel in m
 
+    shape : array_like or 1
+        Output shape. If not specified, a scalar is returned.
+
+    Returns
+    -------
+    dark_current : scalar or ndarray
+        Dark current
+
     References
     ----------
     * Tennant, W.E. et al. MBE HgCdTe Technology: A Very General Solution to IR
@@ -506,343 +349,39 @@ class Rule07DarkCurrent(DarkCurrent):
 
     """
 
-    def __init__(self, temperature, cutoff_wavelength, pixelscale):
-
-        self.temperature = temperature
-        self.cutoff_wavelength = cutoff_wavelength
-
-        J0 = 8367.00001853855  # A/cm^2
-        C = -1.16239134096245
-        k = 1.3802e-23  # J/K - Boltzmanns' constant
-        q = 1.6021e-19  # C - electron charge
-
-        lambda_threshold = 4.63513642316149
-        lambda_scale = 0.200847413564122
-        P = 0.544071281108481
-
-        # compute lambda_e
-        lambda_cutoff = cutoff_wavelength * 1e6  # meters to microns
-        if lambda_cutoff >= lambda_threshold:
-            lambda_e = lambda_cutoff
-        else:
-            lambda_e = lambda_cutoff/(1-((lambda_scale/lambda_cutoff) -
-                                         (lambda_scale/lambda_threshold))**P)
-
-        # apply Rule 07 to compute the dark flux in A/cm^2
-        J = J0*np.exp(C*(1.24*q/(k*lambda_e*temperature)))
-
-        # convert J in A/cm^2 to J in e-/px/s
-        px_area = (pixelscale*1e2)**2  # pixel area in cm^2
-        super().__init__(rate=1/q * px_area * J)
-
-    def __call__(self, shape, *args, **kwargs):
-        """Create dark signal array
-
-        Parameters
-        ---------
-        shape : array_like
-            Dimensions of dark signal array to create
-
-        Returns
-        -------
-        dark_signal : ndarray
-            Dark signal array
-
-        """
-        return self.rate * np.ones(shape)
-
-
-class FPN(Windowable):
-    """Base class for all radiometry of fixed-pattern noise .
-
-    Parameters
-    ----------
-    data : array_like
-        FPN array.
-
-    """
-    def __init__(self, data):
-        super().__init__(data)
-
-    def __call__(self, frame, window=None):
-        """Apply fixed pattern noise to an array.
-
-            The output array :math:`A'` is related to the input array :math:`A`
-            by
-
-            .. math::
-
-                A' = A*F
-
-            where :math:`F` is the :attr:`data` FPN array.
-
-        Parameters
-        ----------
-        frame : ndarray
-
-        window : array_like or None, optional
-            Indices of :attr:`data` FPN array to return given as (r_start,
-            r_end, c_start, c_end). This definition follows standard Numpy
-            indexing.
-
-        Returns
-        -------
-        frame : ndarray
-            Array with  FPN applied
-
-        """
-        return frame * self.fpn(frame.shape, window)
-
-    def fpn(self, shape=None, window=None):
-        return self.window(shape, window)
-
-
-class RandomFPN(FPN):
-    """Base class for randomly generated fixed-pattern noise with an optional
-    user-definable seed.
-
-    Parameters
-    ----------
-    seed : None, int, or array_like, optional
-        Seed for random number generator. If ``None`` (default), the Numpy
-        default is used.
-
-    Attributes
-    ----------
-    rng : numpy.random.RandomState or None
-        Random number generator object
-
-    data : ndarray
-        FPN array.
-
-    """
-    def __init__(self, seed=None):
-        self.seed = seed
-        if seed:
-            self.rng = np.random.RandomState(seed)
-        else:
-            self.rng = None
-
-        self.data = None
-
-
-class NormalFPN(RandomFPN):
-    """Base class for fixed pattern noise represented by a normal distribution.
-
-    Parameters
-    ----------
-    loc : float
-
-    scale : float
-
-    size : float
-
-    """
-    def __init__(self, loc, scale, size, seed=None):
-        super().__init__(seed)
-        if self.rng:
-            self.data = self.rng.normal(loc, scale, size)
-        else:
-            self.data = np.random.normal(loc, scale, size)
-
-
-class LognormalFPN(RandomFPN):
-    """Base class for fixed pattern noise represented by a log-normal
-    distribution.
-
-    Parameters
-    ----------
-    mean : float
-
-    sigma : float
-
-    size : float
-
-    """
-    def __init__(self, mean, sigma, size, seed=None):
-        super().__init__(seed)
-        if self.rng:
-            self.data = self.rng.lognormal(mean, sigma, size)
-        else:
-            self.data = np.random.lognormal(mean, sigma, size)
-
-
-class UniformFPN(RandomFPN):
-    """Base class for fixed pattern noise represented by a uniform distribution.
-
-    Parameters
-    ----------
-    low : float
-
-    high : float
-
-    size : float
-
-    """
-    def __init__(self, low, high, size, seed=None):
-        super().__init__(seed)
-        if self.rng:
-            self.data = self.rng.uniform(low, high, size)
-        else:
-            self.data = np.random.uniform(low, high, size)
-
-
-class PRNU(NormalFPN):
-    """Model for representing photoresponse non-uniformity.
-
-    """
-    def __init__(self, prnu_factor, size, seed=None):
-        self.prnu_factor = prnu_factor
-        super().__init__(loc=1.0, scale=prnu_factor, size=size, seed=seed)
-
-
-class DarkCurrentFPN(LognormalFPN):
-    """Dark current FPN model, represented by a log-normal distribution.
-
-    Parameters
-    ----------
-    sigma : float
-        Dark current FPN factor, usually between 0.1 and 0.4 for CCD and CMOS
-        detectors [2].
-
-    size : None, tuple, or array_like, optional
-        Precomputed FPN matrix size. Typically this will be equal to the
-        detector size. See :class:`GainFPN` note for details on the two
-        different modes for when ``size`` is specified or not.
-
-    seed : None, int, or array_like, optional
-        Random seed used to initialize ``numpy.random.RandomState``. If
-        ``None``, then ``RandomState`` will try to read data from /dev/urandom
-        (or the Windows analogue) if available or seed from the clock otherwise.
-
-    References
-    ----------
-    [1] `Log-normal distribution - Wikipedia <https://en.wikipedia.org/wiki/Log-normal_distribution>`_
-
-    [2] Janesick, J. R., Photon Transfer, Vol. PM170, SPIE (2007)
-
-    """
-
-    def __init__(self, sigma, size, seed=None):
-        super().__init__(mean=1.0, sigma=sigma, size=size, seed=seed)
-        self.sigma = sigma
-
-
-class PixelOffsetFPN(NormalFPN):
-    r"""Pixel offset FPN model.
-
-    Pixel offset FPN can be represented by an autoregressive random process with
-    (:math:`\mu = 0.0, \sigma = ` :attr:`sigma`) [1], [2].
-
-    Parameters
-    ----------
-    sigma : float
-        1-sigma pixel offset FPN value in number of electrons
-
-    ar_parameter : float
-        Autoregressive parameter which characterizes the dependency of each
-        pixel on its neighbors. Valid values are between 0 and 0.5 [1]. Small
-        values correspond to less correlation.
-
-    size : None or array_like, optional
-        Precomputed FPN matrix size. Typically this will be equal to the
-        detector size. See :class:`GainFPN` note for details on the two
-        different modes for when ``size`` is specified or not.
-
-    seed : None, int, or array_like, optional
-        Random seed used to initialize ``numpy.random.RandomState``. If
-        ``None``, then ``RandomState`` will try to read data from /dev/urandom
-        (or the Windows analogue) if available or seed from the clock otherwise.
-
-    References
-    ----------
-    [1] El Gamal, A. et. al., Modeling and Estimation of FPN Components in CMOS Image Sensors, SPIE Proc. 3301 (1998)
-
-    [2] `Autoregressive model - Wikipedia <https://en.wikipedia.org/wiki/Autoregressive_model>`_
-
-    """
-
-    def __init__(self, sigma, ar_parameter, size, seed=None):
-        assert (ar_parameter >= 0) and (ar_parameter <= 0.5)
-
-        super().__init__(loc=1.0, scale=sigma, size=size, seed=seed)
-        self.sigma = sigma
-        self.ar_parameter = ar_parameter
-
-        # apply the autoregressive filter
-        self.data = signal.lfilter([1], [1, self.ar_parameter], self.data, axis=0)
-
-
-class ColumnOffsetFPN(NormalFPN):
-    r"""Column offset FPN model.
-
-    Column offset FPN can be represented by an autoregressive random process
-    with (:math:`\mu = 0.0, \sigma = ` :attr:`sigma`) [1], [2].
-
-    Parameters
-    ----------
-    sigma : float
-        1-sigma column offset FPN value in number of electrons
-
-    ar_parameter : float
-        Autoregressive parameter which characterizes the dependency of each
-        column on its neighbors. Valid values are between 0 and 0.5 [1]. Small
-        values correspond to less correlation.
-
-    size : None or array_like, optional
-        Precomputed FPN matrix size. Typically this will be equal to the
-        detector size. See :class:`GainFPN` note for details on the two
-        different modes for when ``size`` is specified or not.
-
-    seed : None, int, or array_like, optional
-        Random seed used to initialize ``numpy.random.RandomState``. If
-        ``None``, then ``RandomState`` will try to read data from /dev/urandom
-        (or the Windows analogue) if available or seed from the clock otherwise.
-
-    References
-    ----------
-    [1] El Gamal, A. et. al., Modeling and Estimation of FPN Components in CMOS
-        Image Sensors, SPIE Proc. 3301 (1998)
-
-    [2] `Autoregressive model - Wikipedia <https://en.wikipedia.org/wiki/Autoregressive_model>`_
-
-    """
-
-    def __init__(self, sigma, ar_parameter, size, seed=None):
-        assert (ar_parameter >= 0) and (ar_parameter <= 0.5)
-
-        super().__init__(loc=1.0, scale=sigma, size=size[1], seed=seed)
-        self.sigma = sigma
-        self.ar_parameter = ar_parameter
-
-        # apply the autoregressive filter
-        self.data = signal.lfilter([1], [1, self.ar_parameter], self.data)
-        self.data = np.tile(self.data, (size[0], 1))
-
-
-class ChargeDiffusion:
-    """Charge diffusion model represented by a gaussian blur."""
-    def __init__(self, sigma):
-        self.sigma = sigma
-        self.kernel = util.gaussian2d(3, self.sigma)
-
-    def __call__(self, img):
-        return signal.convolve2d(img, self.kernel, mode='same')
-
-
-class Defect(Windowable):
-    """Base class for representing detector defects."""
-    pass
-
-
-class PixelMask(Defect):
-    """Class for representing defective, nonlinear, or dead pixels by providing
-    a mask.
-    """
-    pass
-
-
-class CosmicRay:
+    J0 = 8367.00001853855  # A/cm^2
+    C = -1.16239134096245
+    k = 1.3802e-23  # J/K - Boltzmanns' constant
+    q = 1.6021e-19  # C - electron charge
+
+    lambda_threshold = 4.63513642316149
+    lambda_scale = 0.200847413564122
+    P = 0.544071281108481
+
+    # compute lambda_e
+    lambda_cutoff = cutoff_wavelength * 1e6  # meters to microns
+    if lambda_cutoff >= lambda_threshold:
+        lambda_e = lambda_cutoff
+    else:
+        lambda_e = lambda_cutoff/(1-((lambda_scale/lambda_cutoff) -
+                                     (lambda_scale/lambda_threshold))**P)
+
+    # apply Rule 07 to compute the dark flux in A/cm^2
+    J = J0*np.exp(C*(1.24*q/(k*lambda_e*temperature)))
+
+    # convert J in A/cm^2 to J in e-/px/s
+    px_area = (pixelscale*1e2)**2  # pixel area in cm^2
+    rate = 1/q * px_area * J
+
+    if np.isscalar(shape):
+        out_shape = 1
+    else:
+        out_shape = np.ones(shape)
+
+    return rate * out_shape
+
+
+def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, alpha_flux=4e9):
     """Cosmic ray generator for simulating cosmic ray hits on a detector.
 
     The default values for cosmic ray rates and electron fluxes are taken from
@@ -851,6 +390,15 @@ class CosmicRay:
 
     Parameters
     ----------
+    shape : array_like
+        Frame size defined as (rows, cols)
+
+    pixelscale : array_like
+        Pixel dimensions as (y,x,z) where z is the pixel depth
+
+    ts : float
+        Integration time in seconds
+
     rate : float, optional
         Cosmic ray rate expressed as number of events per square meter of
         detector area. Default is 40000 hits/m^2.
@@ -863,6 +411,12 @@ class CosmicRay:
         Number of electrons liberated per meter of travel for an alpha particle.
         By definition, alpha particles have four times the energy of protons.
         Default is 4e9 e-/m.
+
+    Returns
+    -------
+    cosmic_e : ndarray
+        Array representing the number of electrons in a detector image due
+        to cosmic ray hits
 
     Example
     -------
@@ -887,127 +441,101 @@ class CosmicRay:
     [2] `Cosmic ray - Wikipedia <https://en.wikipedia.org/wiki/Cosmic_ray>`_
     """
 
-    def __init__(self, rate=4e4, proton_flux=1e9, alpha_flux=4e9):
-        self.rate = rate
-        self.proton_flux = proton_flux
-        self.alpha_flux = alpha_flux
+    # compute the number of rays that strike the detector during the
+    # integration time
+    nrays = _nrays(shape, pixelscale, ts, rate)
 
-    def __call__(self, shape, pixelscale, ts):
-        """Simulate cosmic ray hits on a detector.
-
-        Parameters
-        ----------
-        shape : array_like
-            Frame size defined as (rows, cols)
-
-        pixelscale : array_like
-            Pixel dimensions as (y,x,z) where z is the pixel depth
-
-        ts : float
-            Integration time in seconds
-
-        Returns
-        -------
-        cosmic_e : ndarray
-            Array representing the number of electrons in a detector image due
-            to cosmic ray hits
+    img = np.zeros(shape)
+    for ray in np.arange(0, nrays):
+        img += _cosmic_ray(shape, pixelscale, alpha_flux, proton_flux)
+    return img
 
 
-        """
+def _nrays(shape, pixelscale, ts, rate):
+    area = shape[0]*pixelscale[0]*shape[1]*pixelscale[1]
 
-        # compute the number of rays that strike the detector during the
-        # integration time
-        nrays = self.nrays(shape, pixelscale, ts)
+    nrays = area * rate * ts
 
-        img = np.zeros(shape)
-        for ray in np.arange(0, nrays):
-            img += self.cosmic_ray(shape, pixelscale)
-        return img
-
-    def nrays(self, shape, pixelscale, ts):
-        area = shape[0]*pixelscale[0]*shape[1]*pixelscale[1]
-
-        nrays = area * self.rate * ts
-
-        # even if we don't have any events as defined by the rate, there is
-        # still a chance we will see an event
-        if nrays < 1:
-            if np.random.uniform() <= nrays:
-                nrays = 1
-            else:
-                nrays = 0
-
-        return int(nrays)
-
-    def cosmic_ray(self, shape, pixelscale):
-
-        # randomly choose which type of particle we have
-        if np.random.uniform() > 0.9:
-            # alpha particle
-            electron_flux = self.alpha_flux
+    # even if we don't have any events as defined by the rate, there is
+    # still a chance we will see an event
+    if nrays < 1:
+        if np.random.uniform() <= nrays:
+            nrays = 1
         else:
-            # proton
-            electron_flux = self.proton_flux
+            nrays = 0
 
-        img = np.zeros(shape)
-
-        # random position
-        r = np.random.rand() * (shape[0]-1)
-        c = np.random.rand() * (shape[1]-1)
-        z = 0
-        position = np.array([r, c, z])
-
-        # give the cosmic ray a random direction (theta) and angle of incidence
-        # (phi) and compute a unit vector representing the ray's direction of
-        # travel. we can make things slightly easier on ourselves by limiting
-        # phi to the interval 0 < phi < pi. this is assumed to be valid because
-        # a cosmic ray striking the detector from behind will have essentially
-        # the same effect as one striking it from the front. phi is negative to
-        # force the z-direction of v to be negative (traveling into the detector
-        # from above)
-        theta = np.random.uniform() * 2 * np.pi
-        phi = np.random.uniform() * 1*np.pi
-        direction = np.array([np.cos(theta)*np.cos(phi), np.sin(theta)*np.cos(phi),
-                              -np.sin(phi)])
-
-        # scale the direction vector so that we can use ray_box_exit() assuming
-        # a cube instead of a potentially rectangular pixel size
-        pixelscale = np.asarray(pixelscale)
-        scale = pixelscale/np.max(pixelscale)
-        direction /= scale
-        direction /= np.linalg.norm(direction)
-
-        extent = (0, shape[0]-1, 0, shape[1]-1, 0, -1)
-
-        # propagate the ray
-        ray = self.propagate(position, direction, extent)
-
-        for i in np.arange(0, ray.shape[0]-1):
-
-            # compute the distance the ray traveled in pixel space
-            dr = (ray[i+1][0]-ray[i][0])*pixelscale[0]
-            dc = (ray[i+1][1]-ray[i][1])*pixelscale[1]
-            dz = (ray[i+1][2]-ray[i][2])*pixelscale[2]
-            dist = np.sqrt(dr**2+dc**2+dz**2)
-
-            row = int(np.floor(ray[i+1][0]))
-            col = int(np.floor(ray[i+1][1]))
-            img[row, col] += electron_flux*dist
-
-        return img
-
-    @staticmethod
-    def propagate(position, direction, extent):
-        position = position[np.newaxis, ...]
-        direction = direction[np.newaxis, ...]
-
-        intersections = cubeplane_ray_intersection(position, direction, extent)
-        raw_ray_data = process_cube_intersections(intersections, position, direction)
-
-        return raw_ray_data[3]
+    return int(nrays)
 
 
-def cubeplane_ray_intersection(xyz, dxdydz, extent):
+def _cosmic_ray(shape, pixelscale, alpha_flux, proton_flux):
+
+    # randomly choose which type of particle we have
+    if np.random.uniform() > 0.9:
+        # alpha particle
+        electron_flux = alpha_flux
+    else:
+        # proton
+        electron_flux = proton_flux
+
+    img = np.zeros(shape)
+
+    # random position
+    r = np.random.rand() * (shape[0]-1)
+    c = np.random.rand() * (shape[1]-1)
+    z = 0
+    position = np.array([r, c, z])
+
+    # give the cosmic ray a random direction (theta) and angle of incidence
+    # (phi) and compute a unit vector representing the ray's direction of
+    # travel. we can make things slightly easier on ourselves by limiting
+    # phi to the interval 0 < phi < pi. this is assumed to be valid because
+    # a cosmic ray striking the detector from behind will have essentially
+    # the same effect as one striking it from the front. phi is negative to
+    # force the z-direction of v to be negative (traveling into the detector
+    # from above)
+    theta = np.random.uniform() * 2 * np.pi
+    phi = np.random.uniform() * 1*np.pi
+    direction = np.array([np.cos(theta)*np.cos(phi), np.sin(theta)*np.cos(phi),
+                          -np.sin(phi)])
+
+    # scale the direction vector so that we can use ray_box_exit() assuming
+    # a cube instead of a potentially rectangular pixel size
+    pixelscale = np.asarray(pixelscale)
+    scale = pixelscale/np.max(pixelscale)
+    direction /= scale
+    direction /= np.linalg.norm(direction)
+
+    extent = (0, shape[0]-1, 0, shape[1]-1, 0, -1)
+
+    # propagate the ray
+    ray = _propagate_ray(position, direction, extent)
+
+    for i in np.arange(0, ray.shape[0]-1):
+
+        # compute the distance the ray traveled in pixel space
+        dr = (ray[i+1][0]-ray[i][0])*pixelscale[0]
+        dc = (ray[i+1][1]-ray[i][1])*pixelscale[1]
+        dz = (ray[i+1][2]-ray[i][2])*pixelscale[2]
+        dist = np.sqrt(dr**2+dc**2+dz**2)
+
+        row = int(np.floor(ray[i+1][0]))
+        col = int(np.floor(ray[i+1][1]))
+        img[row, col] += electron_flux*dist
+
+    return img
+
+
+def _propagate_ray(position, direction, extent):
+    position = position[np.newaxis, ...]
+    direction = direction[np.newaxis, ...]
+
+    intersections = _cubeplane_ray_intersection(position, direction, extent)
+    raw_ray_data = _process_cube_intersections(intersections, position, direction)
+
+    return raw_ray_data[3]
+
+
+def _cubeplane_ray_intersection(xyz, dxdydz, extent):
     """Intersects rays with a plane of cubes and returns data about
     intersections
 
@@ -1044,7 +572,7 @@ def cubeplane_ray_intersection(xyz, dxdydz, extent):
     Notes
     -----
     If you don't like the output of this function, feed it into
-    process_cube_intersections().
+    _process_cube_intersections().
 
     This code has been tested when the rays start outside the cube volume. Would
     recommend not starting rays inside cube or within 2e-7 of a cube boundary.
@@ -1130,7 +658,7 @@ def cubeplane_ray_intersection(xyz, dxdydz, extent):
     return inter
 
 
-def process_cube_intersections(inter, xyz, dxdydz, verbose=False):
+def _process_cube_intersections(inter, xyz, dxdydz, verbose=False):
     """Intersects rays with a plane of cubes and returns data about
     intersections
 
@@ -1141,7 +669,7 @@ def process_cube_intersections(inter, xyz, dxdydz, verbose=False):
     Parameters
     ----------
     inter : list of tuple
-        Output of cubeplane_ray_intersection() or _cubeplane_ray_intersection()
+        Output of _cubeplane_ray_intersection() or _cubeplane_ray_intersection()
 
     xyz : ndarray, ndim=2
         xyz[:, 0] is the x coordinate of the starting point of the ray,

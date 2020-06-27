@@ -1,6 +1,5 @@
 from lentil import convolvable
 from lentil import detector
-from lentil.fpa import *
 from lentil import modeltools
 from lentil.plane import *
 from lentil.prop import propagate

@@ -15,13 +15,6 @@ Optical Planes
     lentil.Image
     lentil.Detector
 
-Focal Planes
-============
-.. autosummary::
-
-    lentil.FPA
-    lentil.BayerFPA
-
 Special Planes
 ==============
 .. autosummary::
