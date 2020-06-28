@@ -165,11 +165,6 @@ def pad(array, shape):
 
     array = np.asarray(array)
 
-    output_shape = (shape[0], shape[1])
-    if array.ndim == 3:
-        output_shape = np.append(output_shape, array.shape[2])
-
-    padded = np.zeros(output_shape, dtype=array.dtype)
 
     dr = shape[0] - array.shape[0]
     dc = shape[1] - array.shape[1]
@@ -196,7 +191,12 @@ def pad(array, shape):
         cmin1 = (shape[1] - array.shape[1])//2
         cmax1 = cmin1 + array.shape[1]
 
-    padded[rmin1:rmax1, cmin1:cmax1] = array[rmin0:rmax0, cmin0:cmax0]
+    if array.ndim < 3:
+        padded = np.zeros((shape[0], shape[1]), dtype=array.dtype)
+        padded[rmin1:rmax1, cmin1:cmax1] = array[rmin0:rmax0, cmin0:cmax0]
+    else:
+        padded = np.zeros((array.shape[0], shape[0], shape[1]), dtype=array.dtype)
+        padded[:, rmin1:rmax1, cmin1:cmax1] = array[:, rmin0:rmax0, cmin0:cmax0]
 
     return padded
 
