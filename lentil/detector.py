@@ -148,9 +148,6 @@ def qe_asarray(qe, wave, waveunit):
     else:
         qe = qe.sample(wave, waveunit=waveunit)
 
-    if qe.ndim == 0:
-        qe = qe[np.newaxis, ...]
-
     return qe
 
 
@@ -658,7 +655,7 @@ def _cubeplane_ray_intersection(xyz, dxdydz, extent):
     return inter
 
 
-def _process_cube_intersections(inter, xyz, dxdydz, verbose=False):
+def _process_cube_intersections(inter, xyz, dxdydz):
     """Intersects rays with a plane of cubes and returns data about
     intersections
 
@@ -678,10 +675,6 @@ def _process_cube_intersections(inter, xyz, dxdydz, verbose=False):
 
     dxdydz : double ndim=2
         Unit vector representing the direction of travel of the ray.
-
-    verbose: bool, optional
-        If True, prints every ray intersection in human readable format. Default
-        is False.
 
     Returns
     -------
@@ -738,19 +731,6 @@ def _process_cube_intersections(inter, xyz, dxdydz, verbose=False):
 
     last_coord = np.empty(_xyz.shape, dtype=np.int16)
     np.floor(inter_point - w, out=last_coord, casting='unsafe')
-
-    if verbose:
-        last_indx = -1
-        for ind, rl, ip, lc, nc, dl in zip(inter['indx'], inter['raylength'],
-                                           inter_point, last_coord, next_coord,
-                                           draylength):
-            if last_indx != ind:
-                print('Ray ' + str(ind) + ' is born at ' + str(xyz[ind, :]) +
-                      ' and heads off in direction ' + str(dxdydz[ind, :]))
-            print('  then leaves cube ' + str(lc) + ' at ' + str(ip) +
-                  ' for cube ' + str(nc) + ' after having gone  ' +
-                  str(dl) + ' and traveling ' + str(rl) + ' from inception')
-            last_indx = ind
 
     return (inter['indx'], inter['raylength'], draylength, inter_point,
             last_coord, next_coord)
