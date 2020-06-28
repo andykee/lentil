@@ -198,5 +198,5 @@ def test_rule07_dark_current_high_cutoff():
 
 def test_cosmic_rays():
     # we're going to punt on this one for now
-    frame = lentil.detector.cosmic_rays((10, 10), 10e-6*np.ones(3), 1)
+    frame = lentil.detector.cosmic_rays((10, 10), 0.1*np.ones(3), 1, rate=1)
     assert frame.shape == (10, 10)
