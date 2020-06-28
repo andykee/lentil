@@ -34,6 +34,30 @@ def test_rescale_unitary():
     assert np.isclose(np.sum(a), np.sum(b))
 
 
+def test_pad():
+    img = np.ones((3, 3))
+    out = lentil.util.pad(img, (5, 5))
+    truth = np.zeros((5, 5))
+    truth[1:4, 1:4] = 1
+
+    assert np.array_equal(out, truth)
+
+
+def test_pad_cube():
+    img = np.ones((2, 3, 3))
+    out = lentil.util.pad(img, (5, 5))
+    truth = np.zeros((2, 5, 5))
+    truth[:, 1:4, 1:4] = 1
+
+    assert np.array_equal(out, truth)
+
+
+def test_pad_shrink():
+    img = np.random.uniform(size=(5, 5))
+    out = lentil.util.pad(img, (3, 3))
+    assert np.array_equal(out, img[1:4, 1:4])
+
+
 def test_mesh_nonsquare():
     xx, yy = lentil.util.mesh((256, 512))
     assert xx.shape == (256, 512)
@@ -43,6 +67,11 @@ def test_pixelscle_nyquist():
     wave = np.random.uniform(low=350e-9, high=750e-9)
     f_number = np.random.uniform(low=5, high=30)
     assert lentil.util.pixelscale_nyquist(wave, f_number) == wave * f_number / 2
+
+
+def test_slit():
+    slit = lentil.util.slit((5, 5), 1)
+    assert np.array_equal(slit[:, 0], np.array([0,0,1,0,0]))
 
 
 def test_make_mask():
