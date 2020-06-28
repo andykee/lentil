@@ -141,7 +141,7 @@ def qe_asarray(qe, wave, waveunit):
     wave = np.asarray(wave)
     if not isinstance(qe, lentil.radiometry.Spectrum):
         qe = np.asarray(qe)
-        if np.isscalar(qe):
+        if qe.shape is ():
             qe = qe*np.ones(wave.size)
         else:
             assert qe.size == wave.size
