@@ -165,31 +165,35 @@ def pad(array, shape):
 
     array = np.asarray(array)
 
+    offset = 0
+    if array.ndim == 3:
+        offset = 1
 
-    dr = shape[0] - array.shape[0]
-    dc = shape[1] - array.shape[1]
+
+    dr = shape[0] - array.shape[0+offset]
+    dc = shape[1] - array.shape[1+offset]
 
     if dr <= 0:
-        rmin0 = (array.shape[0] - shape[0])//2
+        rmin0 = (array.shape[0+offset] - shape[0])//2
         rmax0 = rmin0 + shape[0]
         rmin1 = 0
         rmax1 = shape[0]
     else:
         rmin0 = 0
-        rmax0 = array.shape[0]
-        rmin1 = (shape[0] - array.shape[0])//2
-        rmax1 = rmin1 + array.shape[0]
+        rmax0 = array.shape[0+offset]
+        rmin1 = (shape[0] - array.shape[0+offset])//2
+        rmax1 = rmin1 + array.shape[0+offset]
 
     if dc <= 0:
-        cmin0 = (array.shape[1] - shape[1])//2
+        cmin0 = (array.shape[1+offset] - shape[1])//2
         cmax0 = cmin0 + shape[1]
         cmin1 = 0
         cmax1 = shape[1]
     else:
         cmin0 = 0
         cmax0 = array.shape[1]
-        cmin1 = (shape[1] - array.shape[1])//2
-        cmax1 = cmin1 + array.shape[1]
+        cmin1 = (shape[1] - array.shape[1+offset])//2
+        cmax1 = cmin1 + array.shape[1+offset]
 
     if array.ndim < 3:
         padded = np.zeros((shape[0], shape[1]), dtype=array.dtype)
