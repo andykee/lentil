@@ -121,17 +121,14 @@ def collect_charge_bayer(img, wave, qe_red, qe_green, qe_blue, bayer_pattern, ov
 
     # build up the bayer image. we do this one channel at a time, and then
     # accumulate the individual channels into one final frame
-    qe_red = qe_red.sample(wave, waveunit=waveunit)
     red_mosaic = np.tile(red_kernel, (nrow // red_kernel.shape[0], ncol // red_kernel.shape[1]))
     red_mosaic = scipy.ndimage.zoom(red_mosaic, oversample, order=0, mode='wrap')
     red_e = np.einsum('ijk,i->jk', img, qe_red) * red_mosaic
 
-    qe_green = qe_green.sample(wave, waveunit=waveunit)
     green_mosaic = np.tile(green_kernel, (nrow // green_kernel.shape[0], ncol // green_kernel.shape[1]))
     green_mosaic = scipy.ndimage.zoom(green_mosaic, oversample, order=0, mode='wrap')
     green_e = np.einsum('ijk,i->jk', img, qe_green) * green_mosaic
 
-    qe_blue = qe_blue.sample(wave, waveunit=waveunit)
     blue_mosaic = np.tile(blue_kernel, (nrow // blue_kernel.shape[0], ncol // blue_kernel.shape[1]))
     blue_mosaic = scipy.ndimage.zoom(blue_mosaic, oversample, order=0, mode='wrap')
     blue_e = np.einsum('ijk,i->jk', img, qe_blue) * blue_mosaic
@@ -150,6 +147,10 @@ def qe_asarray(qe, wave, waveunit):
             assert qe.size == wave.size
     else:
         qe = qe.sample(wave, waveunit=waveunit)
+
+    if qe.ndim == 0:
+        qe = qe[np.newaxis, ...]
+
     return qe
 
 
@@ -306,9 +307,9 @@ def shot_noise(img, method='poisson', seed=None):
     else:
         if seed:
             rng = np.random.RandomState(seed)
-            img = rng.normal(scale=img, size=img)
+            img = rng.normal(scale=img)
         else:
-            img = np.random.normal(scale=img, size=img)
+            img = np.random.normal(scale=img)
     return img
 
 
@@ -427,8 +428,7 @@ def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, alpha_flux=4e9
 
         >>> import matplotlib.pyplot as plt
         >>> import lentil
-        >>> cosmic_generator = lentil.detector.CosmicRay()
-        >>> cosmic_frame = cosmic_generator((256,256), (5e-6, 5e-6, 3e-6), 300)
+        >>> cosmic_frame = lentil.detector.cosmic_rays((256,256), (5e-6, 5e-6, 3e-6), 300)
         >>> plt.imshow(cosmic_frame)
 
     .. image:: ../_static/img/api/detector/cosmic_ray.png
