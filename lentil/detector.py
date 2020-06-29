@@ -378,7 +378,8 @@ def dark_current(rate, shape=1, fpn_factor=0, seed=None):
 
     fpn_factor : float
         Dark current FPN factor. Should be between 0.1 and 0.4 for CCD and CMOS
-        sensors [1]. When fpn_factor is 0, dark current FPN is not applied.
+        sensors [1]. When fpn_factor is nonzero, seed must be provided. When
+        fpn_factor is 0 (default), dark current FPN is not applied.
 
     seed : None, int, or array_like, optional
         Random seed used to initialize ``numpy.random.RandomState``. If
@@ -398,6 +399,7 @@ def dark_current(rate, shape=1, fpn_factor=0, seed=None):
 
     """
     if fpn_factor > 0:
+        assert seed is not None
         rng = np.random.RandomState(seed)
         fpn = rng.lognormal(mean=1.0, sigma=fpn_factor, size=shape)
     else:
@@ -431,7 +433,8 @@ def rule07_dark_current(temperature, cutoff_wavelength, pixelscale, shape=1,
 
     fpn_factor : float
         Dark current FPN factor. Should be between 0.1 and 0.4 for CCD and CMOS
-        sensors [2]. When fpn_factor is 0, dark current FPN is not applied.
+        sensors [2]. When fpn_factor is nonzero, seed must be provided. When
+        fpn_factor is 0 (default), dark current FPN is not applied.
 
     seed : None, int, or array_like, optional
         Random seed used to initialize ``numpy.random.RandomState``. If
@@ -446,8 +449,8 @@ def rule07_dark_current(temperature, cutoff_wavelength, pixelscale, shape=1,
     References
     ----------
     [1] Tennant, W.E. et al. MBE HgCdTe Technology: A Very General Solution to IR
-       Detection, Described by "Rule 07", a Very Convenient Heuristic. Journal of
-       Electronic Materials (2008).
+    Detection, Described by "Rule 07", a Very Convenient Heuristic. Journal of
+    Electronic Materials (2008).
 
     [2] `Log-normal distribution - Wikipedia <https://en.wikipedia.org/wiki/Log-normal_distribution>`_
 
