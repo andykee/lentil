@@ -4,7 +4,10 @@ The example below assumes a ``dwdx`` influence function matrix is available.
 
 .. code-block:: python3
 
+    import numpy as np
     import lentil
+
+    DWDX = np.load('dwdx.npy')
 
     class RBElement(lentil.Plane):
 
@@ -12,14 +15,9 @@ The example below assumes a ``dwdx`` influence function matrix is available.
             # Establish the initial pose state as zeros
             self._x = np.zeros(6)
 
-            # Define a WFE object which will return an OPD when called with a state.
-            # dwdx is an influence function matrix mapping pose change (dx) to
-            # wavefront (dw).
-            self.rb_wfe = lentil.wfe.ParameterizedWFE(basis = dwdx)
-
         @property
-        def opd(self):
-            return self.rb_wfe(self.x, reshape=True)
+        def phase(self):
+            return np.einsum('ijk,i->jk',DWDX, self.x)
 
         @property
         def x(self):
@@ -37,7 +35,7 @@ The example below assumes a ``dwdx`` influence function matrix is available.
 
 A slightly more involved model also bookkeeps rigid body actuator stroke, includes
 actuator length limits, and introduces a small RBA stepping error every time the
-element is perturbed. In addition to ``dwdx``, this example requires a ``dxdu``
+element is perturbed. In addition to ``DWDX``, this example requires a ``DXDU``
 influence function matrix.
 
 
@@ -46,16 +44,14 @@ influence function matrix.
     import numpy as np
     import lentil
 
-    class RBElement(mo.Element):
+    DWDX = np.load('dwdx.npy')
+    DXDU = np.load('dxdu.npy')
+
+    class RBElement(mo.Plane):
 
         def __init__(self):
             # Establish the initial pose state as zeros
             self._x = np.zeros(6)
-
-            # Define a WFE object which will return an OPD when called with a state.
-            # dwdx is an influence function matrix mapping pose change (dx) to
-            # wavefront (dw).
-            self.rb_wfe = le.wfe.ParameterizedWFE(basis = dwdx)
 
             # Establish the initial rigid body actuator stroke as zeros
             self._u = np.zeros(6)
@@ -65,14 +61,9 @@ influence function matrix.
             self._umax = 0.5e-3
             self._uerror = 1e-6
 
-
-            # dxdu is an influence function matrix which maps RBA stroke (du) to
-            # pose change (dx)
-            self._dxdu = dxdu
-
         @property
-        def opd(self):
-            return self.rb_wfe(self.x, reshape=True)
+        def phase(self):
+            return np.einsum('ijk,i->jk',DWDX, self.x)
 
         @property
         def x(self):
@@ -86,7 +77,7 @@ influence function matrix.
 
         def perturb(self, dx):
             # Compute desired command in actuator space
-            du = np.dot(np.linang.pinv(self._dxdu), dx)
+            du = np.dot(np.linang.pinv(self.DXDU), dx)
 
             # Compute random stepping error
             uerror = np.random.uniform(low=-0.5*self._uerror, high=0.5*self._uerror, size=6)
@@ -106,4 +97,5 @@ influence function matrix.
             self._u = self._u + du
 
             # Update x
-            self._x = self._x + np.dot(self._dxdu, du)
+            self._x = self._x + np.dot(DXDU, du)
+
