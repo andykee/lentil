@@ -77,8 +77,8 @@ The Plane-Wavefront interaction is governed by the Plane's multiply() method. Ge
 speaking, the multiply method constructs a complex phasor from a Plane or Pupil phase
 and amplitude and Wavefront wavelength and multiplies the wavefront data by it. The
 type and direction of the Fourier transfer used to propagate between planes depends on
-the wavefront's planetype and the planetype of the destination plane. The table below
-describes the possible combinations:
+the wavefront's planetype the planetype of the destination plane, and the destination
+plane sampling. The table below describes the possible combinations:
 
 +------------------------+-----------------------------+--------------------+
 | Wavefront planetype    | Destination plane planetype | Propagation method |
@@ -98,7 +98,7 @@ describes the possible combinations:
 | Detector               | Any                         | Not supported      |
 +------------------------+-----------------------------+--------------------+
 
-As mentioned earlier, non Pupil/Image/Detector planes can also be included in the
+As mentioned earlier, non-Pupil and Image planes can also be included in the
 propagation planes list. This is primarily done to simplify using planes with special
 Plane-Wavefront multiplication behavior (the ``Grism`` plane is a perfect example). When
 "vanilla" Plane objects are inserted into the propagation list, their multiply() method
@@ -106,10 +106,10 @@ is still called and the Wavefront's complex field attribute is affected accordin
 none of the additional Plane-Wavefront interactions occur. The diagram below helps to
 clarify this behavior
 
-.. Draw a diagram showing both a Pupil -> Detector and Pupil -> Plane -> Detector flow.
+.. Draw a diagram showing both a Pupil -> Image and Pupil -> Plane -> image flow.
 .. Show when complex phasor is applied to WF.data and when focal length and planetype
-.. is updated. Also show propagation between steps (i.e. Pupil -> DFT -> Detector vs.
-.. Pupil -> None -> Plane -> DFT -> Detector)
+.. is updated. Also show propagation between steps (i.e. Pupil -> DFT -> Image vs.
+.. Pupil -> None -> Plane -> DFT -> Image)
 
 
 

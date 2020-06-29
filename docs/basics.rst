@@ -36,8 +36,7 @@ list below summarizes the general organization of Lentil's public namespace:
 * :ref:`lentil<api-lentil>` - core classes and propagation functionality
 * :ref:`lentil.convolvable<api-convolvable>` - classes for representing common imaging
   artifacts via convolution
-* :ref:`lentil.detector<api-detector>` - classes for representing focal plane noise
-  sources
+* :ref:`lentil.detector<api-detector>` - functions to help with modeling focal planes
 * :ref:`lentil.modeltools<api-modeltools>` - classes, decorators, and functions to
   simplify the creation of rich models
 * :ref:`lentil.radiometry<api-radiometry>` - classes for performing computational
