@@ -51,7 +51,6 @@ Miscellaneous
 .. autofunction:: lentil.util.pad
 .. autofunction:: lentil.util.rebin
 .. autofunction:: lentil.util.rescale
-.. autofunction:: lentil.util.coordinates
 .. autofunction:: lentil.util.circle
 .. autofunction:: lentil.util.circlemask
 .. autofunction:: lentil.util.hexagon

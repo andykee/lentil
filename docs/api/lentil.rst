@@ -42,14 +42,6 @@ Coordinate Transformations
 
 .. autoclass:: lentil.Image
 
-.. autoclass:: lentil.Detector
-
-.. autoclass:: lentil.FPA
-    :members:
-
-.. autoclass:: lentil.BayerFPA
-    :members:
-
 .. autoclass:: lentil.Grism
 
 .. autofunction:: lentil.propagate

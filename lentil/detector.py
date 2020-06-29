@@ -69,20 +69,18 @@ def collect_charge_bayer(img, wave, qe_red, qe_green, qe_blue, bayer_pattern, ov
         Wavelengths corresponding to each slice in ``count``. The length of
         ``wave`` must be equal to the first dimension in ``count``.
 
-    qe_red : {:class:`lentil.radiometry.Spectrum, array_like, scalar}
+    qe_red : {:class:`lentil.radiometry.Spectrum`, array_like, scalar}
         Red channel quantum efficiency
 
-    qe_green : {:class:`lentil.radiometry.Spectrum, array_like, scalar}
+    qe_green : {:class:`lentil.radiometry.Spectrum`, array_like, scalar}
         Green channel quantum efficiency
 
-    qe_blue : {:class:`lentil.radiometry.Spectrum, array_like, scalar}
+    qe_blue : {:class:`lentil.radiometry.Spectrum`, array_like, scalar}
         Blue channel quantum efficiency
 
-    bayer_pattern : array-like
-        A description of the detector's Bayer pattern. Each value represents
-        the position of the red, green, and blue pixels starting with the upper-
-    #left corner of the image and moving left-to-right, top-to-bottom.` For
-    #example, ``'GBRG'`` represents the following Bayer pattern:
+    bayer_pattern : array_like
+        Layout of the detector's Bayer pattern. For example, [['B','G'],['G','R']]
+        describes a BGGR pattern.
 
     oversample : int, optional
         Oversampling factor present in ``count``. Default is 1.

@@ -46,12 +46,12 @@ Working with large tilts
 
 
 .. image:: ../_static/img/propagate_tilt_angle.png
-    :width: 575px
+    :width: 600px
     :align: center
 
 
 .. image:: ../_static/img/propagate_tilt_angle_steps.png
-    :width: 800px
+    :width: 600px
     :align: center
 
 
