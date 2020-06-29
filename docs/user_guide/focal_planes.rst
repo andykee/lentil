@@ -1,38 +1,35 @@
-************
-Focal Planes
-************
+*************
+Image Sensors
+*************
+Lentil does not provide an end-to-end detector modeling capability, but instead provides
+a :ref:`collection of functions<api-detector>` to help model image sensors and
+represent some of the more commonly encountered noise sources.
 
-Focal Plane Classes
-===================
+Basic Signal Flow
+=================
+For an ideal image sensor, photons striking a pixel during the integration time will
+result in the accumulation of electrons in the pixel well. The electrons in each pixel
+are converted to a voltage (up to some saturation point), amplified, and converted to a
+digital signal by an ADC.
 
-Quantum Efficiency and Gain
-===========================
+Input signal
+------------
 
-
-Dark Current
-============
-
-
-Random Noise Sources
-====================
-
-
-
-Fixed Pattern Noise
-===================
+Charge collection
+-----------------
 
 
-
-Defects and Cosmic Rays
-=======================
-
-Subclassing FPA
-===============
+Pixel effects
+-------------
 
 
-Lentil's `detector <../api.html#detector>`_  module provides classes for representing
-both panchromatic and multispectral (Bayer) imaging sensors and many of their common
-noise sources including
+Analog to digital conversion
+----------------------------
+
+
+
+Noise
+=====
 
 * Shot noise due to randomness in the arrival and detection of photons
 * The conversion of photons into electrons (quantum efficiency)
@@ -42,18 +39,6 @@ noise sources including
 * Pixel defects like hot or dead pixels, and other imaging artifacts like cosmic ray
   strikes
 
-The :class:`~lentil.detector.FPA` class is the base class for building models of
-panchromatic imaging sensors. This class implements mathematical models of both single
-pixels and the entire array of pixels. These models are used together to simulate a
-digital image (including noise) produced by the imaging sensor given some photon flux.
-
-Signal Flow
-===========
-The full signal flow through Lentil's FPA model is depicted in the figure below.
-
-.. image:: ../_static/img/detector_model.png
-    :width: 800px
-    :align: center
 
 The signal can be split into two primary groups:
 
@@ -71,36 +56,4 @@ detector. These noise sources can be broadly classified into two groups:
   pattern noise can be thought of as a characteristic of the detector
 * Temporal noise varies from frame to frame and typically represents random processes in t
   he detection and readout of an image
-
-An Ideal Imaging Sensor
-=======================
-In the ideal (noise-free) case, every photon that strikes a pixel will result in the
-accumulation of an electron in the pixel well (QE = 1). The electrons in each pixel are
-converted to a voltage (up to some saturation point), amplified, and converted to a
-digital signal by an ADC. If we assume this process is linear, it can be described by a
-single gain term relating electrons to DN.
-
-The simplest functional model requires the definition of a few basic sensor attributes:
-
-* Pixel size
-* Quantum efficiency
-* The conversion gain from e- to DN
-* The saturation capacity of a single pixel in e-
-
-The model below provides a sample implementation of the ideal imaging sensor described
-above
-
-.. code-block:: python3
-
-    import lentil
-
-    class IdealFPA(lentil.FPA):
-        def __init__(self):
-            self.pixelscale = (5e-6, 5e-6)
-            self.qe = 1
-            self.gain = lentil.detector.Gain(gain=25, saturation_capacity=10000)
-
-
-Constructing a photon flux array
---------------------------------
 

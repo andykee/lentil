@@ -10,25 +10,20 @@ system, and detector:
 
     import lentil
 
-    class TinyInstrument(mo.Instrument):
-        optical_system = TinyOpticalSystem()
-        detector = TinyDetector()
+    class TinyInstrument:
+        def __init__(self):
+            self.pupil = lentil.Pupil(amplitude=lentil.util.circle((256,256), 128),
+                                      diameter=1, focal_length=10, pixelscale=1/256)
+            self.detector = lentil.Image(pixelscale=5e-6)
 
-    class TinyOpticalSystem(mo.SimpleOpticalSystem):
-        diameter = 1
-        focal_length = 8
-        pixelscale = self.diameter/512
-        detector_pixelscale = 5e-6
+        @property
+        def planes(self):
+            return [self.pupil, self.detector]
 
-        def amplitude(self):
-            return le.util.circle((512,512), 256)
-
-    class TinyDetector(mo.FPA):
-        pixelscale = 5e-6
-        shape = (512,512)
-        qe = le.radiometry.Spectrum(wave=[400, 600, 1000], value=[0.4, 0.8, 0.05],\
-                         waveunits='nm', valueunits=None)
-        gain = le.detector.Gain(gain=2.44, saturation_capacity=10000)
+        def propagate(self, wave, weight, npix=1024, oversample=3, rebin=True,
+                      tilt='phase', npix_chip=None):
+            return lentil.propagate(self.planes, wave, weight, npix, npix_chip,
+                                    oversampe, rebin, tilt, flatten=True)
 
 A corresponding MATLAB class that provides an interface to the instrument looks like
 this:
@@ -37,7 +32,7 @@ this:
 
     classdef TinyInstrument < handle
 
-        properties(Hidden):
+        properties(Hidden)
             cls
         end
 
@@ -45,9 +40,42 @@ this:
             function self = TinyInstrument
                 self.cls = py.tiny.TinyInstrument()
             end
+
+            function img = propagate(self, wave, weight, npix, oversample, rebin, tilt, npix_chip)
+                if nargin < 8; npix_chip = py.None; end
+                if nargin < 7; tilt = 'phase'; end
+                if nargin < 6; rebin = true; end
+                if nargin < 5; oversample = 3; end
+                if nargin < 4; npix = 1024; end
+
+                img = ndarray2mat(self.cls.propagate(nparray2mat(wave), nparray2mat(weight),...
+                                  int(npix), int(oversample), rebin, tilt, int(npix_chip));
+            end
+
+        end
+    end
+
+More recent versions of MATLAB (>= 2019b) support optional positional arguments. The
+``propagate`` function can be rewritten to take advantage of this new functionality:
+
+.. code-block:: matlab
+
+    function img = propagate(self, wave, weight, npix, oversample, rebin, tilt, npix_chip)
+        arguments
+            self
+            wave
+            weight
+            npix = 1024
+            oversample = 3
+            rebin = true
+            tilt = 'phase'
+            npix_chip = py.None
         end
 
+        img = ndarray2mat(self.cls.propagate(nparray2mat(wave), nparray2mat(weight),...
+                          int(npix), int(oversample), rebin, tilt, int(npix_chip));
     end
+
 
 The MATLAB interface can be easily packaged up for delivery with the Python model by
 including it in a to-level subdirectory:
@@ -58,14 +86,13 @@ including it in a to-level subdirectory:
     ~/dev/tiny-lentil
     ├── tiny_telescope/
     │   ├── __init__.py
-    │   ├── detector.py
-    │   ├── tiny.py
-    │   ├── pupil.py
+    │   ├── planes.py
     │   ├── radiometry.py
+    │   ├── telescope.py
     │   └── data/
+    │       ├── dwdx.npy
     │       ├── detector_qe.csv
-    │       ├── pupil_mask.npy
-    │       └── sensitivities.npz
+    │       └── pupil_mask.npy
     ├── matlab/
     │   ├── mat2ndarray.m
     │   ├── ndarray2mat.m
@@ -77,4 +104,6 @@ including it in a to-level subdirectory:
     ├── README.md
     └── setup.py
 
-Note the inclusion of ``mat2ndarray.m`` and ``ndarray2mat``.
+
+Note the inclusion of ``mat2ndarray.m`` and ``ndarray2mat`` to handle
+:ref:`data conversion between NumPy and MATLAB<numpy-matlab>`

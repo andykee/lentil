@@ -74,6 +74,7 @@ using Lentil in MATLAB, be sure that you you have
 :ref:`configured MATLAB to use the correct version of Python installed on your system
 <configuring-matlab>`
 
+.. _numpy-matlab:
 
 Working with NumPy Arrays in MATLAB
 -----------------------------------
