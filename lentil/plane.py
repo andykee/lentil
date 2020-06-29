@@ -6,8 +6,8 @@ from lentil.modeltools import (cached_property, iterable_amplitude,
                                 iterable_mask, iterable_phase, iterable_segmask)
 from lentil import util
 
-__all__ = ['Plane', 'Pupil', 'Image', 'Detector', 'DispersiveShift', 'Grism',
-           'LensletArray', 'Tilt', 'Rotate', 'Flip']
+__all__ = ['Plane', 'Pupil', 'Image', 'DispersiveShift', 'Grism', 'LensletArray',
+           'Tilt', 'Rotate', 'Flip']
 
 
 class Plane:
@@ -496,30 +496,9 @@ class Image(Plane):
     def multiply(self, wavefront, *args, **kwargs):
         """Multiply with a :class:`~lentil.wavefront.Wavefront`."""
 
-        # TODO: make sure this is correct
-        wavefront.focal_length = np.inf
-
         wavefront.planetype = 'image'
 
         return wavefront
-
-
-class Detector(Image):
-    """Class for representing a discretely sampled  :class:`~lentil.Image`
-    plane.
-
-    Parameters
-    ----------
-    pixelscale : float
-        Pixel size in meters. Pixels are assumed to be square.
-
-    shape : {int, (2,) array_like}
-        Number of pixels as (rows, cols). If a single value is provided, the
-        :class:`Detector` is assumed to be square with nrows = ncols = shape.
-
-    """
-    def __init__(self, pixelscale, shape):
-        super().__init__(pixelscale, shape)
 
 
 class DispersiveShift(Plane):

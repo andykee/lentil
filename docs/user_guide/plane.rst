@@ -129,8 +129,8 @@ subclassing |Pupil|. See :ref:`creating-planes` for details.
 .. [1] Goodman, *Introduction to Fourier Optics*.
 
 
-Image and Detector Planes
-=========================
+Image Planes
+============
 
 Tilt
 ====
@@ -139,7 +139,7 @@ tilt outside of the context of a discretely sampled :class:`~lentil.Plane` objec
 :class:`~lentil.Tilt` is most useful for representing global tilt of an optical system
 during a propagation.
 
-For example, given the following :class:`~lentil.Pupil` and :class:`~lentil.Detector`
+For example, given the following :class:`~lentil.Pupil` and :class:`~lentil.Image`
 planes:
 
 .. code-block:: pycon
@@ -148,7 +148,7 @@ planes:
     >>> import matplotlib.pyplot as plt
     >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 128), diameter=1,
     ...                      focal_length=10, pixelscale=1/256)
-    >>> detector = lentil.Detector(pixelscale=5e-6, shape=(1024, 1024))
+    >>> detector = lentil.Image(pixelscale=5e-6, shape=(1024, 1024))
     >>> psf = lentil.propagate([pupil, detector], wave=650e-9, npix=(64, 64))
     >>> plt.imshow(psf, origin='lower')
 
@@ -176,7 +176,7 @@ The plane transformation examples below are used to modify the following image:
     >>> import matplotlib.pyplot as plt
     >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 128), diameter=1,
     ...                      focal_length=10, pixelscale=1/256)
-    >>> detector = lentil.Detector(pixelscale=5e-6, shape=(1024, 1024))
+    >>> detector = lentil.Image(pixelscale=5e-6, shape=(1024, 1024))
     >>> psf = lentil.propagate([pupil, detector], wave=650e-9, npix=(128, 128))
     >>> plt.imshow(psf, origin='lower')
 

@@ -13,7 +13,6 @@ Optical Planes
     lentil.Plane
     lentil.Pupil
     lentil.Image
-    lentil.Detector
 
 Special Planes
 ==============

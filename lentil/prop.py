@@ -4,7 +4,7 @@ import numpy as np
 
 from lentil import util
 from lentil import fourier
-from lentil.plane import Pupil, Image, Detector, Plane
+from lentil.plane import Plane, Pupil, Image
 from lentil.wavefront import Wavefront
 
 __all__ = ['propagate']
@@ -325,8 +325,8 @@ class Propagate:
             # TODO: figure out how/when to accumulate tilt
 
             if (w.planetype == 'pupil') and isinstance(next_plane, Image):
-                if isinstance(next_plane, Detector):
-                    w = _propagate_pupil_detector(w, next_plane.pixelscale, npix, oversample)
+                if next_plane.pixelscale is not None:
+                    w = _propagate_pupil_image_fixed(w, next_plane.pixelscale, npix, oversample)
                 else:
                     pass
             elif (w.planetype == 'image') and isinstance(next_plane, Pupil):
@@ -343,9 +343,10 @@ class Propagate:
         return w
 
 
-def _propagate_pupil_detector(w, detector_pixelscale, npix, oversample):
+def _propagate_pupil_image_fixed(w, pixelscale, npix, oversample):
 
-    shift = w.shift(detector_pixelscale, oversample)
+    # TODO: we should only apply the shift if this is the final plane
+    shift = w.shift(pixelscale, oversample)
     w.tilt = []
 
     # Integer portion of the shift that will be accounted for
@@ -358,7 +359,7 @@ def _propagate_pupil_detector(w, detector_pixelscale, npix, oversample):
 
     npix = npix * oversample
 
-    alpha = (w.pixelscale * detector_pixelscale) / (w.wavelength * w.focal_length * oversample)
+    alpha = (w.pixelscale * pixelscale) / (w.wavelength * w.focal_length * oversample)
 
     data = np.zeros((w.depth, npix[0], npix[1]), dtype=np.complex128)
 

@@ -94,8 +94,7 @@ any optical effect, they are represented by clean ``Plane()`` objects.
 
     import lentil
 
-    from examplemodel.planes import Pupil, Grism
-    from examplemodel.detector import Detector
+    from examplemodel.planes import Pupil, Grism, Detector
     from examplemodel import radiometry
 
     class ExampleModel:

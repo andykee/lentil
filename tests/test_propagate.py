@@ -141,7 +141,7 @@ class TiltPupil(lentil.Pupil):
         self.coeffs = coeffs
 
 
-class BasicDetector(lentil.Detector):
+class BasicDetector(lentil.Image):
     def __init__(self, pixelscale=5e-6, shape=(512, 512)):
         super().__init__(pixelscale=pixelscale, shape=shape)
 
@@ -172,15 +172,15 @@ def test_propagate_airy():
     p = TiltPupil(npix=512, coeffs=[0])
     d = BasicDetector(pixelscale=5e-6 / 25)
 
-    airy = airy2(diameter=p.diameter, focal_length=p.focal_length, wavelength=650e-9,
-                 pixelscale=d.pixelscale, shape=(511, 511), oversample=1)
-    airy = airy/np.max(airy)
+    psf_airy = airy2(diameter=p.diameter, focal_length=p.focal_length, wavelength=650e-9,
+                     pixelscale=d.pixelscale, shape=(511, 511), oversample=1)
+    psf_airy = psf_airy/np.max(psf_airy)
 
     planes = [p, d]
     psf = lentil.propagate(planes, wave=650e-9, npix=511, oversample=1)
     psf = psf/np.max(psf)
 
-    assert np.all(np.isclose(psf, airy, atol=1e-3))
+    assert np.all(np.isclose(psf, psf_airy, atol=1e-3))
 
 
 def test_propagate_tilt_angle_mono():
