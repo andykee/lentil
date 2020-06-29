@@ -184,7 +184,7 @@ def test_rule07_dark_current_low_cutoff():
                                               pixelscale=18e-6,
                                               shape=1)
 
-    assert np.isclose(out, 65.208272)
+    assert np.isclose(out, 65)
 
 
 def test_rule07_dark_current_high_cutoff():
@@ -193,7 +193,7 @@ def test_rule07_dark_current_high_cutoff():
                                               pixelscale=18e-6,
                                               shape=1)
 
-    assert np.isclose(out, 10403.86345)
+    assert np.isclose(out, 10403)
 
 
 def test_cosmic_rays():

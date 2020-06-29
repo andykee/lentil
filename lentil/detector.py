@@ -7,8 +7,8 @@ import scipy.ndimage
 import lentil.radiometry
 
 __all__ = ['collect_charge', 'collect_charge_bayer', 'pixelate', 'adc',
-           'shot_noise', 'charge_diffusion', 'rule07_dark_current',
-           'cosmic_rays']
+           'shot_noise', 'read_noise', 'charge_diffusion',
+           'rule07_dark_current', 'cosmic_rays']
 
 
 def collect_charge(img, wave, qe, waveunit='nm'):
@@ -139,7 +139,7 @@ def qe_asarray(qe, wave, waveunit):
     wave = np.asarray(wave)
     if not isinstance(qe, lentil.radiometry.Spectrum):
         qe = np.asarray(qe)
-        if qe.shape is ():
+        if qe.shape == ():
             qe = qe*np.ones(wave.size)
         else:
             assert qe.size == wave.size
@@ -260,7 +260,12 @@ def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
         # gain.ndim == 3
         img = np.einsum('ijk,ijk->jk', img_cube, gain)
 
-    return np.floor(img, dtype=dtype)
+    img = np.floor(img)
+
+    if dtype is not None:
+        img = img.astype(dtype)
+
+    return img
 
 
 def shot_noise(img, method='poisson', seed=None):
@@ -275,8 +280,9 @@ def shot_noise(img, method='poisson', seed=None):
         Noise method.
 
     seed : None, int, or array_like, optional
-        Seed for random number generator. If ``None`` (default), the Numpy
-        default is used.
+        Random seed used to initialize ``numpy.random.RandomState``. If
+        ``None``, then ``RandomState`` will try to read data from /dev/urandom
+        (or the Windows analogue) if available or seed from the clock otherwise.
 
     Returns
     -------
@@ -293,30 +299,121 @@ def shot_noise(img, method='poisson', seed=None):
     """
     assert method in {'poisson', 'gaussian'}
 
+    rng = np.random.RandomState(seed)
+
     if method == 'poisson':
-        if seed:
-            rng = np.random.RandomState(seed)
-            img = rng.poisson(img)
-        else:
-            img = np.random.poisson(img)
+        img = rng.poisson(img)
     else:
-        if seed:
-            rng = np.random.RandomState(seed)
-            img = rng.normal(scale=img)
-        else:
-            img = np.random.normal(scale=img)
-    return img
+        img = rng.normal(scale=img)
+    return np.floor(img)
+
+
+def read_noise(img, electrons, seed=None):
+    """Apply read noise to a frame
+
+    Parameters
+    ----------
+    img : array_like
+        Array of electrons
+
+    electrons : int
+        Read noise per frame
+
+    seed : None, int, or array_like, optional
+        Random seed used to initialize ``numpy.random.RandomState``. If
+        ``None``, then ``RandomState`` will try to read data from /dev/urandom
+        (or the Windows analogue) if available or seed from the clock otherwise.
+
+    Returns
+    -------
+    img : ndarray
+        Input image with read noise applied
+
+    """
+    img = np.asarray(img)
+    rng = np.random.RandomState(seed)
+    noise = rng.normal(loc=0.0, scale=electrons, size=img.shape)
+    return img + noise
 
 
 def charge_diffusion(img, sigma, oversample=1):
-    """Apply charge diffusion represented by a Gaussian blur"""
+    """Apply charge diffusion represented by a Gaussian blur
+
+    Parameters
+    ----------
+    img : array_like
+        Frame to apply charge diffusion to
+
+    sigma : float
+        Diffusion sigma
+
+    oversample : int
+        Oversample factor in img
+
+    Returns
+    -------
+    img : ndarray
+        Input frame blurred by charge diffusion
+
+    """
 
     kernel = lentil.util.gaussian2d(3*oversample, sigma)
     return scipy.signal.convolve2d(img, kernel, mode='same')
 
 
-def rule07_dark_current(temperature, cutoff_wavelength, pixelscale, shape=1):
-    """Compute dark current in HgCdTe infrared detectors using Rule 07.
+def dark_current(rate, shape=1, fpn_factor=0, seed=None):
+    """Create dark current frame
+
+    If applied, dark current fixed pattern noise (FPN) is modeled by a
+    log-normal distribution [1], [2] with mean = 1.0 and sigma = fpn_factor
+    where rate = rate * FPN.
+
+    Parameters
+    ----------
+    rate : int
+        Dark current rate in electrons/second/pixel
+
+    shape : array_like or 1
+        Output shape. If not specified, a scalar is returned.
+
+    fpn_factor : float
+        Dark current FPN factor. Should be between 0.1 and 0.4 for CCD and CMOS
+        sensors [1]. When fpn_factor is 0, dark current FPN is not applied.
+
+    seed : None, int, or array_like, optional
+        Random seed used to initialize ``numpy.random.RandomState``. If
+        ``None``, then ``RandomState`` will try to read data from /dev/urandom
+        (or the Windows analogue) if available or seed from the clock otherwise.
+
+    Returns
+    -------
+    dark : ndarray
+        Dark current frame
+
+    References
+    ----------
+    [1] `Log-normal distribution - Wikipedia <https://en.wikipedia.org/wiki/Log-normal_distribution>`_
+
+    [2] Janesick, J. R., Photon Transfer, Vol. PM170, SPIE (2007)
+
+    """
+    if fpn_factor > 0:
+        rng = np.random.RandomState(seed)
+        fpn = rng.lognormal(mean=1.0, sigma=fpn_factor, size=shape)
+    else:
+        fpn = 1
+
+    dark = np.floor(rate*np.ones(shape)*fpn)
+    return dark
+
+
+def rule07_dark_current(temperature, cutoff_wavelength, pixelscale, shape=1,
+                        fpn_factor=0, seed=None):
+    """Create dark current frame for HgCdTe infrared detectors using Rule 07 [1].
+
+    If applied, dark current fixed pattern noise (FPN) is modeled by a
+    log-normal distribution [2], [3] with mean = 1.0 and sigma = fpn_factor
+    where rate = rate * FPN.
 
     Parameters
     ----------
@@ -332,16 +429,29 @@ def rule07_dark_current(temperature, cutoff_wavelength, pixelscale, shape=1):
     shape : array_like or 1
         Output shape. If not specified, a scalar is returned.
 
+    fpn_factor : float
+        Dark current FPN factor. Should be between 0.1 and 0.4 for CCD and CMOS
+        sensors [2]. When fpn_factor is 0, dark current FPN is not applied.
+
+    seed : None, int, or array_like, optional
+        Random seed used to initialize ``numpy.random.RandomState``. If
+        ``None``, then ``RandomState`` will try to read data from /dev/urandom
+        (or the Windows analogue) if available or seed from the clock otherwise.
+
     Returns
     -------
-    dark_current : scalar or ndarray
+    dark_current  : ndarray
         Dark current
 
     References
     ----------
-    * Tennant, W.E. et al. MBE HgCdTe Technology: A Very General Solution to IR
-      Detection, Described by "Rule 07", a Very Convenient Heuristic. Journal of
-      Electronic Materials (2008).
+    [1] Tennant, W.E. et al. MBE HgCdTe Technology: A Very General Solution to IR
+       Detection, Described by "Rule 07", a Very Convenient Heuristic. Journal of
+       Electronic Materials (2008).
+
+    [2] `Log-normal distribution - Wikipedia <https://en.wikipedia.org/wiki/Log-normal_distribution>`_
+
+    [3] Janesick, J. R., Photon Transfer, Vol. PM170, SPIE (2007)
 
     """
 
@@ -369,12 +479,7 @@ def rule07_dark_current(temperature, cutoff_wavelength, pixelscale, shape=1):
     px_area = (pixelscale*1e2)**2  # pixel area in cm^2
     rate = 1/q * px_area * J
 
-    if np.isscalar(shape):
-        out_shape = 1
-    else:
-        out_shape = np.ones(shape)
-
-    return rate * out_shape
+    return dark_current(rate, shape, fpn_factor, seed)
 
 
 def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, alpha_flux=4e9):
