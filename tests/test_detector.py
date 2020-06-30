@@ -1,3 +1,4 @@
+import pytest
 import numpy as np
 import lentil
 
@@ -96,6 +97,13 @@ def test_adc_saturation_capacity():
     assert np.array_equal(out, np.ones((10, 10)))
 
 
+def test_adc_warn_saturate():
+    with pytest.warns(UserWarning):
+        img = 10 * np.ones((10, 10))
+        out = lentil.detector.adc(img, gain=1, saturation_capacity=1,
+                                  warn_saturate=True)
+
+
 def test_adc_float_gain():
     g = np.random.uniform(size=1)
     img = 10*np.random.uniform(size=(10, 10))
@@ -125,6 +133,19 @@ def test_adc_nonlinear_gain_cube():
     r = int(index[0])
     c = int(index[1])
     assert np.isclose(out[r, c], np.floor(np.polyval(np.append(g[:, r, c], 0), 10)))
+
+
+def test_adc_invalid_gain():
+    img = 10*np.ones((10, 10))
+    with pytest.raises(ValueError):
+        out = lentil.detector.adc(img, gain=np.ones((1, 1, 1, 1)))
+
+
+def test_adc_dtype():
+    g = np.random.uniform(size=1)
+    img = 10*np.random.uniform(size=(10, 10))
+    out = lentil.detector.adc(img, g, dtype=np.int8)
+    assert out.dtype == np.int8
 
 
 def test_shot_noise_poisson():
@@ -157,6 +178,21 @@ def test_shot_noise_gaussian_seed():
     assert np.array_equal(shot1, shot2)
 
 
+def test_read_noise_gaussian():
+    img = np.random.uniform(low=0, high=1e5, size=(2, 2))
+    read1 = lentil.detector.read_noise(img, electrons=100)
+    read2 = lentil.detector.read_noise(img, electrons=100)
+    assert np.all(read1 != read2)
+    assert read1.shape == (2, 2)
+
+
+def test_read_noise_gaussian_seed():
+    img = np.random.uniform(low=0, high=1e5, size=(2, 2))
+    read1 = lentil.detector.read_noise(img, electrons=100, seed=12345)
+    read2 = lentil.detector.read_noise(img, electrons=100, seed=12345)
+    assert np.array_equal(read1, read2)
+
+
 def test_charge_diffusion_shape():
     img = np.random.uniform(low=0, high=1e5, size=(10, 10))
     out = lentil.detector.charge_diffusion(img, sigma=0.5, oversample=1)
@@ -167,6 +203,12 @@ def test_charge_diffusion_shape_oversample():
     img = np.random.uniform(low=0, high=1e5, size=(10, 10))
     out = lentil.detector.charge_diffusion(img, sigma=0.5, oversample=2)
     assert out.shape == img.shape
+
+
+def test_dark_current_fpn():
+    dark1 = lentil.detector.dark_current(rate=100, shape=(10, 10), fpn_factor=0.1, seed=12345)
+    dark2 = lentil.detector.dark_current(rate=100, shape=(10, 10), fpn_factor=0.1, seed=12345)
+    assert np.array_equal(dark1, dark2)
 
 
 def test_rule07_dark_current_shape():
