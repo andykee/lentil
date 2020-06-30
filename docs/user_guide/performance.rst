@@ -18,6 +18,13 @@ that decorated functions have their values computed and cached once at the begin
 of a propagation. The cache is automatically cleared when the propagation is
 complete.
 
+.. _performance-image-simulation::
+
+Image simulation
+================
+
+
+
 Speeding up the FFT
 ===================
 

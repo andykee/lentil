@@ -500,6 +500,22 @@ class Image(Plane):
 
         return wavefront
 
+    def frame(self, *args, **kwargs):
+        """Simulate reading out a frame
+
+        Returns
+        -------
+        frame : ndarray
+            Raw frame
+
+        Note
+        ----
+        This method just defines the ``frame`` interface. Any real functionality
+        should be defined in a subclass.
+
+        """
+        raise NotImplementedError
+
 
 class DispersiveShift(Plane):
 

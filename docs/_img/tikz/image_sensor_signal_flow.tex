@@ -1,0 +1,41 @@
+\documentclass{standalone}
+\usepackage{tikz}
+
+
+\usetikzlibrary{positioning,shapes,arrows,calc}
+
+\begin{document}
+\tikzstyle{class}=[rectangle, thick, draw=black, minimum height=1.2cm, minimum width=1cm]
+\tikzstyle{circ}=[circle, draw=black, inner sep=0pt, minimum size=8pt, thick]
+\tikzstyle{arrow}=[->, >=latex, thick]
+\tikzstyle{line}=[-, thick]
+
+\begin{tikzpicture}[node distance=1cm, auto]
+
+    \fill [fill={rgb:black,1;white,5}] (-1,-1) rectangle (7.25,2.75);
+
+    \node (qe) [class, fill=white] {QE};
+    \node (scene) [left=1.5cm of qe]{\begin{tabular}{c} Photon \\ count \end{tabular}};
+    \node (sum) [circ, right=of qe, fill=white] {$+$};
+    \node (sum2) [circ, right=2cm of sum, fill=white] {$+$};
+    \node (dark) [class, above=of sum, fill=white] {\begin{tabular}{c} Dark \\ signal \end{tabular}};
+    \node (read) [class, above=of sum2, fill=white] {\begin{tabular}{c} Read \\ noise \end{tabular}};
+    \node (adc) [signal, right=of sum2, signal to=west, thick, draw=black, minimum height=1.2cm, fill=white] {ADC};
+    \node (frame) [right=1cm of adc] {\begin{tabular}{c} Digital \\ signal \end{tabular}};
+
+    \node (input) [below=0.75cm of scene] {\textbf{Input scene}};
+    \node (sensor) [right=3.75cm of input] {\textbf{Image sensor}};
+    \node (output) [below=0.75cm of frame] {\textbf{Output frame}};
+
+    %\draw[red,thick,dotted] ($(QE.north west)+(-0.3,0.6)$)  rectangle ($(adc.south east)+(0.3,-0.6)$);
+
+    \draw[arrow] (-2.25,0) -- node [midway, above, align=center] {\scriptsize ph/$\lambda$} (qe.west);
+    \draw[arrow] (qe.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (sum.west);
+    \draw[arrow] (dark.south) -- node [midway, right, align=center] {\scriptsize e$^-$} (sum.north);
+    \draw[arrow] (sum.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (sum2.west);
+    \draw[arrow] (read.south) -- node [midway, right, align=center] {\scriptsize e$^-$} (sum2.north);
+    \draw[arrow] (sum2.east) -- node [midway, above, align=center] {\scriptsize e$^-$} (adc.west);
+    \draw[arrow] (adc.east) -- ++(1.25,0) node [midway, above, align=center] {\scriptsize DN};
+
+\end{tikzpicture}
+\end{document}

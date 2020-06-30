@@ -33,7 +33,7 @@ functions of segmented aperture telescopes.
     user_guide/diffraction
     user_guide/wavefront_error
     user_guide/radiometry
-    user_guide/focal_planes
+    user_guide/image_sensors
     user_guide/imaging_artifacts
     patterns/index
     user_guide/performance
