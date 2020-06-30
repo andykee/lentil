@@ -15,7 +15,7 @@ Released June 29, 2020
 * Completely rework the contents of the :ref:`detector<api-detector>` module. All
   objects have been deprecated. Some functionality has been retained but converted to
   atomic functions instead. `#6`_
-* Deprecate ``util.coordinates`
+* Deprecate ``util.coordinates``
 * Change the way ``Rotate`` angle is interpreted to behave more intuitively
 * A number of small bugfixes and enhancements
 * Updated documentation
