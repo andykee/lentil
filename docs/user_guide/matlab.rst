@@ -158,6 +158,35 @@ custom models in a Python interpreter:
 For more hints, see the MATLAB documentation on `Undefined variable "py" or function
 "py.command" <https://www.mathworks.com/help/matlab/matlab_external/undefined-variable-py-or-function-py-command.html>`_
 
+Resolving "Python Error: ImportError: Importing the numpy c-extensions failed." error
+-------------------------------------------------------------------------------------
+On Windows, if the system path is not correctly configured, Python will throw a lengthy
+error message when trying to import Numpy:
+
+.. code-block:: matlab
+
+    >> py.importlib.import_module('numpy')
+    Error using __init__><module> (line 54)
+    Python Error: ImportError:
+
+    IMPORTANT: PLEASE READ THIS FOR ADVICE ON HOW TO SOLVE THIS ISSUE!
+
+    Importing the numpy c-extensions failed. - Try uninstalling and reinstalling numpy.
+
+    ...
+
+There appear to be several causes, but the error is most likely triggered because Python
+is not able to locate the necessary Numpy DLL files. The most common culprit is not
+electing to add Anaconda to the Windows PATH (which for some reason is the recommended
+choice during installation). The issue is fixed by appending the system path. Note that
+it is safest to do this from within MATLAB, in case a different version of Python is
+on the system path and is being used by other applications.
+
+.. code-block:: matlab
+
+    setenv('path',['C:\Path\To\Anaconda3\Library\bin;', getenv('path')]);
+
+
 Useful Links
 ============
 
