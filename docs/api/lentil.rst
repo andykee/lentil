@@ -39,8 +39,11 @@ Coordinate Transformations
     :members:
 
 .. autoclass:: lentil.Pupil
+    :members:
+    :inherited-members:
 
 .. autoclass:: lentil.Image
+    :members: pixelscale, shape, multiply, frame, mask
 
 .. autoclass:: lentil.Grism
 
