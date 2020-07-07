@@ -85,7 +85,7 @@ class Plane:
         """
         return self._cache
 
-    @cached_property
+    @property
     def amplitude(self):
         """Electric field amplitude transmission.
 
@@ -95,10 +95,13 @@ class Plane:
 
         Note
         ----
-        ``amplitude`` is cacheable. If a cached value exists, it is returned.
+        If a cached value exists it is returned first.
 
         """
-        return self._amplitude
+        if self.cache.get('amplitude') is not None:
+            return self.cache.get('amplitude')
+        else:
+            return self._amplitude
 
     @amplitude.setter
     def amplitude(self, value):
@@ -108,7 +111,7 @@ class Plane:
         else:
             self._amplitude = None
 
-    @cached_property
+    @property
     def phase(self):
         """Electric field phase shift.
 
@@ -118,10 +121,13 @@ class Plane:
 
         Note
         ----
-        ``phase`` is cacheable. If a cached value exists, it is returned.
+        If a cached value exists it is returned first.
 
         """
-        return self._phase
+        if self.cache.get('phase') is not None:
+            return self.cache.get('phase')
+        else:
+            return self._phase
 
     @phase.setter
     def phase(self, value):
@@ -202,7 +208,7 @@ class Plane:
         else:
             return self.mask.shape
 
-    @cached_property
+    @property
     def ptt_vector(self):
         """2D vector representing piston and tilt in x and y. Planes with no mask or
         segmask have ptt_vector = None
@@ -211,36 +217,71 @@ class Plane:
         -------
         ptt_vector : (3,...) ndarray or None
 
+        Note
+        ----
+        If a cached value exists it is returned, otherwise ptt_vector is
+        constructed from the mask and segmask attributes as available.
+
         """
 
-        # if there's no mask, we just set ptt_vector to None and move on
-        if (self.shape == () or self.shape is None) and self.segmask is None:
-            ptt_vector = None
+        if self.cache.get('ptt_vector') is not None:
+            return self.cache.get('ptt_vector')
+
         else:
-            # compute unmasked piston, tip, tilt vector
-            x, y = util.mesh(self.shape)
-            unmasked_ptt_vector = np.array([np.ones(x.size), x.ravel(), y.ravel()]) * self.pixelscale
-
-            if self.segmask is None:
-                ptt_vector = np.einsum('ij,j->ij', unmasked_ptt_vector, self.mask.ravel())
+            # if there's no mask, we just set ptt_vector to None and move on
+            if (self.shape == () or self.shape is None) and self.segmask is None:
+                ptt_vector = None
             else:
-                # prepare empty ptt_vector
-                ptt_vector = np.empty((self.nseg*3, self.mask.size))
+                # compute unmasked piston, tip, tilt vector
+                x, y = util.mesh(self.shape)
+                unmasked_ptt_vector = np.array([np.ones(x.size), x.ravel(), y.ravel()]) * self.pixelscale
 
-                # loop over the segments and fill in the masked ptt_vectors
-                for seg in np.arange(self.nseg):
-                    ptt_vector[3*seg:3*seg+3] = unmasked_ptt_vector * self.segmask[seg].ravel()
+                if self.segmask is None:
+                    ptt_vector = np.einsum('ij,j->ij', unmasked_ptt_vector, self.mask.ravel())
+                else:
+                    # prepare empty ptt_vector
+                    ptt_vector = np.empty((self.nseg*3, self.mask.size))
 
-        return ptt_vector
+                    # loop over the segments and fill in the masked ptt_vectors
+                    for seg in np.arange(self.nseg):
+                        ptt_vector[3*seg:3*seg+3] = unmasked_ptt_vector * self.segmask[seg].ravel()
+
+            return ptt_vector
 
     def cache_propagate(self):
-        """Cache expensive to compute attributes for propagation."""
+        """Cache expensive to compute attributes for propagation.
+
+        The following attributes are cached:
+
+        * amplitude
+        * phase
+        * ptt_vector
+
+        Note
+        ----
+        This method can be redefined to enable custom pre-propagation caching
+        behavior.
+
+        """
         self.cache.add('amplitude', self.amplitude)
         self.cache.add('phase', self.phase)
         self.cache.add('ptt_vector', self.ptt_vector)
 
     def clear_cache_propagate(self):
-        """Clear propagation cache values."""
+        """Clear propagation cache values.
+
+        The following attributes are cached:
+
+        * amplitude
+        * phase
+        * ptt_vector
+
+        Note
+        ----
+        This method can be redefined to enable custom post-propagation cache
+        clearing behavior.
+
+        """
         self.cache.delete('amplitude')
         self.cache.delete('phase')
         self.cache.delete('ptt_vector')
