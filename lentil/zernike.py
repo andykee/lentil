@@ -390,12 +390,22 @@ def zernike_index(j):
     return m, n
 
 
-def zernike_coordinates(mask, shift=(0, 0), rotate=0):
+def zernike_coordinates(mask, center=None, rotate=0):
     """Compute the Zernike coordinate system for a given mask."""
 
     mask = np.asarray(mask)
 
-    yy, xx = util.mesh(mask.shape, shift)
+    if center is None:
+        (xc, yc) = util.centroid(mask)
+    else:
+        xc, yc = center[0], center[1]
+
+    nr, nc = mask.shape
+
+    x = np.arange(nc) - xc
+    y = np.arange(nr) - yc
+
+    xx, yy = np.meshgrid(x, y, indexing='ij')
 
     r = np.abs(xx+1j*yy)
     rho = r/np.max(r*mask)  # rho is defined to be 1 on the edge of the aperture
