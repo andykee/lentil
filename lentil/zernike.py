@@ -174,7 +174,7 @@ def zernike_compose(mask, coeffs, normalize=True, rho=None, theta=None):
     return opd
 
 
-def zernike_basis(mask, modes, vectorize=True, normalize=True, rho=None, theta=None):
+def zernike_basis(mask, modes, vectorize=False, normalize=True, rho=None, theta=None):
     """Compute a Zernike basis set for a given mask.
 
     Parameters
@@ -186,9 +186,9 @@ def zernike_basis(mask, modes, vectorize=True, normalize=True, rho=None, theta=N
         List of modes (Noll ordering) to return.
 
     vectorize : bool, optional
-        If True (default), the output is returned as a
-        ``(length(modes), modes.shape[0]*modes.shape[1])`` array If False,
-        the output is returned as a
+        If True, the output is returned as a
+        ``(length(modes), modes.shape[0]*modes.shape[1])`` array If False
+        (default), the output is returned as a
         ``(length(terms), mask.shape[0], mask.shape[1])`` cube.
 
     normalize : bool, optional
