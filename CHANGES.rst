@@ -1,6 +1,36 @@
 Changes
 =======
 
+v0.3.0
+------
+Released July 8, 2020
+
+* The Plane attribute caching approach has been entirely reworked, eliminating the need
+  for end-users to explicitly decorate attributes defined in subclasses:
+
+  * Users are now able to explicitly choose which attributes are cached when
+    ``cache_propagate()`` is called by specifying them in ``Plane.cache_attrs``. The
+    only accepted values right now are ``amplitude`` and ``phase``. Note that
+    ``ptt_vector`` is always cached and is not allowed to be specified in
+    ``cache_attrs``.
+
+  * Rather than checking for and returning cached values at the attribute getter level,
+    it is now done inside ``Plane.multiply()``. This change streamlines both the plane
+    attribute getter code and the creation of planes with phase attributes that should
+    be random with each access.
+
+  * The ``cache_propagate`` decorator has been deprecated, and the documentation and
+    tests have been updated to reflect the changes in functionality. `#7`_
+
+* Fix bug in ``zernike_coordinates`` that was causing modes over off-centered masks to
+  be incorrectly computed. `#8`_
+* Change default behavior of ``zernike_basis`` to return a stack of matrices rather than
+  a single vectorized matrix.
+
+.. _#7: https://github.com/andykee/lentil/issues/7
+.. _#8: https://github.com/andykee/lentil/issues/8
+
+
 v0.2.0
 ------
 Released June 29, 2020
