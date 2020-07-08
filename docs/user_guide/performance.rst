@@ -6,17 +6,21 @@ Optimizing Performance
 
 Caching
 =======
-While the computation that occurs when accessing the ``opd`` attribute in the
-example above isn't terribly expensive, that computation (along with many other
-similar computations) may be performed tens, hundreds, or even thousands of times
-in the process of performing a single propagation.
+A number of plane attributes are accessed with each propagation wavelength. This
+behavior does does not impact performance unless any of these attributes are computed on
+the fly or are otherwise expensive to retrieve. To mitigate any potential performance
+impacts, Lentil's :func:`~lentil.propagate` method performs a pre-propagation caching
+step by calling each plane's :func:`~lentil.Plane.cache_propagate` method, temporarily
+storing a copy of possibly expensive to compute attributes for faster access during the
+actual numerical propagation. When the propagation calculations are complete, a
+post-propagation cleanup calls each plane's :func:`~lentil.Plane.clear_cache_propagate`
+to clear any cached values.
 
-Lentil provides a caching mechanism to reduce the number of times these
-computations are performed. The :class:`~lentil.modeltools.cached_property`
-decorator is a drop-in replacement for Python's ``property`` decorator and ensures
-that decorated functions have their values computed and cached once at the beginning
-of a propagation. The cache is automatically cleared when the propagation is
-complete.
+The cached attributes are defined in a list in each Plane's
+:attr:`~lentil.Plane.cache_attrs` attribute. This list is user-settable but the only
+valid values are `'amplitude'` and `'phase'`. The default behavior is to cache both
+amplitude and phase attributes.
+
 
 .. _performance-image-simulation:
 
@@ -25,15 +29,15 @@ Image simulation
 
 
 
-Speeding up the FFT
-===================
+.. Speeding up the FFT
+.. ===================
 
 
-Multiprocessing
-===============
+.. Multiprocessing
+.. ===============
 
-Other Performance Tweaks
-========================
+.. Other Performance Tweaks
+.. ========================
 
-Faster photon to electron (quantum efficiency) calculations
------------------------------------------------------------
+.. Faster photon to electron (quantum efficiency) calculations
+.. -----------------------------------------------------------

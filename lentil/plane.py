@@ -2,8 +2,6 @@ import numpy as np
 from scipy import ndimage
 
 from lentil.cache import Cache
-from lentil.modeltools import (cached_property, iterable_amplitude,
-                                iterable_mask, iterable_phase, iterable_segmask)
 from lentil import util
 
 __all__ = ['Plane', 'Pupil', 'Image', 'DispersiveShift', 'Grism', 'LensletArray',
@@ -35,6 +33,9 @@ class Plane:
     segmask : (nseg, ...) {array_like, None} optional
         Binary segment mask. Default is None.
 
+    Attributes
+    ----------
+
     """
 
     def __init__(self, pixelscale=None, amplitude=1, phase=0, mask=None, segmask=None):
@@ -49,6 +50,7 @@ class Plane:
         self._segmask = np.asarray(segmask) if segmask is not None else None
 
         self._cache = Cache()
+        self.cache_attrs = ['amplitude', 'phase']
 
     def __init_subclass__(cls):
         # we have to define default values to avoid AttributeErrors in case
@@ -61,6 +63,7 @@ class Plane:
         cls._segmask = None
 
         cls._cache = Cache()
+        cls.cache_attrs = ['amplitude', 'phase', 'ptt_vector']
 
     def __repr__(self):
         return f'{self.__class__.__name__}()'
@@ -86,6 +89,27 @@ class Plane:
         return self._cache
 
     @property
+    def cache_attrs(self):
+        """List of plane attributes to cache for propagations. Valid values are:
+
+        * :attr:`~lentil.Plane.amplitude`
+        * :attr:`~lentil.Plane.phase`
+
+        Default is ``['amplitude', 'phase']``
+
+        Returns
+        -------
+        cache_attrs : list
+
+        """
+        return self._cache_attrs
+
+    @cache_attrs.setter
+    def cache_attrs(self, value):
+        assert all(attr in ('amplitude', 'phase') for attr in value)
+        self._cache_attrs = value
+
+    @property
     def amplitude(self):
         """Electric field amplitude transmission.
 
@@ -98,14 +122,10 @@ class Plane:
         If a cached value exists it is returned first.
 
         """
-        if self.cache.get('amplitude') is not None:
-            return self.cache.get('amplitude')
-        else:
-            return self._amplitude
+        return self._amplitude
 
     @amplitude.setter
     def amplitude(self, value):
-        self.cache.delete('amplitude')
         if value is not None:
             self._amplitude = np.asarray(value)
         else:
@@ -124,14 +144,10 @@ class Plane:
         If a cached value exists it is returned first.
 
         """
-        if self.cache.get('phase') is not None:
-            return self.cache.get('phase')
-        else:
-            return self._phase
+        return self._phase
 
     @phase.setter
     def phase(self, value):
-        self.cache.delete('phase')
         if value is not None:
             self._phase = np.asarray(value)
         else:
@@ -251,39 +267,25 @@ class Plane:
     def cache_propagate(self):
         """Cache expensive to compute attributes for propagation.
 
-        The following attributes are cached:
-
-        * amplitude
-        * phase
-        * ptt_vector
-
-        Note
-        ----
-        This method can be redefined to enable custom pre-propagation caching
-        behavior.
-
+        Attributes listed in :attr:`~lentil.Pupil.cache_attrs` are cached.
         """
-        self.cache.add('amplitude', self.amplitude)
-        self.cache.add('phase', self.phase)
+        # User-defined cached attributes
+        for attr in self.cache_attrs:
+            self.cache.add(attr, getattr(self, attr))
+
+        # We always want to cache ptt_vector
         self.cache.add('ptt_vector', self.ptt_vector)
 
     def clear_cache_propagate(self):
         """Clear propagation cache values.
 
-        The following attributes are cached:
-
-        * amplitude
-        * phase
-        * ptt_vector
-
-        Note
-        ----
-        This method can be redefined to enable custom post-propagation cache
-        clearing behavior.
-
+        Attributes listed in :attr:`~lentil.Pupil.cache_attrs` are cleared from
+        the cache.
         """
-        self.cache.delete('amplitude')
-        self.cache.delete('phase')
+        # User-defined cached attributes
+        for attr in self.cache_attrs:
+            self.cache.delete(attr)
+
         self.cache.delete('ptt_vector')
 
     def multiply(self, wavefront, tilt='phase'):
@@ -327,10 +329,20 @@ class Plane:
             if self.pixelscale is not None:
                 assert wavefront.pixelscale == self.pixelscale
 
+        if 'amplitude' in self.cache.keys():
+            amplitude = self.cache.get('amplitude')
+        else:
+            amplitude = self.amplitude
+
+        if 'phase' in self.cache.keys():
+            phase = self.cache.get('phase')
+        else:
+            phase = self.phase
+
         if tilt == 'phase':
-            wavefront = self._multiply_phase(self.amplitude, self.phase, wavefront)
+            wavefront = self._multiply_phase(amplitude, phase, wavefront)
         elif tilt == 'angle':
-            wavefront = self._multiply_angle(self.amplitude, self.phase, wavefront)
+            wavefront = self._multiply_angle(amplitude, phase, wavefront)
         else:
             raise AttributeError('Unknown tilt parameter', tilt)
 
@@ -728,7 +740,7 @@ class Rotate(Plane):
 
         """
         if self.angle % 90 == 0:
-            wavefront.data = np.rot90(wavefront.data, k=int(self.angle/90), axes=(1,2))
+            wavefront.data = np.rot90(wavefront.data, k=int(self.angle/90), axes=(1, 2))
         else:
             real = ndimage.rotate(wavefront.data.real, angle=self.angle, reshape=False, order=self.order, axes=(1, 2))
             imag = ndimage.rotate(wavefront.data.imag, angle=self.angle, reshape=False, order=self.order, axes=(1, 2))
@@ -799,7 +811,6 @@ class Conic(Plane):
 
     """
     pass
-
 
 
 #    def Q(self, wave, pixelscale, oversample=1):

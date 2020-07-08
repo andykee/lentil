@@ -5,14 +5,11 @@ lentil.modeltools
 
 .. autosummary::
 
-    lentil.modeltools.cached_property
     lentil.modeltools.normalize_power
     lentil.modeltools.iterable_amplitude
     lentil.modeltools.iterable_mask
     lentil.modeltools.iterable_phase
     lentil.modeltools.iterable_segmask
-
-.. autoclass:: lentil.modeltools.cached_property
 
 .. autofunction:: lentil.modeltools.normalize_power
 

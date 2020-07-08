@@ -1,75 +1,7 @@
 import numpy as np
 
-__all__ = ['cached_property', 'normalize_power', 'iterable_amplitude', 'iterable_mask',
-           'iterable_phase', 'iterable_segmask']
-
-
-class cached_property:
-    """Property that checks an object's cache for a cached value stored with the
-    same attribute name before returning whatever value the in-place property
-    defines.
-
-    Note
-    ----
-    :class:`cached_property` is a drop-in replacement for Python's ``property``
-    decorator. It has no side-effects and is safe to use even if Monocle's
-    caching backend is not used.
-
-    Example
-    -------
-    First we'll define a simple example class with a ``surface`` property
-    using ``@cached_property``:
-
-    .. code:: python3
-
-        import lentil as le
-
-        class CustomPlane(le.Plane):
-            def __init__(self, surface):
-                self._surface = surface
-
-            @cached_property
-            def surface(self):
-                    return 10e-9
-
-    Now we'll take a look at how a cached property behaves:
-
-    .. code:: pycon
-
-        >>> p = CustomPlane()
-        >>> p.surface
-        1e-08
-        >>> p.cache.set('surface', 5e-6)
-        >>> p.surface
-        5e-06
-        >>> p.cache.delete('surface')
-        >>> p.surface
-        1e-08
-
-    """
-
-    def __init__(self, fget=None, fset=None, fdel=None):
-        self.fget = fget
-        self.fset = fset
-        self.fdel = fdel
-        self.__doc__ = getattr(fget, '__doc__')
-
-    def __set_name__(self, owner, name):
-        self.name = name
-
-    def __get__(self, instance, cls=None):
-        if instance.cache.get(self.name) is not None:
-            return instance.cache.get(self.name)
-        else:
-            return self.fget(instance)
-
-    def __set__(self, instance, value):
-        if self.fset is None:
-            raise AttributeError("can't set attribute")
-        self.fset(instance, value)
-
-    def setter(self, fset):
-        return type(self)(self.fget, fset, self.fdel)
+__all__ = ['normalize_power', 'iterable_amplitude', 'iterable_mask', 'iterable_phase',
+           'iterable_segmask']
 
 
 def normalize_power(array, power=1):

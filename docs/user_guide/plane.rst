@@ -211,15 +211,15 @@ Flip
     :width: 300px
 
 
-Active Optics and Deformable Mirrors
-====================================
+.. Active Optics and Deformable Mirrors
+.. ====================================
 
 
-Dispersion and Chromatic Aberration
-===================================
+.. Dispersion and Chromatic Aberration
+.. ===================================
 
 
-Lenslet Arrays
-==============
+.. Lenslet Arrays
+.. ==============
 
 
