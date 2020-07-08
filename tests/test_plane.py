@@ -26,6 +26,7 @@ def test_default_plane():
     assert p.mask == p.amplitude
     assert p.segmask is None
     assert p.nseg == 0
+    assert p.cache_attrs == ['amplitude', 'phase']
 
 
 def test_set_plane_attrs_none():
