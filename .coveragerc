@@ -10,3 +10,6 @@ exclude_lines =
     raise AssertionError
     raise NotImplementedError
     raise ImportError
+
+    # This stuff always works
+    def __repr__
