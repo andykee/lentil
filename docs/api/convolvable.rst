@@ -5,23 +5,10 @@ lentil.convolvable
 
 .. autosummary::
 
-    lentil.convolvable.Jitter
-    lentil.convolvable.Smear
-    lentil.convolvable.Pixel
-    lentil.convolvable.Convolvable
+    lentil.convolvable.jitter
+    lentil.convolvable.smear
+    lentil.convolvable.pixel
 
-.. autoclass:: lentil.convolvable.Jitter
-    :members:
-    :special-members: __call__
-
-.. autoclass:: lentil.convolvable.Smear
-    :members:
-    :special-members: __call__
-
-.. autoclass:: lentil.convolvable.Pixel
-    :members:
-    :special-members: __call__
-
-.. autoclass:: lentil.convolvable.Convolvable
-    :members:
-    :special-members: __call__
+.. autofunction:: lentil.convolvable.jitter
+.. autofunction:: lentil.convolvable.smear
+.. autofunction:: lentil.convolvable.pixel

@@ -89,16 +89,10 @@ with the analytic result for the same imaging system:
     mtf_optics_lentil = mtf_optics_lentil[0,0:mtf_optics_lentil.shape[0]//2]
 
     # Now apply Lentil's pixellation method and compute the system MTF
-    pixel_mtf = lentil.convolvable.Pixel()
-    psf_px = pixel_mtf(psf, oversample=oversample)
+    psf_px = lentil.convolvable.pixel(psf, oversample=oversample)
     mtf_sys_lentil = np.abs(np.fft.fft2(psf_px))
     mtf_sys_lentil = mtf_sys_lentil/np.max(mtf_sys_lentil)
     mtf_sys_lentil = mtf_sys_lentil[0,0:mtf_sys_lentil.shape[0]//2]
-
-    # Finally, we'll grab the Pixel kernel to make sure it matches the
-    # analytic pixel MTF
-    mtf_px_lentil = np.abs(pixel_mtf.kernel(mtf_axis_px, mtf_axis_px, 1))
-    mtf_px_lentil = mtf_px_lentil[0,:]
 
     plt.plot(mtf_axis_px, mtf_optics, label='optics')
     plt.plot(mtf_axis_px, mtf_px, label='pixel')

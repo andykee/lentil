@@ -6,9 +6,8 @@ def test_jitter_scale():
     a = np.zeros((11, 11))
     a[5, 5] = 1
 
-    j = lentil.convolvable.Jitter()
     scale = 2
-    b = j(a, scale)
+    b = lentil.convolvable.jitter(a, scale)
 
     def fwhm(arr):
         arr = arr / np.max(arr)
@@ -23,9 +22,8 @@ def test_jitter_unitary():
     a = np.zeros((11, 11))
     a[5, 5] = 1
 
-    j = lentil.convolvable.Jitter()
     scale = 2
-    b = j(a, scale)
+    b = lentil.convolvable.jitter(a, scale)
     assert np.isclose(np.sum(a), np.sum(b))
 
 
@@ -33,14 +31,12 @@ def test_smear_unitary():
     a = np.zeros((11, 11))
     a[5, 5] = 1
 
-    s = lentil.convolvable.Smear()
     distance = 2
-    b = s(a, distance)
+    b = lentil.convolvable.smear(a, distance)
     assert np.isclose(np.sum(a), np.sum(b))
 
 
 def test_pixel_unitary():
     a = np.random.uniform(low=0, high=1, size=(100, 100))
-    pixel_sampling = lentil.convolvable.Pixel()
-    b = pixel_sampling(a, oversample=1)
+    b = lentil.convolvable.pixel(a, oversample=1)
     assert np.isclose(np.sum(a), np.sum(b))

@@ -63,16 +63,15 @@ mtf_optics_mo = mtf_optics_mo/np.max(mtf_optics_mo)
 mtf_optics_mo = mtf_optics_mo[0, 0:mtf_optics_mo.shape[0]//2]
 
 # Now apply Monocle's pixellation method and compute the system MTF
-pixel_mtf = lentil.convolvable.Pixel()
-psf_px = pixel_mtf(psf, oversample=oversample)
+psf_px = lentil.convolvable.pixel(psf, oversample=oversample)
 mtf_sys_mo = np.abs(np.fft.fft2(psf_px))
 mtf_sys_mo = mtf_sys_mo/np.max(mtf_sys_mo)
 mtf_sys_mo = mtf_sys_mo[0, 0:mtf_sys_mo.shape[0]//2]
 
 # Finally, we'll grab the Pixel kernel to make sure it matches the
 # analytic pixel MTF
-mtf_px_mo = np.abs(pixel_mtf.kernel(mtf_axis_px, mtf_axis_px, 1))
-mtf_px_mo = mtf_px_mo[0, :]
+#mtf_px_mo = np.abs(pixel_mtf.kernel(mtf_axis_px, mtf_axis_px, 1))
+#mtf_px_mo = mtf_px_mo[0, :]
 
 #plt.plot(mtf_axis_px, mtf_optics_mo, label='optics')
 #plt.plot(mtf_axis_px, mtf_px_mo, label='pixel')

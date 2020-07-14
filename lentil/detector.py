@@ -169,10 +169,13 @@ def pixelate(img, oversample):
     ----
     :func:`pixelate` should only be used if ``oversample`` > 2
 
+    See Also
+    --------
+    :func:`lentil.convolvable.pixel`
+
     """
 
-    pixel_sampling = lentil.convolvable.Pixel()
-    img = pixel_sampling(img, oversample)
+    img = lentil.convolvable.pixel(img, oversample)
     return lentil.util.rescale(img, 1/oversample, order=3, mode='nearest', unitary=True)
 
 
