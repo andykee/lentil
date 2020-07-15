@@ -1,3 +1,4 @@
+import pytest
 import numpy as np
 
 import lentil
@@ -56,6 +57,37 @@ def test_pad_shrink():
     img = np.random.uniform(size=(5, 5))
     out = lentil.util.pad(img, (3, 3))
     assert np.array_equal(out, img[1:4, 1:4])
+
+
+win_data = np.diag(np.arange(1, 11))
+for i in np.diag(win_data):
+    win_data[i-1, i-1:] = win_data[i-1, i-1]
+    win_data[i-1:, i-1] = win_data[i-1, i-1]
+
+
+def test_even_window_shape():
+    assert np.array_equal(lentil.util.window(win_data, shape=(2, 2)), np.array([[5, 5], [5, 6]]))
+
+
+def test_even_window_window():
+    assert np.array_equal(lentil.util.window(win_data, slice=(0, 2, 0, 2)), np.array([[1, 1], [1, 2]]))
+
+
+def test_odd_window_shape():
+    assert np.array_equal(lentil.util.window(win_data[:-1, :-1], shape=(2, 2)), np.array([[4, 4], [4, 5]]))
+
+
+def test_odd_window_window():
+    assert np.array_equal(lentil.util.window(win_data[:-1, :-1], slice=(0, 2, 0, 2)), np.array([[1, 1], [1, 2]]))
+
+
+def test_window_shape_window():
+    assert np.array_equal(lentil.util.window(win_data, shape=(2, 2), slice=(8, 10, 8, 10)), np.array([[9, 9], [9, 10]]))
+
+
+def test_window_shape_mismatch():
+    with pytest.raises(AssertionError):
+        lentil.util.window(win_data, shape=(3, 3), slice=(0, 2, 0, 2))
 
 
 def test_mesh_nonsquare():

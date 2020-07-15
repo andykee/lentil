@@ -205,6 +205,68 @@ def pad(array, shape):
     return padded
 
 
+def window(img, shape=None, slice=None):
+    """Extract an appropriately sized, potentially windowed array
+
+    Parameters
+    ----------
+    img : array_like
+        Data to window
+
+    shape : array_like or None, optional
+        Output shape given as (nrows, ncols). If ``None`` (default), an
+        uncropped array is returned.
+
+    slice : array_like or None, optional
+        Indices of ``img`` array to return given as (r_start, r_end, c_start,
+        c_end). This definition follows standard numpy indexing.
+
+    Returns
+    -------
+    data : ndarray
+        Trimmed and windowed ``img`` array
+
+    Notes
+    -----
+    * If ``img`` is a single value (img.size == 1), self.data is returned
+      regardless of what ``shape`` and ``slice`` are.
+    * If ``shape`` is given but ``slice`` is ``None``, the returned ndarray
+      is trimmed about the center of the array using :func:`lentil.util.pad`.
+    * If ``slice`` is given but ``shape`` is ``None``, the returned ndarray
+      is extracted from ``img`` according to the indices in ``slice``
+    * If both ``shape`` and ``slice`` are given, the returned ndarray is
+      extracted from ``img`` according to the indices in ``slice`` and the
+      following expressions must also be true:
+
+    .. code::
+
+        shape[0] = (slice[1] - slice[0]) = (r_end - r_start)
+        shape[1] = (slice[3] - slice[2]) = (c_end - c_start)
+
+    """
+
+    img = np.asarray(img)
+    if img.size == 1:
+        return img
+
+    if shape is None and slice is None:
+        return img
+    elif slice is not None:
+        if shape is not None:
+            # ensure size consistency
+            assert(slice[1] - slice[0]) == shape[0]
+            assert(slice[3] - slice[2]) == shape[1]
+
+        # return the requested view. Note that numpy will implicitly handle a
+        # third dimension if one is present
+        return img[slice[0]:slice[1], slice[2]:slice[3]]
+
+    else:
+        # return the padded array. Note that pad will handle a third dimension
+        # if one exists
+        return pad(img, shape)
+
+
 def boundary(img, threshold=0):
     """Find bounding row and column indices of data within an array."""
     img = np.asarray(img)
