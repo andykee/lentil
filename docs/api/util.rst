@@ -10,6 +10,7 @@ Image Manipulation
     lentil.util.boundary
     lentil.util.centroid
     lentil.util.pad
+    lentil.util.window
     lentil.util.rebin
     lentil.util.rescale
 
@@ -35,7 +36,6 @@ Sparse Matrix Utilities
 
     lentil.util.v2m
     lentil.util.m2v
-    lentil.util.col_major_to_row_major
     lentil.util.make_mask
     lentil.util.make_index
 
@@ -49,6 +49,7 @@ Miscellaneous
 .. autofunction:: lentil.util.boundary
 .. autofunction:: lentil.util.centroid
 .. autofunction:: lentil.util.pad
+.. autofunction:: lentil.util.window
 .. autofunction:: lentil.util.rebin
 .. autofunction:: lentil.util.rescale
 .. autofunction:: lentil.util.circle
@@ -59,7 +60,6 @@ Miscellaneous
 .. autofunction:: lentil.util.gaussian2d
 .. autofunction:: lentil.util.v2m
 .. autofunction:: lentil.util.m2v
-.. autofunction:: lentil.util.col_major_to_row_major
 .. autofunction:: lentil.util.make_mask
 .. autofunction:: lentil.util.make_index
 .. autofunction:: lentil.util.pixelscale_nyquist
