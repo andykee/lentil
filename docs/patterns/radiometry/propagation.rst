@@ -3,7 +3,7 @@ Performing Radiometrically Correct Propagations
 
 We'll define a simple pupil, detector, and source object that returns at-aperture
 irradiance in terms of photons/s/m^2. Note we must normalize the amplitude array
-using :func:`~lentil.util.normalize_power` to ensure the source flux is preserved
+using :func:`~lentil.modeltools.normalize_power` to ensure the source flux is preserved
 through the diffraction propagation.
 
 .. code:: pycon
@@ -106,7 +106,7 @@ image methods to the Model class:
 
         ...
 
-        def light_flux, self, qe=1):
+        def light_flux(self, flux, qe=1):
             flux.to('photlam')
             flux *= self.pupil.transmission
             flux *= qe  # flux is now in e-/s

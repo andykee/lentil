@@ -34,11 +34,11 @@ Materials
     :inherited-members:
     :noindex:
 
-.. automethod:: lentil.radiometry.planck_radiance
+.. autofunction:: lentil.radiometry.planck_radiance
 
-.. automethod:: lentil.radiometry.planck_exitance
+.. autofunction:: lentil.radiometry.planck_exitance
 
-.. automethod:: lentil.radiometry.vegaflux
+.. autofunction:: lentil.radiometry.vegaflux
 
 .. autoclass:: lentil.radiometry.Material
     :members:
