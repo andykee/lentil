@@ -1,6 +1,19 @@
 Changes
 =======
 
+v0.3.1
+------
+Released July 16, 2020
+
+* Objects in the :ref:`convolvable<api-convolvable>` module have been rearchitected as
+  functions.
+* Legacy functionality from the ``detector.Windowable`` class has been resurrected into
+  :func:`lentil.util.window`
+* Deprecate ``util.col_major_to_util_major()``
+* Lentil is now compatible with Python 3.6 and newer. `#9`_
+
+.. _#9: https://github.com/andykee/lentil/issues/9
+
 v0.3.0
 ------
 Released July 8, 2020
@@ -29,7 +42,6 @@ Released July 8, 2020
 
 .. _#7: https://github.com/andykee/lentil/issues/7
 .. _#8: https://github.com/andykee/lentil/issues/8
-
 
 v0.2.0
 ------
