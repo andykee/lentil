@@ -65,6 +65,14 @@ for i in np.diag(win_data):
     win_data[i-1:, i-1] = win_data[i-1, i-1]
 
 
+def test_window_none():
+    assert np.array_equal(lentil.util.window(win_data, shape=None, slice=None), win_data)
+
+
+def test_window_single():
+    assert np.array_equal(lentil.util.window(5), np.array(5))
+
+
 def test_even_window_shape():
     assert np.array_equal(lentil.util.window(win_data, shape=(2, 2)), np.array([[5, 5], [5, 6]]))
 
