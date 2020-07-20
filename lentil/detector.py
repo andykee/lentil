@@ -264,6 +264,7 @@ def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
         img = np.einsum('ijk,ijk->jk', img_cube, gain)
 
     img = np.floor(img)
+    img[img < 0] = 0
 
     if dtype is not None:
         img = img.astype(dtype)
