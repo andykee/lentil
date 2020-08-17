@@ -1,6 +1,12 @@
 Changes
 =======
 
+v0.3.3
+------
+Released August 17, 2020
+
+* Make FPN seed optional in ``detector.dark_current``
+
 v0.3.2
 ------
 Released July 20, 2020
