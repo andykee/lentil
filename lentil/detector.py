@@ -382,13 +382,17 @@ def dark_current(rate, shape=1, fpn_factor=0, seed=None):
 
     fpn_factor : float
         Dark current FPN factor. Should be between 0.1 and 0.4 for CCD and CMOS
-        sensors [1]. When fpn_factor is nonzero, seed must be provided. When
-        fpn_factor is 0 (default), dark current FPN is not applied.
+        sensors [1].
 
     seed : None, int, or array_like, optional
         Random seed used to initialize ``numpy.random.RandomState``. If
         ``None``, then ``RandomState`` will try to read data from /dev/urandom
         (or the Windows analogue) if available or seed from the clock otherwise.
+
+        .. warning::
+            Be aware that if fpn_factor is nonzero and a seed is not provided,
+            the fixed pattern noise will be different each time dark_current is
+            called.
 
     Returns
     -------
@@ -403,7 +407,6 @@ def dark_current(rate, shape=1, fpn_factor=0, seed=None):
 
     """
     if fpn_factor > 0:
-        assert seed is not None
         rng = np.random.RandomState(seed)
         fpn = rng.lognormal(mean=1.0, sigma=fpn_factor, size=shape)
     else:
