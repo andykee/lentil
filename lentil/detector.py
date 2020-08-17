@@ -829,7 +829,7 @@ def _process_cube_intersections(inter, xyz, dxdydz):
     _dxdydz = dxdydz[inter['indx'], :].astype(np.float32)
 
     draylength = np.ediff1d(inter['raylength'], to_begin=(0.0,))
-    np.putmask(draylength, np.ediff1d(inter['indx'], to_begin=(1,)) != 0,
+    np.putmask(draylength, np.ediff1d(inter['indx'], to_begin=np.array([1], dtype=np.uint64)) != 0,
                inter['raylength'])
 
     inter_point = _xyz + inter['raylength'][:, None] * _dxdydz

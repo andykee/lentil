@@ -6,6 +6,7 @@ v0.3.3
 Released August 17, 2020
 
 * Make FPN seed optional in ``detector.dark_current``
+* Update ``np.ediff1d`` usage to be compatible with Numpy 1.19
 
 v0.3.2
 ------
