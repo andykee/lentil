@@ -278,7 +278,7 @@ def shot_noise(img, method='poisson', seed=None):
     Parameters
     ----------
     img : array_like
-        Array of counts
+        Array of counts. All values must be >= 0.
 
     method : 'poisson' or 'gaussian'
         Noise method.
@@ -293,8 +293,12 @@ def shot_noise(img, method='poisson', seed=None):
     img : ndarray
         Array of noisy counts
 
-    Note
-    ----
+    Notes
+    -----
+    The output of the Poisson distribution is limited to the range of the C
+    int64 type. A ValueError is raised when img contains values within 10 sigma
+    of the maximum representable value (lam > 9.223372006484771e+18).
+
     For sufficiently large values of :math:`\lambda`,  (say :math:`\lambda >
     1000`), the Normal(:math:`\mu = \lambda`, :math:`\sigma^2 = \lambda`)
     distribution is an excellent approximation to the Poisson(:math:`\lambda`)
@@ -306,9 +310,23 @@ def shot_noise(img, method='poisson', seed=None):
     rng = np.random.RandomState(seed)
 
     if method == 'poisson':
-        img = rng.poisson(img)
+        try:
+            img = rng.poisson(img)
+        except ValueError as e:
+            if np.min(img) < 0:
+                raise ValueError('Counts must be positive')
+            elif np.max(img) > 9.223372006484771e+18:
+                raise ValueError('Counts exceed max representable value')
+            else:
+                raise e
     else:
-        img = rng.normal(scale=img)
+        # REF: https://stackoverflow.com/a/33701974
+        with np.errstate(divide='raise'):
+            try:
+                img = np.asarray(rng.normal(loc=img, scale=np.sqrt(img)), dtype=np.int)
+            except FloatingPointError:
+                raise ValueError('Counts must be positive')
+
     return np.floor(img)
 
 
