@@ -1,12 +1,22 @@
 Changes
 =======
 
+v0.3.4
+------
+Released September 8, 2020
+
+* Fix implementation error in Gaussian detector.shot_noise
+* Add better exception handling for detector.shot_noise `#10`_
+* No longer check Python version on import
+* Update ``np.ediff1d`` usage to be compatible with Numpy 1.19
+
+.. _#10: https://github.com/andykee/lentil/issues/10
+
 v0.3.3
 ------
 Released August 17, 2020
 
 * Make FPN seed optional in ``detector.dark_current``
-* Update ``np.ediff1d`` usage to be compatible with Numpy 1.19
 
 v0.3.2
 ------
