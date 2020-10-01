@@ -1220,7 +1220,7 @@ def path_transmission(iterable):
     return transmission
 
 
-def path_emission(iterable):
+def path_emission(iterable, emission=0):
     """Construct a common emission from an iterable of :class:`Material` objects
 
     Parameters
@@ -1228,12 +1228,16 @@ def path_emission(iterable):
     iterable: list_like
         List of :class:`Material` objects
 
+    emission: scalar or :class:`~lentil.radiometry.Spectrum`, optional
+        Emission collected upstream of the iterable path. This could be used to
+        represent things like zodiacal background or warm cavities emitting
+        into the first element of a path.
+
     Returns
     -------
     emission: :class:`~lentil.radiometry.Spectrum`
 
     """
-    emission = 0
     for item in iterable:
         emission = (emission * item.transmission) + item.emission
     return emission
