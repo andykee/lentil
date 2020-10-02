@@ -385,7 +385,13 @@ class Plane:
             phase = phase - phase_tilt
 
             # Set the wavefront angle
-            wavefront.tilt.extend([Tilt(x=t[1], y=t[2])])
+            #
+            # wavefront.tilt.extend([Tilt(x=t[1], y=t[2])])
+            #
+            # 01da13b transitioned from specifying tilt in terms of image plane
+            # coordinates to about the Tilt plane axes. We can transform from
+            # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
+            wavefront.tilt.extend([Tilt(x=-t[2], y=t[1])])
 
             # Compute and apply the phasor
             wavefront = self._multiply_phase(amplitude, phase, wavefront)
@@ -414,7 +420,13 @@ class Plane:
             # Set the tilt term
             # Create a wavefront.Angle object for each segment and put them all in a
             # list
-            wavefront.tilt.append([Tilt(x=t[seg, 1], y=t[seg, 2]) for seg in range(self.nseg)])
+            #
+            # wavefront.tilt.append([Tilt(x=t[seg, 1], y=t[seg, 2]) for seg in range(self.nseg)])
+            #
+            # 01da13b transitioned from specifying tilt in terms of image plane
+            # coordinates to about the Tilt plane axes. We can transform from
+            # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
+            wavefront.tilt.append([Tilt(x=-t[seg, 2], y=t[seg, 1]) for seg in range(self.nseg)])
 
         return wavefront
 
