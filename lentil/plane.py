@@ -650,16 +650,17 @@ class Tilt(Plane):
     Parameters
     ----------
     x : float
-        x tilt in radians
+        Radians of tilt about the x-axis
 
     y : float
-        y tilt in radians
+        Radians of tilt about the y-axis
 
     """
     def __init__(self, x, y):
         super().__init__()
-        self.x = x
-        self.y = y
+
+        self.x = y  # y tilt is about the x-axis. 
+        self.y = -x  # x tilt is about the y axis. There's also a sign flip to get the direction right.
 
     def multiply(self, wavefront, tilt):
         wavefront = super().multiply(wavefront, tilt)
