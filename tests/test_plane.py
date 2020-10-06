@@ -95,9 +95,7 @@ def test_grism_center():
 
 
 def test_grism_shift():
-    grism = lentil.Grism()
-    grism.trace = [1, 1]
-    grism.dispersion = [1, 650e-9]
+    grism = lentil.Grism(trace=[1,1], dispersion=[1,650e-9])
     wave = 900e-9
     x, y = grism.shift(wavelength=wave)
 

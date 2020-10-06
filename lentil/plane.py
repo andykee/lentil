@@ -1,5 +1,7 @@
 import numpy as np
 from scipy import ndimage
+import scipy.integrate
+import scipy.optimize
 
 from lentil.cache import Cache
 from lentil import util
@@ -600,56 +602,169 @@ class DispersivePhase(Plane):
 
 
 class Grism(DispersiveShift):
-    """Class for representing a grism."""
+    """Class for representing a grism.
 
-    def __init__(self, trace=None, dispersion=None, pixelscale=None, amplitude=1,
+    A grism is an optical element that can be inserted into a collimated beam
+    to disperse incoming light according to its wavelength. 
+    
+    Light is dispersed along a line called the the spectral trace. The position
+    along the trace is determined by the dispersion function of the grism. The 
+    local origin of the spectral trace is anchored relative to the undispersed 
+    position of the source. This basic geometry is illustrated in the figure 
+    below:
+
+    .. image:: ../_static/img/grism_geometry.png
+        :scale: 40%
+        :align: center
+
+    The spectral trace is parameterized by a polynomial of the form
+
+    .. math::
+
+        y = a_n x^n + \cdots + a_2 x^2 + a_1 x + a_0
+
+    and should return units of meters on the focal plane provided an input 
+    in meters on the focal plane.
+
+    Similarly, the spectral dispersion along the trace is parameterized by a
+    polynomial of the form
+
+    .. math::
+
+        d = a_n \lambda^n + \cdots + a_2 \lambda^2 + a_1 \lambda + a_0
+
+    and should return units of meters along the spectral trace provided an
+    input wavelength in meters.
+
+    Note
+    ----
+    Lentil supports trace and dispersion functions with any arbitrary polynomial
+    order. While a simple analytic solution exists for modeling first-order trace
+    and/or dispersion, there is no general solution for higher order functions.
+    
+    As a result, trace and/or dispersion polynomials with order > 1 are evaluated
+    numerically. Although the effects are small, this approach impacts both the 
+    speed and precision of modeling grisms with higher order trace and/or 
+    dispersion functions. In cases where speed or accuracy are extremely important,
+    a custom solution may be required.
+    
+    Parameters
+    ----------
+    trace : array_like
+        Polynomial coefficients describing the spectral trace produced by the 
+        grism in decreasing powers (i.e. trace[0] represents the highest order
+        coefficient and trace[-1] represents the lowest). 
+        
+    dispersion : array_like
+        Polynomial coefficients describing the dispersion produced by the grism
+        in decreasing powers (i.e. dispersion[0] represents the highest order
+        coefficient and dispersion[-1] represents the lowest.) 
+        
+    See Also
+    --------
+    
+    """
+
+    def __init__(self, trace, dispersion, pixelscale=None, amplitude=1,
                  phase=0, mask=None, segmask=None):
         super().__init__(pixelscale=pixelscale, amplitude=amplitude, phase=phase,
                          mask=mask, segmask=segmask)
 
-        self._trace = trace
-        self._dispersion = dispersion
-
-    def __init_subclass__(cls, **kwargs):
-        cls._trace = None
-        cls._dispersion = None
-
-    @property
-    def trace(self):
-        return self._trace
-
-    @trace.setter
-    def trace(self, value):
-        if value is None:
-            self._trace = None
-        else:
-            self._trace = value
-
-    @property
-    def dispersion(self):
-        return self._dispersion
-
-    @dispersion.setter
-    def dispersion(self, value):
-        self._dispersion = value
+        self.trace = np.asarray(trace)
+        self._trace_order = self.trace.size - 1
+        assert self._trace_order >= 1
+        
+        self.dispersion = np.asarray(dispersion)
+        self._dispersion_order = self.dispersion.size - 1
+        assert self._dispersion_order >= 1
 
     def shift(self, wavelength, xs=0., ys=0., **kwargs):
 
-        # first we compute the distance d from the reference point to the
-        # requested wavelength
-        d = (wavelength - self.dispersion[1])/self.dispersion[0]
+        dist = self._dispersion(wavelength)
+        x, y = self._trace(dist) 
 
-        # https://www.physicsforums.com/threads/formula-for-finding-point-on-a-line-given-distance-along-a-line.419561/
-
-        # now we can compute the resulting coords due to the dispersion
-        x = d/np.sqrt(1+self.trace[0]**2)
-        y = np.polyval(self.trace, x)
-
-        # finally, we include the incoming shift
+        # Include any incoming shift
         x += xs
         y += ys
 
         return x, y
+
+    def _dispersion(self, wavelength):
+        """Compute distance along spectral trace given wavelength.
+
+        This method automatically selects the optimal computation stragegy
+        depending on the dispersion model order.
+
+        Parameters
+        ----------
+        wavelength: float
+            Wavelength to compute dispersed distance in meters. 
+
+        Returns
+        -------
+        distance: float
+            Distance along spectral trace relative to self.dispersion[-1]
+
+        """
+
+        if self._dispersion_order == 1:
+            # https://www.physicsforums.com/threads/formula-for-finding-point-on-a-line-given-distance-along-a-line.419561/
+            return self.dispersion[0] * (wavelength - self.dispersion[1])
+        else:
+            # Compute the arc length by numerically integrating from lambda_ref (dispersion[-1])
+            # to wavelength
+            return self._arc_len(self._dispersion_dist_func(wavelength), self.dispersion[-1], wavelength)
+
+    def _trace(self, dist):
+        
+        if self._trace_order == 1:
+            x = dist/np.sqrt(1+self.trace[0]**2)
+        else:
+            # Find x by matching the observed distance along the trace computed by
+            # self._arc_len(self._trace_dist_func(x), 0, x) with the known distance
+            # along the trace dist as provided from the wavelenbgth (via self._dispersion)
+            x = scipy.optimize.leastsq(self._trace_cost, x0=0, args=(dist,))[0]
+            
+        y = np.polyval(self.trace, x)
+
+        return x, y
+
+    @staticmethod
+    def _arc_len(dist_func, a, b):
+        """Compute arc length by numerically evaluating the following expression for arc length:
+
+        s = integrate sqrt(1+f'(x)^2) dx = integrate dist_func dx
+
+        where dist_func is either _dispersion_dist_func or _trace_dist_func and f(x) is the 
+        polynomial defining either the trace or dispersion.
+
+        Parameters
+        ----------
+        dist_func: func
+            Function defining the integrand to be numerically integrated
+        a, b: float
+            Lower and upper integration bounds
+
+        Reference
+        ---------
+        https://en.wikipedia.org/wiki/Arc_length#Finding_arc_lengths_by_integrating
+
+        """
+        return scipy.integrate.quad(dist_func, a, b)[0]
+    
+    def _dispersion_dist_func(self, wavelength):
+        # Integrand for computing dispersion (via numerical integration of arc length formula)
+        # along the polynomial defined by coefficients in self.dispersion
+        return np.sqrt(1 + np.polyval(np.polyder(self.dispersion), wavelength)**2)
+    
+    def _trace_dist_func(self, x):
+        # Integrand for computing distance along the trace (via numerical integration  of arc
+        # length formula) along the polynomial defined by coefficients in self.trace
+        return np.sqrt(1 + np.polyval(np.polyder(self.trace), x)**2)
+
+    def _trace_cost_func(self, x, dist):
+        # Compute difference between dist and distance computed along trace given x
+        return dist - self._arc_len(self._trace_dist_func(x), 0, x)
 
 
 class LensletArray(Plane):
