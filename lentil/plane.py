@@ -626,15 +626,15 @@ class Grism(DispersiveShift):
     and should return units of meters on the focal plane provided an input 
     in meters on the focal plane.
 
-    Similarly, the spectral dispersion along the trace is parameterized by a
+    Similarly, the wavelength along the trace is parameterized by a
     polynomial of the form
 
     .. math::
 
-        d = a_n \lambda^n + \cdots + a_2 \lambda^2 + a_1 \lambda + a_0
+        \lambda = a_n d^n + \cdots + a_2 d^2 + a_1 d + a_0
 
-    and should return units of meters along the spectral trace provided an
-    input wavelength in meters.
+    and should return units of meters of wavelength provided an input distance
+    along the spectral trace.
 
     Note
     ----
@@ -708,27 +708,48 @@ class Grism(DispersiveShift):
         """
 
         if self._dispersion_order == 1:
-            # https://www.physicsforums.com/threads/formula-for-finding-point-on-a-line-given-distance-along-a-line.419561/
-            return self.dispersion[0] * (wavelength - self.dispersion[1])
+            # For a first order polynomial we have lambda = dispersion[0] * dist + dispersion[1]
+            # Solving for distance gives dist = (lambda - dispersion[1])/dispersion[0]
+            return (wavelength - self.dispersion[1]) / self.dispersion[0]
         else:
             # Compute the arc length by numerically integrating from lambda_ref (dispersion[-1])
             # to wavelength
-            return self._arc_len(self._dispersion_dist_func(wavelength), self.dispersion[-1], wavelength)
+            #return self._arc_len(self._dispersion_dist_func, self.dispersion[-1], wavelength)
+            return scipy.optimize.leastsq(self._dist_cost_func, x0=0, args=(wavelength,))[0]
 
     def _trace(self, dist):
         
         if self._trace_order == 1:
+            # https://www.physicsforums.com/threads/formula-for-finding-point-on-a-line-given-distance-along-a-line.419561/
             x = dist/np.sqrt(1+self.trace[0]**2)
         else:
             # Find x by matching the observed distance along the trace computed by
             # self._arc_len(self._trace_dist_func(x), 0, x) with the known distance
-            # along the trace dist as provided from the wavelenbgth (via self._dispersion)
-            x = scipy.optimize.leastsq(self._trace_cost, x0=0, args=(dist,))[0]
+            # along the trace dist as provided from the wavelength (via self._dispersion)
+            x = scipy.optimize.leastsq(self._trace_cost_func, x0=0, args=(dist,))[0]
             
         y = np.polyval(self.trace, x)
 
         return x, y
 
+    def _dispersion_wavelength_func(self, dist):
+        # Integrand for computing wavelength (via numerical integration of arc length formula)
+        # along the polynomial defined by coefficients in self.dispersion
+        #return np.sqrt(1 + np.polyval(np.polyder(self.dispersion), dist)**2)
+        return np.polyval(self.dispersion, dist)
+
+    def _dist_cost_func(self, x, wavelength):
+        return wavelength - self._dispersion_wavelength_func(x)
+
+    def _trace_dist_func(self, x):
+        # Integrand for computing distance along the trace (via numerical integration  of arc
+        # length formula) along the polynomial defined by coefficients in self.trace
+        return np.sqrt(1 + np.polyval(np.polyder(self.trace), x)**2)
+
+    def _trace_cost_func(self, x, dist):
+        # Compute difference between dist and distance computed along trace given x
+        return dist - self._arc_len(self._trace_dist_func, 0, x)
+    
     @staticmethod
     def _arc_len(dist_func, a, b):
         """Compute arc length by numerically evaluating the following expression for arc length:
@@ -751,20 +772,6 @@ class Grism(DispersiveShift):
 
         """
         return scipy.integrate.quad(dist_func, a, b)[0]
-    
-    def _dispersion_dist_func(self, wavelength):
-        # Integrand for computing dispersion (via numerical integration of arc length formula)
-        # along the polynomial defined by coefficients in self.dispersion
-        return np.sqrt(1 + np.polyval(np.polyder(self.dispersion), wavelength)**2)
-    
-    def _trace_dist_func(self, x):
-        # Integrand for computing distance along the trace (via numerical integration  of arc
-        # length formula) along the polynomial defined by coefficients in self.trace
-        return np.sqrt(1 + np.polyval(np.polyder(self.trace), x)**2)
-
-    def _trace_cost_func(self, x, dist):
-        # Compute difference between dist and distance computed along trace given x
-        return dist - self._arc_len(self._trace_dist_func(x), 0, x)
 
 
 class LensletArray(Plane):
