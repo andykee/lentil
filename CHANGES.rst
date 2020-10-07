@@ -1,6 +1,19 @@
 Changes
 =======
 
+v0.4.0
+------
+Released October 6, 2020
+
+* Update Grism model to use correct definition of dispersion, accomodate
+  trace and dispersion models with polynomial order > 1
+* Establish coordinate system `#12`_
+* Fix direction and orientation of Tilt `#12`_
+* Allow spectral inputs to radiometry.path_emission
+
+.. _#12: https://github.com/andykee/lentil/issues/12
+
+
 v0.3.4
 ------
 Released September 8, 2020
