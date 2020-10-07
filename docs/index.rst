@@ -29,6 +29,7 @@ functions of segmented aperture telescopes.
     :maxdepth: 1
 
     user_guide/overview
+    user_guide/coordinate_system
     user_guide/plane
     user_guide/diffraction
     user_guide/wavefront_error
