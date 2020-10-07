@@ -9,12 +9,12 @@ Released October 7, 2020
 
 v0.4.0
 ------
+Released October 6, 2020
+
 .. warning::
 
   The Grism model updates are broken in this release. It has been yanked from 
   PyPi. The issue is fixed in v0.4.1.
-
-Released October 6, 2020
 
 * Update Grism model to use correct definition of dispersion, accomodate
   trace and dispersion models with polynomial order > 1
