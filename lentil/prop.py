@@ -361,13 +361,14 @@ def _propagate_pupil_image_fixed(w, pixelscale, npix, oversample):
 
     alpha = (w.pixelscale * pixelscale) / (w.wavelength * w.focal_length * oversample)
 
-    data = np.zeros((w.depth, npix[0], npix[1]), dtype=np.complex128)
+    data = np.empty((w.depth, npix[0], npix[1]), dtype=np.complex128)
 
     assert shift.shape[0] == w.depth, \
         'Dimension mismatch between tilt and wavefront depth'
 
     for d in range(w.depth):
-        data[d] = fourier.dft2(w.data[d], alpha, npix, res_shift[d])
+        # data[d] = fourier.dft2(w.data[d], alpha, npix, res_shift[d])
+        fourier.dft2(w.data[d], alpha, npix, res_shift[d], unitary = True, out = data[d])
 
     w.data = data
 
