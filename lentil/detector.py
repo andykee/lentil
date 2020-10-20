@@ -179,7 +179,7 @@ def pixelate(img, oversample):
     return lentil.util.rescale(img, 1/oversample, order=3, mode='nearest', unitary=True)
 
 
-def adc(img, gain, bit_depth, saturation_capacity=None, warn_saturate=False, dtype=None):
+def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
     """Analog to digital conversion
 
     Parameters
@@ -271,7 +271,7 @@ def adc(img, gain, bit_depth, saturation_capacity=None, warn_saturate=False, dty
     img[img < 0] = 0
 
     # enforce bit depth max
-    img[img > 2**bit_depth - 1] = 2**bit_depth - 1
+    #img[img > 2**bit_depth - 1] = 2**bit_depth - 1
 
     if dtype is not None:
         img = img.astype(dtype)
