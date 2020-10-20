@@ -3,7 +3,7 @@ import copy
 import numpy as np
 import scipy
 
-__all__ = ['Spectrum', 'Blackbody', 'Material', 'path_emission', 'path_transmission',
+__all__ = ['Spectrum', 'Blackbody', 'Material', 'trim_spectrum', 'path_emission', 'path_transmission',
            'planck_radiance', 'planck_exitance', 'vegaflux']
 
 # Constants
@@ -966,6 +966,39 @@ def _interp_common(s1, s2, sampling, method, fill_value):
     s2_value[s2_index] = s2_samplevalue
 
     return commonwave, s1_value, s2_value
+
+
+def trim_spectrum(spectrum, trim_tol, copy=False):
+
+    if copy:
+        s = spectrum.copy()
+    else:
+        s = spectrum
+    
+    s.trim(trim_tol)
+    return s
+
+
+def sample_spectrum(spectrum, wave_sampling, wavescale=1):
+
+    if copy:
+        s = spectrum.copy()
+    else:
+        s = spectrum
+
+    start = s.wave[0]
+    stop = s.wave[-1]
+    num = int(np.round((stop-start)/wave_sampling*1e9))
+    wave = np.linspace(start, stop, num)
+    value = s.sample(wave)
+    return wave, value
+
+
+def bin_spectrum(spectrum, wave_sampling, wavescale=1):
+
+    wave, _ = sample_spectrum(spectrum, wave_sampling, wavescale)
+    value = spectrum.bin(wave, waveunit=spectrum.waveunit)
+    return wave, value
 
 
 class Blackbody(Spectrum):
