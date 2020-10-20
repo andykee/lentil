@@ -28,8 +28,8 @@ def power_spectrum(mask, pixelscale, rms, half_power_freq, exp, seed=None):
 
     seed : int, optional
         Random seed used to initialize the pseudo-random number generator. If
-        :attr:`PowerSpectrumWFE.seed` is `None` (default), the seed will
-        be randomly generated from `/dev/urandom` if available or the clock.
+        seed is `None` (default), the seed will be randomly generated from 
+        ``/dev/urandom`` if available or the system clock.
 
     Returns
     -------

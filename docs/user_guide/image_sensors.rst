@@ -2,8 +2,8 @@
 Image Sensors
 *************
 Lentil does not provide an end-to-end detector modeling capability, but instead provides
-a :ref:`collection of functions<api-detector>` to help model image sensors and
-represent some of the more commonly encountered noise sources.
+a collection of functions in the :ref:`detector module<api-detector>` to help model image 
+sensors and represent some of the more commonly encountered noise sources.
 
 Basic Signal Flow
 =================
@@ -12,7 +12,7 @@ produced by each pixel is subject to a number of physical characteristics and is
 degraded by a variety of noise sources. The core components of this process are
 represented in the figure below:
 
-.. image:: ../_static/img/image_sensor_signal_flow.png
+.. image:: /_static/img/image_sensor_signal_flow.png
     :width: 75%
 
 

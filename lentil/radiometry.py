@@ -486,7 +486,7 @@ class Spectrum:
 
         Two different first/last bin edge methods are available:
 
-        .. image:: ../_static/img/api/radiometry/spectrum_bin.png
+        .. image:: /_static/img/api/radiometry/spectrum_bin.png
 
         ========= =============================================== ==================================================================================
         ends      Left edge for ``wave[0]``                       Right edge for ``wave[-1]``
@@ -1005,7 +1005,7 @@ class Blackbody(Spectrum):
         >>> src = mo.radiometry.Blackbody(wave,temp,waveunit='nm')
         >>> plt.plot(src.wave, src.value), plt.grid()
 
-    .. image:: ../_static/img/api/radiometry/blackbody.png
+    .. image:: /_static/img/api/radiometry/blackbody.png
         :width: 400px
 
     """
@@ -1070,15 +1070,11 @@ class Blackbody(Spectrum):
         valueunit : str
             Flux units, as accepted by :func:`Unit`. Default is ``photlam``.
 
-        Attributes
-        ----------
-        value : ndarray
-            Spectral irradiance
-
         Examples
         --------
         Create a Blackbody object with wavelength range 400-900 nm, a temperature of
         4000K, and a visible magnitude of 2:
+        
         .. code:: pycon
 
             >>> import numpy as np
@@ -1091,7 +1087,7 @@ class Blackbody(Spectrum):
             >>> src = mo.radiometry.Blackbody.vegamag(wave,temp,mag,band,waveunit='nm')
             >>> plt.plot(src.wave, src.value), plt.grid()
 
-        .. image:: ../_static/img/api/radiometry/blackbody_vegamag.png
+        .. image:: /_static/img/api/radiometry/blackbody_vegamag.png
             :width: 400px
 
         Notes

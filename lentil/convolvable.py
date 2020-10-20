@@ -104,7 +104,7 @@ def jitter(img, scale, pixelscale=1, oversample=1):
         >>> plt.subplot(121), plt.imshow(psf)
         >>> plt.subplot(122), plt.imshow(psf_jitter)
 
-    .. image:: ../_static/img/api/convolvable/jitter_px.png
+    .. image:: /_static/img/api/convolvable/jitter_px.png
         :width: 500px
 
     Apply 20 um jitter to a 3x oversampled PSF. Note that because we are
@@ -125,7 +125,7 @@ def jitter(img, scale, pixelscale=1, oversample=1):
         >>> plt.subplot(121), plt.imshow(psf)
         >>> plt.subplot(122), plt.imshow(psf_jitter)
 
-    .. image:: ../_static/img/api/convolvable/jitter_m.png
+    .. image:: /_static/img/api/convolvable/jitter_m.png
         :width: 500px
 
     References
@@ -199,7 +199,7 @@ def smear(img, distance, angle=None, pixelscale=1, oversample=1):
         >>> plt.subplot(121), plt.imshow(psf)
         >>> plt.subplot(122), plt.imshow(psf_smear)
 
-    .. image:: ../_static/img/api/convolvable/smear_m.png
+    .. image:: /_static/img/api/convolvable/smear_m.png
         :width: 500px
 
     Apply 10 pixels smear at a random angle to a 3x oversampled PSF:
@@ -214,7 +214,7 @@ def smear(img, distance, angle=None, pixelscale=1, oversample=1):
         >>> plt.subplot(121), plt.imshow(psf)
         >>> plt.subplot(122), plt.imshow(psf_smear)
 
-    .. image:: ../_static/img/api/convolvable/smear_px.png
+    .. image:: /_static/img/api/convolvable/smear_px.png
         :width: 500px
 
     References

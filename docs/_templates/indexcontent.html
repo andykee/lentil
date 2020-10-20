@@ -1,0 +1,82 @@
+{#
+    Loosely inspired by the deprecated sphinx/themes/basic/defindex.html
+  #}
+  {%- extends "layout.html" %}
+  {% set title = _('Overview') %}
+  {% block body %}
+  <h1>Lentil documentation</h1>
+  <p><strong>Version</strong>: {{ release|e }}</p>
+  {% if last_updated %}<p><strong>Date</strong>: {{ last_updated|e }}</p>{% endif %}
+
+  <p>
+    Lentil is a Python library for modeling the imaging chain of an optical system.
+    It was originally developed at NASA's Jet Propulsion Lab by the Wavefront Sensing and
+    Control group (383E) to provide an easy to use framework for simulating point spread
+    functions of segmented aperture telescopes.
+ </p>
+
+  <div class="admonition note">
+    <p class="admonition-title">Note</p>
+    <p>Lentil is still under active development and new features continue to be added.
+    Until Lentil reaches version 1.0, the API is not guaranteed to be stable, but
+    changes breaking backwards compatibility will be noted.</p>
+  </div> 
+
+  <p><strong>Getting started</strong></p>
+  <table class="contentstable" align="center"><tr>
+      <td width="50%">
+        <p class="biglink"><a class="biglink" href="{{ pathto("getting_started/install") }}"">Installation</a><br/>
+        <p class="biglink"><a class="biglink" href="{{ pathto("getting_started/overview") }}"">Package Overview</a><br/>
+      <span class="linkdescr">An overview of Lentil features</span></p>
+        <p class="biglink"><a class="biglink" href="{{ pathto("getting_started/tutorials/index") }}">Getting started tutorials</a><br/>
+      <span class="linkdescr">Learn basic concepts</span></p>
+    </td></tr>
+  </table>
+  
+  <p><strong>User guide</strong></p>
+  <table class="contentstable" align="center"><tr>
+      <td width="50%">
+        <p class="biglink"><a class="biglink" href="{{ pathto("user_guide/planes") }}">Optical Planes</a><br/>
+      <span class="linkdescr">Defining pupil, image, and intermediate optical planes</span></p>
+        <p class="biglink"><a class="biglink" href="{{ pathto("user_guide/diffraction") }}">Modeling Diffraction</a><br/>
+      <span class="linkdescr">How Lentil numerically models diffraction propagation</span></p>
+        <p class="biglink"><a class="biglink" href="{{ pathto("user_guide/wavefront_error") }}">Wavefront Errors</a><br/>
+      <span class="linkdescr">Represent a variety of wavefront errors</span></p>
+        <p class="biglink"><a class="biglink" href="{{ pathto("user_guide/coordinate_system") }}">Coordinate System</a><br/>
+      <span class="linkdescr">Details of Lentil's coordinate system</span></p>
+        <p class="biglink"><a class="biglink" href="{{ pathto("user_guide/radiometry") }}">Radiometry</a><br/>
+      <span class="linkdescr">Working with radiometric data</span></p>
+        <p class="biglink"><a class="biglink" href="{{ pathto("user_guide/image_sensors") }}">Image Sensors</a><br/>
+      <span class="linkdescr">Tools for modeling focal plane arrays</span></p>
+        <p class="biglink"><a class="biglink" href="{{ pathto("user_guide/imaging_artifacts") }}">Imaging Artifacts</a><br/>
+      <span class="linkdescr">Applying static and dynamic artifacts to modeled images</span></p>
+        <p class="biglink"><a class="biglink" href="{{ pathto("patterns/index") }}">Model Patterns</a><br/>
+      <span class="linkdescr">General solutions to common problems</span></p>
+        <p class="biglink"><a class="biglink" href="{{ pathto("user_guide/performance") }}">Optimizing Performance</a><br/>
+      <span class="linkdescr">Making models run faster</span></p>
+        <p class="biglink"><a class="biglink" href="{{ pathto("user_guide/matlab") }}">Using Lentil with MATLAB</a><br/>
+      <span class="linkdescr">Tips and tricks for using Lentil and MATLAB together</span></p>
+    </td></tr>
+  </table>
+  
+  <p><strong>API reference</strong></p>
+  <table class="contentstable" align="center"><tr>
+      <td width="50%">
+  <p class="biglink"><a class="biglink" href="{{ pathto("reference/index") }}">Lentil API reference</a><br/>
+          <span class="linkdescr">Automatically generated reference documentation</span></p>
+      </td></tr>
+    </table>
+        
+  
+  <p><strong>Developer guide</strong></p>
+  <table class="contentstable" align="center"><tr>
+      <td width="50%">
+        <p class="biglink"><a class="biglink" href="{{ pathto("dev/index") }}">Lentil contributor guide</a><br/>
+          <span class="linkdescr">How to contribute</span></p>
+        <p class="biglink"><a class="biglink" href="{{ pathto("dev/tech_notes/index") }}">Technical notes</a><br/>
+      <span class="linkdescr">Specialized documentation describing Lentil's technical inner workings</span></p>
+        <p class="biglink"><a class="biglink" href="{{ pathto("dev/changes") }}">Release notes</a><br/>
+      </td></tr>
+    </table>
+  
+  {% endblock %}

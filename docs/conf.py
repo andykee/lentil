@@ -37,21 +37,17 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # -- Options for HTML output -------------------------------------------------
 
-html_theme = 'candle'
+html_theme = 'pydata_sphinx_theme'
 html_theme_options = {
-    'prev_next_buttons_location': None,
-    'collapse_navigation': False,
-    'display_version': True,
-    'logo_only': True,
-    'navbar_links': [
-        ('Get Started', 'https://lentil.readthedocs.io/en/latest/index.html#get-started'),
-        ('User Guide', 'https://lentil.readthedocs.io/en/latest/index.html#user-guide'),
-        ('API', 'https://lentil.readthedocs.io/en/latest/index.html#api'),
-        ('Resources', 'https://lentil.readthedocs.io/en/latest/index.html#resources'),
-        ('Github', 'https://github.com/andykee/lentil')
-    ]
+    'show_prev_next': False,
+    'google_analytics_id': 'UA-180546240-1',
+    'github_url': 'https://github.com/andykee/lentil'
 }
 html_logo = '_static/img/lentil.png'
+
+html_additional_pages = {
+    'index': 'indexcontent.html'
+}
 
 html_static_path = ['_static']
 html_show_sphinx = False
@@ -59,6 +55,7 @@ html_show_sourcelink = False
 html_scaled_image_link = False
 
 html_js_files = ['js/copybutton.js']
+html_css_files = ['css/lentil.css', 'css/syntax-highlighting.css']
 
 pygments_style = 'default'
 
@@ -71,3 +68,4 @@ autodoc_default_options = {
     'exclude-members': '__init__, __weakref__, __dict__, __module__'
 }
 
+autosummary_generate = True

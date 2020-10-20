@@ -1,14 +1,15 @@
 .. _api-lentil:
 
-******
-lentil
-******
+*************************
+Core library (``lentil``)
+*************************
 
 .. currentmodule:: lentil
 
 Optical Planes
 ==============
 .. autosummary::
+    :toctree: ../generated/
 
     lentil.Plane
     lentil.Pupil
@@ -17,40 +18,22 @@ Optical Planes
 Special Planes
 ==============
 .. autosummary::
+    :toctree: ../generated/
 
     lentil.Grism
 
 Diffraction Modeling
 ====================
 .. autosummary::
+    :toctree: ../generated/
 
     lentil.propagate
 
 Coordinate Transformations
 ==========================
 .. autosummary::
+    :toctree: ../generated/
 
     lentil.Tilt
     lentil.Rotate
     lentil.Flip
-
-
-.. autoclass:: lentil.Plane
-    :members:
-
-.. autoclass:: lentil.Pupil
-    :members:
-    :inherited-members:
-
-.. autoclass:: lentil.Image
-    :members: pixelscale, shape, multiply, frame, mask
-
-.. autoclass:: lentil.Grism
-
-.. autofunction:: lentil.propagate
-
-.. autoclass:: lentil.Tilt
-
-.. autoclass:: lentil.Rotate
-
-.. autoclass:: lentil.Flip

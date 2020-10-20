@@ -266,6 +266,12 @@ def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
     img = np.floor(img)
     img[img < 0] = 0
 
+<<<<<<< HEAD
+=======
+    # enforce bit depth max
+    #img[img > 2**bit_depth - 1] = 2**bit_depth - 1
+
+>>>>>>> 3ad52f3... Remove bit_depth from detector
     if dtype is not None:
         img = img.astype(dtype)
 
@@ -559,7 +565,7 @@ def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, alpha_flux=4e9
         >>> cosmic_frame = lentil.detector.cosmic_rays((256,256), (5e-6, 5e-6, 3e-6), 300)
         >>> plt.imshow(cosmic_frame)
 
-    .. image:: ../_static/img/api/detector/cosmic_ray.png
+    .. image:: /_static/img/api/detector/cosmic_ray.png
         :width: 300px
 
     References

@@ -2,67 +2,9 @@
 Using Lentil with MATLAB
 ************************
 
-.. _configuring-matlab:
-
-Configuring MATLAB to use the correct version of Python
-=======================================================
-MATLAB automatically selects and loads a Python version when you type a Python command.
-It commonly defaults to using Python 2.7, which is not at all what we want. We need to
-tell MATLAB where to find the correct version of Python (>=3.7). For MATLAB r2020a or
-later:
-
-.. code-block:: matlab
-
-    pyenv('Version', '/path/to/python3/executable')
-
-For MATLAB r2019b or earlier:
-
-.. code-block:: matlab
-
-    pyversion '/path/to/python3/executable'
-
-The Python version can be set temporarily by executing the above command when MATLAB
-launches or automatically by adding the command to your ``startup.m`` file.
-
-.. note::
-    If you're using virtual environments to manage different Lentil models, the
-    ``pyenv/pyversion`` configuration specified above won't work. Instead, you'll need
-    to call ``pyenv/pyversion`` with the correct virtual environment version before
-    working with a model. Don't forget to call the MKL conflict fix as well. This is
-    annoying. Sorry about that. It's a MATLAB "feature".
-
-.. warning::
-    Once you've set ``pyenv/pyversion`` within a MATLAB session, the only way to change
-    it is to restart MATLAB. This means that if you're working with virtual
-    environments to manage different models, you'll have to restart MATLAB each time you
-    want to switch models. This is annoying. Sorry about that. It's a MATLAB "feature".
-
-For more help on setting MATLAB's Python version, see
-`System and Configuration Requirements <https://www.mathworks.com/help/matlab/matlab_external/system-and-configuration-requirements.html>`_.
-
-
-Resolving MKL Conflicts
------------------------
-MATLAB doesn't always load the correct libraries the underlying Python code relies on.
-In particular, there seems to be some confusion about when to load MKL. There is no
-telltale sign this has occurred. Sometimes MATLAB crashes while other times Python
-method calls will error out with messages that may or may not be useful. The following
-command will clear up MATLAB's confusion by handing control of which libraries Python
-needs back to Python:
-
-.. code-block:: matlab
-
-    py.sys.setdlopenflags(int32(10));
-
-This command sets the ``RTLD_NOW`` and ``RTLD_DEEPBIND`` flags when the active Python
-instance calls ``dlopen()`` `[1]`_ `[2]`_ `[3]`_. Note that this command is Unix only
-and must be called before the Python interpreter is loaded within MATLAB but after
-``pyenv/pyversion`` is set, making it a prime candidate for inclusion in ``startup.m``.
-
-.. _[1]: https://www.mathworks.com/matlabcentral/answers/327193-calling-python-module-from-matlab-causes-segmentation-fault-in-h5py#answer_296569
-.. _[2]: http://man7.org/linux/man-pages/man3/dlopen.3.html
-.. _[3]: https://docs.python.org/3.6/library/sys.html#sys.setdlopenflags
-
+.. contents::
+    :local:
+    :depth: 1
 
 
 MATLAB Lentil Interface
@@ -126,6 +68,69 @@ Finally, a few links that may be helpful when developing a MATLAB interface:
 
     It is not fully understood what happens when you wrap a call to a Python object in a
     ``parfor`` loop in MATLAB. Buyer beware.
+
+
+
+.. _configuring-matlab:
+
+Configuring MATLAB to use the correct version of Python
+=======================================================
+MATLAB automatically selects and loads a Python version when you type a Python command.
+It commonly defaults to using Python 2.7, which is not at all what we want. We need to
+tell MATLAB where to find the correct version of Python (>=3.7). For MATLAB r2020a or
+later:
+
+.. code-block:: matlab
+
+    pyenv('Version', '/path/to/python3/executable')
+
+For MATLAB r2019b or earlier:
+
+.. code-block:: matlab
+
+    pyversion '/path/to/python3/executable'
+
+The Python version can be set temporarily by executing the above command when MATLAB
+launches or automatically by adding the command to your ``startup.m`` file.
+
+.. note::
+    If you're using virtual environments to manage different Lentil models, the
+    ``pyenv/pyversion`` configuration specified above won't work. Instead, you'll need
+    to call ``pyenv/pyversion`` with the correct virtual environment version before
+    working with a model. Don't forget to call the MKL conflict fix as well. This is
+    annoying. Sorry about that. It's a MATLAB "feature".
+
+.. warning::
+    Once you've set ``pyenv/pyversion`` within a MATLAB session, the only way to change
+    it is to restart MATLAB. This means that if you're working with virtual
+    environments to manage different models, you'll have to restart MATLAB each time you
+    want to switch models. This is annoying. Sorry about that. It's a MATLAB "feature".
+
+For more help on setting MATLAB's Python version, see
+`System and Configuration Requirements <https://www.mathworks.com/help/matlab/matlab_external/system-and-configuration-requirements.html>`_.
+
+
+Resolving MKL Conflicts
+-----------------------
+MATLAB doesn't always load the correct libraries the underlying Python code relies on.
+In particular, there seems to be some confusion about when to load MKL. There is no
+telltale sign this has occurred. Sometimes MATLAB crashes while other times Python
+method calls will error out with messages that may or may not be useful. The following
+command will clear up MATLAB's confusion by handing control of which libraries Python
+needs back to Python:
+
+.. code-block:: matlab
+
+    py.sys.setdlopenflags(int32(10));
+
+This command sets the ``RTLD_NOW`` and ``RTLD_DEEPBIND`` flags when the active Python
+instance calls ``dlopen()`` `[1]`_ `[2]`_ `[3]`_. Note that this command is Unix only
+and must be called before the Python interpreter is loaded within MATLAB but after
+``pyenv/pyversion`` is set, making it a prime candidate for inclusion in ``startup.m``.
+
+.. _[1]: https://www.mathworks.com/matlabcentral/answers/327193-calling-python-module-from-matlab-causes-segmentation-fault-in-h5py#answer_296569
+.. _[2]: http://man7.org/linux/man-pages/man3/dlopen.3.html
+.. _[3]: https://docs.python.org/3.6/library/sys.html#sys.setdlopenflags
 
 
 Troubleshooting

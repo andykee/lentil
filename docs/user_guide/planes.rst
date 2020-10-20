@@ -2,8 +2,8 @@
 Optical Planes
 **************
 
-Planes
-======
+Plane
+=====
 Lentil's :class:`~lentil.Plane` object represents a discretely sampled plane in an
 optical model. Planes typically have some influence on the propagation of a
 wavefront through a model. Planes have the following attributes that interact with a
@@ -42,7 +42,7 @@ Simple Planes are easy to define from the command line:
     >>> aperture = lentil.Plane(amplitude=lentil.util.circle((256,256), 128))
     >>> plt.imshow(aperture.amplitude)
 
-.. image:: ../_static/img/circle_amplitude.png
+.. image:: /_static/img/circle_amplitude.png
     :width: 300px
 
 Once a Plane is defined, its attributes can be modified at any time:
@@ -52,7 +52,7 @@ Once a Plane is defined, its attributes can be modified at any time:
     >>> aperture.phase = 2e-6 * lentil.zernike.zernike(aperture.mask, 4)
     >>> plt.imshow(aperture.phase)
 
-.. image:: ../_static/img/circle_focus.png
+.. image:: /_static/img/circle_focus.png
     :width: 300px
 
 In a module
@@ -106,8 +106,8 @@ randomness:
     For more details, see :ref:`caching`.
 
 
-Pupils
-======
+Pupil
+=====
 
 .. |Pupil| replace:: :class:`~lentil.Pupil`
 .. |Image| replace:: :class:`~lentil.Image`
@@ -129,8 +129,8 @@ subclassing |Pupil|. See :ref:`creating-planes` for details.
 .. [1] Goodman, *Introduction to Fourier Optics*.
 
 
-Image Planes
-============
+Image
+=====
 
 Tilt
 ====
@@ -152,7 +152,7 @@ planes:
     >>> psf = lentil.propagate([pupil, detector], wave=650e-9, npix=(64, 64))
     >>> plt.imshow(psf, origin='lower')
 
-.. image:: ../_static/img/psf_64.png
+.. image:: /_static/img/psf_64.png
     :width: 300px
 
 it is simple to see the effect of introducing a tilted wavefront into the system:
@@ -163,7 +163,7 @@ it is simple to see the effect of introducing a tilted wavefront into the system
     >>> psf = lentil.propagate([tilt, pupil, detector], wave=650e-9, npix=(64, 64))
     >>> plt.imshow(psf, origin='lower')
 
-.. image:: ../_static/img/psf_64_tilt.png
+.. image:: /_static/img/psf_64_tilt.png
     :width: 300px
 
 Plane Transformations
@@ -181,7 +181,7 @@ The plane transformation examples below are used to modify the following image:
     >>> plt.imshow(psf, origin='lower')
 
 
-.. image:: ../_static/img/psf_coma.png
+.. image:: /_static/img/psf_coma.png
     :width: 300px
 
 Rotate
@@ -194,7 +194,7 @@ Rotate
     >>> psf = lentil.propagate([pupil, rotation, detector], wave=650e-9, npix=(128, 128))
     >>> plt.imshow(psf, origin='lower')
 
-.. image:: ../_static/img/psf_coma_rotate.png
+.. image:: /_static/img/psf_coma_rotate.png
     :width: 300px
 
 Flip
@@ -207,7 +207,7 @@ Flip
     >>> psf = lentil.propagate([pupil, flip, detector], wave=650e-9, npix=(128, 128))
     >>> plt.imshow(psf, origin='lower')
 
-.. image:: ../_static/img/psf_coma_flip.png
+.. image:: /_static/img/psf_coma_flip.png
     :width: 300px
 
 
