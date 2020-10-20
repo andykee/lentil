@@ -368,7 +368,7 @@ def _propagate_pupil_image_fixed(w, pixelscale, npix, oversample):
 
     for d in range(w.depth):
         # data[d] = fourier.dft2(w.data[d], alpha, npix, res_shift[d])
-        fourier.dft2(w.data[d], alpha, npix, res_shift[d], unitary = True, out = data[d])
+        data[d] = fourier.dft2(w.data[d], alpha, npix, res_shift[d], unitary= True, out=data[d])
 
     w.data = data
 

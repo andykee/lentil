@@ -1,11 +1,8 @@
+import functools
 import numpy as np
 
 __all__ = ['dft2', 'idft2']
 
-_cacheE1 = {}
-_cacheE2 = {}
-_cacheMbyn = {}
-_cacheArange = {}
 
 def dft2(f, alpha, npix=None, shift=(0, 0), unitary=True, out=None):
     """Compute the 2-dimensional discrete Fourier Transform.
@@ -38,6 +35,11 @@ def dft2(f, alpha, npix=None, shift=(0, 0), unitary=True, out=None):
         way, the energy in in a limited-area DFT is a fraction of the total
         energy corresponding to the limited area. Default is ``True``.
 
+    out : ndarray or None
+        A location into which the result is stored. If provided, it must have
+        shape = npix and dtype = np.complex. If not provided or None, a 
+        freshly-allocated array is returned.
+
     Returns
     -------
     F : complex ndarray
@@ -67,9 +69,9 @@ def dft2(f, alpha, npix=None, shift=(0, 0), unitary=True, out=None):
 
     alpha = np.asarray(alpha)
     if alpha.size == 1:
-        ay, ax = alpha, alpha
+        ay, ax = float(alpha), float(alpha)
     else:
-        ay, ax = alpha
+        ay, ax = float(alpha[0]), float(alpha[1])
 
     f = np.asarray(f)
     m, n = f.shape
@@ -79,103 +81,48 @@ def dft2(f, alpha, npix=None, shift=(0, 0), unitary=True, out=None):
 
     npix = np.asarray(npix)
     if npix.size == 1:
-        M, N = npix, npix
+        M, N = int(npix), int(npix)
     else:
-        M, N = npix
+        M, N = int(npix[0]), int(npix[1])
 
-    sx, sy = np.asarray(shift)
+    if isinstance(shift, np.ndarray):
+        sx, sy = float(shift[0]), float(shift[1])
+    else:
+        sx, sy = shift
 
-    # for profiling 
-    # logFile = open('/Users/shanti/Documents/proj/optiix/fourierlog.txt','a')
-    # logFile.write("%d %d %d %d %g %g\n" % (M, m, n, N, sx, sy))
+    if out is not None:
+        if not np.can_cast(complex, out.dtype):
+            raise TypeError(f"Cannot cast complex output to dtype('{out.dtype}')")
 
-    oldWay = False
+    E1, E2 = _dft2_matrices(m, n, M, N, ax, ay, sx, sy)
+    F = np.dot(E1.dot(f), E2, out=out)
+
+    # now calculate the answer, without reallocating memory
+    if unitary:
+        np.multiply(F, np.sqrt(np.abs(ax * ay)), out=F)
+    
+    return F
+
+
+@functools.lru_cache(maxsize=32)
+def _dft2_matrices(m, n, M, N, ax, ay, sx, sy):
+    X, Y, U, V = _dft2_coords(m, n, M, N)
+    E1 = np.exp(-2.0 * np.pi * 1j * ay * np.outer(Y-sy, V-sy)).T
+    E2 = np.exp(-2.0 * np.pi * 1j * ax * np.outer(X-sx, U-sx))
+    return E1, E2
+
+
+@functools.lru_cache(maxsize=32)
+def _dft2_coords(m, n, M, N):
     # Y and X are (r,c) coordinates in the (m x n) input plane f
     # V and U are (r,c) coordinates in the (M x N) ourput plane F
-    if oldWay:
-        Y = np.arange(m, dtype = np.float64) - np.floor(m/2.0) - sy
-        V = np.arange(M, dtype = np.float64) - np.floor(M/2.0) - sy
-        X = np.arange(n, dtype = np.float64) - np.floor(n/2.0) - sx
-        U = np.arange(N, dtype = np.float64) - np.floor(N/2.0) - sx
-    else:
-        # allocate and precompute some of the arrays
-        if m in _cacheArange:
-            Y = _cacheArange[m]
-        else:
-            Y = _cacheArange[m] = np.arange(m, dtype = np.float64) - np.floor(m/2.0)
-        if M in _cacheArange:
-            V = _cacheArange[M]
-        else:
-            V = _cacheArange[M] = np.arange(M, dtype = np.float64) - np.floor(M/2.0)
-        if n in _cacheArange:
-            X = _cacheArange[n]
-        else:
-            X = _cacheArange[n] = np.arange(n, dtype = np.float64) - np.floor(n/2.0)
-        if N in _cacheArange:
-            U = _cacheArange[N]
-        else:
-            U = _cacheArange[N] = np.arange(N, dtype = np.float64) - np.floor(N/2.0)
+
+    X = np.arange(n) - np.floor(n/2.0)
+    Y = np.arange(m) - np.floor(m/2.0)
+    U = np.arange(N) - np.floor(N/2.0)
+    V = np.arange(M) - np.floor(M/2.0)
     
-    # Can't generally precompute E1 and E2 because the shift term varies in each call, and 
-    # storing all possibilities would lead to tremendous memory use. But we can store
-    # and reuse the preallocated empty matrices, since those tend to be the same sizes
-
-    if oldWay:
-        E1 = np.exp(-2.0 * np.pi * 1j * ay * np.outer(Y, V)).T
-    else:
-        key = "%d %d" % (M, m)
-        if key in _cacheE1:
-            E1 = _cacheE1[key]
-        else:
-            E1 = _cacheE1[key] = np.empty((M, m), dtype = np.complex128)
-            # logFile.write("alloc E1 %s\n" % (key))
-
-        np.outer(V - sy, Y - sy, out=E1) # same as transpose(outer(Y,V))
-        np.multiply(E1, -2.0 * np.pi * 1j * ay, out=E1)
-        np.exp(E1, out=E1)
-
-    if oldWay:
-        E2 = np.exp(-2.0 * np.pi * 1j * ax * np.outer(X, U))
-    else:
-        key = "%d %d" % (n, N)
-        if key in _cacheE2:
-            E2 = _cacheE2[key]
-        else:
-            E2 = _cacheE2[key] = np.empty((n, N), dtype = np.complex128)
-            # logFile.write("alloc E2 %s\n" % (key))
-
-        np.outer(X - sx, U - sx, out=E2)
-        np.multiply(E2, -2.0 * np.pi * 1j * ax, out=E2)
-        np.exp(E2, out=E2)
-
-    # place to store the result of E1.dot(f)
-    if oldWay:
-        F  = E1.dot(f).dot(E2) 
-    else:
-        key = "%d %d" % (M, n)
-        if key in _cacheMbyn:
-            Mbyn = _cacheMbyn[key]
-        else:
-            Mbyn = _cacheMbyn[key] = np.empty((M, n), dtype = np.complex128)
-            # logFile.write("alloc Mxn %s\n" % (key))
-
-        np.dot(E1,f,out = Mbyn)
-        F = np.dot(Mbyn,E2,out = out) 
-
-    # now calculate the answer, without allocating memory
-
-    if oldWay:
-        if unitary is True:
-            return F * np.sqrt(np.abs(ax * ay))
-        else:
-            return F
-    else:
-        if unitary is True:
-            # return F * np.sqrt(np.abs(ax * ay))
-            np.multiply(F,np.sqrt(np.abs(ax * ay)),out=F)
-    
-        # logFile.close()
-        return F
+    return X, Y, U, V
 
 
 def idft2(F, alpha, npix=None, shift=(0, 0), unitary=True, out=None):
