@@ -79,6 +79,6 @@ def test_dft2_shift():
 
 def test_dft2_out():
     n = 10
-    f = np.random.normal(size=(n,n))
+    f = np.random.normal(size=(n,n)).astype(np.complex)
     F = lentil.fourier.dft2(f, 1/n, out=f)
     assert f is F
