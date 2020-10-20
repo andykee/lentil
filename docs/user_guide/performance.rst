@@ -2,10 +2,73 @@
 Optimizing Performance
 **********************
 
+Selecting sensible propagation parameters
+=========================================
+Calls to the the :func:`~lentil.propagate` method are almost always the most expensive
+part of any model. Even the most efficient and streamlined models will suffer from poor
+performance when working with large arrays and many wavelengths. Understanding how each
+of the :func:`~lentil.propagate` method's parameters influence accuracy and speed will
+allow you to identify appropriate values for your specific needs.
+
+``propagate()``
+---------------
+
+.. list-table:: 
+   :widths: 20 40 40
+   :header-rows: 1
+
+   * - Parameter
+     - Usage
+     - Performance considerations
+   * - ``wave``, ``weight``
+     - Arrays representing wavelength and the corresponding weight of each wavelength in
+       the propagation.
+     - 
+   * - ``npix``
+     - Shape of output plane.
+     - The output plane size has minimal impact on propagation performance unless it is
+       astronomically large or if ``flatten`` is ``False``. ``npix`` should be set to 
+       ensure all data is adequately captured by the output plane.
+   * - ``npix_chip``
+     - Shape of propagation plane.
+     -
+   * - ``oversample``
+     - Number of times to oversample the output and propagation planes.
+     - The oversampling factor directly scales the output plane size. For accuracy, ``oversample``
+       should be selected to ensure propagations are Nyquist sampled, but there is no benefit in
+       selecting larger values.
+   * - ``flatten``
+     - If ``True``, the cube of wavelength-dependent output planes is flattened into a single
+       2D array before being returned. If ``False``, a cube of output planes is returned.
+     - 
+
+
+Talk about flux_trim_tol and wave_sampling here
+
+
+Multiprocessing
+===============
+
+.. _performance-image-simulation:
+
+
+Using appropriately sized planes
+================================
+Planes should be sized to ensure the smallest spatial features of interest are
+adequately sampled. 
+
+
+Image simulation
+================
+
+
 .. _caching:
 
 Caching
 =======
+
+Plane attributes
+----------------
 A number of plane attributes are accessed with each propagation wavelength. This
 behavior does does not impact performance unless any of these attributes are computed on
 the fly or are otherwise expensive to retrieve. To mitigate any potential performance
@@ -21,23 +84,17 @@ The cached attributes are defined in a list in each Plane's
 valid values are `'amplitude'` and `'phase'`. The default behavior is to cache both
 amplitude and phase attributes.
 
+DFT matrices
+------------
 
-.. _performance-image-simulation:
+Profiling your code
+===================
+There are several approaches to finding bottlenecks and inefficiencies. To really 
+understand what is happening, the code needs to be profiled. The Python standard
+library includes several `profilers <https://docs.python.org/3/library/profile.html>`_.
+``cProfile`` is simple to use and its profile results files can be visualized using
+`snakeviz <https://jiffyclub.github.io/snakeviz/>`_.
 
-Image simulation
-================
-
-
-
-.. Speeding up the FFT
-.. ===================
-
-
-.. Multiprocessing
-.. ===============
-
-.. Other Performance Tweaks
-.. ========================
 
 .. Faster photon to electron (quantum efficiency) calculations
 .. -----------------------------------------------------------

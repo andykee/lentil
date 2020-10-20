@@ -613,9 +613,9 @@ class Grism(DispersiveShift):
     position of the source. This basic geometry is illustrated in the figure 
     below:
 
-    .. image:: ../_static/img/grism_geometry.png
-        :scale: 40%
+    .. image:: /_static/img/grism_geometry.png
         :align: center
+        :width: 400px
 
     The spectral trace is parameterized by a polynomial of the form
 

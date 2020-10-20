@@ -145,7 +145,7 @@ def zernike_compose(mask, coeffs, normalize=True, rho=None, theta=None):
         >>> opd = lentil.zernike.zernike_compose(mask, coeffs)
         >>> plt.imshow(opd)
 
-    .. image:: ../_static/img/api/zernike/zernike_compose_1.png
+    .. image:: /_static/img/api/zernike/zernike_compose_1.png
         :width: 300px
 
     Using the same mask, compute an OPD representing 200 nm focus error (Z4) and -100 nm
@@ -156,7 +156,7 @@ def zernike_compose(mask, coeffs, normalize=True, rho=None, theta=None):
         >>> opd = mo.zernike.zernike_compose(mask, [0, 0, 0, 200e-9, 0, -100e-9])
         >>> plt.imshow(opd)
 
-    .. image:: ../_static/img/api/zernike/zernike_compose_2.png
+    .. image:: /_static/img/api/zernike/zernike_compose_2.png
         :width: 300px
 
     References
