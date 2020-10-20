@@ -179,7 +179,7 @@ def pixelate(img, oversample):
     return lentil.util.rescale(img, 1/oversample, order=3, mode='nearest', unitary=True)
 
 
-def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
+def adc(img, gain, bit_depth, saturation_capacity=None, warn_saturate=False, dtype=None):
     """Analog to digital conversion
 
     Parameters
@@ -201,6 +201,10 @@ def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
             * As a three-dimensional array of pixel-by-pixel gain where the
               first dimension gives polynomial coefficients of each pixel
 
+    bit_depth : int
+        ADC resolution in bits. The maximum representable gray value is
+        2^bit_depth - 1.
+        
     saturation_capacity : int or None
         Electron count resulting in pixel saturation. If None, pixels will not
         saturate. This is obviously nonphysical, but can be useful for testing
@@ -265,6 +269,9 @@ def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
 
     img = np.floor(img)
     img[img < 0] = 0
+
+    # enforce bit depth max
+    img[img > 2**bit_depth - 1] = 2**bit_depth - 1
 
     if dtype is not None:
         img = img.astype(dtype)
@@ -559,7 +566,7 @@ def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, alpha_flux=4e9
         >>> cosmic_frame = lentil.detector.cosmic_rays((256,256), (5e-6, 5e-6, 3e-6), 300)
         >>> plt.imshow(cosmic_frame)
 
-    .. image:: ../_static/img/api/detector/cosmic_ray.png
+    .. image:: /_static/img/api/detector/cosmic_ray.png
         :width: 300px
 
     References
