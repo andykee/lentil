@@ -12,7 +12,8 @@ $(document).ready(function() {
     pre.parent().parent().css('position', 'relative');
     var hide_text = 'Hide the prompts and output';
     var show_text = 'Show the prompts and output';
-    var border_width = pre.css('border-top-width');
+    //var border_width = pre.css('border-top-width');
+    var border_width = '0px';
     var border_style = pre.css('border-top-style');
     //var border_color = pre.css('border-top-color');
     var border_color = 'rgba(0,0,0,0.4)';
