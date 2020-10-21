@@ -183,7 +183,7 @@ def idft2(F, alpha, npix=None, shift=(0, 0), unitary=True, out=None):
 
     References
     ----------
-    * `Expressing the inverse DFT in terms of the DFT <https://en.wikipedia.org/wiki/Discrete_Fourier_transform#Expressing_the_inverse_DFT_in_terms_of_the_DFT>`_.  # NOQA
+    * `Expressing the inverse DFT in terms of the DFT <https://en.wikipedia.org/wiki/Discrete_Fourier_transform#Expressing_the_inverse_DFT_in_terms_of_the_DFT>`_.  
 
     """
     F = np.asarray(F)
