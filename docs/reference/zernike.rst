@@ -5,7 +5,7 @@ Zernike polynomials (``lentil.zernike``)
 ****************************************
 
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.zernike.zernike
     lentil.zernike.zernike_basis

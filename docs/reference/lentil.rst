@@ -1,15 +1,15 @@
 .. _api-lentil:
 
-***********
-Lentil core
-***********
+*************************
+Core library (``lentil``)
+*************************
 
 .. currentmodule:: lentil
 
 Optical Planes
 ==============
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.Plane
     lentil.Pupil
@@ -18,21 +18,21 @@ Optical Planes
 Special Planes
 ==============
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.Grism
 
 Diffraction Modeling
 ====================
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.propagate
 
 Coordinate Transformations
 ==========================
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.Tilt
     lentil.Rotate
