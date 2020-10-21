@@ -7,7 +7,7 @@ Utility functions (``lentil.util``)
 Image Manipulation
 ==================
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.util.boundary
     lentil.util.centroid
@@ -19,7 +19,7 @@ Image Manipulation
 Shapes
 ======
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
 
     lentil.util.circle
@@ -31,14 +31,14 @@ Shapes
 Kernels
 =======
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.util.gaussian2d
 
 Sparse Matrix Utilities
 =======================
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.util.v2m
     lentil.util.m2v
@@ -48,6 +48,6 @@ Sparse Matrix Utilities
 Miscellaneous
 =============
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.util.pixelscale_nyquist

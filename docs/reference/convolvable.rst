@@ -5,7 +5,7 @@ Imaging artifacts (``lentil.convolvable``)
 ******************************************
 
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.convolvable.jitter
     lentil.convolvable.smear

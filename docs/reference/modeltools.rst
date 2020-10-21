@@ -5,7 +5,7 @@ Model helper functions (``lentil.modeltools``)
 **********************************************
 
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.modeltools.normalize_power
     lentil.modeltools.iterable_amplitude

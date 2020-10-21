@@ -5,7 +5,7 @@ Functons for modeling detectors (``lentil.detector``)
 *****************************************************
 
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.detector.collect_charge
     lentil.detector.collect_charge_bayer

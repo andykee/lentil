@@ -7,14 +7,14 @@ Radiometry (``lentil.radiometry``)
 Spectrum
 ========
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.radiometry.Spectrum
 
 Blackbody
 =========
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.radiometry.Blackbody
     lentil.radiometry.planck_radiance
@@ -24,7 +24,7 @@ Blackbody
 Materials
 =========
 .. autosummary::
-    :toctree: generated/
+    :toctree: ../generated/
 
     lentil.radiometry.Material
     lentil.radiometry.path_transmission
