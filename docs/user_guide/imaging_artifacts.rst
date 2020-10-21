@@ -2,6 +2,8 @@
 Imaging Artifacts
 *****************
 
+.. currentmodule:: lentil
+
 Jitter
 ======
 
@@ -16,9 +18,11 @@ A focal plane array samples a continuous light field to produce a digital image.
 Lentil models diffraction numerically by propagating a finite set of points through an
 optical system, the discretely sampled image plane intensity must be convolved with the
 pixel's aperture function to accurately represent the intensity signal seen by each
-pixel. Lentil's :func:`~lentil.FPA.frame` method contains a ``pixelate`` option to
-perform this convolution. After convolving the image plane intensity with the pixel MTF,
-the data is resampled to native detector sampling using :func:`~lentil.util.rescale`.
+pixel. Lentil's :func:`convolvable.pixel` method implements this convolution. 
+After convolving the image plane intensity with the pixel MTF, the data should be 
+resampled to native detector sampling using :func:`util.rescale`. The
+:func:`detector.pixelate` method combines the convolution and resampling operations
+into a single method.
 
 .. note::
 

@@ -23,7 +23,7 @@ allow you to identify appropriate values for your specific needs.
    * - ``wave``, ``weight``
      - Arrays representing wavelength and the corresponding weight of each wavelength in
        the propagation.
-     - 
+     - Propagation time scales linearly with the number of wavelengths. 
    * - ``npix``
      - Shape of output plane.
      - The output plane size has minimal impact on propagation performance unless it is
@@ -31,20 +31,46 @@ allow you to identify appropriate values for your specific needs.
        ensure all data is adequately captured by the output plane.
    * - ``npix_chip``
      - Shape of propagation plane.
-     -
+     - Propagation time scales quadtatically with ``npix_chip`` but because values are
+       typically small there are unlikely to be any large opportunities for increasing
+       performance by reducing ``npix_chip``.
    * - ``oversample``
      - Number of times to oversample the output and propagation planes.
-     - The oversampling factor directly scales the output plane size. For accuracy, ``oversample``
-       should be selected to ensure propagations are Nyquist sampled, but there is no benefit in
-       selecting larger values.
+     - Propagation time scales quadratically with ``oversample``. For accuracy, ``oversample``
+       should be selected to ensure propagations are Nyquist sampled, but there is typically no 
+       benefit in selecting larger values.
    * - ``flatten``
      - If ``True``, the cube of wavelength-dependent output planes is flattened into a single
        2D array before being returned. If ``False``, a cube of output planes is returned.
      - 
 
+``radiometry.trim_spectrum()``
+------------------------------
 
-Talk about flux_trim_tol and wave_sampling here
+.. list-table:: 
+   :widths: 20 40 40
+   :header-rows: 1
 
+   * - Parameter
+     - Usage
+     - Performance considerations
+   * - ``trim_tol``
+     - 
+     - 
+
+``radiometry.sample_spectrum()`` and ``radiometry.trim_spectrum()``
+-------------------------------------------------------------------
+
+.. list-table:: 
+   :widths: 20 40 40
+   :header-rows: 1
+
+   * - Parameter
+     - Usage
+     - Performance considerations
+   * - ``wave_sampling``
+     - 
+     - 
 
 Multiprocessing
 ===============

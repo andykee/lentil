@@ -6,7 +6,7 @@ Development
     :maxdepth: 2
 
     contributing
-    internals
+    tech_notes/index
 
 .. toctree::
     :maxdepth: 1
