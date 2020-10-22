@@ -1,9 +1,10 @@
+import functools
 import numpy as np
 
 __all__ = ['dft2', 'idft2']
 
 
-def dft2(f, alpha, npix=None, shift=(0, 0), unitary=True):
+def dft2(f, alpha, npix=None, shift=(0, 0), unitary=True, out=None):
     """Compute the 2-dimensional discrete Fourier Transform.
 
     Parameters
@@ -34,6 +35,11 @@ def dft2(f, alpha, npix=None, shift=(0, 0), unitary=True):
         way, the energy in in a limited-area DFT is a fraction of the total
         energy corresponding to the limited area. Default is ``True``.
 
+    out : ndarray or None
+        A location into which the result is stored. If provided, it must have
+        shape = npix and dtype = np.complex. If not provided or None, a 
+        freshly-allocated array is returned.
+
     Returns
     -------
     F : complex ndarray
@@ -63,9 +69,9 @@ def dft2(f, alpha, npix=None, shift=(0, 0), unitary=True):
 
     alpha = np.asarray(alpha)
     if alpha.size == 1:
-        ay, ax = alpha, alpha
+        ay, ax = float(alpha), float(alpha)
     else:
-        ay, ax = alpha
+        ay, ax = float(alpha[0]), float(alpha[1])
 
     f = np.asarray(f)
     m, n = f.shape
@@ -75,32 +81,51 @@ def dft2(f, alpha, npix=None, shift=(0, 0), unitary=True):
 
     npix = np.asarray(npix)
     if npix.size == 1:
-        M, N = npix, npix
+        M, N = int(npix), int(npix)
     else:
-        M, N = npix
+        M, N = int(npix[0]), int(npix[1])
 
-    sx, sy = np.asarray(shift)
+    if isinstance(shift, np.ndarray):
+        sx, sy = float(shift[0]), float(shift[1])
+    else:
+        sx, sy = shift
 
+    if out is not None:
+        if not np.can_cast(complex, out.dtype):
+            raise TypeError(f"Cannot cast complex output to dtype('{out.dtype}')")
+
+    E1, E2 = _dft2_matrices(m, n, M, N, ax, ay, sx, sy)
+    F = np.dot(E1.dot(f), E2, out=out)
+
+    # now calculate the answer, without reallocating memory
+    if unitary:
+        np.multiply(F, np.sqrt(np.abs(ax * ay)), out=F)
+    
+    return F
+
+
+@functools.lru_cache(maxsize=32)
+def _dft2_matrices(m, n, M, N, ax, ay, sx, sy):
+    X, Y, U, V = _dft2_coords(m, n, M, N)
+    E1 = np.exp(-2.0 * np.pi * 1j * ay * np.outer(Y-sy, V-sy)).T
+    E2 = np.exp(-2.0 * np.pi * 1j * ax * np.outer(X-sx, U-sx))
+    return E1, E2
+
+
+@functools.lru_cache(maxsize=32)
+def _dft2_coords(m, n, M, N):
     # Y and X are (r,c) coordinates in the (m x n) input plane f
     # V and U are (r,c) coordinates in the (M x N) ourput plane F
 
-    X = np.arange(n) - np.floor(n/2.0) - sx
-    Y = np.arange(m) - np.floor(m/2.0) - sy
-    U = np.arange(N) - np.floor(N/2.0) - sx
-    V = np.arange(M) - np.floor(M/2.0) - sy
-
-    E1 = np.exp(-2.0 * np.pi * 1j * ay * np.outer(Y, V)).T
-    E2 = np.exp(-2.0 * np.pi * 1j * ax * np.outer(X, U))
-
-    F = E1.dot(f).dot(E2)
-
-    if unitary is True:
-        return F * np.sqrt(np.abs(ax * ay))
-    else:
-        return F
+    X = np.arange(n) - np.floor(n/2.0)
+    Y = np.arange(m) - np.floor(m/2.0)
+    U = np.arange(N) - np.floor(N/2.0)
+    V = np.arange(M) - np.floor(M/2.0)
+    
+    return X, Y, U, V
 
 
-def idft2(F, alpha, npix=None, shift=(0, 0), unitary=True):
+def idft2(F, alpha, npix=None, shift=(0, 0), unitary=True, out=None):
     """Compute the 2-dimensional inverse discrete Fourier Transform.
 
     Parameters
@@ -163,4 +188,8 @@ def idft2(F, alpha, npix=None, shift=(0, 0), unitary=True):
     """
     F = np.asarray(F)
     N = F.size
-    return np.conj(dft2(np.conj(F), alpha, npix, shift, unitary))/N
+    # will allocate memory for F if out == None
+    F = dft2(np.conj(F), alpha, npix, shift, unitary=unitary, out=out)
+    np.conj(F, out = F)
+    return np.divide(F, F.size,out=F)
+    # return np.conj(dft2(np.conj(F), alpha, npix, shift, unitary))/N
