@@ -67,27 +67,27 @@ Additional options provide further customization of the propagation behavior:
 
 Sampling
 ========
-.. image:: ../_static/img/propagate_sampling.png
+.. image:: /_static/img/propagate_sampling.png
     :width: 450px
     :align: center
 
-.. image:: ../_static/img/propagate_fourier_period.png
+.. image:: /_static/img/propagate_fourier_period.png
     :width: 550px
     :align: center
 
 Specifying npix and npix_chip
 =============================
-.. image:: ../_static/img/propagate_npix.png
+.. image:: /_static/img/propagate_npix.png
     :width: 450px
     :align: center
 
 
-.. image:: ../_static/img/propagate_npix_small.png
+.. image:: /_static/img/propagate_npix_small.png
     :width: 450px
     :align: center
 
 
-.. image:: ../_static/img/propagate_npix_chip.png
+.. image:: /_static/img/propagate_npix_chip.png
     :width: 450px
     :align: center
 
@@ -96,22 +96,22 @@ Specifying npix and npix_chip
 
 Working with large tilts
 ========================
-.. image:: ../_static/img/propagate_tilt_phase.png
+.. image:: /_static/img/propagate_tilt_phase.png
     :width: 450px
     :align: center
 
 
-.. image:: ../_static/img/propagate_tilt_phase_wrap.png
+.. image:: /_static/img/propagate_tilt_phase_wrap.png
     :width: 650px
     :align: center
 
 
-.. image:: ../_static/img/propagate_tilt_angle.png
+.. image:: /_static/img/propagate_tilt_angle.png
     :width: 600px
     :align: center
 
 
-.. image:: ../_static/img/propagate_tilt_angle_steps.png
+.. image:: /_static/img/propagate_tilt_angle_steps.png
     :width: 600px
     :align: center
 

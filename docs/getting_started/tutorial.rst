@@ -1,3 +1,5 @@
+.. _tutorial:
+
 ************************
 Getting started tutorial
 ************************

@@ -12,7 +12,7 @@ produced by each pixel is subject to a number of physical characteristics and is
 degraded by a variety of noise sources. The core components of this process are
 represented in the figure below:
 
-.. image:: ../_static/img/image_sensor_signal_flow.png
+.. image:: /_static/img/image_sensor_signal_flow.png
     :width: 75%
 
 
