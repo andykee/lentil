@@ -9,7 +9,7 @@ Lentil adopts the widely used convention of aligning the z-axis along the propag
 direction of light through an optical system. By the right hand rule, it follows that 
 the remaining axes are oriented as shown in the figure below:
 
-.. image:: ../_static/img/coordinate_system.png
+.. image:: /_static/img/coordinate_system.png
     :width: 500px
     :align: center
 

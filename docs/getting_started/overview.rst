@@ -1,5 +1,7 @@
+.. _package-overview:
+
 ****************
-Package Overview
+Package overview
 ****************
 
 Lentil is a Python library for modeling the imaging chain of an optical system. It was 
