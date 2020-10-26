@@ -602,7 +602,7 @@ class DispersivePhase(Plane):
 
 
 class Grism(DispersiveShift):
-    """Class for representing a grism.
+    r"""Class for representing a grism.
 
     A grism is an optical element that can be inserted into a collimated beam
     to disperse incoming light according to its wavelength. 
@@ -662,8 +662,8 @@ class Grism(DispersiveShift):
         
     See Also
     --------
-    
-    """
+
+    """    
 
     def __init__(self, trace, dispersion, pixelscale=None, amplitude=1,
                  phase=0, mask=None, segmask=None):
