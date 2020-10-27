@@ -48,7 +48,7 @@ def test_set_plane_attrs_none():
 
 def test_wavefront_plane_multiply():
     p = RandomPlane()
-    w = lentil.wavefront.Wavefront(650e-9, p.shape)
+    w = lentil.wavefront.Wavefront(650e-9, shape=p.shape)
 
     w1 = p.multiply(w)
     phasor = p.amplitude * np.exp(1j*p.phase * 2 * np.pi / w.wavelength)

@@ -31,9 +31,11 @@ class Wavefront:
         and return an updated x and y shift.
 
     """
-    def __init__(self, wavelength, shape=None, pixelscale=None, planetype=None):
+    def __init__(self, wavelength, weight=1, shape=None, pixelscale=None, 
+                 planetype=None):
 
         self.wavelength = wavelength
+        self.weight = 1
         self.pixelscale = pixelscale
         self.planetype = planetype
 
@@ -144,3 +146,74 @@ class Wavefront:
                                                           wavelength=self.wavelength)
 
         return (shift/pixelscale) * oversample
+
+    
+    def dump_data(self, out, apply_shift=True):
+
+        for d in range(self.depth):
+            if apply_shift:
+                # The shift term is given in terms of (x,y) but we place the chip in
+                # terms of (r,c)
+                # TODO: I think this will break if the last plane isn't a Detector
+                shift = np.flip(self.pixel_shift[d], axis=0)
+            else:
+                shift = (0,0)
+
+            # Compute the chip location
+            canvas_slice, chip_slice = _chip_insertion_slices(out.shape,
+                                                             (self.data.shape[1], self.data.shape[2]),
+                                                             shift)
+
+            # Insert the complex result in the output
+            if canvas_slice:
+                out[canvas_slice] += self.data[d, chip_slice[0], chip_slice[1]]
+        
+        return out
+
+    def dump_intensity(self, out, apply_shift=True):
+
+        out = self.dump_data(out, apply_shift)
+        return np.abs(out)**2 * self.weight
+
+
+def _chip_insertion_slices(npix_canvas, npix_chip, shift):
+    npix_canvas = np.asarray(npix_canvas)
+    npix_chip = np.asarray(npix_chip)
+
+    # Canvas coordinates of the upper left corner of the shifted chip
+    chip_shifted_ul = (npix_canvas / 2) - (npix_chip / 2) + shift
+
+    # Chip slice indices
+    chip_top = int(0)
+    chip_bottom = int(npix_chip[0])
+    chip_left = int(0)
+    chip_right = int(npix_chip[1])
+
+    # Canvas insertion slice indices
+    canvas_top = int(chip_shifted_ul[0])
+    canvas_bottom = int(chip_shifted_ul[0] + npix_chip[0])
+    canvas_left = int(chip_shifted_ul[1])
+    canvas_right = int(chip_shifted_ul[1] + npix_chip[1])
+
+    # reconcile the chip and canvas insertion indices
+    if canvas_top < 0:
+        chip_top = -1 * canvas_top
+        canvas_top = 0
+
+    if canvas_bottom > npix_canvas[0]:
+        chip_bottom -= canvas_bottom - npix_canvas[0]
+        canvas_bottom = npix_canvas[0]
+
+    if canvas_left < 0:
+        chip_left = -1 * canvas_left
+        canvas_left = 0
+
+    if canvas_right > npix_canvas[1]:
+        chip_right -= canvas_right - npix_canvas[1]
+        canvas_right = npix_canvas[1]
+
+    if np.any(np.array([canvas_bottom, chip_bottom, canvas_right, chip_right]) < 0):
+        return None, None
+    else:
+        return (slice(canvas_top, canvas_bottom), slice(canvas_left, canvas_right)), \
+               (slice(chip_top, chip_bottom), slice(chip_left, chip_right))

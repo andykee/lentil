@@ -87,7 +87,7 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
 
     with Propagate(planes) as p:
         psf = p.propagate(wave, weight, npix, npix_chip, oversample, rebin, tilt,
-                          flatten)
+                          flatten, use_multiprocessing)
 
     return psf
 
@@ -138,7 +138,7 @@ class Propagate:
         # elements
         for plane in self.planes:
             plane.cache_propagate()
-
+        
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -147,7 +147,7 @@ class Propagate:
             plane.clear_cache_propagate()
 
     def propagate(self, wave, weight=None, npix=None, npix_chip=None, oversample=2,
-                  rebin=True, tilt='phase', flatten=True):
+                  rebin=True, tilt='phase', flatten=True, use_multiprocessing=True): 
         """Compute a polychromatic point spread function using Fraunhofer
         diffraction.
 
@@ -210,11 +210,6 @@ class Propagate:
 
         """
 
-        # TODO: move all this setup into __enter__:
-        #   * npix
-        #   * npix_chip
-        #   * wave
-        #   * weight
         if npix is None:
             npix = self.planes[-1].shape
         npix = np.asarray(npix)
@@ -237,6 +232,21 @@ class Propagate:
         if weight.shape == ():
             weight = weight[np.newaxis, ...]
 
+        if use_multiprocessing:
+            output = self._propagate_multi(wave, weight, npix, npix_chip, oversample,
+                                           tilt, flatten) 
+        else:
+            output = self._propagate_single(wave, weight, npix, npix_chip, oversample, 
+                                            tilt, flatten)
+        
+        if rebin:
+            output = util.rebin(output, oversample)
+
+        return output
+
+    
+    def _propagate_single(self, wave, weight, npix, npix_chip, oversample, tilt, flatten):
+        
         # Create an empty output
         oversample_shape = (npix[0]*oversample, npix[1]*oversample)
         if flatten:
@@ -249,73 +259,95 @@ class Propagate:
         # We also need a temporary array to place the chips and compute intensity
         _output = np.zeros(oversample_shape, dtype=np.complex128)
 
-        for n, (wl, wt) in enumerate(zip(wave, weight)):
-            if wt > 0:
-                w = Wavefront(wavelength=wl, pixelscale=None,
-                              shape=self.npix_wavefront, planetype=None)
+        args = [(wl, wt, self.npix_wavefront, self.planes, npix_chip, oversample, tilt)
+                for wl, wt in zip(wave, weight)]
 
-                w = self._propagate_mono(w, npix_chip, oversample, tilt)
+        res = map(_propagate_mono, args)
 
-                for d in range(w.depth):
+        for n, w in enumerate(res):
 
-                    # The shift term is given in terms of (x,y) but we place the chip in
-                    # terms of (r,c)
-                    # TODO: I think this will break if the last plane isn't a Detector
-                    shift = np.flip(w.pixel_shift[d], axis=0)
+            # Compute intensity
+            if flatten:
+                output += w.dump_intensity(out=_output, apply_shift=True)
+            else:
+                output[n] = w.dump_intensity(out=_output, apply_shift=True)
 
-                    # Compute the chip location
-                    canvas_slice, chip_slice = _chip_insertion_slices(oversample_shape,
-                                                                      (w.data.shape[1], w.data.shape[2]),
-                                                                      shift)
+            # Zero out the local output array
+            _output[:] = 0
 
-                    # Insert the complex result in the output
-                    if canvas_slice:
-                        _output[canvas_slice] += w.data[d, chip_slice[0], chip_slice[1]]
 
-                # Compute intensity
-                if flatten:
-                    output += np.abs(_output).real**2 * wt
-                else:
-                    output[n] = np.abs(_output).real**2 * wt
+        # for n, (wl, wt) in enumerate(zip(wave, weight)):
+        #     if wt > 0:
+        #         w = Wavefront(wavelength=wl, pixelscale=None,
+        #                       shape=self.npix_wavefront, planetype=None)
 
-                # Zero out the local output array
-                _output[:] = 0
+        #         w = self._propagate_mono(w, npix_chip, oversample, tilt)
 
-        if rebin:
-            output = util.rebin(output, oversample)
+        #         for d in range(w.depth):
+
+        #             # The shift term is given in terms of (x,y) but we place the chip in
+        #             # terms of (r,c)
+        #             # TODO: I think this will break if the last plane isn't a Detector
+        #             shift = np.flip(w.pixel_shift[d], axis=0)
+
+        #             # Compute the chip location
+        #             canvas_slice, chip_slice = _chip_insertion_slices(oversample_shape,
+        #                                                               (w.data.shape[1], w.data.shape[2]),
+        #                                                               shift)
+
+        #             # Insert the complex result in the output
+        #             if canvas_slice:
+        #                 _output[canvas_slice] += w.data[d, chip_slice[0], chip_slice[1]]
+
+        #         # Compute intensity
+        #         if flatten:
+        #             output += np.abs(_output).real**2 * wt
+        #         else:
+        #             output[n] = np.abs(_output).real**2 * wt
+
+        #         # Zero out the local output array
+        #         _output[:] = 0
+
+        # if rebin:
+        #     output = util.rebin(output, oversample)
 
         return output
 
-    def _propagate_mono(self, w, npix, oversample, tilt):
-        """Propagate a monochromatic wavefront from plane to plane through the
-        optical system using Fraunhofer diffraction.
 
-        Parameters
-        ----------
-        w : :class:`~lentil.Wavefront`
-            Wavefront object to propagate through the optical system.
+def _propagate_mono(args):
+    """Propagate a monochromatic wavefront from plane to plane through the
+    optical system using Fraunhofer diffraction.
 
-        npix : int or (2,) ints
-            Shape of output plane.
+    Parameters
+    ----------
+    w : :class:`~lentil.Wavefront`
+        Wavefront object to propagate through the optical system.
 
-        oversample : int
-            Number of times to oversample the output plane.
+    npix : int or (2,) ints
+        Shape of output plane.
 
-        tilt : {'phase', 'angle'}
-            * 'phase' - any tilt present in the Element phase contribution is
-              included in the Element*Wavefront product.
-            * 'angle' - any tilt present in the Element phase is removed
-              before computing the Element*Wavefront product. The equivalent
-              angular tilt is included in the Wavefront's
-              :attr:`~lentil.Wavefront.tilt` attribute.
+    oversample : int
+        Number of times to oversample the output plane.
 
-        Returns
-        -------
-        field : ndarray
-            Resulting complex field propagated though the optical system.
+    tilt : {'phase', 'angle'}
+        * 'phase' - any tilt present in the Element phase contribution is
+          included in the Element*Wavefront product.
+        * 'angle' - any tilt present in the Element phase is removed
+          before computing the Element*Wavefront product. The equivalent
+          angular tilt is included in the Wavefront's
+          :attr:`~lentil.Wavefront.tilt` attribute.
 
-        """
-        for plane, next_plane in _iterate_planes(self.planes):
+    Returns
+    -------
+    field : ndarray
+        Resulting complex field propagated though the optical system.
+     """
+    wave, weight, shape, planes, npix, oversample, tilt = args
+    if weight > 0:
+        w = Wavefront(wavelength=wave, weight=weight, pixelscale=None, 
+                      shape=shape, planetype=None)
+
+        for plane, next_plane in _iterate_planes(planes):
 
             # Multiply by the current plane
             w = plane.multiply(w, tilt)
@@ -339,8 +371,10 @@ class Propagate:
                 continue
             else:
                 raise TypeError('Unsupported propagation type ', w.planetype, ' to ', next_plane)
-
         return w
+
+    else:
+        return 0
 
 
 def _propagate_pupil_image_fixed(w, pixelscale, npix, oversample):
