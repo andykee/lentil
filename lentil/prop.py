@@ -1,3 +1,5 @@
+import os
+import multiprocessing
 from operator import itemgetter
 
 import numpy as np
@@ -12,7 +14,7 @@ __all__ = ['propagate']
 
 def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2,
               rebin=True, tilt='phase', interp_phasor=True, flatten=True,
-              use_multiprocessing=False):
+              use_multiprocessing=True):
     """Compute a polychromatic point spread function using Fraunhofer
     diffraction.
 
@@ -275,41 +277,39 @@ class Propagate:
             # Zero out the local output array
             _output[:] = 0
 
+    def _propagate_multi(self, wave, weight, npix, npix_chip, oversample, tilt, flatten):
+        
+        # Create an empty output
+        oversample_shape = (npix[0]*oversample, npix[1]*oversample)
+        if flatten:
+            output_shape = oversample_shape
+        else:
+            output_shape = (len(wave), oversample_shape[0], oversample_shape[1])
 
-        # for n, (wl, wt) in enumerate(zip(wave, weight)):
-        #     if wt > 0:
-        #         w = Wavefront(wavelength=wl, pixelscale=None,
-        #                       shape=self.npix_wavefront, planetype=None)
+        output = np.zeros(output_shape)
 
-        #         w = self._propagate_mono(w, npix_chip, oversample, tilt)
+        # We also need a temporary array to place the chips and compute intensity
+        _output = np.zeros(oversample_shape, dtype=np.complex128)
 
-        #         for d in range(w.depth):
+        args = [(wl, wt, self.npix_wavefront, self.planes, npix_chip, oversample, tilt)
+                for wl, wt in zip(wave, weight)]
 
-        #             # The shift term is given in terms of (x,y) but we place the chip in
-        #             # terms of (r,c)
-        #             # TODO: I think this will break if the last plane isn't a Detector
-        #             shift = np.flip(w.pixel_shift[d], axis=0)
+        
+        pool = multiprocessing.Pool(processes=None)
 
-        #             # Compute the chip location
-        #             canvas_slice, chip_slice = _chip_insertion_slices(oversample_shape,
-        #                                                               (w.data.shape[1], w.data.shape[2]),
-        #                                                               shift)
+        for n, w in enumerate(pool.map(_propagate_mono, args)):
 
-        #             # Insert the complex result in the output
-        #             if canvas_slice:
-        #                 _output[canvas_slice] += w.data[d, chip_slice[0], chip_slice[1]]
+            # Compute intensity
+            if flatten:
+                output += w.dump_intensity(out=_output, apply_shift=True)
+            else:
+                output[n] = w.dump_intensity(out=_output, apply_shift=True)
 
-        #         # Compute intensity
-        #         if flatten:
-        #             output += np.abs(_output).real**2 * wt
-        #         else:
-        #             output[n] = np.abs(_output).real**2 * wt
-
-        #         # Zero out the local output array
-        #         _output[:] = 0
-
-        # if rebin:
-        #     output = util.rebin(output, oversample)
+            # Zero out the local output array
+            _output[:] = 0
+        
+        pool.close()
+        pool.terminate()
 
         return output
 
@@ -427,45 +427,3 @@ class _iterate_planes:
         else:
             raise StopIteration()
 
-
-def _chip_insertion_slices(npix_canvas, npix_chip, shift):
-    npix_canvas = np.asarray(npix_canvas)
-    npix_chip = np.asarray(npix_chip)
-
-    # Canvas coordinates of the upper left corner of the shifted chip
-    chip_shifted_ul = (npix_canvas / 2) - (npix_chip / 2) + shift
-
-    # Chip slice indices
-    chip_top = int(0)
-    chip_bottom = int(npix_chip[0])
-    chip_left = int(0)
-    chip_right = int(npix_chip[1])
-
-    # Canvas insertion slice indices
-    canvas_top = int(chip_shifted_ul[0])
-    canvas_bottom = int(chip_shifted_ul[0] + npix_chip[0])
-    canvas_left = int(chip_shifted_ul[1])
-    canvas_right = int(chip_shifted_ul[1] + npix_chip[1])
-
-    # reconcile the chip and canvas insertion indices
-    if canvas_top < 0:
-        chip_top = -1 * canvas_top
-        canvas_top = 0
-
-    if canvas_bottom > npix_canvas[0]:
-        chip_bottom -= canvas_bottom - npix_canvas[0]
-        canvas_bottom = npix_canvas[0]
-
-    if canvas_left < 0:
-        chip_left = -1 * canvas_left
-        canvas_left = 0
-
-    if canvas_right > npix_canvas[1]:
-        chip_right -= canvas_right - npix_canvas[1]
-        canvas_right = npix_canvas[1]
-
-    if np.any(np.array([canvas_bottom, chip_bottom, canvas_right, chip_right]) < 0):
-        return None, None
-    else:
-        return (slice(canvas_top, canvas_bottom), slice(canvas_left, canvas_right)), \
-               (slice(chip_top, chip_bottom), slice(chip_left, chip_right))
