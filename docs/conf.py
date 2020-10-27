@@ -55,8 +55,9 @@ html_show_sourcelink = False
 html_scaled_image_link = False
 
 html_js_files = ['js/copybutton.js']
+html_css_files = ['css/lentil.css', 'css/syntax-highlighting.css']
 
-pygments_style = 'sphinx'
+pygments_style = 'default'
 
 # if true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
