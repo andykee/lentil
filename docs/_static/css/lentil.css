@@ -38,4 +38,16 @@ h3 {
     color: #013243; /* warm black */
     letter-spacing: -.03em;
 }
-  
+ 
+img {
+    margin-bottom: 1.125rem;
+}
+
+:target:before{
+    content:"";
+    display:block;
+    background-color: #fff;
+    width:100%;
+    height:80px; 
+    margin:-80px 0 0; 
+} 
