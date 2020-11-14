@@ -3,9 +3,13 @@ Development
 ***********
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 3
 
     contributing
+
+.. toctree::
+    :maxdepth: 2
+    
     tech_notes/index
 
 .. toctree::
