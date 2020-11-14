@@ -89,15 +89,6 @@ To return to your root environment::
     conda deactivate
 
 See the full conda docs `here <https://conda.pydata.org/docs>`_.
-=======
-
-Bug reports and enhancement requests
-====================================
-
-https://github.com/andykee/lentil/issues
-
-Working with the code
-=====================
 
 
 Contributing to the code base
