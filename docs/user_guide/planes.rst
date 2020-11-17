@@ -2,8 +2,8 @@
 Optical Planes
 **************
 
-Planes
-======
+Plane
+=====
 Lentil's :class:`~lentil.Plane` object represents a discretely sampled plane in an
 optical model. Planes typically have some influence on the propagation of a
 wavefront through a model. Planes have the following attributes that interact with a
@@ -106,8 +106,8 @@ randomness:
     For more details, see :ref:`caching`.
 
 
-Pupils
-======
+Pupil
+=====
 
 .. |Pupil| replace:: :class:`~lentil.Pupil`
 .. |Image| replace:: :class:`~lentil.Image`
@@ -129,8 +129,8 @@ subclassing |Pupil|. See :ref:`creating-planes` for details.
 .. [1] Goodman, *Introduction to Fourier Optics*.
 
 
-Image Planes
-============
+Image
+=====
 
 Tilt
 ====

@@ -4,30 +4,90 @@ Imaging Artifacts
 
 .. currentmodule:: lentil
 
-Lentil's :ref:`convolvable module<api-convolvable>` contains methods for applying various imaging 
+Lentil's :ref:`convolvable module <api-convolvable>` contains methods for applying various imaging 
 artifacts via convolution. 
 
 .. note::
 
     To ensure accuracy and avoid introducing ailiasing artifacts, the input data should 
-    be Nyquist sampled.
+    be at least Nyquist sampled.
 
 Smear
 =====
 Smear is used to represent image motion with a relatively low temporal frequency relative
 to integration time. The motion occurs in a slowly varying or fixed direction over one
-integration time. Lentil represents smear as a directional blur over some distance (or 
-number of pixels):
+integration time. Lentil's :func:`convolvable.smear` method represents smear as a linear 
+directional blur over some distance (or number of pixels):
 
+.. code:: pycon
+
+    >>> import lentil
+    >>> import matplotlib.pyplot as plt
+    >>> psf = ...  # PSF calculation details omitted
+    >>> psf_smear = lentil.convolvable.smear(psf, distance=5e-5, 
+    ...                                      pixelscale=5e-6, 
+    ...                                      oversample=3)
+    >>> plt.subplot(121), plt.imshow(psf)
+    >>> plt.subplot(122), plt.imshow(psf_smear)
+
+.. image:: /_static/img/api/convolvable/smear_px.png
+    :width: 500px
+
+As an alternative to specifying physical distance and pixelscale, a number of pixels can also
+be provided:
+
+.. code:: pycon
+
+    >>> import lentil
+    >>> import matplotlib.pyplot as plt
+    >>> psf = ...  # PSF calculation details omitted
+    >>> psf_smear = lentil.convolvable.smear(psf, distance=10,
+    ...                                      oversample=3)
+    >>> plt.subplot(121), plt.imshow(psf)
+    >>> plt.subplot(122), plt.imshow(psf_smear)
+
+.. image:: /_static/img/api/convolvable/smear_px.png
+    :width: 500px
+
+The default behavior is to choose a new random smear direction each time :func:`convolvable.smear`
+is called, but a static direction can optionally be specified as needed:
+
+.. code:: pycon
+
+    >>> import lentil
+    >>> import matplotlib.pyplot as plt
+    >>> psf = ...  # PSF calculation details omitted
+    >>> psf_smear = lentil.convolvable.smear(psf, distance=50,
+    ...                                      angle=30)
+    >>> plt.subplot(121), plt.imshow(psf)
+    >>> plt.subplot(122), plt.imshow(psf_smear)
+
+.. image:: /_static/img/api/convolvable/smear_m.png
+    :width: 500px
 
 
 Jitter
 ======
 Jitter is used to represent image motion with a relatively high temporal frequency relative
-to integration time. The motion occurs in all directions randomly during an integration time.
-Lentil represents jitter using a Gaussian blur:
+to integration time. Lentil's :func:`convolvable.jitter` method represents jitter with a 
+Gaussian blur operation. Note this approach is only valid if the motion occurs randomly in all
+directions during one integration time.
 
+.. code:: pycon
 
+    >>> import lentil
+    >>> import matplotlib.pyplot as plt
+    >>> psf = ...  # PSF calculation details omitted
+    >>> psf_jitter = lentil.convolvable.jitter(psf, scale=2)
+    >>> plt.subplot(121), plt.imshow(psf)
+    >>> plt.subplot(122), plt.imshow(psf_jitter)
+
+.. image:: /_static/img/api/convolvable/jitter_px.png
+    :width: 500px
+
+If the jitter direction is not sufficiently random during a typical integration time, a timeseries
+should be used instead. Note this will have a major impact on propagation performance but will 
+provide the most accurate results.
 
 Pixel MTF
 =========

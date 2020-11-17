@@ -21,7 +21,7 @@ system defined above. The following rotations are used:
 * Rotations in +y rotate the xz plane counter-clockwise about the y-axis
 * Rotations in +z rotate the xy plane counter-clockwise about the z-axis
 
-When plotting planes, the z-axis is assumed to come out of the screen with the
+When viewing a plane in 2D, the z-axis is assumed to come out of the screen with the
 positive x-axis pointing to the right and the positive y-axis pointing up.
 
 .. image:: /_static/img/coordinate_system_plot.png

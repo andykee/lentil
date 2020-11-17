@@ -1074,6 +1074,7 @@ class Blackbody(Spectrum):
         --------
         Create a Blackbody object with wavelength range 400-900 nm, a temperature of
         4000K, and a visible magnitude of 2:
+        
         .. code:: pycon
 
             >>> import numpy as np
