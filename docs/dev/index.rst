@@ -8,7 +8,7 @@ Development
     contributing
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 3
     
     tech_notes/index
 

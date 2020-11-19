@@ -3,6 +3,6 @@ Technical Notes
 ***************
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 2
 
-    dft2_caching
+    diffraction/index

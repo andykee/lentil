@@ -11,10 +11,10 @@ polynomials. Methods are provided for creating, combining, fitting, and removing
 
 .. note::
 
-    Lentil uses the Noll indexing scheme for defining Zernike polynomials [1].
+    Lentil uses the Noll indexing scheme for defining Zernike polynomials [1]_.
 
 
-[1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).
+.. [1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).
 
 Linear Wavefront Sensitivities
 ==============================
