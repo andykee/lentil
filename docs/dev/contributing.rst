@@ -163,6 +163,21 @@ Now you can commit your changes in your local repository::
 
 .. _contributing.push-code:
 
+Squashing commits
+-----------------
+It's possible to combine (or squash) a number of smaller commits into one larger 
+commit. This helps to keep the project history more concise and readable. The 
+easiest wat to squash commits is by using interactive rebase. To consider the 
+most recent ``n`` commits::
+
+    git rebase -i HEAD~<n>
+
+To instead consider all commits including and after a specific commit::
+
+    git rebase -i <after-this-commit-sha1>
+
+The interactive rebase interface provides additional syntax details.
+
 Pushing your changes
 --------------------
 
