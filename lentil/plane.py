@@ -4,6 +4,7 @@ import scipy.integrate
 import scipy.optimize
 
 from lentil.cache import Cache
+from lentil.mathtools import expc
 from lentil import util
 
 __all__ = ['Plane', 'Pupil', 'Image', 'DispersiveShift', 'Grism', 'LensletArray',
@@ -353,7 +354,7 @@ class Plane:
     @staticmethod
     def _multiply_phase(amplitude, phase, wavefront):
         # Compute and apply the phasor
-        phasor = amplitude * np.exp(1j * phase * 2 * np.pi / wavefront.wavelength)
+        phasor = amplitude * expc(phase * 2 * np.pi / wavefront.wavelength)
         wavefront.data *= phasor
 
         return wavefront

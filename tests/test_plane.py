@@ -51,7 +51,7 @@ def test_wavefront_plane_multiply():
     w = lentil.wavefront.Wavefront(650e-9, p.shape)
 
     w1 = p.multiply(w)
-    phasor = p.amplitude * np.exp(1j*p.phase * 2 * np.pi / w.wavelength)
+    phasor = p.amplitude * lentil.mathtools.expc(p.phase * 2 * np.pi / w.wavelength)
 
     assert np.array_equal(w1.data[0], phasor)
 
