@@ -144,7 +144,7 @@ some common prefixes along with general guidelines for when to use them:
 * ENH: Enhancement, new functionality
 * BUG: Bug fix
 * DOC: Additions/updates to documentation
-* TST: Additions/updates to tests
+* TEST: Additions/updates to tests
 * PERF: Performance improvement
 * CLN: Code cleanup
 
