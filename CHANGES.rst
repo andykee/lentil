@@ -1,5 +1,5 @@
-Changes
-=======
+Release notes
+=============
 
 v0.4.1
 ------
@@ -11,7 +11,7 @@ v0.4.0
 ------
 Released October 6, 2020
 
-.. warning::
+.. note::
 
   The Grism model updates are broken in this release. It has been yanked from 
   PyPi. The issue is fixed in v0.4.1.

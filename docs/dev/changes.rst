@@ -2,4 +2,4 @@
 
 .. currentmodule:: lentil
 
-.. include:: ../CHANGES.rst
+.. include:: ../../CHANGES.rst
