@@ -315,7 +315,7 @@ def czt2(f, alpha, npix=None, shift=(0, 0), unitary=True):
         H = np.multiply(z_row[:, np.newaxis], H, out=H)
         X = np.fft.ifft2(H)
         
-    X = np.multiply(X[0:npix[0], 0:npix[1]], gamma_col)
+    X = np.multiply(X[0:M, 0:N], gamma_col)
     X = np.multiply(gamma_row[:, np.newaxis], X, out=X)
     return X
 
