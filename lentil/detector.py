@@ -266,12 +266,6 @@ def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
     img = np.floor(img)
     img[img < 0] = 0
 
-<<<<<<< HEAD
-=======
-    # enforce bit depth max
-    #img[img > 2**bit_depth - 1] = 2**bit_depth - 1
-
->>>>>>> 3ad52f3... Remove bit_depth from detector
     if dtype is not None:
         img = img.astype(dtype)
 
