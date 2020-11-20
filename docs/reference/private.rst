@@ -18,6 +18,8 @@ Fourier transforms (``lentil.fourier``)
 
     lentil.fourier.dft2
     lentil.fourier.idft2
+    lentil.fourier.czt2
+    lentil.fourier.iczt2
 
 Diffraction propagation (``lentil.prop``)
 =========================================
