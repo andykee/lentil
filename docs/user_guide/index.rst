@@ -22,7 +22,7 @@ Detailed information on any specific class or method can be found in the :ref:`a
     :maxdepth: 2
 
     planes
-    diffraction
+    diffraction/index
     wavefront_error
     coordinate_system
     radiometry

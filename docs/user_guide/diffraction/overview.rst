@@ -1,13 +1,15 @@
-********************
-Modeling Diffraction
-********************
+.. _diffraction.overview:
+
+********
+Overview
+********
 
 .. |Wavefront| replace:: :class:`~lentil.wavefront.Wavefront`
 .. |Plane| replace:: :class:`~lentil.Plane`
 
-Lentil currently provides algorithms for numerically modeling
-:ref:`diffraction-fraunhofer` (far-field approximation). :ref:`diffraction-fresnel`
-(near-field approximation) algorithms may be implemented in the future if a need arises.
+Lentil currently provides algorithms for numerically modeling Fraunhofer
+diffraction (far-field approximation). :ref:`diffraction.fresnel` (near-field 
+approximation) algorithms may be implemented in the future if a need arises. 
 Lentil's propagation algorithms generally work in the same way and have a standard
 interface wherever possible.
 
@@ -16,13 +18,13 @@ interface wherever possible.
     physical optics. In-depth mathematical background and an extensive discussion of
     the validity of each diffraction approximation is available in [1]_.
 
-General propagation algorithm
-=============================
+Propagation algorithm
+=====================
 Lentil models diffraction numerically by propagating a |Wavefront| object through a
 series of |Plane| objects representing an optical system. The general algorithm is as
 follows:
 
-.. image:: ../_static/img/propagate.png
+.. image:: /_static/img/propagate.png
     :width: 800px
     :align: center
 
@@ -35,8 +37,8 @@ provided weight is applied. This process is repeated for each requested waveleng
 Finally, some general post-processing may be applied depending on the supplied
 propagation parameters.
 
-General propagation interface
-=============================
+Propagation interface
+=====================
 The general propagation interface is provided by the :func:`~lentil.propagate`  method.
 The following attributes govern the propagation:
 
@@ -53,30 +55,14 @@ Additional options provide further customization of the propagation behavior:
 * :attr:`npix_chip`
 * :attr:`oversample`
 * :attr:`rebin`
-* :attr:`tilt` - specifies the tilt handling strategy. See :ref:`diffraction-tilt` for
+* :attr:`tilt` - specifies the tilt handling strategy. See :ref:`diffraction.tilt` for
   more details.
-* :attr:`interp_phasor` See :ref:`diffraction-sampling` for more details.
+* :attr:`interp_phasor` See :ref:`diffraction.sampling` for more details.
 * :attr:`flatten` - specifies whether to collapse wavelength-specific output planes to a
   single array or return a 3D cube of results
 
 
-.. [1] Goodman, *Introduction to Fourier Optics*.
 
-
-.. _diffraction-sampling:
-
-Sampling
-========
-.. image:: /_static/img/propagate_sampling.png
-    :width: 450px
-    :align: center
-
-.. image:: /_static/img/propagate_fourier_period.png
-    :width: 550px
-    :align: center
-
-Specifying npix and npix_chip
-=============================
 .. image:: /_static/img/propagate_npix.png
     :width: 450px
     :align: center
@@ -92,34 +78,7 @@ Specifying npix and npix_chip
     :align: center
 
 
-.. _diffraction-tilt:
 
-Working with large tilts
-========================
-.. image:: /_static/img/propagate_tilt_phase.png
-    :width: 450px
-    :align: center
-
-
-.. image:: /_static/img/propagate_tilt_phase_wrap.png
-    :width: 650px
-    :align: center
-
-
-.. image:: /_static/img/propagate_tilt_angle.png
-    :width: 600px
-    :align: center
-
-
-.. image:: /_static/img/propagate_tilt_angle_steps.png
-    :width: 600px
-    :align: center
-
-
-.. _diffraction-fraunhofer:
-
-Fraunhofer Diffraction
-======================
 
 .. The vast majority of real world optical systems can be adequately modeled using the
 .. far-field diffraction approximation. With this approximation, the relationship
@@ -178,8 +137,11 @@ clarify this behavior
 .. or Detector plane
 
 
-.. _diffraction-fresnel:
 
-Fresnel Diffraction
-===================
-Lentil does not currently support modeling near-field diffraction.
+
+
+.. [1] Goodman, *Introduction to Fourier Optics*.
+
+
+Validity of the Fraunhofer approximation
+========================================
