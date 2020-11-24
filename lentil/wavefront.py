@@ -31,6 +31,10 @@ class Wavefront:
         and return an updated x and y shift.
 
     """
+
+    __slots__ = ('wavelength', 'pixelscale', 'focal_length', 'tilt', 'pixel_shift',
+                 '_planetype', '_data')
+
     def __init__(self, wavelength, shape=None, pixelscale=None, planetype=None):
 
         self.wavelength = wavelength
