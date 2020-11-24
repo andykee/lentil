@@ -38,8 +38,8 @@ def airy2(diameter, focal_length, wavelength, pixelscale, shape, oversample=1):
     x -= c[1]
     y -= c[0]
 
-    x *= (pixelscale / oversample)
-    y *= (pixelscale / oversample)
+    x *= (pixelscale[0] / oversample)
+    y *= (pixelscale[1] / oversample)
 
     q = np.sqrt(x ** 2 + y ** 2)
     X = (np.pi * q) / (wavelength * f_number)
@@ -113,7 +113,7 @@ def test_airy2():
     slice_index = npix // 2
 
     a1 = airy(diameter, focal_length, wave, pixelscale, npix, oversample)
-    a2 = airy2(diameter, focal_length, wave, pixelscale, (npix, npix), oversample)
+    a2 = airy2(diameter, focal_length, wave, (pixelscale, pixelscale), (npix, npix), oversample)
 
     res = a2[:, slice_index] - a1
     assert (np.all(np.abs(res) < 1e-9))

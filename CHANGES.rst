@@ -1,6 +1,26 @@
 Release notes
 =============
 
+v0.5.0
+------
+Released 2020
+
+* Propagations with ``tilt='angle'`` have tilt projected out of each
+  plane once before the entire propagation rather than at each monochromatic
+  propagation
+* Rework ``Plane.pixelscale`` to always store (r,c) pixelscale
+* Fix bug in ``Plane.mask`` on the fly calculation that was overwriting 
+  ``Plane.amplitude`` with a binary mask
+* No longer cache ``Plane.ptt_vector``
+* Deprecate ``Plane.cache_propagate()`` and ``Plane.clear_cache_propagate()``.
+  This functionality has been migrated to ``propagate._prepare_planes()``
+  and ``propagate._cleanup_planes()``
+* New ``Plane.rescale()`` method to rescale Plane pixelscale
+* Update ``util.rescale()`` to choose a more conservative (better sampled)
+  result when having to chose an integer output shape
+* Define ``Wavefront.__slots__`` to increase attribute access speed and reduce 
+  memory footprint
+
 v0.4.1
 ------
 Released October 7, 2020

@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 import numpy as np
 from scipy import ndimage
 import scipy.integrate
@@ -16,8 +18,9 @@ class Plane:
 
     Parameters
     ----------
-    pixelscale : float
-        Physical sampling (in meters) of each pixel in the plane
+    pixelscale : float or (2,) array_like
+        Physical sampling (in meters) of each pixel in the plane. If :attr:`pixelscale`
+        is a scalar, uniform sampling in x and y is assumed.
 
     amplitude : array_like, optional
         Electric field amplitude transmission. Amplitude should be normalized
@@ -38,15 +41,15 @@ class Plane:
 
     Attributes
     ----------
+    tilt : list
 
     """
 
     def __init__(self, pixelscale=None, amplitude=1, phase=0, mask=None, segmask=None):
-
         # We directly set the local attributes here in case a subclass has redefined
         # the property (which could cause an weird behavior and will throw an
         # AttributeError if the subclass hasn't defined an accompanying getter
-        self._pixelscale = pixelscale
+        self.pixelscale = pixelscale
         self._amplitude = np.asarray(amplitude) if amplitude is not None else None
         self._phase = np.asarray(phase) if phase is not None else None
         self._mask = np.asarray(mask) if mask is not None else None
@@ -54,6 +57,8 @@ class Plane:
 
         self._cache = Cache()
         self.cache_attrs = ['amplitude', 'phase']
+
+        self.tilt = []
 
     def __init_subclass__(cls):
         # we have to define default values to avoid AttributeErrors in case
@@ -66,18 +71,28 @@ class Plane:
         cls._segmask = None
 
         cls._cache = Cache()
-        cls.cache_attrs = ['amplitude', 'phase', 'ptt_vector']
+        cls.cache_attrs = ['amplitude', 'phase']
 
     def __repr__(self):
         return f'{self.__class__.__name__}()'
 
     @property
     def pixelscale(self):
-        """Physical sampling (in meters) of each pixel in the plane"""
+        """Physical sampling (in meters) of each pixel in the plane.
+        
+        Returns
+        -------
+        pixelscale : ndarray
+            (dx,dy) sampling of the Plane
+        """
         return self._pixelscale
 
     @pixelscale.setter
     def pixelscale(self, value):
+        if value is not None:
+            value = np.asarray(value)
+            if value.shape == ():
+                value = np.append(value, value)
         self._pixelscale = value
 
     @property
@@ -169,7 +184,7 @@ class Plane:
             return self._mask
         else:
             if self.amplitude is not None:
-                mask = self.amplitude
+                mask = np.copy(self.amplitude)
                 mask[mask != 0] = 1
                 return mask
             else:
@@ -195,8 +210,6 @@ class Plane:
 
     @segmask.setter
     def segmask(self, value):
-        # Note this operation implicitly converts a list or tuple of arrays
-        # to an appropriately stacked ndarray
         if value is None:
             segmask = None
         else:
@@ -243,60 +256,33 @@ class Plane:
 
         """
 
-        if self.cache.get('ptt_vector') is not None:
-            return self.cache.get('ptt_vector')
-
+        # if there's no mask, we just set ptt_vector to None and move on
+        if (self.shape == () or self.shape is None) and self.segmask is None:
+            ptt_vector = None
         else:
-            # if there's no mask, we just set ptt_vector to None and move on
-            if (self.shape == () or self.shape is None) and self.segmask is None:
-                ptt_vector = None
+            # compute unmasked piston, tip, tilt vector
+            x, y = util.mesh(self.shape)
+            unmasked_ptt_vector = np.einsum('ij,i->ij',[np.ones(x.size), x.ravel(), y.ravel()],
+                                            [1, self.pixelscale[0], self.pixelscale[1]])
+
+            if self.segmask is None:
+                ptt_vector = np.einsum('ij,j->ij', unmasked_ptt_vector, self.mask.ravel())
             else:
-                # compute unmasked piston, tip, tilt vector
-                x, y = util.mesh(self.shape)
-                unmasked_ptt_vector = np.array([np.ones(x.size), x.ravel(), y.ravel()]) * self.pixelscale
+                # prepare empty ptt_vector
+                ptt_vector = np.empty((self.nseg*3, self.mask.size))
 
-                if self.segmask is None:
-                    ptt_vector = np.einsum('ij,j->ij', unmasked_ptt_vector, self.mask.ravel())
-                else:
-                    # prepare empty ptt_vector
-                    ptt_vector = np.empty((self.nseg*3, self.mask.size))
+                # loop over the segments and fill in the masked ptt_vectors
+                for seg in np.arange(self.nseg):
+                    ptt_vector[3*seg:3*seg+3] = unmasked_ptt_vector * self.segmask[seg].ravel()
 
-                    # loop over the segments and fill in the masked ptt_vectors
-                    for seg in np.arange(self.nseg):
-                        ptt_vector[3*seg:3*seg+3] = unmasked_ptt_vector * self.segmask[seg].ravel()
+        return ptt_vector
 
-            return ptt_vector
+    def rescale(self, scale, copy=True):
+        """Rescale a plane
 
-    def cache_propagate(self):
-        """Cache expensive to compute attributes for propagation.
-
-        Attributes listed in :attr:`~lentil.Pupil.cache_attrs` are cached.
-        """
-        # User-defined cached attributes
-        for attr in self.cache_attrs:
-            self.cache.add(attr, getattr(self, attr))
-
-        # We always want to cache ptt_vector
-        self.cache.add('ptt_vector', self.ptt_vector)
-
-    def clear_cache_propagate(self):
-        """Clear propagation cache values.
-
-        Attributes listed in :attr:`~lentil.Pupil.cache_attrs` are cleared from
-        the cache.
-        """
-        # User-defined cached attributes
-        for attr in self.cache_attrs:
-            self.cache.delete(attr)
-
-        self.cache.delete('ptt_vector')
-
-    @staticmethod
-    def rescale(input, scale, shape=None):
-        """Rescale an input array
-
-        This method is used during propagation setup to resample plane attributes
-        as needed to satisfy sampling requirements. 
+        This method is primarily used during propagation setup to resample plane 
+        attributes at a different pixelscale as needed to satisfy sampling 
+        requirements. 
 
         The default behavior is to call :func:`util.rescale` with ``mask=None``,
         ``order=3``, ``mode='nearest'``, and ``unitary=True``. This static method
@@ -305,25 +291,79 @@ class Plane:
 
         Parameters
         ----------
-        input : array_like
-            Input to rescale
-            
         scale : float
             Scaling factor. Scale factors less than 1 will shrink the image. Scale 
             factors greater than 1 will grow the image.
-        
-        shape : array_like or int, optional
-            Output shape. If None (default), the output shape will be the input img 
-            shape multiplied by the scale factor.
+
+        copy : bool
+            If True (default) a new plane object is returned, otherwise the rescaling
+            operation happens in place.
 
         Returns
         -------
-        output : ndarray
-            Rescaled input
+        out : :class:`~lentil.Plane`
+            Rescaled Plane
 
         """
-        return util.rescale(img=input, scale=scale, shape=shape, mask=None,
-                            order=3, mode='nearest', unitary=True)
+        if copy:
+            out = deepcopy(self)
+        else:
+            out = self
+        
+        # Create a new Cache object for safety
+        out._cache = Cache()
+
+        if out.shape is None:
+            out.pixelscale /= scale
+        else:
+            out_shape = np.ceil((out.shape[0]*scale, out.shape[1]*scale)).astype(np.int)
+            true_scale = np.array((out_shape[0]/out.shape[0], out_shape[1]/out.shape[1]))
+            out.pixelscale /= true_scale
+
+        # Note that mask has somewhat unique behavior among Plane attributes in 
+        # that it is computed on the fly from the amplitude unless explicitly 
+        # specified (which is stored in Plane._mask). In order to preserve that 
+        # behavior, we'll only rescale self.mask if self._mask is defined.
+        if out._mask is not None:
+            out._mask = self.rescale_mask(out._mask, scale)
+        
+        if out.amplitude is not None:
+            out.amplitude = self.rescale_amplitude(out.amplitude, scale)
+
+        if out.phase is not None:
+            out.phase = self.rescale_phase(out.phase, scale)
+
+        if out.segmask is not None:
+            out.segmask = self.rescale_segmask(out.segmask, scale)
+
+        return out
+
+    @staticmethod
+    def rescale_amplitude(amplitude, scale):
+        return util.rescale(amplitude, scale=scale, shape=None, mask=None, 
+                            order=3, mode='nearest', unitary=False)/scale**2
+
+    @staticmethod
+    def rescale_phase(phase, scale):
+        return util.rescale(phase, scale=scale, shape=None, mask=None,
+                            order=3, mode='nearest', unitary=False)
+    
+    @staticmethod
+    def rescale_mask(mask, scale):
+        mask = util.rescale(mask, scale=scale, shape=None, mask=None, order=1,
+                            mode='constant', unitary=False)
+        mask[mask < np.finfo(mask.dtype).eps] = 0
+        return mask.astype(np.int)
+
+    @staticmethod
+    def rescale_segmask(segmask, scale):
+        out = []
+        for seg in segmask:
+            mask = util.rescale(seg, scale=scale, shape=None, mask=None, 
+                                order=1, mode='nearest', unitary=False)
+            mask[mask != 0] = 1
+            out.append(mask)
+        return np.asarray(out)
 
     def multiply(self, wavefront, tilt='phase'):
         """Multiply with a wavefront

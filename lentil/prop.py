@@ -4,7 +4,7 @@ import numpy as np
 
 from lentil import util
 from lentil import fourier
-from lentil.plane import Plane, Pupil, Image
+from lentil.plane import Plane, Pupil, Image, Tilt
 from lentil.wavefront import Wavefront
 
 __all__ = ['propagate']
@@ -82,9 +82,39 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
     npix_chip = _standardize_shape(npix_chip, default=npix)
     wave = _standardize_vec(wave)
     weight = _standardize_vec(weight, default=wave.shape)
-    
-    _prepare_planes(planes, wave, npix_chip, oversample)
 
+    # consider renaming _cache_propagate() and _clear_cache_propagate()
+    # _prepare() and _clear() since there's much more than just caching 
+    # going on now
+
+    # What should happen here as a part of cache_propagate:
+    # -----------------------------------------------------
+    # * if fit_tilt = True, the tilt in each plane should be fit and removed 
+    #   from the phase and bookkept in the plane.tilt attribute
+    #   - note that this can be done on the un-sliced data for ease of interaction
+    #     with ptt_vector
+    #   - note further that ptt_vector should be reworked as a property with a 
+    #     setter that is called at object creation with the mask in case we need
+    #     to do some reinterpolation down the line
+    #
+    # *  Once this is done we can remove ptt_vector from the cache that is
+    #    created in cache_propagate() since it won't be needed anymore. As
+    #    a matter of fact, we can just turn this into a method that takes
+    #    a mask or segmask and returns the vector -> _ptt_vector(mask)
+    #
+    # * Somewhere in here (probably before we fit and remove tilt), we need
+    #   to sort out the sampling and make sure each plane is adequately 
+    #   sampled. Write up sampling rules for this.
+    # 
+    # 
+
+    # note the actual order of operations is probably:
+    # 1. sampling
+    # 2. set slice
+    # 3. fit_tilt (but this can be done over full arrays)
+
+    _prepare_planes(planes, wave, npix_chip, oversample, interp_phasor)
+    
     # Create an empty output
     if flatten:
         output = np.zeros((npix[0]*oversample, npix[1]*oversample))
@@ -116,19 +146,68 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
     return output
 
 
-def _prepare_planes(planes, wave, npix, oversample):
+def _prepare_planes(planes, wave, npix, oversample, interp_phasor):
     #shapes = [plane.shape for plane in planes if isinstance(plane, Pupil)]
     #npix_wavefront = (max(shapes, key=itemgetter(0))[0],
     #                  max(shapes, key=itemgetter(1))[1])
 
     # Loop over the planes to build caches
     for plane in planes:
-        plane.cache_propagate()
+        for attr in plane.cache_attrs:
+            plane.cache.add(attr, getattr(plane, attr))
+
+
+def _fit_tilt(plane):
+
+    ptt_vector = plane.ptt_vector
+    if ptt_vector is None or plane.phase.size == 1:
+        # There's nothing to do so we'll just return the unmodified
+        # phase and a no-tilt Tilt object
+        return plane.phase, Tilt(x=0, y=0)
+    
+    elif plane.segmask is None:
+        phase_vector = plane.phase.ravel()
+
+        t = np.linalg.lstsq(ptt_vector.T, phase_vector, rcond=None)[0]
+        phase_tilt = np.einsum('ij,i->j', ptt_vector[1:3], t[1:3])
+
+        phase = plane.phase - phase_tilt.reshape(plane.shape)
+        # 01da13b transitioned from specifying tilt in terms of image plane
+        # coordinates to about the Tilt plane axes. We can transform from
+        # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
+        tilt = [Tilt(x=-t[2], y=t[1])]
+        return phase, tilt
+
+    else:
+        return _fit_tilt_segmented(plane)
+
+
+def _fit_tilt_segmented(plane):
+    ptt_vector = plane.ptt_vector
+
+    phase_vector = phase.ravel()
+    t = np.zeros((plane.nseg, 3))
+    phase = np.zeros((plane.nseg, plane.shape[0], plane.shape[1]))
+
+    # iterate over the segments and compute the tilt term
+    for seg in np.arange(plane.nseg):
+        t[seg] = np.linalg.lstsq(ptt_vector[3 * seg:3 * seg + 3].T, phase_vector,
+                                         rcond=None)[0]
+        seg_tilt = np.einsum('ij,i->j', ptt_vector[3 * seg + 1:3 * seg + 3], t[seg, 1:3])
+        phase[seg] = (plane.phase - seg_tilt.reshape(plane.shape)) * plane.segmask[seg]
+    
+    # 01da13b transitioned from specifying tilt in terms of image plane
+    # coordinates to about the Tilt plane axes. We can transform from
+    # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
+    tilt = [Tilt(x=-t[seg, 2], y=t[seg, 1]) for seg in range(plane.nseg)]
+
+    return phase, tilt
 
 
 def _cleanup_planes(planes):
     for plane in planes:
-        plane.clear_cache_propagate()
+        for attr in plane.cache_attrs:
+            plane.cache.delete(attr)
 
 
 def _propagate_mono(planes, wavelength, npix, npix_chip, oversample, tilt, out=None):
@@ -276,6 +355,23 @@ class _iterate_planes:
         else:
             raise StopIteration()
 
+class _iterate_planes_reverse:
+    def __init__(self, planes):
+        self.planes = planes
+        self.length = len(planes)
+        self.n = 1
+        
+    def __iter__(self):
+        return self
+    
+    def __next__(self):
+        if self.n < self.length:
+            plane = self.planes[-(self.n+1)]
+            next_plane = self.planes[-self.n]
+            self.n += 1
+            return plane, next_plane
+        else:
+            raise StopIteration()
 
 def _chip_insertion_slices(npix_canvas, npix_chip, shift):
     npix_canvas = np.asarray(npix_canvas)
