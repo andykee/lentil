@@ -291,6 +291,40 @@ class Plane:
 
         self.cache.delete('ptt_vector')
 
+    @staticmethod
+    def rescale(input, scale, shape=None):
+        """Rescale an input array
+
+        This method is used during propagation setup to resample plane attributes
+        as needed to satisfy sampling requirements. 
+
+        The default behavior is to call :func:`util.rescale` with ``mask=None``,
+        ``order=3``, ``mode='nearest'``, and ``unitary=True``. This static method
+        should be redefined in a subclass if special plane rescaling behavior is
+        required.
+
+        Parameters
+        ----------
+        input : array_like
+            Input to rescale
+            
+        scale : float
+            Scaling factor. Scale factors less than 1 will shrink the image. Scale 
+            factors greater than 1 will grow the image.
+        
+        shape : array_like or int, optional
+            Output shape. If None (default), the output shape will be the input img 
+            shape multiplied by the scale factor.
+
+        Returns
+        -------
+        output : ndarray
+            Rescaled input
+
+        """
+        return util.rescale(img=input, scale=scale, shape=shape, mask=None,
+                            order=3, mode='nearest', unitary=True)
+
     def multiply(self, wavefront, tilt='phase'):
         """Multiply with a wavefront
 
