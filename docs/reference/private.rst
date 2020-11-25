@@ -4,13 +4,6 @@
 Private API
 ***********
 
-Caching (``lentil.cache``)
-==========================
-.. autosummary::
-    :toctree: ../generated/
-
-    lentil.cache.Cache
-
 Fourier transforms (``lentil.fourier``)
 =======================================
 .. autosummary::
@@ -20,13 +13,6 @@ Fourier transforms (``lentil.fourier``)
     lentil.fourier.idft2
     lentil.fourier.czt2
     lentil.fourier.iczt2
-
-Diffraction propagation (``lentil.prop``)
-=========================================
-.. autosummary::
-    :toctree: ../generated/
-
-    lentil.prop.Propagate
 
 Wavefront (``lentil.wavefront``)
 ================================

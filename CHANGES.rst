@@ -21,6 +21,7 @@ Released 2020
 * Define ``Wavefront.__slots__`` to increase attribute access speed and reduce 
   memory footprint
 * ``util.circle()`` `center` parameter is now called `shift`
+* Deprecate ``cache.Cache`` in favor of a simple dictionary
 
 v0.4.1
 ------

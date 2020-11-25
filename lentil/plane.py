@@ -5,7 +5,6 @@ from scipy import ndimage
 import scipy.integrate
 import scipy.optimize
 
-from lentil.cache import Cache
 from lentil.mathtools import expc
 from lentil import util
 
@@ -55,9 +54,7 @@ class Plane:
         self._mask = np.asarray(mask) if mask is not None else None
         self._segmask = np.asarray(segmask) if segmask is not None else None
 
-        self._cache = Cache()
-        self.cache_attrs = ['amplitude', 'phase']
-
+        self.cache = {}
         self.tilt = []
 
     def __init_subclass__(cls):
@@ -70,8 +67,7 @@ class Plane:
         cls._mask = None
         cls._segmask = None
 
-        cls._cache = Cache()
-        cls.cache_attrs = ['amplitude', 'phase']
+        cls.cache = {}
 
     def __repr__(self):
         return f'{self.__class__.__name__}()'
@@ -94,17 +90,6 @@ class Plane:
             if value.shape == ():
                 value = np.append(value, value)
         self._pixelscale = value
-
-    @property
-    def cache(self):
-        """Cache
-
-        Returns
-        -------
-        cache : :class:`~lentil.cache.Cache`
-
-        """
-        return self._cache
 
     @property
     def amplitude(self):
@@ -386,16 +371,10 @@ class Plane:
             if self.pixelscale is not None:
                 assert wavefront.pixelscale == self.pixelscale
 
-        if 'amplitude' in self.cache.keys():
-            amplitude = self.cache.get('amplitude')
-        else:
-            amplitude = self.amplitude
+        amplitude = self.cache['amplitude'] if 'amplitude' in self.cache else self.amplitude
+        phase = self.cache['phase'] if 'phase' in self.cache else self.phase
+        tilt = self.cache['tilt'] if 'tilt' in self.cache else self.tilt
 
-        if 'phase' in self.cache.keys():
-            phase = self.cache.get('phase')
-        else:
-            phase = self.phase
-        
         if phase.ndim == 3:
             data = np.copy(wavefront.data)
             wavefront.data = np.zeros((phase.shape[0], data.shape[1], data.shape[2]),
@@ -408,9 +387,9 @@ class Plane:
         else:
             phasor = amplitude * expc(phase * 2 * np.pi / wavefront.wavelength)
             wavefront.data *= phasor 
-            #wavefront = self._multiply_phase(amplitude, phase, wavefront)
         # np.multiply(wavefront.data, amplitude * expc(phase * 2 * np.pi / wavefront.wavelength), out=wavefront.data)
-        wavefront.tilt.extend(self.tilt)
+        
+        wavefront.tilt.extend(tilt)
 
         return wavefront
 

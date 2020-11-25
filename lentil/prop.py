@@ -1,4 +1,5 @@
 from operator import itemgetter
+import copy
 
 import numpy as np
 
@@ -147,19 +148,28 @@ def _prepare_planes(planes, wave, npix, oversample, tilt, interp_phasor):
     #npix_wavefront = (max(shapes, key=itemgetter(0))[0],
     #                  max(shapes, key=itemgetter(1))[1])
 
+    # TODO: we may be able to avoid the deepcopies here on amplitude and
+    # phase if they are reshaped
+
     # Loop over the planes to build caches
     for plane in planes:
-        plane.cache.add('amplitude', plane.amplitude)
+        plane.cache['amplitude'] = copy.deepcopy(plane.amplitude)
+        plane.cache['tilt'] = copy.deepcopy(plane.tilt)
 
         if tilt == 'angle':
             phase, fit_tilt = _fit_tilt(plane)
-            plane.cache.add('phase', phase)
+            plane.cache['phase'] = phase
             if fit_tilt is not None:
-                plane.tilt.extend([fit_tilt])
-            
-            
+                plane.cache['tilt'].extend([fit_tilt])
+        
         else:
-            plane.cache.add('phase', plane.phase)
+            plane.cache['phase'] = copy.deepcopy(plane.phase)
+
+
+def _cleanup_planes(planes):
+    for plane in planes:
+        plane.cache.clear()
+
 
 
 def _fit_tilt(plane):
@@ -209,16 +219,6 @@ def _fit_tilt_segmented(plane):
     tilt = [Tilt(x=-t[seg, 2], y=t[seg, 1]) for seg in range(plane.nseg)]
 
     return phase, tilt
-
-
-def _cleanup_planes(planes):
-    for plane in planes:
-        # TODO: this is alightly dangerous. In the event that a user set their own tilt
-        # term it will be erased here. We should instead cache the tilt extracted from
-        # the phase and use it only temporarily for the duration of the propagation
-        plane.tilt = []
-        for attr in plane.cache_attrs:
-            plane.cache.delete(attr)
 
 
 def _propagate_mono(planes, wavelength, npix, npix_chip, oversample, tilt, out=None):
