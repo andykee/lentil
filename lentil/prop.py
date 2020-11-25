@@ -81,19 +81,15 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
     npix = _standardize_shape(npix, default=planes[-1].shape)
     npix_chip = _standardize_shape(npix_chip, default=npix)
     wave = _standardize_vec(wave)
-    weight = _standardize_vec(weight, default=wave.shape)
-
-    # consider renaming _cache_propagate() and _clear_cache_propagate()
-    # _prepare() and _clear() since there's much more than just caching 
-    # going on now
+    weight = _standardize_vec(weight, default=np.ones_like(wave))
 
     # What should happen here as a part of cache_propagate:
     # -----------------------------------------------------
-    # * if fit_tilt = True, the tilt in each plane should be fit and removed 
+    # * if fit_tilt = True, the tilt in each plane should be fit and removed
     #   from the phase and bookkept in the plane.tilt attribute
     #   - note that this can be done on the un-sliced data for ease of interaction
     #     with ptt_vector
-    #   - note further that ptt_vector should be reworked as a property with a 
+    #   - note further that ptt_vector should be reworked as a property with a
     #     setter that is called at object creation with the mask in case we need
     #     to do some reinterpolation down the line
     #
@@ -103,18 +99,18 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
     #    a mask or segmask and returns the vector -> _ptt_vector(mask)
     #
     # * Somewhere in here (probably before we fit and remove tilt), we need
-    #   to sort out the sampling and make sure each plane is adequately 
+    #   to sort out the sampling and make sure each plane is adequately
     #   sampled. Write up sampling rules for this.
-    # 
-    # 
+    #
+    #
 
     # note the actual order of operations is probably:
     # 1. sampling
     # 2. set slice
     # 3. fit_tilt (but this can be done over full arrays)
 
-    _prepare_planes(planes, wave, npix_chip, oversample, interp_phasor)
-    
+    _prepare_planes(planes, wave, npix_chip, oversample, tilt, interp_phasor)
+
     # Create an empty output
     if flatten:
         output = np.zeros((npix[0]*oversample, npix[1]*oversample))
@@ -126,7 +122,7 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
 
     for n, (wl, wt) in enumerate(zip(wave, weight)):
         if wt > 0:
-            
+
             _output = _propagate_mono(planes, wl, npix, npix_chip, oversample, tilt, _output)
 
             # Compute intensity
@@ -146,15 +142,24 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
     return output
 
 
-def _prepare_planes(planes, wave, npix, oversample, interp_phasor):
+def _prepare_planes(planes, wave, npix, oversample, tilt, interp_phasor):
     #shapes = [plane.shape for plane in planes if isinstance(plane, Pupil)]
     #npix_wavefront = (max(shapes, key=itemgetter(0))[0],
     #                  max(shapes, key=itemgetter(1))[1])
 
     # Loop over the planes to build caches
     for plane in planes:
-        for attr in plane.cache_attrs:
-            plane.cache.add(attr, getattr(plane, attr))
+        plane.cache.add('amplitude', plane.amplitude)
+
+        if tilt == 'angle':
+            phase, fit_tilt = _fit_tilt(plane)
+            plane.cache.add('phase', phase)
+            if fit_tilt is not None:
+                plane.tilt.extend([fit_tilt])
+            
+            
+        else:
+            plane.cache.add('phase', plane.phase)
 
 
 def _fit_tilt(plane):
@@ -163,8 +168,8 @@ def _fit_tilt(plane):
     if ptt_vector is None or plane.phase.size == 1:
         # There's nothing to do so we'll just return the unmodified
         # phase and a no-tilt Tilt object
-        return plane.phase, Tilt(x=0, y=0)
-    
+        return plane.phase, None
+
     elif plane.segmask is None:
         phase_vector = plane.phase.ravel()
 
@@ -185,7 +190,7 @@ def _fit_tilt(plane):
 def _fit_tilt_segmented(plane):
     ptt_vector = plane.ptt_vector
 
-    phase_vector = phase.ravel()
+    phase_vector = plane.phase.ravel()
     t = np.zeros((plane.nseg, 3))
     phase = np.zeros((plane.nseg, plane.shape[0], plane.shape[1]))
 
@@ -195,10 +200,12 @@ def _fit_tilt_segmented(plane):
                                          rcond=None)[0]
         seg_tilt = np.einsum('ij,i->j', ptt_vector[3 * seg + 1:3 * seg + 3], t[seg, 1:3])
         phase[seg] = (plane.phase - seg_tilt.reshape(plane.shape)) * plane.segmask[seg]
-    
+
     # 01da13b transitioned from specifying tilt in terms of image plane
     # coordinates to about the Tilt plane axes. We can transform from
     # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
+    #
+    # Note the
     tilt = [Tilt(x=-t[seg, 2], y=t[seg, 1]) for seg in range(plane.nseg)]
 
     return phase, tilt
@@ -206,6 +213,10 @@ def _fit_tilt_segmented(plane):
 
 def _cleanup_planes(planes):
     for plane in planes:
+        # TODO: this is alightly dangerous. In the event that a user set their own tilt
+        # term it will be erased here. We should instead cache the tilt extracted from
+        # the phase and use it only temporarily for the duration of the propagation
+        plane.tilt = []
         for attr in plane.cache_attrs:
             plane.cache.delete(attr)
 
@@ -248,7 +259,7 @@ def _propagate_mono(planes, wavelength, npix, npix_chip, oversample, tilt, out=N
     for plane, next_plane in _iterate_planes(planes):
 
         # Multiply by the current plane
-        w = plane.multiply(w, tilt)
+        w = plane.multiply(w)
 
         # Now, we propagate to the next plane in the optical system
 
@@ -256,7 +267,7 @@ def _propagate_mono(planes, wavelength, npix, npix_chip, oversample, tilt, out=N
 
         if (w.planetype == 'pupil') and isinstance(next_plane, Image):
             if next_plane.pixelscale is not None:
-                w = _propagate_pupil_image_fixed(w, next_plane.pixelscale, npix, oversample)
+                w = _propagate_pti(w, next_plane.pixelscale, npix_chip, oversample)
             else:
                 pass
         elif (w.planetype == 'image') and isinstance(next_plane, Pupil):
@@ -289,7 +300,7 @@ def _propagate_mono(planes, wavelength, npix, npix_chip, oversample, tilt, out=N
     return out
 
 
-def _propagate_pupil_image_fixed(w, pixelscale, npix, oversample):
+def _propagate_pti(w, pixelscale, npix, oversample):
 
     # TODO: we should only apply the shift if this is the final plane
     shift = w.shift(pixelscale, oversample)
@@ -360,10 +371,10 @@ class _iterate_planes_reverse:
         self.planes = planes
         self.length = len(planes)
         self.n = 1
-        
+
     def __iter__(self):
         return self
-    
+
     def __next__(self):
         if self.n < self.length:
             plane = self.planes[-(self.n+1)]

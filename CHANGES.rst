@@ -20,6 +20,7 @@ Released 2020
   result when having to chose an integer output shape
 * Define ``Wavefront.__slots__`` to increase attribute access speed and reduce 
   memory footprint
+* ``util.circle()`` `center` parameter is now called `shift`
 
 v0.4.1
 ------

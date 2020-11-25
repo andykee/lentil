@@ -5,9 +5,9 @@ import lentil
 class SimpleSegmentedPupil(lentil.Pupil):
 
     def __init__(self, npix=256):
-        segmask1 = lentil.util.circlemask((npix, npix), 0.2 * npix, center=(-0.25 * npix, 0.2 * npix))
-        segmask2 = lentil.util.circlemask((npix, npix), 0.2 * npix, center=(0.25 * npix, 0.2 * npix))
-        segmask3 = lentil.util.circlemask((npix, npix), 0.2 * npix, center=(0, -0.2 * npix))
+        segmask1 = lentil.util.circlemask((npix, npix), 0.2 * npix, shift=(-0.25 * npix, 0.2 * npix))
+        segmask2 = lentil.util.circlemask((npix, npix), 0.2 * npix, shift=(0.25 * npix, 0.2 * npix))
+        segmask3 = lentil.util.circlemask((npix, npix), 0.2 * npix, shift=(0, -0.2 * npix))
         segmask = np.stack((segmask1, segmask2, segmask3))
         mask = np.sum(segmask, axis=0)
 

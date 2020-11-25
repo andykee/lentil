@@ -2,7 +2,7 @@ import numpy as np
 from scipy.ndimage.interpolation import map_coordinates
 
 
-def circle(shape, radius, center=(0, 0)):
+def circle(shape, radius, shift=(0, 0)):
     """Compute a circle with anti-aliasing.
 
     Parameters
@@ -13,7 +13,7 @@ def circle(shape, radius, center=(0, 0)):
     radius : float
         Radius of circle in pixels
 
-    center : (2,) array_like, optional
+    shift : (2,) array_like, optional
         How far to shift center in float (rows, cols). Default is (0, 0).
 
     Returns
@@ -22,11 +22,11 @@ def circle(shape, radius, center=(0, 0)):
 
     """
     x, y = mesh(shape)
-    r = np.sqrt(np.square(x - center[1]) + np.square(y - center[0]))
+    r = np.sqrt(np.square(x - shift[1]) + np.square(y - shift[0]))
     return np.clip(radius + 0.5 - r, 0.0, 1.0)
 
 
-def circlemask(shape, radius, center=(0, 0)):
+def circlemask(shape, radius, shift=(0, 0)):
     """Compute a circular mask.
 
     Parameters
@@ -37,7 +37,7 @@ def circlemask(shape, radius, center=(0, 0)):
     radius : float
         Radius of circle in pixels
 
-    center : array_like, optional
+    shift : array_like, optional
         How far to shift center in float (rows, cols). Default is (0, 0).
 
     Returns
@@ -46,7 +46,7 @@ def circlemask(shape, radius, center=(0, 0)):
 
     """
 
-    mask = circle(shape, radius, center)
+    mask = circle(shape, radius, shift)
     mask[mask > 0] = 1
     return mask
 

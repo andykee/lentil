@@ -107,27 +107,6 @@ class Plane:
         return self._cache
 
     @property
-    def cache_attrs(self):
-        """List of plane attributes to cache for propagations. Valid values are:
-
-        * :attr:`~lentil.Plane.amplitude`
-        * :attr:`~lentil.Plane.phase`
-
-        Default is ``['amplitude', 'phase']``
-
-        Returns
-        -------
-        cache_attrs : list
-
-        """
-        return self._cache_attrs
-
-    @cache_attrs.setter
-    def cache_attrs(self, value):
-        assert all(attr in ('amplitude', 'phase') for attr in value)
-        self._cache_attrs = value
-
-    @property
     def amplitude(self):
         """Electric field amplitude transmission.
 
@@ -350,9 +329,10 @@ class Plane:
     
     @staticmethod
     def rescale_mask(mask, scale):
-        mask = util.rescale(mask, scale=scale, shape=None, mask=None, order=1,
+        mask = util.rescale(mask, scale=scale, shape=None, mask=None, order=0,
                             mode='constant', unitary=False)
-        mask[mask < np.finfo(mask.dtype).eps] = 0
+        #mask[mask < np.finfo(mask.dtype).eps] = 0
+        mask[np.nonzero(mask)] = 1
         return mask.astype(np.int)
 
     @staticmethod
@@ -365,7 +345,7 @@ class Plane:
             out.append(mask)
         return np.asarray(out)
 
-    def multiply(self, wavefront, tilt='phase'):
+    def multiply(self, wavefront):
         """Multiply with a wavefront
 
         Parameters
@@ -415,95 +395,22 @@ class Plane:
             phase = self.cache.get('phase')
         else:
             phase = self.phase
-
-        if tilt == 'phase':
-            wavefront = self._multiply_phase(amplitude, phase, wavefront)
-        elif tilt == 'angle':
-            wavefront = self._multiply_angle(amplitude, phase, wavefront)
-        else:
-            raise AttributeError('Unknown tilt parameter', tilt)
-
-        return wavefront
-
-    @staticmethod
-    def _multiply_phase(amplitude, phase, wavefront):
-        # Compute and apply the phasor
-        phasor = amplitude * expc(phase * 2 * np.pi / wavefront.wavelength)
-        wavefront.data *= phasor
-
-        return wavefront
-
-    def _multiply_angle(self, amplitude, phase, wavefront):
-
-        # There are a couple of different paths here
-
-        # If ptt_vector is None or the phase has no shape, there's nothing extra to do
-        # here so we will just defer to _multiply_phase:
-        if self.ptt_vector is None or phase.size == 1:
-            wavefront = self._multiply_phase(amplitude, phase, wavefront)
-
-        # If there's no segment mask, we can just do a single step projection,
-        # subtraction, and multiplication:
-        elif self.segmask is None:
-            # TODO: move this into _multiple_angle_one (or something like that)
-            ptt_vector = self.ptt_vector
-            phase_vector = phase.ravel()
-            t = np.linalg.lstsq(ptt_vector.T, phase_vector, rcond=None)[0]
-            phase_tilt = \
-                np.einsum('ij,i->j', ptt_vector[1:3], t[1:3]).reshape(self.shape)
-
-            # Note that it is tempting to do an in-place subtraction here. Don't do
-            # it! In the event that self.opd is returning a static ndarray, phase
-            # will actually be a reference to this underlying array in memory and an
-            # in-place operation will operate on that array. The in-place
-            # operation's effects will persist beyond the scope of this function,
-            # causing very strange behavior and lots of head scratching trying to
-            # figure out what happened.
-            phase = phase - phase_tilt
-
-            # Set the wavefront angle
-            #
-            # wavefront.tilt.extend([Tilt(x=t[1], y=t[2])])
-            #
-            # 01da13b transitioned from specifying tilt in terms of image plane
-            # coordinates to about the Tilt plane axes. We can transform from
-            # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
-            wavefront.tilt.extend([Tilt(x=-t[2], y=t[1])])
-
-            # Compute and apply the phasor
-            wavefront = self._multiply_phase(amplitude, phase, wavefront)
-
-        # Otherwise we have to go segment by segment:
-        else:
-            # TODO: move this to _multiply_angle_multi
-            ptt_vector = self.ptt_vector
-            phase_vector = phase.ravel()
-            t = np.zeros((self.nseg, 3))
+        
+        if phase.ndim == 3:
             data = np.copy(wavefront.data)
-            wavefront.data = np.zeros((self.nseg, data.shape[1], data.shape[2]),
+            wavefront.data = np.zeros((phase.shape[0], data.shape[1], data.shape[2]),
                                       dtype=np.complex128)
 
             # iterate over the segments and compute the tilt term
-            for seg in np.arange(self.nseg):
-                t[seg] = np.linalg.lstsq(ptt_vector[3 * seg:3 * seg + 3].T, phase_vector,
-                                         rcond=None)[0]
-                seg_tilt = np.einsum('ij,i->j', ptt_vector[3 * seg + 1:3 * seg + 3],
-                                     t[seg, 1:3]).reshape(self.shape)
-
-                phasor = amplitude * np.exp(1j * (phase - seg_tilt) * 2 * np.pi / wavefront.wavelength)
-
+            for seg in np.arange(phase.shape[0]):
+                phasor = amplitude * expc(phase[seg] * 2 * np.pi / wavefront.wavelength)
                 wavefront.data[seg] = data * phasor * self.segmask[seg]
-
-            # Set the tilt term
-            # Create a wavefront.Angle object for each segment and put them all in a
-            # list
-            #
-            # wavefront.tilt.append([Tilt(x=t[seg, 1], y=t[seg, 2]) for seg in range(self.nseg)])
-            #
-            # 01da13b transitioned from specifying tilt in terms of image plane
-            # coordinates to about the Tilt plane axes. We can transform from
-            # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
-            wavefront.tilt.append([Tilt(x=-t[seg, 2], y=t[seg, 1]) for seg in range(self.nseg)])
+        else:
+            phasor = amplitude * expc(phase * 2 * np.pi / wavefront.wavelength)
+            wavefront.data *= phasor 
+            #wavefront = self._multiply_phase(amplitude, phase, wavefront)
+        # np.multiply(wavefront.data, amplitude * expc(phase * 2 * np.pi / wavefront.wavelength), out=wavefront.data)
+        wavefront.tilt.extend(self.tilt)
 
         return wavefront
 
@@ -585,9 +492,9 @@ class Pupil(Plane):
         """F-number."""
         return self.focal_length/self.diameter
 
-    def multiply(self, wavefront, tilt='phase'):
+    def multiply(self, wavefront):
 
-        wavefront = super().multiply(wavefront, tilt)
+        wavefront = super().multiply(wavefront)
 
         # we inherit the plane's focal length as the wavefront's focal length
         wavefront.focal_length = self.focal_length
@@ -635,7 +542,7 @@ class Image(Plane):
     def shape(self, value):
         self._shape = value
 
-    def multiply(self, wavefront, *args, **kwargs):
+    def multiply(self, wavefront):
         """Multiply with a :class:`~lentil.wavefront.Wavefront`."""
 
         wavefront.planetype = 'image'
@@ -664,8 +571,8 @@ class DispersiveShift(Plane):
     def shift(self, wavelength, x0, y0, **kwargs):
         raise NotImplementedError
 
-    def multiply(self, wavefront, tilt='angle'):
-        wavefront = super().multiply(wavefront, tilt)
+    def multiply(self, wavefront):
+        wavefront = super().multiply(wavefront)
 
         wavefront.tilt.extend([self])
 
@@ -871,8 +778,8 @@ class Tilt(Plane):
         self.x = y  # y tilt is about the x-axis. 
         self.y = -x  # x tilt is about the y axis. There's also a sign flip to get the direction right.
 
-    def multiply(self, wavefront, tilt):
-        wavefront = super().multiply(wavefront, tilt)
+    def multiply(self, wavefront):
+        wavefront = super().multiply(wavefront)
         wavefront.tilt.extend([self])
         return wavefront
 
@@ -935,7 +842,7 @@ class Rotate(Plane):
     def clear_cache_propagate(self):
         pass
 
-    def multiply(self, wavefront, *args, **kwargs):
+    def multiply(self, wavefront):
         """Multiply with a wavefront
 
         Parameters
@@ -990,7 +897,7 @@ class Flip(Plane):
     def clear_cache_propagate(self):
         pass
 
-    def multiply(self, wavefront, *args, **kwargs):
+    def multiply(self, wavefront):
         """Multiply with a wavefront
 
         Parameters
