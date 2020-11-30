@@ -1,3 +1,5 @@
+.. _tech_notes.diffraction:
+
 ***********
 Diffraction
 ***********
