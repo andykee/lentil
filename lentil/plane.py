@@ -5,7 +5,7 @@ from scipy import ndimage
 import scipy.integrate
 import scipy.optimize
 
-from lentil.mathtools import expc
+from lentil.fourier import expc
 from lentil import util
 
 __all__ = ['Plane', 'Pupil', 'Image', 'DispersiveShift', 'Grism', 'LensletArray',
@@ -42,6 +42,8 @@ class Plane:
     ----------
     tilt : list
 
+    cache : dict
+
     """
 
     def __init__(self, pixelscale=None, amplitude=1, phase=0, mask=None, segmask=None):
@@ -68,6 +70,8 @@ class Plane:
         cls._segmask = None
 
         cls.cache = {}
+        cls.tilt = []
+        cls.sliceable = True
 
     def __repr__(self):
         return f'{self.__class__.__name__}()'
@@ -75,7 +79,7 @@ class Plane:
     @property
     def pixelscale(self):
         """Physical sampling (in meters) of each pixel in the plane.
-        
+
         Returns
         -------
         pixelscale : ndarray
@@ -196,27 +200,129 @@ class Plane:
 
     @property
     def shape(self):
-        """Plane dimensions computed from :attr:`mask`. Returns None if :attr:`mask`
-        is None.
+        """Plane dimensions computed from :attr:`mask` or :attr:`segmask`. Returns None
+        if :attr:`mask` and :attr:`segmask` are None.
         """
-        if self.mask is None:
+        if self.mask is None and self.segmask is None:
             return None
         else:
-            return self.mask.shape
+            if self.mask is not None:
+                return self.mask.shape
+            else:
+                return self.segmask.shape[1], self.segmask.shape[2]
+
+    @staticmethod
+    def rescale_amplitude(amplitude, scale):
+        """Rescale plane amplitude
+
+        This method uses 3rd order interpolation and preserves the power of the amplitude
+        array. If custom interpolation is required, this method should be redefined.
+
+        Parameters
+        ----------
+        amplitude : array_like
+
+        scale : float
+            Scaling factor. Scale factors less than 1 will shrink the amplitude. Scale
+            factors greater than 1 will grow the amplitude.
+
+        Returns
+        -------
+        amplitude : ndarray
+            Rescaled amplitude
+
+        """
+        if scale == 1:
+            return amplitude
+        else:
+            return util.rescale(amplitude, scale=scale, shape=None, mask=None,
+                                order=3, mode='nearest', unitary=False)/scale**2
+
+    @staticmethod
+    def rescale_phase(phase, scale):
+        """Rescale plane phase
+
+        This method uses 3rd order interpolation. If custom interpolation is required,
+        this method should be redefined.
+
+        Parameters
+        ----------
+        scale : float
+            Scaling factor. Scale factors less than 1 will shrink the amplitude. Scale
+            factors greater than 1 will grow the amplitude.
+
+        Returns
+        -------
+        phase : ndarray
+            Rescaled phase
+
+        """
+        if scale == 1:
+            return phase
+        else:
+            return util.rescale(phase, scale=scale, shape=None, mask=None,
+                                order=3, mode='nearest', unitary=False)
+
+    @staticmethod
+    def rescale_mask(mask, scale):
+        """Rescale plane mask
+
+        This method uses linear interpolation. If custom interpolation is required,
+        this method should be redefined.
+
+        Parameters
+        ----------
+        scale : float
+            Scaling factor. Scale factors less than 1 will shrink the amplitude. Scale
+            factors greater than 1 will grow the amplitude.
+
+        Returns
+        -------
+        mask : ndarray
+            Rescaled mask
+
+        """
+        mask = util.rescale(mask, scale=scale, shape=None, mask=None, order=0,
+                            mode='constant', unitary=False)
+        #mask[mask < np.finfo(mask.dtype).eps] = 0
+        mask[np.nonzero(mask)] = 1
+        return mask.astype(np.int)
+
+    @staticmethod
+    def rescale_segmask(segmask, scale):
+        """Rescale plane segmask
+
+        This method uses linear interpolation. If custom interpolation is required,
+        this method should be redefined.
+
+        Parameters
+        ----------
+        scale : float
+            Scaling factor. Scale factors less than 1 will shrink the amplitude. Scale
+            factors greater than 1 will grow the amplitude.
+
+        Returns
+        -------
+        segmask : ndarray
+            Rescaled segmask
+
+        """
+        out = []
+        for seg in segmask:
+            mask = util.rescale(seg, scale=scale, shape=None, mask=None,
+                                order=1, mode='nearest', unitary=False)
+            mask[mask != 0] = 1
+            out.append(mask)
+        return np.asarray(out)
 
     @property
     def ptt_vector(self):
         """2D vector representing piston and tilt in x and y. Planes with no mask or
-        segmask have ptt_vector = None
+        segmask have ptt_vector = None. 
 
         Returns
         -------
-        ptt_vector : (3,...) ndarray or None
-
-        Note
-        ----
-        If a cached value exists it is returned, otherwise ptt_vector is
-        constructed from the mask and segmask attributes as available.
+        ptt_vector : ndarray or None
 
         """
 
@@ -226,109 +332,112 @@ class Plane:
         else:
             # compute unmasked piston, tip, tilt vector
             x, y = util.mesh(self.shape)
-            unmasked_ptt_vector = np.einsum('ij,i->ij',[np.ones(x.size), x.ravel(), y.ravel()],
+            unmasked_ptt_vector = np.einsum('ij,i->ij', [np.ones(x.size), x.ravel(), y.ravel()],
                                             [1, self.pixelscale[0], self.pixelscale[1]])
 
             if self.segmask is None:
                 ptt_vector = np.einsum('ij,j->ij', unmasked_ptt_vector, self.mask.ravel())
             else:
                 # prepare empty ptt_vector
-                ptt_vector = np.empty((self.nseg*3, self.mask.size))
+                ptt_vector = np.empty((self.nseg * 3, self.mask.size))
 
                 # loop over the segments and fill in the masked ptt_vectors
                 for seg in np.arange(self.nseg):
-                    ptt_vector[3*seg:3*seg+3] = unmasked_ptt_vector * self.segmask[seg].ravel()
+                    ptt_vector[3 * seg:3 * seg + 3] = unmasked_ptt_vector * self.segmask[seg].ravel()
 
         return ptt_vector
 
-    def rescale(self, scale, copy=True):
-        """Rescale a plane
-
-        This method is primarily used during propagation setup to resample plane 
-        attributes at a different pixelscale as needed to satisfy sampling 
-        requirements. 
-
-        The default behavior is to call :func:`util.rescale` with ``mask=None``,
-        ``order=3``, ``mode='nearest'``, and ``unitary=True``. This static method
-        should be redefined in a subclass if special plane rescaling behavior is
-        required.
+    def fit_tilt(self, phase=None, ptt_vector=None):
+        """Fit and remove tilt from a phase via least squares.
 
         Parameters
         ----------
-        scale : float
-            Scaling factor. Scale factors less than 1 will shrink the image. Scale 
-            factors greater than 1 will grow the image.
+        phase : array_like or None
+            Phase to fit. If None (default), the Plane's :attr:`~lentil.Plane.phase`
+            attribute it used.
 
-        copy : bool
-            If True (default) a new plane object is returned, otherwise the rescaling
-            operation happens in place.
+        ptt_vector : array_like or None
+            Piston, tip, tilt basis used for fitting. If None (default), the Plane's 
+            :attr:`~lentil.Plane.ptt_vector` attribute it used. 
 
         Returns
         -------
-        out : :class:`~lentil.Plane`
-            Rescaled Plane
+        phase_no_tilt : ndarray
+            ``phase`` with tilt fit and removed. If ``len(ptt_vector)//3 > 1``, the 
+            returned phase array will contain one entry for each triad in ``ptt_vector``.
+
+        tilt : list
+            List of :class:`~lentil.Tilt` objects representing the fit and removed tilt.
+
+        Note
+        ----
+        This method is called during :func:`~lentil.propagate` when ``tilt='angle'``. If
+        custom tilt-removal behavior is required, this method should be modified in a
+        subclass.
+
+        If tilt-removal should `always` be skipped, this method should be modified in a
+        subclass to: ``return self.phase, None``
 
         """
-        if copy:
-            out = deepcopy(self)
+        if phase is None:
+            phase = self.phase
+
+        if ptt_vector is None:
+            ptt_vector = self.ptt_vector
+
+        # There are a couple of cases where we don't have enough information to remove the
+        # tilt, so we just return the phase as is and None tilt
+        if ptt_vector is None or phase.size == 1:
+            return phase, None
+
+        nseg = len(ptt_vector)//3
+
+        if nseg == 1:
+            t = np.linalg.lstsq(ptt_vector.T, phase.ravel(), rcond=None)[0]
+            phase_tilt = np.einsum('ij,i->j', ptt_vector[1:3], t[1:3])
+            phase_no_tilt = phase - phase_tilt.reshape(phase.shape)
+
+            # 01da13b transitioned from specifying tilt in terms of image plane
+            # coordinates to about the Tilt plane axes. We can transform from
+            # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
+            tilt = [Tilt(x=-t[2], y=t[1])]
+            return phase_no_tilt, tilt
         else:
-            out = self
+            t = np.empty((nseg, 3))
+            phase_no_tilt = np.empty((nseg, phase.shape[0], phase.shape[1]))
+
+            # iterate over the segments and compute the tilt term
+            for seg in np.arange(nseg):
+                t[seg] = np.linalg.lstsq(ptt_vector[3 * seg:3 * seg + 3].T, phase.ravel(),
+                                         rcond=None)[0]
+                seg_tilt = np.einsum('ij,i->j', ptt_vector[3 * seg + 1:3 * seg + 3], t[seg, 1:3])
+                phase_no_tilt[seg] = phase - seg_tilt.reshape(phase.shape)
+
+            # 01da13b transitioned from specifying tilt in terms of image plane
+            # coordinates to about the Tilt plane axes. We can transform from
+            # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
+            tilt = [Tilt(x=-t[seg, 2], y=t[seg, 1]) for seg in range(nseg)]
+
+            return phase_no_tilt, tilt  
+
+    def slice(self, mask=None):
+        # If a mask is not provided, we should prefer segmask over mask
+        if mask is None:
+            if self.segmask is not None:
+                mask = self.segmask
+            else:
+                mask = self.mask
         
-        # Create a new Cache object for safety
-        out._cache = Cache()
-
-        if out.shape is None:
-            out.pixelscale /= scale
-        else:
-            out_shape = np.ceil((out.shape[0]*scale, out.shape[1]*scale)).astype(np.int)
-            true_scale = np.array((out_shape[0]/out.shape[0], out_shape[1]/out.shape[1]))
-            out.pixelscale /= true_scale
-
-        # Note that mask has somewhat unique behavior among Plane attributes in 
-        # that it is computed on the fly from the amplitude unless explicitly 
-        # specified (which is stored in Plane._mask). In order to preserve that 
-        # behavior, we'll only rescale self.mask if self._mask is defined.
-        if out._mask is not None:
-            out._mask = self.rescale_mask(out._mask, scale)
-        
-        if out.amplitude is not None:
-            out.amplitude = self.rescale_amplitude(out.amplitude, scale)
-
-        if out.phase is not None:
-            out.phase = self.rescale_phase(out.phase, scale)
-
-        if out.segmask is not None:
-            out.segmask = self.rescale_segmask(out.segmask, scale)
-
-        return out
-
-    @staticmethod
-    def rescale_amplitude(amplitude, scale):
-        return util.rescale(amplitude, scale=scale, shape=None, mask=None, 
-                            order=3, mode='nearest', unitary=False)/scale**2
-
-    @staticmethod
-    def rescale_phase(phase, scale):
-        return util.rescale(phase, scale=scale, shape=None, mask=None,
-                            order=3, mode='nearest', unitary=False)
-    
-    @staticmethod
-    def rescale_mask(mask, scale):
-        mask = util.rescale(mask, scale=scale, shape=None, mask=None, order=0,
-                            mode='constant', unitary=False)
-        #mask[mask < np.finfo(mask.dtype).eps] = 0
-        mask[np.nonzero(mask)] = 1
-        return mask.astype(np.int)
-
-    @staticmethod
-    def rescale_segmask(segmask, scale):
-        out = []
-        for seg in segmask:
-            mask = util.rescale(seg, scale=scale, shape=None, mask=None, 
-                                order=1, mode='nearest', unitary=False)
-            mask[mask != 0] = 1
-            out.append(mask)
-        return np.asarray(out)
+        # self.mask and self.segmask may still return None so we
+        # catch that here
+        if mask.ndim < 2 or mask is None:
+            # np.s_[...] = Ellipsis -> returns the whole array
+            s = [np.s_[...]]
+        elif mask.ndim == 2:
+            s = [util.boundary_slice(mask)]
+        elif mask.ndim == 3:
+            s = [util.boundary_slice(segmask) for segmask in mask]
+        return s
 
     def multiply(self, wavefront):
         """Multiply with a wavefront
@@ -374,21 +483,24 @@ class Plane:
         amplitude = self.cache['amplitude'] if 'amplitude' in self.cache else self.amplitude
         phase = self.cache['phase'] if 'phase' in self.cache else self.phase
         tilt = self.cache['tilt'] if 'tilt' in self.cache else self.tilt
+        # TODO: could also only multiply along slices if we wanted. Might buy a tiny bit of speed
+        # slc = self.cache['slice'] if 'slice' in self.cache else np.s_[...]
 
         if phase.ndim == 3:
+            # TODO: this will break if we already have multidimensional wavefront data
+            # coming in. Need to fix. Maybe can just sum it up along axis=0?
             data = np.copy(wavefront.data)
             wavefront.data = np.zeros((phase.shape[0], data.shape[1], data.shape[2]),
                                       dtype=np.complex128)
 
-            # iterate over the segments and compute the tilt term
             for seg in np.arange(phase.shape[0]):
                 phasor = amplitude * expc(phase[seg] * 2 * np.pi / wavefront.wavelength)
                 wavefront.data[seg] = data * phasor * self.segmask[seg]
         else:
             phasor = amplitude * expc(phase * 2 * np.pi / wavefront.wavelength)
-            wavefront.data *= phasor 
+            wavefront.data *= phasor
         # np.multiply(wavefront.data, amplitude * expc(phase * 2 * np.pi / wavefront.wavelength), out=wavefront.data)
-        
+
         wavefront.tilt.extend(tilt)
 
         return wavefront
@@ -521,6 +633,13 @@ class Image(Plane):
     def shape(self, value):
         self._shape = value
 
+    def fit_tilt(self, *args, **kwargs):
+        return self.phase, []
+
+    def slice(self, *args, **kwargs):
+        # np.s_[...] = Ellipsis -> returns the whole array
+        return [np.s_[...]]
+
     def multiply(self, wavefront):
         """Multiply with a :class:`~lentil.wavefront.Wavefront`."""
 
@@ -566,12 +685,12 @@ class Grism(DispersiveShift):
     r"""Class for representing a grism.
 
     A grism is an optical element that can be inserted into a collimated beam
-    to disperse incoming light according to its wavelength. 
-    
+    to disperse incoming light according to its wavelength.
+
     Light is dispersed along a line called the the spectral trace. The position
-    along the trace is determined by the dispersion function of the grism. The 
-    local origin of the spectral trace is anchored relative to the undispersed 
-    position of the source. This basic geometry is illustrated in the figure 
+    along the trace is determined by the dispersion function of the grism. The
+    local origin of the spectral trace is anchored relative to the undispersed
+    position of the source. This basic geometry is illustrated in the figure
     below:
 
     .. image:: /_static/img/grism_geometry.png
@@ -584,7 +703,7 @@ class Grism(DispersiveShift):
 
         y = a_n x^n + \cdots + a_2 x^2 + a_1 x + a_0
 
-    and should return units of meters on the focal plane provided an input 
+    and should return units of meters on the focal plane provided an input
     in meters on the focal plane.
 
     Similarly, the wavelength along the trace is parameterized by a
@@ -602,30 +721,29 @@ class Grism(DispersiveShift):
     Lentil supports trace and dispersion functions with any arbitrary polynomial
     order. While a simple analytic solution exists for modeling first-order trace
     and/or dispersion, there is no general solution for higher order functions.
-    
+
     As a result, trace and/or dispersion polynomials with order > 1 are evaluated
-    numerically. Although the effects are small, this approach impacts both the 
-    speed and precision of modeling grisms with higher order trace and/or 
+    numerically. Although the effects are small, this approach impacts both the
+    speed and precision of modeling grisms with higher order trace and/or
     dispersion functions. In cases where speed or accuracy are extremely important,
     a custom solution may be required.
-    
+
     Parameters
     ----------
     trace : array_like
-        Polynomial coefficients describing the spectral trace produced by the 
+        Polynomial coefficients describing the spectral trace produced by the
         grism in decreasing powers (i.e. trace[0] represents the highest order
-        coefficient and trace[-1] represents the lowest). 
-        
+        coefficient and trace[-1] represents the lowest).
+
     dispersion : array_like
         Polynomial coefficients describing the dispersion produced by the grism
         in decreasing powers (i.e. dispersion[0] represents the highest order
-        coefficient and dispersion[-1] represents the lowest.) 
-        
+        coefficient and dispersion[-1] represents the lowest.)
+
     See Also
     --------
 
-    """    
-
+    """
     def __init__(self, trace, dispersion, pixelscale=None, amplitude=1,
                  phase=0, mask=None, segmask=None):
         super().__init__(pixelscale=pixelscale, amplitude=amplitude, phase=phase,
@@ -634,7 +752,7 @@ class Grism(DispersiveShift):
         self.trace = np.asarray(trace)
         self._trace_order = self.trace.size - 1
         assert self._trace_order >= 1
-        
+
         self.dispersion = np.asarray(dispersion)
         self._dispersion_order = self.dispersion.size - 1
         assert self._dispersion_order >= 1
@@ -642,7 +760,7 @@ class Grism(DispersiveShift):
     def shift(self, wavelength, xs=0., ys=0., **kwargs):
 
         dist = self._dispersion(wavelength)
-        x, y = self._trace(dist) 
+        x, y = self._trace(dist)
 
         # Include any incoming shift
         x += xs
@@ -659,7 +777,7 @@ class Grism(DispersiveShift):
         Parameters
         ----------
         wavelength: float
-            Wavelength to compute dispersed distance in meters. 
+            Wavelength to compute dispersed distance in meters.
 
         Returns
         -------
@@ -679,7 +797,7 @@ class Grism(DispersiveShift):
             return scipy.optimize.leastsq(self._dist_cost_func, x0=0, args=(wavelength,))[0]
 
     def _trace(self, dist):
-        
+
         if self._trace_order == 1:
             # https://www.physicsforums.com/threads/formula-for-finding-point-on-a-line-given-distance-along-a-line.419561/
             x = dist/np.sqrt(1+self.trace[0]**2)
@@ -688,7 +806,7 @@ class Grism(DispersiveShift):
             # self._arc_len(self._trace_dist_func(x), 0, x) with the known distance
             # along the trace dist as provided from the wavelength (via self._dispersion)
             x = scipy.optimize.leastsq(self._trace_cost_func, x0=0, args=(dist,))[0]
-            
+
         y = np.polyval(self.trace, x)
 
         return x, y
@@ -710,14 +828,14 @@ class Grism(DispersiveShift):
     def _trace_cost_func(self, x, dist):
         # Compute difference between dist and distance computed along trace given x
         return dist - self._arc_len(self._trace_dist_func, 0, x)
-    
+
     @staticmethod
     def _arc_len(dist_func, a, b):
         """Compute arc length by numerically evaluating the following expression for arc length:
 
         s = integrate sqrt(1+f'(x)^2) dx = integrate dist_func dx
 
-        where dist_func is either _dispersion_dist_func or _trace_dist_func and f(x) is the 
+        where dist_func is either _dispersion_dist_func or _trace_dist_func and f(x) is the
         polynomial defining either the trace or dispersion.
 
         Parameters
@@ -754,7 +872,7 @@ class Tilt(Plane):
     def __init__(self, x, y):
         super().__init__()
 
-        self.x = y  # y tilt is about the x-axis. 
+        self.x = y  # y tilt is about the x-axis.
         self.y = -x  # x tilt is about the y axis. There's also a sign flip to get the direction right.
 
     def multiply(self, wavefront):
@@ -815,12 +933,6 @@ class Rotate(Plane):
         self.angle = -angle
         self.order = order
 
-    def cache_propagate(self):
-        pass
-
-    def clear_cache_propagate(self):
-        pass
-
     def multiply(self, wavefront):
         """Multiply with a wavefront
 
@@ -870,12 +982,6 @@ class Flip(Plane):
             # behave as expected.
             self.axis = np.asarray(axis) + 1
 
-    def cache_propagate(self):
-        pass
-
-    def clear_cache_propagate(self):
-        pass
-
     def multiply(self, wavefront):
         """Multiply with a wavefront
 
@@ -918,3 +1024,45 @@ class Conic(Plane):
 #    def q(self, wave, pixelscale, npix, oversample=1):
 #        alpha = self.alpha(wave, pixelscale, oversample)
 #        return 1/(alpha * npix)
+
+# TODO: write a test for this
+# TODO: this may be broken for non-square parent matrices?
+def slice_offset(slice, order='xy'):
+    """Compute the offset of the center of a 2d slice relative to the center of a larger
+    array.
+
+    It is assumed the center of the larger containing array with shape (m,n) is at:
+
+        r = m - np.floor(m/2)
+        c = n - np.floor(n/2)
+
+    Parameters
+    ----------
+    slice : iterable of Slice objects
+        2d slice
+
+    order : {'xy', 'rc'}, optional
+        Offset ordering. Default is 'xy'.
+
+    Returns
+    -------
+    offset : list
+        Offset
+
+    """
+    offset = []
+    for s in slice:
+        if s == Ellipsis:
+            offset.append((0,0))
+        else:
+            slice_shape = np.array((s[0].stop-s[0].start, s[1].stop-s[1].start))
+            slice_offset = np.asarray((s[0].start, s[1].start)) - np.floor(slice_shape/2)
+
+            if order == 'xy':
+                offset.append(tuple(slice_offset[::-1]))
+            elif order == 'rc':
+                offset.append(tuple(slice_offset))
+            else:
+                raise ValueError(f"Unknown order {order}. order must be 'rc' or 'xy'.")
+
+    return offset

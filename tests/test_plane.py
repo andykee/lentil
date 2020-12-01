@@ -42,7 +42,6 @@ def test_set_plane_attrs_none():
     assert p.mask is None
     assert p.segmask is None
     assert p.shape is None
-    assert p.ptt_vector is None
 
 
 def test_wavefront_plane_multiply():
@@ -50,7 +49,7 @@ def test_wavefront_plane_multiply():
     w = lentil.wavefront.Wavefront(650e-9, p.shape)
 
     w1 = p.multiply(w)
-    phasor = p.amplitude * lentil.mathtools.expc(p.phase * 2 * np.pi / w.wavelength)
+    phasor = p.amplitude * lentil.fourier.expc(p.phase * 2 * np.pi / w.wavelength)
 
     assert np.array_equal(w1.data[0], phasor)
 

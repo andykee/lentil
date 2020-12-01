@@ -1,9 +1,7 @@
 import functools
 import numpy as np
-from lentil.mathtools import expc
 
-
-__all__ = ['dft2', 'idft2', 'czt2', 'iczt2']
+__all__ = ['dft2', 'idft2', 'czt2', 'iczt2', 'expc']
 
 
 FFTW_WISDOM_FILENAME = '.lentil_fftw_wisdom'
@@ -24,7 +22,7 @@ except ImportError:
     pyfftw = None
 
 
-def dft2(f, alpha, npix=None, shift=(0, 0), unitary=True, out=None):
+def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0,0), unitary=True, out=None):
     """Compute the 2-dimensional discrete Fourier Transform. 
     
     This function allows independent control over input shape, output shape,
@@ -50,7 +48,11 @@ def dft2(f, alpha, npix=None, shift=(0, 0), unitary=True, out=None):
 
     shift : array_like, optional
         Number of pixels in (x,y) to shift the DC pixel in the output plane
-        with the origin centrally located in the plane. Default is ``[0,0]``.
+        with the origin centrally located in the plane. Default is ``(0,0)``.
+
+    offset : array_like, optional
+        Number of pixels in (x,y) that the input plane is shifted relative to
+        the origin. Default is ``(0,0)``.
 
     unitary : bool, optional
         Normalization flag. If ``True``, a normalization is performed on the
@@ -105,12 +107,13 @@ def dft2(f, alpha, npix=None, shift=(0, 0), unitary=True, out=None):
     M, N = _sanitize_npix(npix)
 
     sx, sy = _sanitize_shift(shift)
+    ox, oy = _sanitize_npix(offset)
 
     if out is not None:
         if not np.can_cast(complex, out.dtype):
             raise TypeError(f"Cannot cast complex output to dtype('{out.dtype}')")
 
-    E1, E2 = _dft2_matrices(m, n, M, N, ax, ay, sx, sy)
+    E1, E2 = _dft2_matrices(m, n, M, N, ax, ay, sx, sy, ox, oy)
     F = np.dot(E1.dot(f), E2, out=out)
 
     # now calculate the answer, without reallocating memory
@@ -121,10 +124,10 @@ def dft2(f, alpha, npix=None, shift=(0, 0), unitary=True, out=None):
 
 
 @functools.lru_cache(maxsize=32)
-def _dft2_matrices(m, n, M, N, ax, ay, sx, sy):
+def _dft2_matrices(m, n, M, N, ax, ay, sx, sy, ox, oy):
     X, Y, U, V = _dft2_coords(m, n, M, N)
-    E1 = np.exp(-2.0 * np.pi * 1j * ay * np.outer(Y-sy, V-sy)).T
-    E2 = np.exp(-2.0 * np.pi * 1j * ax * np.outer(X-sx, U-sx))
+    E1 = expc(-2.0 * np.pi * ay * np.outer(Y-sy+oy, V-sy)).T
+    E2 = expc(-2.0 * np.pi * ax * np.outer(X-sx+ox, U-sx))
     return E1, E2
 
 
@@ -141,7 +144,7 @@ def _dft2_coords(m, n, M, N):
     return X, Y, U, V
 
 
-def idft2(F, alpha, npix=None, shift=(0, 0), unitary=True, out=None):
+def idft2(F, alpha, npix=None, shift=(0,0), unitary=True, out=None):
     """Compute the 2-dimensional inverse discrete Fourier Transform.
 
     This function allows independent control over input shape, output shape,
@@ -459,6 +462,19 @@ def _czt2_optimal_L(N, M):
                 break
     
     return tuple(L)
+
+
+def expc(x):
+    """Computes np.exp(1.0j * x) for real valued x... FAST!"""
+    x = np.asarray(x)
+    if x.dtype == np.float32:
+        out = np.empty(x.shape, dtype=np.complex64)
+    elif x.dtype == np.float64:
+        out = np.empty(x.shape, dtype=np.complex128)
+        
+    out.real = np.cos(x)
+    out.imag = np.sin(x)
+    return out
 
 
 def _sanitize_alpha(x):

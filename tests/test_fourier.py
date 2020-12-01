@@ -77,8 +77,29 @@ def test_dft2_shift():
     assert np.array_equal(shift, observed_shift)
 
 
+def test_dft2_offset():
+    n = 10
+    m = 3
+    
+    f = np.zeros((n,n), dtype=np.complex)
+    r,c = np.random.randint(0, n-m, size=2)
+    f[r:r+m,c:c+m] = np.random.rand(m,m) + 1j * np.random.rand(m,m)
+    slc = lentil.util.boundary_slice(f)
+    offset = lentil.plane.slice_offset([slc])
+
+    F = lentil.fourier.dft2(f, alpha=1/m, npix=10)
+    FF = lentil.fourier.dft2(f[slc], alpha=1/m, npix=10, offset=offset)
+
+    assert np.allclose(F, FF)
+
+
 def test_dft2_out():
     n = 10
     f = np.random.normal(size=(n,n)).astype(np.complex)
     F = lentil.fourier.dft2(f, 1/n, out=f)
     assert f is F
+
+
+def test_expc():
+    a = np.random.uniform(low=-1, high=1, size=(5,5))
+    assert np.allclose(np.exp(1j*a), lentil.fourier.expc(a))

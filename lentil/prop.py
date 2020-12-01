@@ -5,7 +5,7 @@ import numpy as np
 
 from lentil import util
 from lentil import fourier
-from lentil.plane import Plane, Pupil, Image, Tilt
+from lentil.plane import Plane, Pupil, Image, Tilt, slice_offset
 from lentil.wavefront import Wavefront
 
 __all__ = ['propagate']
@@ -81,8 +81,8 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
 
     npix = _standardize_shape(npix, default=planes[-1].shape)
     npix_chip = _standardize_shape(npix_chip, default=npix)
-    wave = _standardize_vec(wave)
-    weight = _standardize_vec(weight, default=np.ones_like(wave))
+    wave = _standardize_bandpass(wave)
+    weight = _standardize_bandpass(weight, default=np.ones_like(wave))
 
     # What should happen here as a part of cache_propagate:
     # -----------------------------------------------------
@@ -144,81 +144,51 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
 
 
 def _prepare_planes(planes, wave, npix, oversample, tilt, interp_phasor):
-    #shapes = [plane.shape for plane in planes if isinstance(plane, Pupil)]
-    #npix_wavefront = (max(shapes, key=itemgetter(0))[0],
-    #                  max(shapes, key=itemgetter(1))[1])
 
-    # TODO: we may be able to avoid the deepcopies here on amplitude and
-    # phase if they are reshaped
+    # TODO: rework this
+    # Compute the wavefront shape required to support propagation through the
+    # provided list of planes
+
+    # TODO: not sure where we should reinterpolate and how it should be done.
+
+    # The current approach is to find the maximum row and column dimensions of
+    # only the Pupil elements in self.planes. This whole approach will have to
+    # change once we support more complicated multi-plane propagations.
+    shapes = [plane.shape for plane in planes if isinstance(plane, Pupil)]
+    npix_wavefront = (max(shapes, key=itemgetter(0))[0],
+                      max(shapes, key=itemgetter(1))[1])
 
     # Loop over the planes to build caches
     for plane in planes:
-        plane.cache['amplitude'] = copy.deepcopy(plane.amplitude)
+        # handle the tilt first
         plane.cache['tilt'] = copy.deepcopy(plane.tilt)
-
         if tilt == 'angle':
-            phase, fit_tilt = _fit_tilt(plane)
+            phase, fit_tilt = plane.fit_tilt()
             plane.cache['phase'] = phase
             if fit_tilt is not None:
                 plane.cache['tilt'].extend([fit_tilt])
-        
         else:
             plane.cache['phase'] = copy.deepcopy(plane.phase)
+
+        plane.cache['amplitude'] = copy.deepcopy(plane.amplitude)
+        plane.cache['pixelscale'] = copy.deepcopy(plane.pixelscale)
+        plane.cache['npix_wavefront'] = npix_wavefront
+        slc = plane.slice()
+        #offset = slice_offset(slc)
+        plane.cache['slice'] = slc
+        #plane.cache['offset'] = offset
+
+        # reinterpolate as needed
+        if interp_phasor:
+            # We'll have already computed the interpolation scale when
+            # figuring out npix_wavefront so we just need to rescale
+            # amplitude and phase here
+            pass
 
 
 def _cleanup_planes(planes):
     for plane in planes:
         plane.cache.clear()
-
-
-
-def _fit_tilt(plane):
-
-    ptt_vector = plane.ptt_vector
-    if ptt_vector is None or plane.phase.size == 1:
-        # There's nothing to do so we'll just return the unmodified
-        # phase and a no-tilt Tilt object
-        return plane.phase, None
-
-    elif plane.segmask is None:
-        phase_vector = plane.phase.ravel()
-
-        t = np.linalg.lstsq(ptt_vector.T, phase_vector, rcond=None)[0]
-        phase_tilt = np.einsum('ij,i->j', ptt_vector[1:3], t[1:3])
-
-        phase = plane.phase - phase_tilt.reshape(plane.shape)
-        # 01da13b transitioned from specifying tilt in terms of image plane
-        # coordinates to about the Tilt plane axes. We can transform from
-        # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
-        tilt = [Tilt(x=-t[2], y=t[1])]
-        return phase, tilt
-
-    else:
-        return _fit_tilt_segmented(plane)
-
-
-def _fit_tilt_segmented(plane):
-    ptt_vector = plane.ptt_vector
-
-    phase_vector = plane.phase.ravel()
-    t = np.zeros((plane.nseg, 3))
-    phase = np.zeros((plane.nseg, plane.shape[0], plane.shape[1]))
-
-    # iterate over the segments and compute the tilt term
-    for seg in np.arange(plane.nseg):
-        t[seg] = np.linalg.lstsq(ptt_vector[3 * seg:3 * seg + 3].T, phase_vector,
-                                         rcond=None)[0]
-        seg_tilt = np.einsum('ij,i->j', ptt_vector[3 * seg + 1:3 * seg + 3], t[seg, 1:3])
-        phase[seg] = (plane.phase - seg_tilt.reshape(plane.shape)) * plane.segmask[seg]
-
-    # 01da13b transitioned from specifying tilt in terms of image plane
-    # coordinates to about the Tilt plane axes. We can transform from
-    # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
-    #
-    # Note the
-    tilt = [Tilt(x=-t[seg, 2], y=t[seg, 1]) for seg in range(plane.nseg)]
-
-    return phase, tilt
 
 
 def _propagate_mono(planes, wavelength, npix, npix_chip, oversample, tilt, out=None):
@@ -254,7 +224,7 @@ def _propagate_mono(planes, wavelength, npix, npix_chip, oversample, tilt, out=N
         out = np.zeros((npix[0]*oversample, npix[1]*oversample), dtype=np.complex128)
 
     w = Wavefront(wavelength=wavelength, pixelscale=None,
-                  shape=planes[0].shape, planetype=None)
+                  shape=planes[0].cache['npix_wavefront'], planetype=None)
 
     for plane, next_plane in _iterate_planes(planes):
 
@@ -340,13 +310,15 @@ def _standardize_shape(shape, default=()):
         shape = np.append(shape, shape)
     return shape
 
-def _standardize_vec(vec, default=[]):
+
+def _standardize_bandpass(vec, default=()):
     if vec is None:
         vec = default
     vec = np.asarray(vec)
     if vec.shape == ():
         vec = vec[np.newaxis, ...]
     return vec
+
 
 class _iterate_planes:
     def __init__(self, planes):
@@ -366,6 +338,7 @@ class _iterate_planes:
         else:
             raise StopIteration()
 
+
 class _iterate_planes_reverse:
     def __init__(self, planes):
         self.planes = planes
@@ -383,6 +356,7 @@ class _iterate_planes_reverse:
             return plane, next_plane
         else:
             raise StopIteration()
+
 
 def _chip_insertion_slices(npix_canvas, npix_chip, shift):
     npix_canvas = np.asarray(npix_canvas)
@@ -425,3 +399,6 @@ def _chip_insertion_slices(npix_canvas, npix_chip, shift):
     else:
         return (slice(canvas_top, canvas_bottom), slice(canvas_left, canvas_right)), \
                (slice(chip_top, chip_bottom), slice(chip_left, chip_right))
+
+
+

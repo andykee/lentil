@@ -9,7 +9,7 @@ Released 2020
   plane once before the entire propagation rather than at each monochromatic
   propagation
 * Rework ``Plane.pixelscale`` to always store (r,c) pixelscale
-* Fix bug in ``Plane.mask`` on the fly calculation that was overwriting 
+* Fix bug in ``Plane.mask`` on the fly calculation that was overwriting
   ``Plane.amplitude`` with a binary mask
 * No longer cache ``Plane.ptt_vector``
 * Deprecate ``Plane.cache_propagate()`` and ``Plane.clear_cache_propagate()``.
@@ -17,11 +17,17 @@ Released 2020
   and ``propagate._cleanup_planes()``
 * New ``Plane.rescale()`` method to rescale Plane pixelscale
 * Update ``util.rescale()`` to choose a more conservative (better sampled)
-  result when having to chose an integer output shape
-* Define ``Wavefront.__slots__`` to increase attribute access speed and reduce 
+  result when having to choose an integer output shape
+* Define ``Wavefront.__slots__`` to increase attribute access speed and reduce
   memory footprint
 * ``util.circle()`` `center` parameter is now called `shift`
 * Deprecate ``cache.Cache`` in favor of a simple dictionary
+* New function ``fourier.expc()`` to more quickly compute a complex exponential
+* ``fourier.dft2()`` now accepts an offset parameter
+* New function ``Plane.fit_tilt()`` to handle tilt fitting and removal of in the
+  Plane's ``phase`` attribute
+* New function ``Plane.slice()`` for computing avaliable slices from the plane
+  attributes to speed up propagation performance
 
 v0.4.1
 ------
@@ -35,7 +41,7 @@ Released October 6, 2020
 
 .. note::
 
-  The Grism model updates are broken in this release. It has been yanked from 
+  The Grism model updates are broken in this release. It has been yanked from
   PyPi. The issue is fixed in v0.4.1.
 
 * Update Grism model to use correct definition of dispersion, accomodate

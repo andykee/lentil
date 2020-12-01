@@ -10,6 +10,7 @@ Image Manipulation
     :toctree: ../generated/
 
     lentil.util.boundary
+    lentil.util.boundary_slice
     lentil.util.centroid
     lentil.util.pad
     lentil.util.window

@@ -267,18 +267,73 @@ def window(img, shape=None, slice=None):
         return pad(img, shape)
 
 
-def boundary(img, threshold=0):
-    """Find bounding row and column indices of data within an array."""
-    img = np.asarray(img)
-    img = (img > threshold)
+def boundary(x, threshold=0):
+    """Find bounding row and column indices of data within an array.
 
-    rows = np.any(img, axis=1)
-    cols = np.any(img, axis=0)
+    Parameters
+    ----------
+    x : array_like
+        Input array
+
+    threshold : float, optional
+        Masking threshold to apply before boundary finding. Only values
+        in x that are larger than threshold are considered in the boundary
+        finding operation. Default is 0.
+
+    Returns
+    -------
+    rmin, rmax, cmin, cmax : ints
+        Boundary indices
+
+    """
+    x = np.asarray(x)
+    x = (x > threshold)
+
+    rows = np.any(x, axis=1)
+    cols = np.any(x, axis=0)
 
     rmin, rmax = np.where(rows)[0][[0, -1]]
     cmin, cmax = np.where(cols)[0][[0, -1]]
 
     return rmin, rmax, cmin, cmax
+
+
+def boundary_slice(x, threshold=0, pad=(0, 0)):
+    """Find bounding row and column indices of data within an array and
+    return the results as slice objects.
+
+    Parameters
+    ----------
+    x : array_like
+        Input array
+
+    threshold : float, optional
+        Masking threshold to apply before boundary finding. Only values
+        in x that are larger than threshold are considered in the boundary
+        finding operation. Default is 0.
+
+    pad : int or tuple of ints
+        Additional number of pixels to pad the boundary finding result by.
+        Default is (0,0).
+
+    Returns
+    -------
+    row_slice, col_slice : tuple of slices
+        Boundary slices
+
+    """
+    pad = np.asarray(pad)
+    if pad.shape == ():
+        pad = np.append(pad, pad)
+
+    rmin, rmax, cmin, cmax = boundary(x, threshold)
+
+    rmin = np.max((rmin-pad[0], 0))
+    rmax = np.min((rmax+pad[0]+1, x.shape[0]))
+    cmin = np.max((cmin-pad[1], 0))
+    cmax = np.min((cmax+pad[1]+1, x.shape[1]))
+
+    return np.s_[rmin:rmax, cmin:cmax]
 
 
 def rebin(img, factor):

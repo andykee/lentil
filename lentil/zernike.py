@@ -33,7 +33,7 @@ def zernike(mask, index, normalize=True, rho=None, theta=None):
 
     Returns
     -------
-    array_like
+    out
         Circular Zernike polynomial computed over the given mask.
 
     Warning
@@ -53,7 +53,10 @@ def zernike(mask, index, normalize=True, rho=None, theta=None):
 
     """
     mask = np.asarray(mask)
-
+    #out = np.zeros_like(mask)
+    #mask_slice = util.boundary_slice(mask, pad=0)
+    #mask = mask[mask_slice]
+    
     if rho is None:
 
         rho, theta = zernike_coordinates(mask)
@@ -84,7 +87,9 @@ def zernike(mask, index, normalize=True, rho=None, theta=None):
         else:
             Z = R(m, n, rho) * np.sin(m*theta) * mask
 
-    return Z
+    #out[mask_slice] = Z
+    out = Z
+    return out
 
 
 def R(m, n, rho):

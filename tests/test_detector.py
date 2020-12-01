@@ -188,6 +188,7 @@ def test_shot_noise_gaussian_seed():
     assert np.array_equal(shot1, shot2)
 
 
+@pytest.mark.filterwarnings("ignore:invalid value encountered in sqrt")
 def test_shot_noise_gaussian_negative():
     with pytest.raises(ValueError):
         lentil.detector.shot_noise(-10, method='gaussian')
