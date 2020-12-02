@@ -376,7 +376,7 @@ class Plane:
         subclass.
 
         If tilt-removal should `always` be skipped, this method should be modified in a
-        subclass to: ``return self.phase, None``
+        subclass to: ``return self.phase, []``
 
         """
         if phase is None:
@@ -388,7 +388,7 @@ class Plane:
         # There are a couple of cases where we don't have enough information to remove the
         # tilt, so we just return the phase as is and None tilt
         if ptt_vector is None or phase.size == 1:
-            return phase, None
+            return phase, []
 
         nseg = len(ptt_vector)//3
 
