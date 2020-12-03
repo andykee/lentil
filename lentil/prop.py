@@ -124,16 +124,22 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
     for n, (wl, wt) in enumerate(zip(wave, weight)):
         if wt > 0:
 
-            _output = _propagate_mono(planes, wl, npix, npix_chip, oversample, tilt, _output)
+            # _output = _propagate_mono(planes, wl, npix, npix_chip, oversample, tilt, _output)
 
-            # Compute intensity
+            # # Compute intensity
+            # if flatten:
+            #     output += np.abs(_output)**2 * wt
+            # else:
+            #     output[n] = np.abs(_output)**2 * wt
+
+            # # Zero out the local output array
+            # _output[:] = 0
+
+            w = _propagate_mono(planes, wl, npix, npix_chip, oversample, tilt)
             if flatten:
-                output += np.abs(_output)**2 * wt
+                output += w.data * wt
             else:
-                output[n] = np.abs(_output)**2 * wt
-
-            # Zero out the local output array
-            _output[:] = 0
+                output[n] = w.data * wt
 
     if rebin:
         output = util.rebin(output, oversample)
@@ -226,51 +232,54 @@ def _propagate_mono(planes, wavelength, npix, npix_chip, oversample, tilt, out=N
     w = Wavefront(wavelength=wavelength, pixelscale=None,
                   shape=planes[0].cache['npix_wavefront'], planetype=None)
 
-    for plane, next_plane in _iterate_planes(planes):
+    for plane in planes:
 
-        # Multiply by the current plane
-        w = plane.multiply(w)
-
-        # Now, we propagate to the next plane in the optical system
-
-        # TODO: figure out how/when to accumulate tilt
-
-        if (w.planetype == 'pupil') and isinstance(next_plane, Image):
-            if next_plane.pixelscale is not None:
-                w = _propagate_pti(w, next_plane.pixelscale, npix_chip, oversample)
+        # Propagate to plane
+        if w.planetype is None:
+            # free space propagation to first plane
+            pass
+        elif (w.planetype == 'pupil') and isinstance(plane, Image):
+            if plane.pixelscale is not None:
+                w = _propagate_pti(w, plane.pixelscale, npix, npix_chip, oversample)
             else:
                 pass
-        elif (w.planetype == 'image') and isinstance(next_plane, Pupil):
+        elif (w.planetype == 'image') and isinstance(plane, Pupil):
             pass
-        elif (w.planetype == 'pupil') and isinstance(next_plane, Pupil):
-            continue
-        elif (w.planetype == 'image') and isinstance(next_plane, Image):
-            continue
-        elif isinstance(next_plane, Plane):
-            continue
+        elif (w.planetype == 'pupil') and isinstance(plane, Pupil):
+            pass
+        elif (w.planetype == 'image') and isinstance(plane, Image):
+            pass
+        elif isinstance(plane, Plane):
+            pass
         else:
-            raise TypeError('Unsupported propagation type ', w.planetype, ' to ', next_plane)
-
-    for d in range(w.depth):
-
-        # The shift term is given in terms of (x,y) but we place the chip in
-        # terms of (r,c)
-        # TODO: I think this will break if the last plane isn't a Detector
-        shift = np.flip(w.pixel_shift[d], axis=0)
-
-        # Compute the chip location
-        canvas_slice, chip_slice = _chip_insertion_slices(out.shape,
-                                                          (w.data.shape[1], w.data.shape[2]),
-                                                          shift)
-
-        # Insert the complex result in the output
-        if canvas_slice:
-            out[canvas_slice] += w.data[d, chip_slice[0], chip_slice[1]]
-
-    return out
+            raise TypeError('Unsupported propagation type ', w.planetype, ' to ', plane)
 
 
-def _propagate_pti(w, pixelscale, npix, oversample):
+        # Multiply by plane
+        w = plane.multiply(w)
+
+    # TODO: functionalize this and call it in propagate_pti
+    #for d in range(w.depth):
+    #
+    #    # The shift term is given in terms of (x,y) but we place the chip in
+    #    # terms of (r,c)
+    #    # TODO: I think this will break if the last plane isn't a Detector
+    #    shift = np.flip(w.pixel_shift[d], axis=0)
+    #
+    #    # Compute the chip location
+    #    canvas_slice, chip_slice = _chip_insertion_slices(out.shape,
+    #                                                      (w.data.shape[1], w.data.shape[2]),
+    #                                                      shift)
+    #
+    #    # Insert the complex result in the output
+    #    if canvas_slice:
+    #        out[canvas_slice] += w.data[d, chip_slice[0], chip_slice[1]]
+    #
+    #return out
+    return w
+
+
+def _propagate_pti(w, pixelscale, npix, npix_chip, oversample):
 
     # TODO: we should only apply the shift if this is the final plane
     shift = w.shift(pixelscale, oversample)
@@ -278,24 +287,38 @@ def _propagate_pti(w, pixelscale, npix, oversample):
 
     # Integer portion of the shift that will be accounted for
     # later
-    w.pixel_shift = np.fix(shift)
+    fix_shift = np.fix(shift)
 
     # Residual subpixel portion of the shift that is passed to
     # the DFT
-    res_shift = shift - w.pixel_shift
+    res_shift = shift - fix_shift
 
-    npix = npix * oversample
+    data = np.zeros((npix[0]*oversample, npix[1]*oversample), dtype=np.complex128)
+    chip = np.empty((npix_chip[0]*oversample, npix_chip[1]*oversample), dtype=np.complex128)
 
     alpha = (w.pixelscale * pixelscale) / (w.wavelength * w.focal_length * oversample)
-
-    data = np.empty((w.depth, npix[0], npix[1]), dtype=np.complex128)
 
     assert shift.shape[0] == w.depth, \
         'Dimension mismatch between tilt and wavefront depth'
 
     for d in range(w.depth):
         # data[d] = fourier.dft2(w.data[d], alpha, npix, res_shift[d])
-        data[d] = fourier.dft2(w.data[d], alpha, npix, res_shift[d], unitary= True, out=data[d])
+        chip = fourier.dft2(w.data[d], alpha, (npix_chip[0]*oversample, npix_chip[1]*oversample), 
+                            res_shift[d], unitary= True, out=chip)
+    
+        # The shift term is given in terms of (x,y) but we place the chip in
+        # terms of (r,c)
+        # TODO: I think this will break if the last plane isn't a Detector
+        shift = np.flip(fix_shift[d], axis=0)
+
+        # Compute the chip location
+        data_slice, chip_slice = _chip_insertion_slices(data.shape,
+                                                        (chip.shape[0], chip.shape[1]),
+                                                        shift)
+
+        # Insert the complex result in the output
+        if data_slice:
+            data[data_slice] += chip[chip_slice]
 
     w.data = data
 

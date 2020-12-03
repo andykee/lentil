@@ -25,7 +25,7 @@ class SimpleSegmentedPupil(lentil.Pupil):
                          mask=mask, segmask=segmask)
 
 
-class SimpleDetector(lentil.Image):
+class SimpleDetector(lentil.Detector):
     def __init__(self, pixelscale=5e-6, shape=(256, 256)):
         super().__init__(pixelscale, shape)
 

@@ -51,7 +51,6 @@ class Wavefront:
         self.focal_length = np.inf
 
         self.tilt = []  # List of pre-propagation tilts
-        self.pixel_shift = []
 
     @property
     def data(self):
@@ -69,7 +68,10 @@ class Wavefront:
     @property
     def depth(self):
         """Number of individual Wavefront arrays in :attr:`data`"""
-        return self.data.shape[0]
+        if self.data.ndim in (0,1,2):
+            return 1
+        else:
+            return self.data.shape[0]
 
     @property
     def planetype(self):

@@ -8,8 +8,8 @@ import scipy.optimize
 from lentil.fourier import expc
 from lentil import util
 
-__all__ = ['Plane', 'Pupil', 'Image', 'DispersiveShift', 'Grism', 'LensletArray',
-           'Tilt', 'Rotate', 'Flip']
+__all__ = ['Plane', 'Pupil', 'Image', 'Detector', 'DispersiveShift', 'Grism', 
+           'LensletArray', 'Tilt', 'Rotate', 'Flip']
 
 
 class Plane:
@@ -643,7 +643,19 @@ class Image(Plane):
     def multiply(self, wavefront):
         """Multiply with a :class:`~lentil.wavefront.Wavefront`."""
 
+        # TODO: we should construct some version of Plane.multiply() here or just call super().multiply()
+
         wavefront.planetype = 'image'
+
+        return wavefront
+
+
+class Detector(Image):
+
+    def multiply(self, wavefront):
+        # compute intensity here
+
+        wavefront.data = np.abs(wavefront.data)**2
 
         return wavefront
 

@@ -28,6 +28,7 @@ Released 2020
   Plane's ``phase`` attribute
 * New function ``Plane.slice()`` for computing avaliable slices from the plane
   attributes to speed up propagation performance
+* New ``Detector()`` plane that returns intensity
 
 v0.4.1
 ------

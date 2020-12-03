@@ -141,7 +141,7 @@ class TiltPupil(lentil.Pupil):
         self.coeffs = coeffs
 
 
-class BasicDetector(lentil.Image):
+class BasicDetector(lentil.Detector):
     def __init__(self, pixelscale=5e-6, shape=(512, 512)):
         super().__init__(pixelscale=pixelscale, shape=shape)
 
