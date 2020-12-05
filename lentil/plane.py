@@ -480,15 +480,22 @@ class Plane:
             if self.pixelscale is not None:
                 assert wavefront.pixelscale == self.pixelscale
 
+        # TODO: could move these back inside the cached attribute construct to make it
+        # easier for users to redefint multiply() in subclasses - i.e. if these attributes
+        # are automatically grabbed from the cache if they exist, the user won't have to 
+        # recreate the block of code below in a subclasses multiply() method
         amplitude = self.cache['amplitude'] if 'amplitude' in self.cache else self.amplitude
         phase = self.cache['phase'] if 'phase' in self.cache else self.phase
         tilt = self.cache['tilt'] if 'tilt' in self.cache else self.tilt
         # TODO: could also only multiply along slices if we wanted. Might buy a tiny bit of speed
-        # slc = self.cache['slice'] if 'slice' in self.cache else np.s_[...]
+        slc = self.cache['slice'] if 'slice' in self.cache else np.s_[...]
 
         if phase.ndim == 3:
             # TODO: this will break if we already have multidimensional wavefront data
             # coming in. Need to fix. Maybe can just sum it up along axis=0?
+            # 2020-12-03 update: This will really only be a concern for a multisegment pupil
+            # followed by another multisegment pupil since a propagation step will always
+            # collapse wavefront.data back to a single 2d array
             data = np.copy(wavefront.data)
             wavefront.data = np.zeros((phase.shape[0], data.shape[1], data.shape[2]),
                                       dtype=np.complex128)
@@ -676,6 +683,16 @@ class Detector(Image):
         raise NotImplementedError
 
 
+class DispersivePhase(Plane):
+
+    def multiply(self, wavefront):
+        # NOTE: we can handle wavelength-dependent phase terms here (e.g. chromatic 
+        # aberrations). Since the phase will vary by wavelength, we can't fit out the
+        # tilt pre-propagation and apply the same tilt for each wavelength like we can 
+        # with run of the mill tilt
+        raise NotImplementedError
+
+
 class DispersiveShift(Plane):
 
     def shift(self, wavelength, x0, y0, **kwargs):
@@ -683,14 +700,8 @@ class DispersiveShift(Plane):
 
     def multiply(self, wavefront):
         wavefront = super().multiply(wavefront)
-
         wavefront.tilt.extend([self])
-
         return wavefront
-
-
-class DispersivePhase(Plane):
-    pass
 
 
 class Grism(DispersiveShift):

@@ -25,7 +25,7 @@ Released 2020
 * New function ``fourier.expc()`` to more quickly compute a complex exponential
 * ``fourier.dft2()`` now accepts an offset parameter
 * New function ``Plane.fit_tilt()`` to handle tilt fitting and removal of in the
-  Plane's ``phase`` attribute
+  Plane's ``phase`` attribute. This is now called once 
 * New function ``Plane.slice()`` for computing avaliable slices from the plane
   attributes to speed up propagation performance
 * New ``Detector()`` plane that returns intensity
