@@ -103,10 +103,11 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
 
             w = _propagate_mono(planes, wl, npix, npix_chip, oversample, tilt)
 
+            # At this point w.data should always have len == 1
             if flatten:
-                output += w.data * wt
+                output += w.data[0] * wt
             else:
-                output[n] = w.data * wt
+                output[n] = w.data[0] * wt
 
     if rebin:
         output = util.rebin(output, oversample)
@@ -247,6 +248,10 @@ def _propagate_mono(planes, wavelength, npix, npix_chip, oversample, tilt):
         # Multiply by plane
         w = plane.multiply(w)
 
+    # TODO: More advanced use cases may fail this assertion. We should figure out a
+    # way to handle them here
+    assert w.depth == 1
+
     return w
 
 
@@ -273,9 +278,9 @@ def _propagate_pti(w, pixelscale, npix, npix_chip, oversample):
 
     for d in range(w.depth):
         # data[d] = fourier.dft2(w.data[d], alpha, npix, res_shift[d])
-        chip = fourier.dft2(w.data[d], alpha, (npix_chip[0]*oversample, npix_chip[1]*oversample), 
+        chip = fourier.dft2(w.data[d], alpha, (npix_chip[0]*oversample, npix_chip[1]*oversample),
                             res_shift[d], unitary= True, out=chip)
-    
+
         # The shift term is given in terms of (x,y) but we place the chip in
         # terms of (r,c)
         shift = np.flip(fix_shift[d], axis=0)
@@ -289,7 +294,7 @@ def _propagate_pti(w, pixelscale, npix, npix_chip, oversample):
         if data_slice:
             data[data_slice] += chip[chip_slice]
 
-    w.data = data
+    w.data = [data]
 
     return w
 

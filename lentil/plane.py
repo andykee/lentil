@@ -496,18 +496,19 @@ class Plane:
             # 2020-12-03 update: This will really only be a concern for a multisegment pupil
             # followed by another multisegment pupil since a propagation step will always
             # collapse wavefront.data back to a single 2d array
-            data = np.copy(wavefront.data)
-            wavefront.data = np.zeros((phase.shape[0], data.shape[1], data.shape[2]),
-                                      dtype=np.complex128)
+            
+            
+            data = wavefront.data # grab a pointer to the existing wavefront.data
+            wavefront.data = []
 
             for seg in np.arange(phase.shape[0]):
                 phasor = amplitude * expc(phase[seg] * 2 * np.pi / wavefront.wavelength)
-                wavefront.data[seg] = data * phasor * self.segmask[seg]
+                wavefront.data.append(data[0] * phasor * self.segmask[seg])
         else:
             phasor = amplitude * expc(phase * 2 * np.pi / wavefront.wavelength)
-            wavefront.data *= phasor
-        # np.multiply(wavefront.data, amplitude * expc(phase * 2 * np.pi / wavefront.wavelength), out=wavefront.data)
+            wavefront.data[0] *= phasor
 
+        # TODO: verify this should really be extend and not append
         wavefront.tilt.extend(tilt)
 
         return wavefront
@@ -660,10 +661,8 @@ class Image(Plane):
 class Detector(Image):
 
     def multiply(self, wavefront):
-        # compute intensity here
-
-        wavefront.data = np.abs(wavefront.data)**2
-
+        # compute intensity
+        wavefront.data = [np.abs(w)**2 for w in wavefront.data]
         return wavefront
 
     def frame(self, *args, **kwargs):

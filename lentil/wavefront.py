@@ -33,7 +33,7 @@ class Wavefront:
     """
 
     __slots__ = ('wavelength', 'pixelscale', 'focal_length', 'tilt', 'offset',
-                 '_planetype', '_data')
+                 'data', '_planetype')
 
     def __init__(self, wavelength, shape=None, pixelscale=None, planetype=None):
 
@@ -43,9 +43,9 @@ class Wavefront:
 
         # All new Wavefront objects represent a perfect plane wave
         if shape:
-            self.data = np.ones((1, shape[0], shape[1]), dtype=np.complex128)
+            self.data = [np.ones((shape[0], shape[1]), dtype=np.complex)]
         else:
-            self.data = np.array([[1.]], dtype=np.complex128)
+            self.data = [np.array([1], dtype=np.complex)]
 
         # Wavefront focal length (which is infinity for a plane wave)
         self.focal_length = np.inf
@@ -54,25 +54,9 @@ class Wavefront:
         self.offset = [] # List of (r,c) offsets from master array center for cropped DFTs
 
     @property
-    def data(self):
-        return self._data
-
-    @data.setter
-    def data(self, value):
-        self._data = np.asarray(value)
-
-    @property
-    def shape(self):
-        """Wavefront array shape"""
-        return self.data.shape
-
-    @property
     def depth(self):
         """Number of individual Wavefront arrays in :attr:`data`"""
-        if self.data.ndim in (0,1,2):
-            return 1
-        else:
-            return self.data.shape[0]
+        return len(self.data)
 
     @property
     def planetype(self):
