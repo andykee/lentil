@@ -5,10 +5,9 @@ from scipy import ndimage
 import scipy.integrate
 import scipy.optimize
 
-from lentil.fourier import expc
 from lentil import util
 
-__all__ = ['Plane', 'Pupil', 'Image', 'Detector', 'DispersiveShift', 'Grism', 
+__all__ = ['Plane', 'Pupil', 'Image', 'Detector', 'DispersiveShift', 'Grism',
            'LensletArray', 'Tilt', 'Rotate', 'Flip']
 
 
@@ -71,7 +70,6 @@ class Plane:
 
         cls.cache = {}
         cls.tilt = []
-        cls.sliceable = True
 
     def __repr__(self):
         return f'{self.__class__.__name__}()'
@@ -318,7 +316,7 @@ class Plane:
     @property
     def ptt_vector(self):
         """2D vector representing piston and tilt in x and y. Planes with no mask or
-        segmask have ptt_vector = None. 
+        segmask have ptt_vector = None.
 
         Returns
         -------
@@ -357,13 +355,13 @@ class Plane:
             attribute it used.
 
         ptt_vector : array_like or None
-            Piston, tip, tilt basis used for fitting. If None (default), the Plane's 
-            :attr:`~lentil.Plane.ptt_vector` attribute it used. 
+            Piston, tip, tilt basis used for fitting. If None (default), the Plane's
+            :attr:`~lentil.Plane.ptt_vector` attribute it used.
 
         Returns
         -------
         phase_no_tilt : ndarray
-            ``phase`` with tilt fit and removed. If ``len(ptt_vector)//3 > 1``, the 
+            ``phase`` with tilt fit and removed. If ``len(ptt_vector)//3 > 1``, the
             returned phase array will contain one entry for each triad in ``ptt_vector``.
 
         tilt : list
@@ -418,16 +416,38 @@ class Plane:
             # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
             tilt = [Tilt(x=-t[seg, 2], y=t[seg, 1]) for seg in range(nseg)]
 
-            return phase_no_tilt, tilt  
+            return phase_no_tilt, tilt
 
     def slice(self, mask=None):
+        """Compute slices defined by the data extent in ``mask``.
+
+        Parameters
+        ----------
+        mask : array_like or None, optional
+            Mask to use for identifying data extents. If None, the Plane's
+            :attr:`segmask` is used if available, otherwise the Plane's
+            :attr:`mask` is used. If both :attr:`segmask` and :attr:`mask` are
+            None, ``Ellipsis`` is returned (slice returns all data).
+
+        Returns
+        -------
+        slices : list
+            List of slices corresponding to the data extent defined by ``mask``.
+
+        See also
+        --------
+        * :func:`~lentil.util.boundary_slice`
+        * :func:`~lentil.Plane.slice_offset`
+
+        """
+
         # If a mask is not provided, we should prefer segmask over mask
         if mask is None:
             if self.segmask is not None:
                 mask = self.segmask
             else:
                 mask = self.mask
-        
+
         # self.mask and self.segmask may still return None so we
         # catch that here
         if mask.ndim < 2 or mask is None:
@@ -438,6 +458,39 @@ class Plane:
         elif mask.ndim == 3:
             s = [util.boundary_slice(segmask) for segmask in mask]
         return s
+
+    def slice_offset(self, slices, shape=None, indexing='xy'):
+        """Compute (r,c) offsets of the centers of each slice in a list of slices.
+
+        Parameters
+        ----------
+        slices : list
+            List of slices
+
+        shape : (2,) array_like or None, optional
+            Shape of containing array each slice is taken from. If None (default),
+            ``shape = Plane.shape``.
+
+        indexing : {'xy', 'ij'}, optional
+            Offset ordering. Default is 'xy'.
+
+        Returns
+        -------
+        offsets : list
+           List of center offsets corresponding to the provided slices
+
+        See also
+        --------
+        * :func:`~lentil.util.slice_offset`
+        * :func:`~lentil.Plane.slice`
+
+        """
+
+        if shape is None:
+            shape = self.shape
+
+        return [util.slice_offset(slice=s, shape=shape, indexing=indexing) for s in slices]
+
 
     def multiply(self, wavefront):
         """Multiply with a wavefront
@@ -482,7 +535,7 @@ class Plane:
 
         # TODO: could move these back inside the cached attribute construct to make it
         # easier for users to redefint multiply() in subclasses - i.e. if these attributes
-        # are automatically grabbed from the cache if they exist, the user won't have to 
+        # are automatically grabbed from the cache if they exist, the user won't have to
         # recreate the block of code below in a subclasses multiply() method
         amplitude = self.cache['amplitude'] if 'amplitude' in self.cache else self.amplitude
         phase = self.cache['phase'] if 'phase' in self.cache else self.phase
@@ -496,16 +549,16 @@ class Plane:
             # 2020-12-03 update: This will really only be a concern for a multisegment pupil
             # followed by another multisegment pupil since a propagation step will always
             # collapse wavefront.data back to a single 2d array
-            
-            
+
+
             data = wavefront.data # grab a pointer to the existing wavefront.data
             wavefront.data = []
 
             for seg in np.arange(phase.shape[0]):
-                phasor = amplitude * expc(phase[seg] * 2 * np.pi / wavefront.wavelength)
+                phasor = amplitude * util.expc(phase[seg] * 2 * np.pi / wavefront.wavelength)
                 wavefront.data.append(data[0] * phasor * self.segmask[seg])
         else:
-            phasor = amplitude * expc(phase * 2 * np.pi / wavefront.wavelength)
+            phasor = amplitude * util.expc(phase * 2 * np.pi / wavefront.wavelength)
             wavefront.data[0] *= phasor
 
         # TODO: verify this should really be extend and not append
@@ -685,9 +738,9 @@ class Detector(Image):
 class DispersivePhase(Plane):
 
     def multiply(self, wavefront):
-        # NOTE: we can handle wavelength-dependent phase terms here (e.g. chromatic 
+        # NOTE: we can handle wavelength-dependent phase terms here (e.g. chromatic
         # aberrations). Since the phase will vary by wavelength, we can't fit out the
-        # tilt pre-propagation and apply the same tilt for each wavelength like we can 
+        # tilt pre-propagation and apply the same tilt for each wavelength like we can
         # with run of the mill tilt
         raise NotImplementedError
 
@@ -1046,45 +1099,3 @@ class Conic(Plane):
 #    def q(self, wave, pixelscale, npix, oversample=1):
 #        alpha = self.alpha(wave, pixelscale, oversample)
 #        return 1/(alpha * npix)
-
-# TODO: write a test for this
-# TODO: this may be broken for non-square parent matrices?
-def slice_offset(slice, order='xy'):
-    """Compute the offset of the center of a 2d slice relative to the center of a larger
-    array.
-
-    It is assumed the center of the larger containing array with shape (m,n) is at:
-
-        r = m - np.floor(m/2)
-        c = n - np.floor(n/2)
-
-    Parameters
-    ----------
-    slice : iterable of Slice objects
-        2d slice
-
-    order : {'xy', 'rc'}, optional
-        Offset ordering. Default is 'xy'.
-
-    Returns
-    -------
-    offset : list
-        Offset
-
-    """
-    offset = []
-    for s in slice:
-        if s == Ellipsis:
-            offset.append((0,0))
-        else:
-            slice_shape = np.array((s[0].stop-s[0].start, s[1].stop-s[1].start))
-            slice_offset = np.asarray((s[0].start, s[1].start)) - np.floor(slice_shape/2)
-
-            if order == 'xy':
-                offset.append(tuple(slice_offset[::-1]))
-            elif order == 'rc':
-                offset.append(tuple(slice_offset))
-            else:
-                raise ValueError(f"Unknown order {order}. order must be 'rc' or 'xy'.")
-
-    return offset

@@ -5,7 +5,7 @@ import numpy as np
 
 from lentil import util
 from lentil import fourier
-from lentil.plane import Plane, Pupil, Image, Detector, Tilt, slice_offset
+from lentil.plane import Plane, Pupil, Image, Detector, Tilt
 from lentil.wavefront import Wavefront
 
 __all__ = ['propagate']
@@ -173,9 +173,8 @@ def _prepare_planes(planes, wave, npix, oversample, tilt, interp_phasor):
         plane.cache['pixelscale'] = copy.deepcopy(plane.pixelscale)
         plane.cache['npix_wavefront'] = npix_wavefront
         slc = plane.slice()
-        #offset = slice_offset(slc)
         plane.cache['slice'] = slc
-        #plane.cache['offset'] = offset
+        plane.cache['offset'] = plane.slice_offset(slices=slc, shape=plane.shape, indexing='xy')
 
         # reinterpolate as needed
         if interp_phasor:
@@ -396,6 +395,3 @@ def _chip_insertion_slices(npix_canvas, npix_chip, shift):
     else:
         return (slice(canvas_top, canvas_bottom), slice(canvas_left, canvas_right)), \
                (slice(chip_top, chip_bottom), slice(chip_left, chip_right))
-
-
-

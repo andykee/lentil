@@ -80,15 +80,15 @@ def test_dft2_shift():
 def test_dft2_offset():
     n = 10
     m = 3
-    
+
     f = np.zeros((n,n), dtype=np.complex)
     r,c = np.random.randint(0, n-m, size=2)
     f[r:r+m,c:c+m] = np.random.rand(m,m) + 1j * np.random.rand(m,m)
     slc = lentil.util.boundary_slice(f)
-    offset = lentil.plane.slice_offset([slc])
+    offset = lentil.util.slice_offset(slc, f.shape, indexing='xy')
 
     F = lentil.fourier.dft2(f, alpha=1/m, npix=10)
-    FF = lentil.fourier.dft2(f[slc], alpha=1/m, npix=10, offset=offset[0])
+    FF = lentil.fourier.dft2(f[slc], alpha=1/m, npix=10, offset=offset)
 
     assert np.allclose(F, FF)
 
@@ -100,6 +100,4 @@ def test_dft2_out():
     assert f is F
 
 
-def test_expc():
-    a = np.random.uniform(low=-1, high=1, size=(5,5))
-    assert np.allclose(np.exp(1j*a), lentil.fourier.expc(a))
+

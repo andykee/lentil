@@ -10,6 +10,31 @@ def test_boundary():
     assert np.array_equal(bounds, [42, 214, 28, 228])
 
 
+def test_boundary_slice():
+    a = np.zeros((10,10))
+    r,c = np.floor(np.random.uniform(low=0, high=10, size=2)).astype(np.int)
+    a[r:r+3, c:c+3] = 1
+
+    rmin = np.max((r, 0))
+    rmax = np.min((r+3, a.shape[0]))
+    cmin = np.max((c, 0))
+    cmax = np.min((c+3, a.shape[1]))
+
+    slc = lentil.util.boundary_slice(a)
+
+    assert (slice(rmin,rmax), slice(cmin,cmax)) == slc
+
+
+def test_slice_offset():
+    shift = np.random.uniform(low=-50, high=50, size=2).astype(np.int)
+
+    a = lentil.util.circlemask((256,256), 256//4, shift=shift)
+    slc = lentil.util.boundary_slice(a)
+    offset = lentil.util.slice_offset(slc, shape=a.shape, indexing='xy')
+
+    assert np.all(offset[::-1] == shift)
+
+
 def test_rebin():
     img = np.array([[1, 1, 2, 2], [1, 1, 2, 2], [3, 3, 4, 4], [3, 3, 4, 4]])
     factor = 2
@@ -126,3 +151,7 @@ def test_sparse():
     vec = lentil.util.m2v(mask, index)
     mat = lentil.util.v2m(vec, index)
     assert np.array_equal(mat, mask)
+
+def test_expc():
+    a = np.random.uniform(low=-1, high=1, size=(5,5))
+    assert np.allclose(np.exp(1j*a), lentil.util.expc(a))

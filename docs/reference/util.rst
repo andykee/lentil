@@ -4,7 +4,7 @@
 Utility functions (``lentil.util``)
 ***********************************
 
-Image Manipulation
+Array Manipulation
 ==================
 .. autosummary::
     :toctree: ../generated/
@@ -12,6 +12,7 @@ Image Manipulation
     lentil.util.boundary
     lentil.util.boundary_slice
     lentil.util.centroid
+    lentil.util.slice_offset
     lentil.util.pad
     lentil.util.window
     lentil.util.rebin
@@ -52,3 +53,4 @@ Miscellaneous
     :toctree: ../generated/
 
     lentil.util.pixelscale_nyquist
+    lentil.util.expc

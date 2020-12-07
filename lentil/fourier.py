@@ -1,7 +1,9 @@
 import functools
 import numpy as np
 
-__all__ = ['dft2', 'idft2', 'czt2', 'iczt2', 'expc']
+from lentil import util
+
+__all__ = ['dft2', 'idft2', 'czt2', 'iczt2']
 
 
 FFTW_WISDOM_FILENAME = '.lentil_fftw_wisdom'
@@ -23,10 +25,10 @@ except ImportError:
 
 
 def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0,0), unitary=True, out=None):
-    """Compute the 2-dimensional discrete Fourier Transform. 
-    
+    """Compute the 2-dimensional discrete Fourier Transform.
+
     This function allows independent control over input shape, output shape,
-    and output sampling by implementing the matrix triple product algorithm 
+    and output sampling by implementing the matrix triple product algorithm
     described in [1].
 
     Parameters
@@ -63,7 +65,7 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0,0), unitary=True, out=None
 
     out : ndarray or None
         A location into which the result is stored. If provided, it must have
-        shape = npix and dtype = np.complex. If not provided or None, a 
+        shape = npix and dtype = np.complex. If not provided or None, a
         freshly-allocated array is returned.
 
     Returns
@@ -119,15 +121,15 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0,0), unitary=True, out=None
     # now calculate the answer, without reallocating memory
     if unitary:
         np.multiply(F, np.sqrt(np.abs(ax * ay)), out=F)
-    
+
     return F
 
 
 @functools.lru_cache(maxsize=32)
 def _dft2_matrices(m, n, M, N, ax, ay, sx, sy, ox, oy):
     X, Y, U, V = _dft2_coords(m, n, M, N)
-    E1 = expc(-2.0 * np.pi * ay * np.outer(Y-sy+oy, V-sy)).T
-    E2 = expc(-2.0 * np.pi * ax * np.outer(X-sx+ox, U-sx))
+    E1 = util.expc(-2.0 * np.pi * ay * np.outer(Y-sy+oy, V-sy)).T
+    E2 = util.expc(-2.0 * np.pi * ax * np.outer(X-sx+ox, U-sx))
     return E1, E2
 
 
@@ -140,7 +142,7 @@ def _dft2_coords(m, n, M, N):
     Y = np.arange(m) - np.floor(m/2.0)
     U = np.arange(N) - np.floor(N/2.0)
     V = np.arange(M) - np.floor(M/2.0)
-    
+
     return X, Y, U, V
 
 
@@ -148,7 +150,7 @@ def idft2(F, alpha, npix=None, shift=(0,0), unitary=True, out=None):
     """Compute the 2-dimensional inverse discrete Fourier Transform.
 
     This function allows independent control over input shape, output shape,
-    and output sampling by implementing the matrix triple product algorithm 
+    and output sampling by implementing the matrix triple product algorithm
     described in [1].
 
     Parameters
@@ -207,7 +209,7 @@ def idft2(F, alpha, npix=None, shift=(0,0), unitary=True, out=None):
     References
     ----------
     [1] Soummer, et. al. Fast computation of Lyot-style coronagraph propagation (2007)
-    
+
     [2] `Expressing the inverse DFT in terms of the DFT <https://en.wikipedia.org/wiki/Discrete_Fourier_transform#Expressing_the_inverse_DFT_in_terms_of_the_DFT>`_.
 
     """
@@ -222,8 +224,8 @@ def idft2(F, alpha, npix=None, shift=(0,0), unitary=True, out=None):
 
 def czt2(f, alpha, npix=None, shift=(0, 0), unitary=True):
     """Compute the 2-dimensional discrete Fourier Transform using the chirp
-    z-transform. 
-    
+    z-transform.
+
     Parameters
     ----------
     f : array_like
@@ -283,7 +285,7 @@ def czt2(f, alpha, npix=None, shift=(0, 0), unitary=True):
     ----------
     [1] Rabiner, et. al. The Chirp z-Transform Algorithm. Iransactions on Audio and Electroacoustics. (1969)
 
-    """ 
+    """
     ax, ay = _sanitize_alpha(alpha)
 
     f = np.asarray(f)
@@ -299,10 +301,10 @@ def czt2(f, alpha, npix=None, shift=(0, 0), unitary=True):
 
     z_row, beta_row, gamma_row = _czt_coeffs(m, M, L[0], sy, ay, unitary)
     z_col, beta_col, gamma_col = _czt_coeffs(n, N, L[1], sx, ax, unitary)
-    
+
     f_phased = np.multiply(f, beta_col)
     f_phased = np.multiply(f_phased, beta_row[:, np.newaxis], out=f_phased)
-    
+
     if pyfftw:
         H = pyfftw.interfaces._utils._Xfftn(f_phased, L, (-2,-1), False, 'FFTW_MEASURE',
                                            48, True, True, 'fft2', normalise_idft=False,
@@ -317,16 +319,16 @@ def czt2(f, alpha, npix=None, shift=(0, 0), unitary=True):
         H = np.multiply(H, z_col, out=H)
         H = np.multiply(z_row[:, np.newaxis], H, out=H)
         X = np.fft.ifft2(H)
-        
+
     X = np.multiply(X[0:M, 0:N], gamma_col)
     X = np.multiply(gamma_row[:, np.newaxis], X, out=X)
     return X
 
 
 def iczt2(F, alpha, npix=None, shift=(0, 0), unitary=True):
-    """Compute the 2-dimensional inverse discrete Fourier Transform using the 
-    chirp z-transform. 
-    
+    """Compute the 2-dimensional inverse discrete Fourier Transform using the
+    chirp z-transform.
+
     Parameters
     ----------
     f : array_like
@@ -385,10 +387,10 @@ def iczt2(F, alpha, npix=None, shift=(0, 0), unitary=True):
     References
     ----------
     [1] Rabiner, et. al. The Chirp z-Transform Algorithm. Iransactions on Audio and Electroacoustics. (1969)
-    
+
     [2] `Expressing the inverse DFT in terms of the DFT <https://en.wikipedia.org/wiki/Discrete_Fourier_transform#Expressing_the_inverse_DFT_in_terms_of_the_DFT>`_.
 
-    """ 
+    """
     F = np.asarray(F)
     N = F.size
     # will allocate memory for F if out == None
@@ -399,45 +401,45 @@ def iczt2(F, alpha, npix=None, shift=(0, 0), unitary=True):
 
 @functools.lru_cache(maxsize=32, typed=True)
 def _czt_coeffs(N, M, L, shift, alpha, unitary):
-    
+
     dN = N // 2
     dM = M // 2 + shift
-    
+
     m_hat = np.linspace(start=-dM, stop=M-dM-1, num=M)
-    
+
     beta = _czt_beta(N, dN, L, alpha, unitary)
-    
-    gamma = expc(-np.pi * np.square(m_hat) * alpha)
-    
-    
+
+    gamma = util.expc(-np.pi * np.square(m_hat) * alpha)
+
+
     z_hat_i = np.zeros(L)
     start = dN - dM
-    
+
     p = np.linspace(start=start, stop=start+M-1, num=M)
     z_hat_i[0:M] = np.pi * np.square(p)
-    
+
     p = np.linspace(start=start-N+1, stop=start-1, num=N-1)
     z_hat_i[L-N+1:L] = np.pi * np.square(p)
-    
-    z_hat = expc(z_hat_i * alpha)
+
+    z_hat = util.expc(z_hat_i * alpha)
     z_hat[M:L-N+1] = 0
     z = np.fft.fft(z_hat)
-    
+
     return z, beta, gamma
 
 @functools.lru_cache(maxsize=32, typed=True)
 def _czt_beta(N, dN, L, alpha, unitary):
     n_hat = np.linspace(start=-dN, stop=N-dN-1, num=N)
-    
+
     if unitary:
         scale_factor = np.sqrt(alpha)
     else:
         scale_factor = 1
-    
+
     if pyfftw:
         scale_factor /= L
-        
-    return scale_factor * expc(-np.pi * np.square(n_hat) * alpha)
+
+    return scale_factor * util.expc(-np.pi * np.square(n_hat) * alpha)
 
 @functools.lru_cache(maxsize=32, typed=True)
 def _czt2_optimal_L(N, M):
@@ -445,7 +447,7 @@ def _czt2_optimal_L(N, M):
     L = []
     for k in range(2):
         min_L = N[k] + M[k] - 1
-        
+
         for candidate_L in range(min_L, 2 * min_L + 1):
             current_L = candidate_L
             rem = 0
@@ -460,21 +462,8 @@ def _czt2_optimal_L(N, M):
                         break
             if len(L) == k + 1:
                 break
-    
+
     return tuple(L)
-
-
-def expc(x):
-    """Computes np.exp(1.0j * x) for real valued x... FAST!"""
-    x = np.asarray(x)
-    if x.dtype == np.float32:
-        out = np.empty(x.shape, dtype=np.complex64)
-    elif x.dtype == np.float64:
-        out = np.empty(x.shape, dtype=np.complex128)
-        
-    out.real = np.cos(x)
-    out.imag = np.sin(x)
-    return out
 
 
 def _sanitize_alpha(x):
