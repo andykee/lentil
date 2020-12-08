@@ -541,30 +541,42 @@ class Plane:
         phase = self.cache['phase'] if 'phase' in self.cache else self.phase
         tilt = self.cache['tilt'] if 'tilt' in self.cache else self.tilt
         # TODO: could also only multiply along slices if we wanted. Might buy a tiny bit of speed
-        slc = self.cache['slice'] if 'slice' in self.cache else np.s_[...]
+        slc = self.cache['slice'] if 'slice' in self.cache else [np.s_[...]]
+        ofst = self.cache['offset'] if 'offset' in self.cache else [(0, 0)]
+
+        data = wavefront.data  # grab a pointer to the existing wavefront.data
+        wavefront.data = []
 
         if phase.ndim == 3:
+
             # TODO: this will break if we already have multidimensional wavefront data
             # coming in. Need to fix. Maybe can just sum it up along axis=0?
             # 2020-12-03 update: This will really only be a concern for a multisegment pupil
             # followed by another multisegment pupil since a propagation step will always
             # collapse wavefront.data back to a single 2d array
 
-
-            data = wavefront.data # grab a pointer to the existing wavefront.data
-            wavefront.data = []
-
+            # This is the case we hit when tilt = 'angle' and nseg > 1
             for seg in np.arange(phase.shape[0]):
-                phasor = amplitude * util.expc(phase[seg] * 2 * np.pi / wavefront.wavelength)
-                wavefront.data.append(data[0] * phasor * self.segmask[seg])
+                phasor = _phasor(amplitude, phase[seg], self.segmask[seg], wavefront.wavelength, slc[seg])
+                wavefront.data.append(data[0][slc[seg]] * phasor)
+
+            wavefront.offset = ofst
         else:
-            phasor = amplitude * util.expc(phase * 2 * np.pi / wavefront.wavelength)
-            wavefront.data[0] *= phasor
+            # tilt = 'phase' regardless of nseg or tilt = 'angle' and nseg = None
+            wavefront.data = [data[0][s] * _phasor(amplitude, phase, self.mask, wavefront.wavelength, s) for s in slc]
+            wavefront.offset = ofst
 
         # TODO: verify this should really be extend and not append
         wavefront.tilt.extend(tilt)
 
         return wavefront
+
+
+def _phasor(amplitude, phase, mask, wavelength, slc=Ellipsis):
+    amp = amplitude if amplitude.size == 1 else amplitude[slc]
+    ph = phase if phase.size == 1 else phase[slc]
+    msk = mask if mask.size == 1 else mask[slc]
+    return amp * util.expc(2*np.pi*ph/wavelength) * msk
 
 
 class Pupil(Plane):

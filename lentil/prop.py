@@ -153,6 +153,9 @@ def _prepare_planes(planes, wave, npix, oversample, tilt, interp_phasor):
     # The current approach is to find the maximum row and column dimensions of
     # only the Pupil elements in self.planes. This whole approach will have to
     # change once we support more complicated multi-plane propagations.
+    #
+    # I think what we should really do is find the shape of the first Plane
+    # of consequence. What we have hwre works for now though
     shapes = [plane.shape for plane in planes if isinstance(plane, Pupil)]
     npix_wavefront = (max(shapes, key=itemgetter(0))[0],
                       max(shapes, key=itemgetter(1))[1])
@@ -164,7 +167,7 @@ def _prepare_planes(planes, wave, npix, oversample, tilt, interp_phasor):
         if tilt == 'angle':
             phase, fit_tilt = plane.fit_tilt()
             plane.cache['phase'] = phase
-            if fit_tilt is not None:
+            if fit_tilt:
                 plane.cache['tilt'].extend([fit_tilt])
         else:
             plane.cache['phase'] = copy.deepcopy(plane.phase)
@@ -177,6 +180,8 @@ def _prepare_planes(planes, wave, npix, oversample, tilt, interp_phasor):
         plane.cache['offset'] = plane.slice_offset(slices=slc, shape=plane.shape, indexing='xy')
 
         # reinterpolate as needed
+        # NOTE: if we reinterpolate, we'll have to make sure we provide the correct
+        # slices and offsets (using the appropriate reinterpolated mask, probably)
         if interp_phasor:
             # We'll have already computed the interpolation scale when
             # figuring out npix_wavefront so we just need to rescale
@@ -278,7 +283,7 @@ def _propagate_pti(w, pixelscale, npix, npix_chip, oversample):
     for d in range(w.depth):
         # data[d] = fourier.dft2(w.data[d], alpha, npix, res_shift[d])
         chip = fourier.dft2(w.data[d], alpha, (npix_chip[0]*oversample, npix_chip[1]*oversample),
-                            res_shift[d], unitary= True, out=chip)
+                            res_shift[d], offset=w.offset[d], unitary=True, out=chip)
 
         # The shift term is given in terms of (x,y) but we place the chip in
         # terms of (r,c)
