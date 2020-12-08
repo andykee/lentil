@@ -134,4 +134,9 @@ class Wavefront:
                                                           z=self.focal_length,
                                                           wavelength=self.wavelength)
 
-        return (shift/pixelscale) * oversample
+        shift = (shift/pixelscale) * oversample
+
+        if shift.shape[0] != self.depth:
+            shift = np.repeat(shift, self.depth, axis=0)
+
+        return shift
