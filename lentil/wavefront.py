@@ -33,7 +33,7 @@ class Wavefront:
     """
 
     __slots__ = ('wavelength', 'pixelscale', 'focal_length', 'tilt', 'offset',
-                 'data', '_planetype')
+                 'data', 'center', '_planetype')
 
     def __init__(self, wavelength, shape=None, pixelscale=None, planetype=None):
 
@@ -52,6 +52,7 @@ class Wavefront:
 
         self.tilt = []  # List of pre-propagation tilts
         self.offset = []  # List of (r,c) offsets from master array center for cropped DFTs
+        self.center = []  # List of (r,c) center shifts of each item in data
 
     @property
     def depth(self):

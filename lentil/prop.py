@@ -91,22 +91,45 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
 
     # Create an empty output
     output_dtype = np.float64 if isinstance(planes[-1], Detector) else np.complex128
+    output_shape = (npix[0]*oversample, npix[1]*oversample)
 
     if flatten:
-        output = np.zeros((npix[0]*oversample, npix[1]*oversample), dtype=output_dtype)
+        output = np.zeros(output_shape, dtype=output_dtype)
     else:
-        output = np.zeros((len(wave), npix[0]*oversample, npix[1]*oversample), dtype=output_dtype)
+        output = np.zeros((len(wave), output_shape[0], output_shape[1]), dtype=output_dtype)
 
     for n, (wl, wt) in enumerate(zip(wave, weight)):
         if wt > 0:
 
-            w = _propagate_mono(planes, wl, npix, npix_chip, oversample)
+            w = _propagate_mono(planes, wl, npix_chip, oversample)
+
+            if w.planetype == 'image':
+
+                for d in range(w.depth):
+                    # The shift term is given in terms of (x,y) but we place the chip in
+                    # terms of (r,c)
+                    shift = np.flip(w.center[d], axis=0)
+
+                    # Compute the chip location
+                    data_slice, chip_slice = _chip_insertion_slices(output_shape,
+                                                                    (w.data[d].shape[0], w.data[d].shape[1]),
+                                                                    shift)
+
+                    # Insert the complex result in the output
+                    if data_slice:
+                        if flatten:
+                            output[data_slice] += w.data[d][chip_slice] * wt
+                        else:
+                            output[n][data_slice] = w.data[d][chip_slice] * wt
+
+
+
 
             # At this point w.data should always have len == 1
-            if flatten:
-                output += w.data[0] * wt
-            else:
-                output[n] = w.data[0] * wt
+            #if flatten:
+            #    output += w.data[0] * wt
+            #else:
+            #    output[n] = w.data[0] * wt
 
     if rebin:
         output = util.rebin(output, oversample)
@@ -193,7 +216,7 @@ def _cleanup_planes(planes):
         plane.cache.clear()
 
 
-def _propagate_mono(planes, wavelength, npix, npix_chip, oversample):
+def _propagate_mono(planes, wavelength, npix_chip, oversample):
     """Propagate a monochromatic wavefront from plane to plane through the
     optical system using Fraunhofer diffraction.
 
@@ -234,7 +257,7 @@ def _propagate_mono(planes, wavelength, npix, npix_chip, oversample):
             pass
         elif (w.planetype == 'pupil') and isinstance(plane, Image):
             if plane.pixelscale is not None:
-                w = _propagate_pti(w, plane.pixelscale, npix, npix_chip, oversample)
+                w = _propagate_pti(w, plane.pixelscale, npix_chip, oversample)
             else:
                 pass
         elif (w.planetype == 'image') and isinstance(plane, Pupil):
@@ -253,7 +276,7 @@ def _propagate_mono(planes, wavelength, npix, npix_chip, oversample):
 
     # TODO: More advanced use cases may fail this assertion. We should figure out a
     # way to handle them here
-    assert w.depth == 1
+    #assert w.depth == 1
 
     return w
 
@@ -263,9 +286,7 @@ def _propagate_mono(planes, wavelength, npix, npix_chip, oversample):
 # 2. accept some sort of chip processing lambda function
 # 3. accept data dtype parameter
 
-# if Image: dtype=np.complex128
-# if Detector: dtype=np.float64,
-def _propagate_pti(w, pixelscale, npix, npix_chip, oversample):
+def _propagate_pti(w, pixelscale, npix, oversample):
 
     shift = w.shift(pixelscale, oversample)
     w.tilt = []
@@ -273,13 +294,13 @@ def _propagate_pti(w, pixelscale, npix, npix_chip, oversample):
     # Integer portion of the shift that will be accounted for
     # later
     fix_shift = np.fix(shift)
+    w.center = list(fix_shift)
 
     # Residual subpixel portion of the shift that is passed to
     # the DFT
     res_shift = shift - fix_shift
 
-    data = np.zeros((npix[0]*oversample, npix[1]*oversample), dtype=np.complex128)
-    chip = np.empty((npix_chip[0]*oversample, npix_chip[1]*oversample), dtype=np.complex128)
+    #chip = np.empty((npix[0]*oversample, npix[1]*oversample), dtype=np.complex128)
 
     alpha = (w.pixelscale * pixelscale) / (w.wavelength * w.focal_length * oversample)
 
@@ -288,23 +309,10 @@ def _propagate_pti(w, pixelscale, npix, npix_chip, oversample):
 
     for d in range(w.depth):
         # data[d] = fourier.dft2(w.data[d], alpha, npix, res_shift[d])
-        chip = fourier.dft2(w.data[d], alpha, (npix_chip[0]*oversample, npix_chip[1]*oversample),
-                            res_shift[d], offset=w.offset[d], unitary=True, out=chip)
+        w.data[d] = fourier.dft2(w.data[d], alpha, (npix[0]*oversample, npix[1]*oversample),
+                                 res_shift[d], offset=w.offset[d], unitary=True)
 
-        # The shift term is given in terms of (x,y) but we place the chip in
-        # terms of (r,c)
-        shift = np.flip(fix_shift[d], axis=0)
 
-        # Compute the chip location
-        data_slice, chip_slice = _chip_insertion_slices(data.shape,
-                                                        (chip.shape[0], chip.shape[1]),
-                                                        shift)
-
-        # Insert the complex result in the output
-        if data_slice:
-            data[data_slice] += chip[chip_slice]
-
-    w.data = [data]
 
     return w
 

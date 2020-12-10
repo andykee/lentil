@@ -589,7 +589,7 @@ class Plane:
 
                     # we have a few rules for dealing with the slice offset here
                     ofst = util.slice_offset(slc[seg], amplitude.shape)
-                    
+
                     # if wavefront.offset is empty, we will just append the offset for each slice as we go (even if offset is None)
                     if not wavefront.offset:
                         offset.append(ofst)
@@ -610,7 +610,7 @@ class Plane:
 
                     # we have a few rules for dealing with the slice offset here
                     ofst = util.slice_offset(s, amplitude.shape)
-                    
+
                     # if wavefront.offset is empty, we will just append the offset for each slice as we go (even if offset is None)
                     offset.append(ofst)
 
@@ -780,6 +780,7 @@ class Detector(Image):
     def multiply(self, wavefront):
         # compute intensity
         wavefront.data = [np.abs(w)**2 for w in wavefront.data]
+        wavefront.planetype = 'image'
         return wavefront
 
     def frame(self, *args, **kwargs):
