@@ -100,7 +100,7 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
     for n, (wl, wt) in enumerate(zip(wave, weight)):
         if wt > 0:
 
-            w = _propagate_mono(planes, wl, npix, npix_chip, oversample, tilt)
+            w = _propagate_mono(planes, wl, npix, npix_chip, oversample)
 
             # At this point w.data should always have len == 1
             if flatten:
@@ -193,7 +193,7 @@ def _cleanup_planes(planes):
         plane.cache.clear()
 
 
-def _propagate_mono(planes, wavelength, npix, npix_chip, oversample, tilt):
+def _propagate_mono(planes, wavelength, npix, npix_chip, oversample):
     """Propagate a monochromatic wavefront from plane to plane through the
     optical system using Fraunhofer diffraction.
 
