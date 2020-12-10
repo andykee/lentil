@@ -24,7 +24,7 @@ except ImportError:
     pyfftw = None
 
 
-def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0,0), unitary=True, out=None):
+def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=None):
     """Compute the 2-dimensional discrete Fourier Transform.
 
     This function allows independent control over input shape, output shape,
@@ -107,6 +107,9 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0,0), unitary=True, out=None
     if npix is None:
         npix = [m, n]
     M, N = _sanitize_npix(npix)
+
+    if offset is None:
+        offset = (0, 0)
 
     sx, sy = _sanitize_shift(shift)
     ox, oy = _sanitize_npix(offset)

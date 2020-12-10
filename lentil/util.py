@@ -358,8 +358,9 @@ def slice_offset(slice, shape, indexing='xy'):
 
     Returns
     -------
-    offset : tuple
-        Offset ordered according to ``order``.
+    offset : tuple or None
+        Offset ordered according to ``order``. Note that if the computed offset
+        is (0, 0), None is returned instead.
 
     See Also
     --------
@@ -377,11 +378,11 @@ def slice_offset(slice, shape, indexing='xy'):
     #                    ellipsis ('...')
 
     if slice == Ellipsis:
-        offset = (0,0)
+        offset = None
     elif Ellipsis in slice:
         # The only case we know enough to deal with is (Ellipsis, slice(None, None, None))
         if slice(None, None, None) in slice:
-            offset = (0,0)
+            offset = None
         else:
             raise ValueError(f"Can't compute offset from slice {slice}")
     else:
@@ -393,12 +394,15 @@ def slice_offset(slice, shape, indexing='xy'):
 
         slice_offset = np.array((slice[0].start+slice_center[0], slice[1].start+slice_center[1])) - center
 
-        if indexing == 'xy':
-            offset = tuple(slice_offset[::-1])
-        elif indexing == 'ij':
-            offset = tuple(slice_offset)
+        if np.all(slice_offset == 0):
+            offset = None
         else:
-            raise ValueError(f"Unknown indexing {indexing}. indexing must be 'ij' or 'xy'.")
+            if indexing == 'xy':
+                offset = tuple(slice_offset[::-1])
+            elif indexing == 'ij':
+                offset = tuple(slice_offset)
+            else:
+                raise ValueError(f"Unknown indexing {indexing}. indexing must be 'ij' or 'xy'.")
 
     return offset
 

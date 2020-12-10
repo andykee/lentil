@@ -489,8 +489,15 @@ class Plane:
         if shape is None:
             shape = self.shape
 
-        return [util.slice_offset(slice=s, shape=shape, indexing=indexing) for s in slices]
-
+        offsets = []
+        for s in slices:
+            offset = util.slice_offset(slice=s, shape=shape, indexing=indexing)
+            if offset:
+                offsets.append(offset)
+        if offsets:
+            return offsets
+        else:
+            return [None]
 
     def multiply(self, wavefront):
         """Multiply with a wavefront
@@ -540,31 +547,76 @@ class Plane:
         amplitude = self.cache['amplitude'] if 'amplitude' in self.cache else self.amplitude
         phase = self.cache['phase'] if 'phase' in self.cache else self.phase
         tilt = self.cache['tilt'] if 'tilt' in self.cache else self.tilt
-        # TODO: could also only multiply along slices if we wanted. Might buy a tiny bit of speed
         slc = self.cache['slice'] if 'slice' in self.cache else [np.s_[...]]
-        ofst = self.cache['offset'] if 'offset' in self.cache else [(0, 0)]
+        #ofst = self.cache['offset'] if 'offset' in self.cache else [None]
 
         data = wavefront.data  # grab a pointer to the existing wavefront.data
         wavefront.data = []
 
-        if phase.ndim == 3:
+        # wavefront.offset = []
+        # then below, under wavefront.data.append:
+        # wavefront.offset.append(ofst[seg])
+        #   OR
+        # wavefront.offset.append(
 
-            # TODO: this will break if we already have multidimensional wavefront data
-            # coming in. Need to fix. Maybe can just sum it up along axis=0?
-            # 2020-12-03 update: This will really only be a concern for a multisegment pupil
-            # followed by another multisegment pupil since a propagation step will always
-            # collapse wavefront.data back to a single 2d array
+        # WAIT!
+        # -----------------------------
+        # what if we just compute the offset on the fly here with each slice?
+        #
+        # no need to cache it or deal with any of this BS?!
+        #
+        # Still need to figure out how to deal with the fact that we may have an
+        # incoming offset that may or may not be replaced by something new.
+        #
+        # this could be handled by a simple rule:
+        #   new offset always takes prescedence over old offset UNLESS new offset is None and old offset is not none
 
-            # This is the case we hit when tilt = 'angle' and nseg > 1
-            for seg in np.arange(phase.shape[0]):
-                phasor = _phasor(amplitude, phase[seg], self.segmask[seg], wavefront.wavelength, slc[seg])
-                wavefront.data.append(data[0][slc[seg]] * phasor)
+        # maybe enforce a simple rule
+        # wavefront with offsets can only be multiplied with Planes that either introduce
+        # NO offset or have the SAME offset
 
-            wavefront.offset = ofst
-        else:
-            # tilt = 'phase' regardless of nseg or tilt = 'angle' and nseg = None
-            wavefront.data = [data[0][s] * _phasor(amplitude, phase, self.mask, wavefront.wavelength, s) for s in slc]
-            wavefront.offset = ofst
+        offset = []
+
+        for d in data:
+            if phase.ndim == 3:
+
+                # we should make some assertions about wavefront.offset here
+
+                # This is the case we hit when tilt = 'angle' and nseg > 1
+                for seg in np.arange(phase.shape[0]):
+                    phasor = _phasor(amplitude, phase[seg], self.segmask[seg], wavefront.wavelength, slc[seg])
+                    wavefront.data.append(d[slc[seg]] * phasor)
+
+                    # we have a few rules for dealing with the slice offset here
+                    ofst = util.slice_offset(slc[seg], amplitude.shape)
+                    
+                    # if wavefront.offset is empty, we will just append the offset for each slice as we go (even if offset is None)
+                    if not wavefront.offset:
+                        offset.append(ofst)
+
+                    # if len(wavefront.offset) == 1
+
+                    #if len(wavefront.offset) == 1:
+
+
+            else:
+
+                # we should make some assertions about wavefront.offset here
+
+                # tilt = 'phase' regardless of nseg or tilt = 'angle' and nseg = None
+                for s in slc:
+                    phasor = _phasor(amplitude, phase, self.mask, wavefront.wavelength, s)
+                    wavefront.data.append(d[s] * phasor)
+
+                    # we have a few rules for dealing with the slice offset here
+                    ofst = util.slice_offset(s, amplitude.shape)
+                    
+                    # if wavefront.offset is empty, we will just append the offset for each slice as we go (even if offset is None)
+                    offset.append(ofst)
+
+
+        if offset:
+             wavefront.offset = offset
 
         # TODO: verify this should really be extend and not append
         wavefront.tilt.extend(tilt)

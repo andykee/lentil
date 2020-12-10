@@ -84,7 +84,6 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
     wave = _standardize_bandpass(wave)
     weight = _standardize_bandpass(weight, default=np.ones_like(wave))
 
-
     if (rebin is True) and (not isinstance(planes[-1], Detector)):
         raise AttributeError('rebin is only supported when propagating to a Detector plane')
 
@@ -259,6 +258,13 @@ def _propagate_mono(planes, wavelength, npix, npix_chip, oversample, tilt):
     return w
 
 
+# TODO:
+# 1. accept flatten parameter
+# 2. accept some sort of chip processing lambda function
+# 3. accept data dtype parameter
+
+# if Image: dtype=np.complex128
+# if Detector: dtype=np.float64,
 def _propagate_pti(w, pixelscale, npix, npix_chip, oversample):
 
     shift = w.shift(pixelscale, oversample)

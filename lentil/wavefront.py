@@ -51,7 +51,7 @@ class Wavefront:
         self.focal_length = np.inf
 
         self.tilt = []  # List of pre-propagation tilts
-        self.offset = [] # List of (r,c) offsets from master array center for cropped DFTs
+        self.offset = []  # List of (r,c) offsets from master array center for cropped DFTs
 
     @property
     def depth(self):
