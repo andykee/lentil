@@ -770,6 +770,14 @@ class Image(Plane):
 
         # TODO: we should construct some version of Plane.multiply() here or just call super().multiply()
 
+        # TODO: remove this before the full v0.5.0 release
+        # NOTE: This is a temporary hack so that we don't have to update models
+        # while we're still flushing out v0.5.0b
+
+        # compute intensity
+        wavefront.data = [np.abs(w)**2 for w in wavefront.data]
+        # back to our regularly scheduled programming
+
         wavefront.planetype = 'image'
 
         return wavefront

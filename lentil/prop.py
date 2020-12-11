@@ -84,13 +84,17 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
     wave = _standardize_bandpass(wave)
     weight = _standardize_bandpass(weight, default=np.ones_like(wave))
 
-    if (rebin is True) and (not isinstance(planes[-1], Detector)):
-        raise AttributeError('rebin is only supported when propagating to a Detector plane')
+    # TODO: this is temporarily commented out for v0.5.0 beta testing
+    # if (rebin is True) and (not isinstance(planes[-1], Detector)):
+    #     raise AttributeError('rebin is only supported when propagating to a Detector plane')
 
     _prepare_planes(planes, wave, npix_chip, oversample, tilt, interp_phasor)
 
     # Create an empty output
-    output_dtype = np.float64 if isinstance(planes[-1], Detector) else np.complex128
+
+    # TODO: temporary image = detector workaround for v0.5.0 beta testing
+    output_dtype = np.float64
+    #output_dtype = np.float64 if isinstance(planes[-1], Detector) else np.complex128
     output_shape = (npix[0]*oversample, npix[1]*oversample)
 
     if flatten:
