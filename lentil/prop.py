@@ -1,5 +1,6 @@
-from operator import itemgetter
 import copy
+from itertools import combinations
+from operator import itemgetter
 
 import numpy as np
 
@@ -102,6 +103,8 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
     else:
         output = np.zeros((len(wave), output_shape[0], output_shape[1]), dtype=output_dtype)
 
+    #_output = np.zeros(output_shape, dtype=np.complex128)
+
     for n, (wl, wt) in enumerate(zip(wave, weight)):
         if wt > 0:
 
@@ -109,6 +112,7 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
 
             if w.planetype == 'image':
 
+                tiles = []
                 for d in range(w.depth):
                     # The shift term is given in terms of (x,y) but we place the chip in
                     # terms of (r,c)
@@ -118,16 +122,30 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
                     data_slice, chip_slice = _chip_insertion_slices(output_shape,
                                                                     (w.data[d].shape[0], w.data[d].shape[1]),
                                                                     shift)
+                    tiles.append(imtile(w.data[d], data_slice, chip_slice))
+
+                tiles = consolidate(tiles)
+
+                for tile in tiles:
+                    if flatten:
+                        output[tile.slice] += np.abs(tile.data)**2 * wt
+                    else:
+                        output[n][tile.slice] = np.abs(tile.data)**2 * wt
+
+
 
                     # Insert the complex result in the output
-                    if data_slice:
-                        if flatten:
-                            output[data_slice] += w.data[d][chip_slice] * wt
-                        else:
-                            output[n][data_slice] = w.data[d][chip_slice] * wt
+                    #if data_slice:
+                    #    _output[data_slice] += w.data[d][chip_slice] * np.sqrt(wt)
 
+                #if flatten:
+                #    output += np.abs(_output)**2
+                #else:
+                #    output[n] = np.abs(_output)**2
 
+                #_output[:] = 0
 
+    #output = np.abs(output)**2
 
             # At this point w.data should always have len == 1
             #if flatten:
@@ -418,3 +436,72 @@ def _chip_insertion_slices(npix_canvas, npix_chip, shift):
     else:
         return (slice(canvas_top, canvas_bottom), slice(canvas_left, canvas_right)), \
                (slice(chip_top, chip_bottom), slice(chip_left, chip_right))
+
+
+class imtile:
+    def __init__(self, data, global_slice, data_slice):
+        self._data = [data]
+        self._data_slice = [data_slice]
+        self._global_slice = [global_slice]
+        self._slice = global_slice
+
+    def join(self, imtile):
+        self._data = [*self._data, *imtile._data]
+        self._data_slice = [*self._data_slice, *imtile._data_slice]
+        self._global_slice = [*self._global_slice, *imtile._global_slice]
+
+        # update the bounding slice
+        self._slice = bounding_slice(self._slice, imtile.slice)  # the full output tile slice
+
+    @property
+    def slice(self):
+        return self._slice
+
+    @property
+    def _local_slice(self):
+        return [local_slice(self._slice, slc) for slc in self._global_slice]
+
+    @property
+    def data(self):
+        # this creates the output array and places everything
+
+        data = np.zeros((self.slice[0].stop - self.slice[0].start,
+                         self.slice[1].stop - self.slice[1].start),
+                        dtype=np.complex128)
+
+        # compute local slices based on slice and global slice
+
+        _local_slice = self._local_slice
+
+        for n in range(len(self._data)):
+            data[_local_slice[n]] += self._data[n][self._data_slice[n]]
+
+        return data
+
+
+def overlap(a, b):
+    return a[0].start <= b[0].stop and a[0].stop >= b[0].start and a[1].start <= b[1].stop and a[1].stop >= b[1].start
+
+
+def bounding_slice(a, b):
+    rmin = min(a[0].start, b[0].start)
+    rmax = max(a[0].stop, b[0].stop)
+    cmin = min(a[1].start, b[1].start)
+    cmax = max(a[1].stop, b[1].stop)
+    return slice(rmin, rmax), slice(cmin, cmax)
+
+
+def local_slice(output_slice, chip_slice):
+    row_slc = chip_slice[0].start - output_slice[0].start, chip_slice[0].stop - output_slice[0].start
+    col_slc = chip_slice[1].start - output_slice[1].start, chip_slice[1].stop - output_slice[1].start
+    return slice(*row_slc), slice(*col_slc)
+
+
+def consolidate(tiles):
+    for m, n in combinations(range(len(tiles)), 2):
+        if overlap(tiles[m].slice, tiles[n].slice):
+            tiles[m].join(tiles[n])
+            tiles.pop(n)
+            return consolidate(tiles)
+
+    return tiles

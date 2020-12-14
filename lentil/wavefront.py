@@ -42,6 +42,8 @@ class Wavefront:
         self.planetype = planetype
 
         # All new Wavefront objects represent a perfect plane wave
+        # TODO: default shape=1, make sure we create separate list entries of shape
+        # has ndim = 3
         if shape:
             self.data = [np.ones((shape[0], shape[1]), dtype=np.complex)]
         else:

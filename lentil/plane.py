@@ -571,6 +571,8 @@ class Plane:
         # this could be handled by a simple rule:
         #   new offset always takes prescedence over old offset UNLESS new offset is None and old offset is not none
 
+
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # maybe enforce a simple rule
         # wavefront with offsets can only be multiplied with Planes that either introduce
         # NO offset or have the SAME offset
@@ -612,7 +614,8 @@ class Plane:
                     ofst = util.slice_offset(s, amplitude.shape)
 
                     # if wavefront.offset is empty, we will just append the offset for each slice as we go (even if offset is None)
-                    offset.append(ofst)
+                    if not wavefront.offset:
+                        offset.append(ofst)
 
 
         if offset:
@@ -628,7 +631,7 @@ def _phasor(amplitude, phase, mask, wavelength, slc=Ellipsis):
     amp = amplitude if amplitude.size == 1 else amplitude[slc]
     ph = phase if phase.size == 1 else phase[slc]
     msk = mask if mask.size == 1 else mask[slc]
-    return amp * util.expc(2*np.pi*ph/wavelength) * msk
+    return (amp * util.expc(2*np.pi*ph/wavelength)) * msk
 
 
 class Pupil(Plane):
@@ -770,14 +773,6 @@ class Image(Plane):
 
         # TODO: we should construct some version of Plane.multiply() here or just call super().multiply()
 
-        # TODO: remove this before the full v0.5.0 release
-        # NOTE: This is a temporary hack so that we don't have to update models
-        # while we're still flushing out v0.5.0b
-
-        # compute intensity
-        wavefront.data = [np.abs(w)**2 for w in wavefront.data]
-        # back to our regularly scheduled programming
-
         wavefront.planetype = 'image'
 
         return wavefront
@@ -787,7 +782,7 @@ class Detector(Image):
 
     def multiply(self, wavefront):
         # compute intensity
-        wavefront.data = [np.abs(w)**2 for w in wavefront.data]
+        #wavefront.data = [np.abs(w)**2 for w in wavefront.data]
         wavefront.planetype = 'image'
         return wavefront
 
