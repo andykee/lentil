@@ -122,7 +122,8 @@ def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2
                     data_slice, chip_slice = _chip_insertion_slices(output_shape,
                                                                     (w.data[d].shape[0], w.data[d].shape[1]),
                                                                     shift)
-                    tiles.append(imtile(w.data[d], data_slice, chip_slice))
+                    if data_slice:
+                        tiles.append(imtile(w.data[d], data_slice, chip_slice))
 
                 tiles = consolidate(tiles)
 
