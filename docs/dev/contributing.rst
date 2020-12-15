@@ -5,14 +5,14 @@ Contributing to Lentil
 **********************
 
 .. note::
-    
+
     This contribution guide is very heavily influenced by (and in many places
-    directly copied from) the `Pandas development guide 
+    directly copied from) the `Pandas development guide
     <https://pandas.pydata.org/docs/development/index.html>`_.
 
 Bug reports and enhancement requests
 
-Bug reports and enhancement requests should be filed using Lentil's 
+Bug reports and enhancement requests should be filed using Lentil's
 `issue tracker <https://github.com/andykee/lentil/issues>`__.
 
 Working with the source code
@@ -21,18 +21,18 @@ Working with the source code
 Version control, Git, and GitHub
 --------------------------------
 Lentil's source code is hosted on `GitHub <https://github.com/andykee/lentil>`_.
-To contribute you'll need `an account <https://github.com/signup/free>`_. Local 
-version control is handled by `Git <https://git-scm.com/>`_. 
+To contribute you'll need `an account <https://github.com/signup/free>`_. Local
+version control is handled by `Git <https://git-scm.com/>`_.
 
-`GitHub has instructions <https://help.github.com/set-up-git-redirect>`_ for 
-installing Git, setting up your SSH key, and configuring Git. All these steps 
-need to be completed before you can work seamlessly between your local repository 
+`GitHub has instructions <https://help.github.com/set-up-git-redirect>`_ for
+installing Git, setting up your SSH key, and configuring Git. All these steps
+need to be completed before you can work seamlessly between your local repository
 and GitHub.
 
 Some useful resources for learning Git:
 
 * `Github Docs <https://docs.github.com/en>`_
-* Matthew Brett's `Pydagouge <http://matthew-brett.github.io/pydagogue/git.html>`_ 
+* Matthew Brett's `Pydagouge <http://matthew-brett.github.io/pydagogue/git.html>`_
   notes on Git
 * `Oh Shit, Git? <https://ohshitgit.com>`_ for when things go horribly wrong
 
@@ -40,19 +40,19 @@ Some useful resources for learning Git:
 
 Forking
 -------
-You will need your own fork to work on the code. Go to the Lentil GitHub page and 
+You will need your own fork to work on the code. Go to the Lentil GitHub page and
 hit the ``Fork`` button. You will want to clone your fork to your machine::
 
     git clone https://github.com/your-user-name/lentil.git lentil-yourname
     cd lentil-yourname
     git remote add upstream https://github.com/andykee/lentil.git
 
-This creates the directory `lentil-yourname` and connects your repository to the 
+This creates the directory `lentil-yourname` and connects your repository to the
 upstream (main project) Lentil repository.
 
 Creating a Python environment
 -----------------------------
-To test out code changes, you’ll need to build install from source, which 
+To test out code changes, you’ll need to build install from source, which
 requires a suitable Python environment. To create an isolated Lentil development
 environment:
 
@@ -94,7 +94,7 @@ Contributing to the code base
 
 Creating a branch
 -----------------
-You want your master branch to reflect only production-ready code, so create a feature 
+You want your master branch to reflect only production-ready code, so create a feature
 branch for making your changes. For example::
 
     git branch shiny-new-feature
@@ -104,18 +104,18 @@ The above can be simplified to::
 
     git checkout -b shiny-new-feature
 
-This changes your working directory to the shiny-new-feature branch. Keep any changes 
-in this branch specific to one bug or feature so it is clear what the branch brings to 
-Lentil. You can have many shiny-new-features and switch in between them using the git 
+This changes your working directory to the shiny-new-feature branch. Keep any changes
+in this branch specific to one bug or feature so it is clear what the branch brings to
+Lentil. You can have many shiny-new-features and switch in between them using the git
 checkout command.
 
-When creating this branch, make sure your master branch is up to date with the latest 
+When creating this branch, make sure your master branch is up to date with the latest
 upstream master version. To update your local master branch, you can do::
 
     git checkout master
     git pull upstream master --ff-only
 
-When you want to update the feature branch with changes in master after you created the 
+When you want to update the feature branch with changes in master after you created the
 branch, check the section on :ref:`updating a PR <contributing.update-pr>`.
 
 .. _contributing.commit-code:
@@ -137,7 +137,7 @@ Doing 'git status' again should give something like::
     #       modified:   /relative/path/to/file-you-added.py
     #
 
-Finally, commit your changes to your local repository with an explanatory message. 
+Finally, commit your changes to your local repository with an explanatory message.
 Lentil uses a convention for commit message prefixes and layout.  Here are
 some common prefixes along with general guidelines for when to use them:
 
@@ -163,9 +163,9 @@ Now you can commit your changes in your local repository::
 
 Squashing commits
 -----------------
-It's possible to combine (or squash) a number of smaller commits into one larger 
-commit. This helps to keep the project history more concise and readable. The 
-easiest wat to squash commits is by using interactive rebase. To consider the 
+It's possible to combine (or squash) a number of smaller commits into one larger
+commit. This helps to keep the project history more concise and readable. The
+easiest wat to squash commits is by using interactive rebase. To consider the
 most recent ``n`` commits::
 
     git rebase -i HEAD~<n>
@@ -205,7 +205,7 @@ Review your code
 
 When you're ready to ask for a code review, file a pull request. Before you do, once
 again make sure that you have followed all the guidelines outlined in this document
-regarding code style, tests, and documentation. You should also double check your 
+regarding code style, tests, and documentation. You should also double check your
 branch changes against the branch it was based on:
 
 #. Navigate to your repository on GitHub -- https://github.com/your-user-name/lentil
@@ -311,29 +311,29 @@ The tests can then be run directly inside your Git clone by typing::
 
 Documenting your code
 ---------------------
-Changes should be reflected in the release notes located in ``CHANGES.rst``. This 
-file contains an ongoing change log for each release. Add an entry to this file to 
-document your fix, enhancement or (unavoidable) breaking change. Make sure to include 
-the GitHub issue number when adding your entry (using ``:issue:`1234``` where ``1234`` 
+Changes should be reflected in the release notes located in ``CHANGES.rst``. This
+file contains an ongoing change log for each release. Add an entry to this file to
+document your fix, enhancement or (unavoidable) breaking change. Make sure to include
+the GitHub issue number when adding your entry (using ``:issue:`1234``` where ``1234``
 is the issue/pull request number).
 
-If your code is an enhancement, it is most likely necessary to add usage examples to 
-the existing documentation. Further, to let users know when this feature was added, 
+If your code is an enhancement, it is most likely necessary to add usage examples to
+the existing documentation. Further, to let users know when this feature was added,
 the ``versionadded`` directive is used. The sphinx syntax for that is::
 
   .. versionadded:: 1.1.0
 
-This will put the text New in version 1.1.0 wherever you put the sphinx directive. This 
-should also be put in the docstring when adding a new function or method or a new keyword 
+This will put the text New in version 1.1.0 wherever you put the sphinx directive. This
+should also be put in the docstring when adding a new function or method or a new keyword
 argument.
 
 Building the documentation
 --------------------------
 
-.. note:: 
+.. note::
 
   Building the documentation requires `Sphinx <https://www.sphinx-doc.org/en/master/>`_
-  and the `PyData Sphinx Theme 
+  and the `PyData Sphinx Theme
   <https://pydata-sphinx-theme.readthedocs.io/en/latest/index.html>`_.
 
 To build the documentation, navigate to your local ``docs/`` directory and run::
@@ -345,3 +345,33 @@ The HTML documentation will be written to ``docs/_build/html``.
 If you want to do a full clean build, do::
 
     make clean && make html
+
+Publishing to PyPi
+==================
+
+Prepare the release
+-------------------
+1. Increment the version number appropriately in `lentil/__init__.py
+   <https://github.com/andykee/lentil/blob/master/lentil/__init__.py>`_ according to
+   `PEP 440 <https://www.python.org/dev/peps/pep-0440/>`_.
+2. Document contents of the release in `CHANGES.rst
+   <https://github.com/andykee/lentil/blob/master/CHANGES.rst>`_
+3. Commit the changes from above on the master branch with a commit message equal to the
+   short version name (i.e. ``v0.3.2`` or ``v0.5.0b2``).
+4. Push the updated master branch and create a new release.
+
+Build the release
+-----------------
+.. code:: bash
+
+    $ python setup.py sdist bdist_wheel
+
+Upload the release
+------------------
+.. code:: bash
+
+    $ twine upload dist/*
+
+.. note::
+
+    Only core-team members are able to publish new releases to PyPi.
