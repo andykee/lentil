@@ -538,7 +538,7 @@ class Plane:
             wavefront.pixelscale = self.pixelscale
         else:
             if self.pixelscale is not None:
-                assert wavefront.pixelscale == self.pixelscale
+                assert all(wavefront.pixelscale == self.pixelscale)
 
         # TODO: could move these back inside the cached attribute construct to make it
         # easier for users to redefint multiply() in subclasses - i.e. if these attributes
