@@ -8,4 +8,4 @@ from lentil import util
 from lentil import wfe
 from lentil import zernike
 
-__version__ = '0.5.0b3'
+__version__ = '0.5.0b4'
