@@ -593,8 +593,11 @@ class Plane:
                     ofst = util.slice_offset(slc[seg], amplitude.shape)
 
                     # if wavefront.offset is empty, we will just append the offset for each slice as we go (even if offset is None)
-                    if not wavefront.offset:
+                    #if not wavefront.offset:
+                    if ofst:
                         offset.append(ofst)
+                    else:
+                        offset.append(None)
 
                     # if len(wavefront.offset) == 1
 
@@ -614,11 +617,14 @@ class Plane:
                     ofst = util.slice_offset(s, amplitude.shape)
 
                     # if wavefront.offset is empty, we will just append the offset for each slice as we go (even if offset is None)
-                    if not wavefront.offset:
+                    # if not wavefront.offset:
+                    if ofst:
                         offset.append(ofst)
+                    else:
+                        offset.append(None)
 
-
-        if offset:
+        if not wavefront.offset or not all(wavefront.offset):
+            # of wavefront.offset is [] or a list of [None]:
              wavefront.offset = offset
 
         # TODO: verify this should really be extend and not append
