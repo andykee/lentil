@@ -5,8 +5,8 @@ Coordinate System
 .. |Pupil| replace:: :class:`~lentil.Pupil`
 .. |Image| replace:: :class:`~lentil.Image`
 
-Lentil adopts the widely used convention of aligning the z-axis along the direction 
-of light propagation through an optical system. By the right hand rule, it follows that 
+Lentil adopts the widely used convention of aligning the z-axis along the direction
+of light propagation through an optical system. By the right hand rule, it follows that
 the remaining axes are oriented as shown in the figure below:
 
 .. image:: /_static/img/coordinate_system.png
@@ -28,9 +28,10 @@ positive x-axis pointing to the right and the positive y-axis pointing up.
     :width: 700px
     :align: center
 
-Note that Matplotlib's ``imshow()`` method (and MATLAB's ``imagesc()`` method) places the
-origin in the upper left corner of the plotted image by default. This doesn't necessarily 
-present a problem as long as results are consistently plotted "incorrectly", but to be 
-completely correct (particularly when comparing model-generated images against intuition 
-or measured data) the origin should be located in the lower left corner of the displayed 
-image.
+Note that Matplotlib's ``imshow()`` method (and MATLAB's ``imagesc()`` method) places
+the origin in the upper left corner of the plotted image by default. The result is that
+the direction of y-axis is flipped relative to Lentil's coordinate system. This doesn't
+necessarily present a problem as long as results are consistently plotted "incorrectly",
+but to be completely correct (particularly when comparing model-generated images against
+intuition or measured data) the origin should be located in the lower left corner of the
+displayed image.

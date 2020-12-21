@@ -1,3 +1,5 @@
+.. _development:
+
 ***********
 Development
 ***********
@@ -9,10 +11,10 @@ Development
 
 .. toctree::
     :maxdepth: 3
-    
+
     tech_notes/index
 
 .. toctree::
     :maxdepth: 1
-    
-    changes 
+
+    changes

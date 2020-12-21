@@ -1,9 +1,23 @@
+.. _user-guide:
+
 **********
 User Guide
 **********
 
-The User Guide provides documentation for all of Lentil organized by topic area. Each
-section introduces a topic and discusses how Lentil approaches the subject.
+.. describing optical systems
+..    planes
+..    coordinate system
+..    wavefront errors
+.. modeling diffraction
+.. radiometry
+.. image sensors (incl. image artifacts)
+.. model patterns
+.. optimizing performance
+.. external interfaces
+.. algorithm verification
+
+The User Guide provides documentation for all of Lentil's features and capabilities. It
+is generally organized by topic area.
 
 Brand new users should start with the :ref:`package-overview` and :ref:`tutorial`.
 
@@ -21,14 +35,11 @@ Detailed information on any specific class or method can be found in the :ref:`a
 .. toctree::
     :maxdepth: 2
 
-    planes
+    optical_systems/index
     diffraction
-    wavefront_error
-    coordinate_system
     radiometry
-    image_sensors
-    imaging_artifacts
+    image_sensors/index
     ../patterns/index
-    performance    
+    performance
     external/index
     verification/index

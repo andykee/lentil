@@ -8,3 +8,4 @@ Getting started
     install
     overview
     tutorial
+    next_steps

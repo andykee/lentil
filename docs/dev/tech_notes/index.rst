@@ -1,3 +1,5 @@
+.. _technical-notes:
+
 ***************
 Technical Notes
 ***************

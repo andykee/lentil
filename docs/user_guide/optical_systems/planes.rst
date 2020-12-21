@@ -1,3 +1,5 @@
+.. _user-guide.optical-planes:
+
 **************
 Optical Planes
 **************
