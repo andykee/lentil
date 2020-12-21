@@ -4,18 +4,6 @@
 User Guide
 **********
 
-.. describing optical systems
-..    planes
-..    coordinate system
-..    wavefront errors
-.. modeling diffraction
-.. radiometry
-.. image sensors (incl. image artifacts)
-.. model patterns
-.. optimizing performance
-.. external interfaces
-.. algorithm verification
-
 The User Guide provides documentation for all of Lentil's features and capabilities. It
 is generally organized by topic area.
 
@@ -29,14 +17,15 @@ Detailed information on any specific class or method can be found in the :ref:`a
     by Lentil.
 
     This documentation does not attempt to provide a comprehensive reference to these
-    topics but does provide links and references to supporting materials where applicable.
+    topics but does provide links and references to supporting materials where
+    applicable.
 
 
 .. toctree::
     :maxdepth: 2
 
     optical_systems/index
-    diffraction
+    diffraction/index
     radiometry
     image_sensors/index
     ../patterns/index

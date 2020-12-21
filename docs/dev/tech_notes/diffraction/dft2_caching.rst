@@ -79,9 +79,6 @@ the calculation of ``E1`` and ``E2`` for when ``shift`` does not vary.
 
         return F
 
-Benchmarks
-----------
-
 
 References
 ----------
