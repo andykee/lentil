@@ -8,11 +8,12 @@ The :ref:`user-guide` provides comprehensive documentation for all of Lentil's f
 and capabilities. It is generally organized around topic areas, with the following
 subjects being particularly useful for newcomers:
 
-* The section on :ref:`user-guide.optical-planes` describes
-* Modeling Diffraction
-* Model Patterns
-
-
+* The section on :ref:`user-guide.optical-systems` discusses how Lentil represents
+  optical systems
+* The section on :ref:`user-guide.diffraction` describes how Lentil numerically models
+  diffraction effects
+* The :ref:`patterns` section provides code examples for solving commonly found use
+  cases
 
 The :ref:`api` provides a detailed description of the Lentil API syntax. It gives
 specifics on how to use Lentil's classes and functions (parameter names and types,

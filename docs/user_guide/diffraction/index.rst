@@ -1,4 +1,4 @@
-.. _diffraction:
+.. _user-guide.diffraction:
 
 ********************
 Modeling Diffraction

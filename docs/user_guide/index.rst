@@ -26,9 +26,9 @@ Detailed information on any specific class or method can be found in the :ref:`a
 
     optical_systems/index
     diffraction/index
-    radiometry
+    sources
     image_sensors/index
     ../patterns/index
     performance
-    external/index
+    matlab
     verification/index

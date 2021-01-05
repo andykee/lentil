@@ -1,0 +1,35 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{textcomp}
+
+\begin{document}
+
+\begin{tikzpicture}
+
+    \draw[gray, -latex] (-0.75,1) -- (9.5,1);
+    \draw[dashed] (-0.75,0.1) -- (0,0.1);
+    \draw[dashed] (-0.75,1.9) -- (0,1.9);
+    
+    \draw[fill=black] (0,0) rectangle (0.1,2);
+    \node[below] at (0.05,0) {\begin{tabular}{c}Secondary support\\structure\end{tabular}};
+
+    \draw[dashed] (0.1,0.1) -- (3,0.1);
+    \draw[dashed] (0.1,1.9) -- (3,1.9);
+
+    \draw[fill=black] (3,0) rectangle (3.1,2);
+    \node[below] at (3.05,0) {\begin{tabular}{c}Primary\\mirror\end{tabular}};
+
+    \draw[dashed] (3.1,0.1) -- (6,0.7);
+    \draw[dashed] (3.1,1.9) -- (6,1.3);
+    
+    \draw[fill=black] (6,0.5) rectangle (6.1,1.5);
+    \node[below] at (6.05,0) {\begin{tabular}{c}Secondary\\mirror\end{tabular}};
+    
+    \draw[dashed] (6.1,0.7) -- (9,1);
+    \draw[dashed] (6.1,1.3) -- (9,1);
+
+    \draw[fill=black] (9,0.7) rectangle (9.05,1.3);
+    \node[below] at (9.025,0) {\begin{tabular}{c}Focal\\plane\end{tabular}};
+
+\end{tikzpicture}
+\end{document}

@@ -15,6 +15,8 @@ Optical Planes
     lentil.Pupil
     lentil.Image
 
+.. _api-lentil.special-planes:
+
 Special Planes
 ==============
 .. autosummary::

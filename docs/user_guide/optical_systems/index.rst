@@ -1,3 +1,4 @@
+.. _user-guide.optical-systems:
 
 **************************
 Describing Optical Systems
@@ -10,4 +11,5 @@ Describing Optical Systems
     coordinate_system
     planes
     wavefront_error
-    examples
+    segmented
+    custom

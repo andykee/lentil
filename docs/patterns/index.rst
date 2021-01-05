@@ -16,13 +16,16 @@ General
 Integration
 ===========
 
-Optics
+.. _patterns.planes:
+
+Planes
 ======
 .. toctree::
     :maxdepth: 1
 
-    optics/filter_wheel
-    optics/rb_element
+    planes/filter_wheel
+    planes/rb_element
+    planes/translation_stage
 
 Radiometry
 ==========
