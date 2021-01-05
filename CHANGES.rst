@@ -3,7 +3,7 @@ Release notes
 
 v0.5.0
 ------
-Released 2020
+Released 2021
 
 * Propagations with ``tilt='angle'`` have tilt projected out of each
   plane once before the entire propagation rather than at each monochromatic
@@ -29,6 +29,8 @@ Released 2020
 * New function ``Plane.slice()`` for computing avaliable slices from the plane
   attributes to speed up propagation performance
 * New ``Detector()`` plane that returns intensity
+* Update ``zernike.zernike_coordinates()`` to automatically compute shift that 
+  locates the origin at the mask centroid if no shift is provided.
 
 v0.4.1
 ------

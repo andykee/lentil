@@ -394,10 +394,33 @@ def zernike_index(j):
     return m, n
 
 
-def zernike_coordinates(mask, shift=(0,0), rotate=0):
-    """Compute the Zernike coordinate system for a given mask."""
+def zernike_coordinates(mask, shift=None, rotate=0):
+    """Compute the Zernike coordinate system for a given mask.
+    
+    Parameters
+    ----------
+    mask : array_like
+        Binary mask defining the extent to compute the Zernike polynomial 
+        over.
+    
+    shift : (2,) array_like or None, optional
+        x, y shift of the coordinate system origin in pixels. If None 
+        (default), shift is computed automatically to locate the origin at the
+        mask centroid.
+
+    rotate: float, optional
+        Angle to rotate coordinate system by in degrees. rotate is specified 
+        relative to the x-axis. Default is 0.
+
+    """
 
     mask = np.asarray(mask)
+
+    if shift is None:
+        center = np.asarray(mask.shape)/2
+        centroid = util.centroid(mask)
+        shift = (centroid[1]-center[1], centroid[0]-center[0])
+
 
     yy, xx = util.mesh(mask.shape, shift)
 
