@@ -1,3 +1,5 @@
+.. _user-guide.coordinate-system:
+
 *****************
 Coordinate System
 *****************

@@ -109,10 +109,33 @@ Normalization
 Defining custom coordinates
 ---------------------------
 By default, all of Lentil's Zernike functions place the center of the coordinate system
-at the centroid of the supplied mask. This works as expected for the vast majority of 
+at the centroid of the supplied mask with its axes aligned with Lentil's 
+:ref:`user-guide.coordinate-system`. This works as expected for the vast majority of 
 needs, but in some cases it may be desirable to manually define the coordinate system. 
 This is accomplished by using :func:`zernike.zernike_coordinates` to compute ``rho`` and
-``theta``, and providing these definitions to the appropriate Zernike function.
+``theta``, and providing these definitions to the appropriate Zernike function. For 
+example, if we have an off-centered sub-aperture but wish to compute focus relative to 
+the center of the defined array:
+
+.. code-block:: pycon
+
+    >>> import matplotlib.pyplot as plt
+    >>> import lentil as le
+    >>> mask = le.util.circlemask((256,256), radius=50, shift=(0,60))
+    >>> rho, theta = le.zernike.zernike_coordinates(mask, shift=(0,0))
+    >>> z4 = le.zernike.zernike(mask, 4, rho=rho, theta=theta)
+    >>> plt.imshow(z4)
+
+If we wish to align a tilt mode with one side of a hexagon:
+
+.. code-block:: pycon
+
+    >>> import matplotlib.pyplot as plt
+    >>> import lentil as le
+    >>> mask = le.util.hexagon((256,256), radius=128)
+    >>> rho, theta = le.zernike.zernike_coordinates(mask, shift=(0,0), rotate=60)
+    >>> z2 = le.zernike.zernike(mask, 2, rho=rho, theta=theta)
+    >>> plt.imshow(z2)
 
 Linear Influence Functions
 ==========================
