@@ -105,6 +105,42 @@ If you don't love ``einsum``, it's possible to achieve the same result with Nump
 
 Normalization
 -------------
+Each of Lentil's Zernike functions accepts a ``normalize`` parameter. If ``normalize``
+is flase (the default), the raw Zernike mode is returned. Each mode will approximately
+span [-1 1] although this shouldn't be relied upon because of the discrete sampling of
+the result. If ``normalize`` is true, the Zernike mode will be normalized so that its 
+standard deviation equals 1. 
+
+Normalization becomes important when trying to achieve a specific error magnitude, 
+whether it be in terms of RMS or peak to valley. To acihieve a specific error in terms
+of RMS, Zernike modes should be computed with ``normalize=True`` before multiplying by
+the error magnitude:
+
+.. code-block:: pycon
+
+    >>> import lentil as le
+    >>> import numpy as np
+    >>> mask = le.util.circlemask((256,256), 128)
+    >>> z4 = 100e-9 * le.zernike.zernike(mask, mode=4, normalize=True)
+    >>> np.std(z4[np.nonzero(z4)])
+
+    9.986295346152438e-08
+
+To achieve a specific error in terms of peak to valley, Zernike modes should be computed
+and normalized separately. The separate normalization step should be performed to ensure
+the discretely sampled mode spans [-0.5 0.5] before multiplying by the error magnitude:
+
+.. code-block:: pycon
+
+    >>> import lentil as le
+    >>> import numpy as np
+    >>> mask = le.util.circlemask((256,256), 128)
+    >>> z4 = le.zernike.zernike(mask, mode=4, normalize=False)
+    >>> z4 /= np.max(z4) - np.min(z4)
+    >>> z4 *= 100e-9
+    >>> np.max(z4) - np.min(z4)
+
+    1e-07
 
 Defining custom coordinates
 ---------------------------
@@ -137,8 +173,41 @@ If we wish to align a tilt mode with one side of a hexagon:
     >>> z2 = le.zernike.zernike(mask, 2, rho=rho, theta=theta)
     >>> plt.imshow(z2)
 
-Linear Influence Functions
-==========================
+Sensitivity Matrices
+====================
+The effects of optical element rigid body perturbations and surface figure errors in the 
+exit pupil of an optical system are commonly captured using linear sensitivity matrices. 
+These linearized models can be used in place of a full ray-tracing model for representing
+small perturbations and errors. In general, a linear wavefront error model has the form:
+
+.. math::
+
+    \mathbf{w} = \mathbf{S}\Delta\mathbf{x}
+
+where :math:`\textbf{w}` is the wavefront error map, :math:`S` is the sensitivity 
+matrix, and :math:`\Delta\mathbf{x}` is a vector of perturbations relative to the system 
+state about which linearization occurred. 
+
+The :math:`\mathbf{S}` matrix will have either two or three dimensions. For a three-
+dimensional sensitivity matrix, the wavefront error map is computed by multiplying 
+:math:`\mathbf{S}`  by the :math:`\Delta\mathbf{x}` vector and summing along the first 
+dimension:
+
+.. code-block:: pycon
+
+    >>> w = np.einsum('ijk,i->jk', S, dx)
+
+For a two-dimensional sensitivity matrix, each mode is assumed to have been unraveled 
+into a vector. The wavefront error is computed by taking the dot product of 
+:math:`\mathbf{S}` and :math:`\Delta\mathbf{x}` and reshaping the resulting vector into a
+two-dimensional error map. For a sensitivity matrix representing a 256 x 256 pixel 
+wavefront map:
+
+.. code-block:: pycon
+
+    >>> w = np.dot(S, dx)
+    >>> w.reshape((256,256))
+
 
 Static Errors
 =============

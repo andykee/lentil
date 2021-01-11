@@ -149,7 +149,6 @@ Discretely sampled pupil attributes can also be specified:
     All optional Pupil attributes have sensible default values that have no effect on
     propagations when not defined.
 
-
 Image
 =====
 Lentil's |Image| plane is used to either manipulate or view a wavefront at a focal point
@@ -161,8 +160,10 @@ of the following can be specified:
   ensure the results are at least Nyquist sampled.
 * :attr:`~lentil.Image.shape` - Defines the shape of the image plane. If not provided,
   the image plane will grow as necessary to capture all data.
-* :attr:`~lentil.Image.amplitude` -
-* :attr:`~lentil.Image.phase` - 
+* :attr:`~lentil.Image.amplitude` - Definers the relative electric field amplitude 
+  transmission through the image plane.
+* :attr:`~lentil.Image.phase` - Defines the electric field phase shift that a wavefront
+  experiences when propagating through the image plane.
 
 Detector
 ========
@@ -188,8 +189,8 @@ operation. Details of this algorithm are available in the :ref:`technical-notes`
   field information. Because of this, |Detector| planes can only be used as the final 
   plane in a Lentil model.
 
-Dispersion and Chromatic Aberration
-===================================
+Representing Dispersion and Chromatic Aberration
+================================================
 
 
 Active Optics and Deformable Mirrors
