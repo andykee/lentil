@@ -68,8 +68,6 @@ def zernike(mask, index, normalize=True, rho=None, theta=None):
     if m == 0:
         if n == 0:
             Z = mask
-            if normalize:
-                Z = Z/np.std(Z[np.nonzero(Z)])
         else:
             if normalize:
                 Z = np.sqrt(n+1) * R(m, n, rho) * mask
