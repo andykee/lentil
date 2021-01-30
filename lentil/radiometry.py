@@ -3,6 +3,8 @@ import copy
 import numpy as np
 import scipy
 
+# Charlotte - We love you and will miss you forever. You were the light of our lives.
+
 __all__ = ['Spectrum', 'Blackbody', 'Material', 'path_emission', 'path_transmission',
            'planck_radiance', 'planck_exitance', 'vegaflux']
 
