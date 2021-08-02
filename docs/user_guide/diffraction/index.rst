@@ -10,6 +10,5 @@ Modeling Diffraction
     overview
     sampling
     tilt
-    dispersion
     segmented
     fresnel

@@ -245,6 +245,8 @@ class Plane:
 
         Parameters
         ----------
+        phase : ndarray
+
         scale : float
             Scaling factor. Scale factors less than 1 will shrink the amplitude. Scale
             factors greater than 1 will grow the amplitude.
@@ -270,6 +272,8 @@ class Plane:
 
         Parameters
         ----------
+        mask : ndarray
+
         scale : float
             Scaling factor. Scale factors less than 1 will shrink the amplitude. Scale
             factors greater than 1 will grow the amplitude.
@@ -282,7 +286,7 @@ class Plane:
         """
         mask = util.rescale(mask, scale=scale, shape=None, mask=None, order=0,
                             mode='constant', unitary=False)
-        #mask[mask < np.finfo(mask.dtype).eps] = 0
+        # mask[mask < np.finfo(mask.dtype).eps] = 0
         mask[np.nonzero(mask)] = 1
         return mask.astype(np.int)
 
@@ -295,6 +299,8 @@ class Plane:
 
         Parameters
         ----------
+        segmask : ndarray
+
         scale : float
             Scaling factor. Scale factors less than 1 will shrink the amplitude. Scale
             factors greater than 1 will grow the amplitude.
@@ -361,7 +367,7 @@ class Plane:
         Returns
         -------
         phase_no_tilt : ndarray
-            ``phase`` with tilt fit and removed. If ``len(ptt_vector)//3 > 1``, the
+            ``phase`` with tilt fitted and removed. If ``len(ptt_vector)//3 > 1``, the
             returned phase array will contain one entry for each triad in ``ptt_vector``.
 
         tilt : list
@@ -507,25 +513,10 @@ class Plane:
         wavefront : :class:`~lentil.wavefront.Wavefront` object
             Wavefront to be multiplied
 
-        tilt : {'phase', 'angle'}, optional
-            * 'phase' - any tilt present in the Element phase contribution is
-              included in the Element*Wavefront product. (Default)
-            * 'angle' - any tilt present in the Element phase is removed before
-              computing the Element*Wavefront product. The equivalent angular
-              tilt is included in the Wavefront's
-              :attr:`~lentil.Wavefront.tilt` attribute.
-
         Note
         ----
-        It is possible to customize the way multiplication is performed in this
-        class and any subclasses by reimplementing any of the following methods:
-
-        * ``_multiply_phase`` is called when :attr:`tilt` is 'phase'
-        * ``_multiply_angle`` is called when :attr:`tilt` is 'angle'
-
-        In each case, the interface is defined as follows:
-
-        ``wavefront = _multiply_method(amplitude, phase, wavefront)``
+        It is possible to customize the way multiplication is performed by
+        creating a subclass and overloading its ``multiply`` method.
 
         Returns
         -------
@@ -540,10 +531,14 @@ class Plane:
             if self.pixelscale is not None:
                 assert all(wavefront.pixelscale == self.pixelscale)
 
-        # TODO: could move these back inside the cached attribute construct to make it
-        # easier for users to redefint multiply() in subclasses - i.e. if these attributes
-        # are automatically grabbed from the cache if they exist, the user won't have to
-        # recreate the block of code below in a subclasses multiply() method
+        # TODO: functionalize grabbing cached attributes from self.cache
+        # Want to make overloading multiply() easier. This could probably be
+        # done in one of two ways:
+        #   1. Write a function that returns a tuple of cached values, handling
+        #      the defaults along the way
+        #   2. It might be possible to use a defaultdict for self.cache that
+        #      take care of the defaulting automatically?
+
         amplitude = self.cache['amplitude'] if 'amplitude' in self.cache else self.amplitude
         phase = self.cache['phase'] if 'phase' in self.cache else self.phase
         tilt = self.cache['tilt'] if 'tilt' in self.cache else self.tilt
@@ -552,6 +547,8 @@ class Plane:
 
         data = wavefront.data  # grab a pointer to the existing wavefront.data
         wavefront.data = []
+
+        # TODO: need to develop a strategy for handling pre-existing offsets
 
         # wavefront.offset = []
         # then below, under wavefront.data.append:
@@ -599,16 +596,10 @@ class Plane:
                     else:
                         offset.append(None)
 
-                    # if len(wavefront.offset) == 1
-
-                    #if len(wavefront.offset) == 1:
-
-
             else:
 
                 # we should make some assertions about wavefront.offset here
 
-                # tilt = 'phase' regardless of nseg or tilt = 'angle' and nseg = None
                 for s in slc:
                     phasor = _phasor(amplitude, phase, self.mask, wavefront.wavelength, s)
                     wavefront.data.append(d[s] * phasor)

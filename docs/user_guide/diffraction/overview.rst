@@ -11,25 +11,25 @@ This section of the User Guide assumes an undergraduate-level understanding of
 physical and Fourier optics. In-depth mathematical background and an extensive
 discussion of the validity of each diffraction approximation is available in [1]_.
 
-Theoretical background
-======================
-
-Maxwell's equations describe how an electromagnetic field propagates through free space
-and behaves when encountering an obstruction or aperture (diffraction). Practical
-solutions to Maxwell's equations for common optics problems are made possible by making a
-few key assumptions:
-
-* `Scalar diffraction theory` assumes that the propagating electromagnetic field can be
-  treated treated as a scalar field (thus ignoring the vector nature of the field and any
-  polarization effects that may be present).
-* The `paraxial approximation` assumes the electromagnetic field propagates through an
-  optical system in a direction geneally aligned with the optical axis.
-
-These two assumptions form the basis for the `Fresnel` or `near-field` approximation for
-modeling diffraciton. By assuming the electromagnetic field is observed at a sufficiently
-large distance beyond the diffracting obscuration or if the optical system imparts a
-quadratic phase term (by a focusing lens, for example), we are able to use the simpler
-`Fraunhofer` or `far-field` approximation for modeling diffraction.
+.. Theoretical background
+.. ======================
+.. 
+.. Maxwell's equations describe how an electromagnetic field propagates through free space
+.. and behaves when encountering an obstruction or aperture (diffraction). Practical
+.. solutions to Maxwell's equations for common optics problems are made possible by making a
+.. few key assumptions:
+..
+.. * `Scalar diffraction theory` assumes that the propagating electromagnetic field can be
+..   treated treated as a scalar field (thus ignoring the vector nature of the field and any
+..   polarization effects that may be present).
+.. * The `paraxial approximation` assumes the electromagnetic field propagates through an
+..   optical system in a direction geneally aligned with the optical axis.
+..
+.. These two assumptions form the basis for the `Fresnel` or `near-field` approximation for
+.. modeling diffraciton. By assuming the electromagnetic field is observed at a sufficiently
+.. large distance beyond the diffracting obscuration or if the optical system imparts a
+.. quadratic phase term (by a focusing lens, for example), we are able to use the simpler
+.. `Fraunhofer` or `far-field` approximation for modeling diffraction.
 
 .. note::
 

@@ -220,9 +220,6 @@ def _prepare_planes(planes, wave, npix, oversample, tilt, interp_phasor):
         plane.cache['amplitude'] = copy.deepcopy(plane.amplitude)
         plane.cache['pixelscale'] = copy.deepcopy(plane.pixelscale)
         plane.cache['npix_wavefront'] = npix_wavefront
-        slc = plane.slice()
-        plane.cache['slice'] = slc
-        plane.cache['offset'] = plane.slice_offset(slices=slc, shape=plane.shape, indexing='xy')
 
         # reinterpolate as needed
         # NOTE: if we reinterpolate, we'll have to make sure we provide the correct
@@ -232,6 +229,12 @@ def _prepare_planes(planes, wave, npix, oversample, tilt, interp_phasor):
             # figuring out npix_wavefront so we just need to rescale
             # amplitude and phase here
             pass
+
+        # We need to compute slice and affset after we've reinterpolated -> mask and segmask
+        # note that plane.slice takes a mask parameter
+        slc = plane.slice()
+        plane.cache['slice'] = slc
+        plane.cache['offset'] = plane.slice_offset(slices=slc, shape=plane.shape, indexing='xy')
 
 
 def _cleanup_planes(planes):
@@ -303,6 +306,11 @@ def _propagate_mono(planes, wavelength, npix_chip, oversample):
 
     return w
 
+# NOTE - PROPAGATION RULES
+# 1. Pupil to image will always implement tilts
+# 2. Pupil to pupil
+# 3. Image to pupil
+
 
 # TODO:
 # 1. accept flatten parameter
@@ -334,8 +342,6 @@ def _propagate_pti(w, pixelscale, npix, oversample):
         # data[d] = fourier.dft2(w.data[d], alpha, npix, res_shift[d])
         w.data[d] = fourier.dft2(w.data[d], alpha, (npix[0]*oversample, npix[1]*oversample),
                                  res_shift[d], offset=w.offset[d], unitary=True)
-
-
 
     return w
 

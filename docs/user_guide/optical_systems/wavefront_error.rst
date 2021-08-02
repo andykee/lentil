@@ -135,7 +135,7 @@ the discretely sampled mode spans [-0.5 0.5] before multiplying by the error mag
     >>> import lentil as le
     >>> import numpy as np
     >>> mask = le.util.circlemask((256,256), 128)
-    >>> z4 = le.zernike.zernike(mask, mode=4, normalize=False)
+    >>> z4 = le.zernike.zernike(mask, mode=4)
     >>> z4 /= np.max(z4) - np.min(z4)
     >>> z4 *= 100e-9
     >>> np.max(z4) - np.min(z4)
@@ -209,8 +209,52 @@ wavefront map:
     >>> w.reshape((256,256))
 
 
-Static Errors
-=============
+.. Chromatic Aberrations
+.. =====================
+.. Chromatic aberrations are wavelength-dependent errors cause by dispersion. These 
+.. aberrations can be further classified as either transverse or longitudinal. Transverse
+.. chromatic aberration causes a wavelength-dependent focus shift and can be implemented
+.. by customizing :class:`~lentil.DispersivePhase`'s :func:`~lentil.DispersivePhase.multiply` 
+.. method. For example, if an 
+.. optical system produces best focus at 550 nm and each nm of wavelength change causes 1 nm
+.. of focus error, we represent the wavelength-dependent focus by:
+
+.. .. math::
+
+..     \mbox{Focus shift} = \lambda - 550 \times 10^{-9}
+
+.. We implement this focus shift as an additional focus :attr:`~lentil.Plane.phase` term 
+.. that is applied within the plane's :func:`~lentil.Plane._phasor` method. Note that 
+.. wavelength is given in :attr:`Wavefront.wavelength`
+
+.. .. code-block:: python3
+
+..     import lentil as le
+
+..     class TransverseCA(le.Plane):
+
+..         def __init__(self, *args, **kwargs):
+..             super().__init__(*args, **kwargs)
+
+..             # Pre-compute defocus map for efficiency
+..            self.defocus = le.zernike.zernike(mask=self.amplitude, 
+..                                               index=4,
+..                                               normalize=True)
+
+..         def _phasor(amplitude, ):
+
+
+.. Transverse chromatic aberration causes a wavelength-dependent magnification across the
+.. field. 
+
+
+.. Atmospheric Turbulence
+.. ======================
+
+
+
+.. Static Errors
+.. =============
 
 .. File-based errors
 .. -----------------
@@ -218,13 +262,8 @@ Static Errors
 .. Parametric errors
 .. -----------------
 
-
-Atmospheric Turbulence
-======================
-
-
-Parameterized Timeseries Errors
-===============================
+.. Parameterized Timeseries Errors
+.. ===============================
 
 
 .. [1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).

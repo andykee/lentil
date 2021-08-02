@@ -189,9 +189,15 @@ operation. Details of this algorithm are available in the :ref:`technical-notes`
   field information. Because of this, |Detector| planes can only be used as the final 
   plane in a Lentil model.
 
-Representing Dispersion and Chromatic Aberration
-================================================
+Representing Dispersion
+=======================
+Dispersion is most commonly seen in an optical system as a wavelength-dependent phase
+change. In some cases, like with a grating or prism, dispersion is used to achieve some 
+desired optical effect. In other cases, dispersion causes an unwanted chromatic 
+aberration.
 
+Lentil provides two classes for representing the effects of dispersion: 
+:class:`~lentil.DispersivePhase` and :class:`~lentil.DispersiveShift`.
 
 Active Optics and Deformable Mirrors
 ====================================

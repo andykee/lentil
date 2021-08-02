@@ -1,5 +1,0 @@
-.. _diffraction.dispersion:
-
-**********
-Dispersion
-**********

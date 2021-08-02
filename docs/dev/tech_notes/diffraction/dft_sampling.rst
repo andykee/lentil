@@ -42,15 +42,12 @@ still visibile to those with a keen eye when :math:`1.5 < Q < 2`:
     :align: center
 
 In cases where the system :math:`Q` is less than 2, the propagation fidelity should
-be increased by oversampling to avoid ailiasing. For a given imaging system, :math:`du`, 
-:math:`\lambda`, and :math:`z` are likely to be fixed. Therefore, :math:`Q` can only be 
-increased in a discrete propagation by either more finely sampling the input plane 
-(decreasing :math:`dx`) or by oversampling the output plane (temporarily decreasing 
-:math:`du`) before rebinning the results to the native output sampling.
-
-We more finely sample the output plane by introducing an ``oversample`` factor. This
-decreases ``alpha``
-
+be increased by oversampling to avoid ailiasing. For a given imaging system, the system's
+:math:`F/\#`, focal plane sampling :math:`du`, and propagation wavelength(s) 
+:math:`\lambda` will be fixed values. As a result, :math:`Q` can only be increased in a 
+discrete propagation by introducing an ``oversample`` factor that effectively decreases 
+the output plane sampling :math:`du`. In order to view the results of a propagation at 
+native system sampling, the oversampled output plane must be resampled or rebinned. 
 
 .. math::
 
