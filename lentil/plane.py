@@ -34,9 +34,6 @@ class Plane:
     mask : array_like, optional
         Binary mask. If not specified, a mask is created from the amplitude.
 
-    segmask : (nseg, ...) {array_like, None} optional
-        Binary segment mask. Default is None.
-
     Attributes
     ----------
     tilt : list
@@ -45,7 +42,7 @@ class Plane:
 
     """
 
-    def __init__(self, pixelscale=None, amplitude=1, phase=0, mask=None, segmask=None):
+    def __init__(self, pixelscale=None, amplitude=1, phase=0, mask=None):
         # We directly set the local attributes here in case a subclass has redefined
         # the property (which could cause an weird behavior and will throw an
         # AttributeError if the subclass hasn't defined an accompanying getter
@@ -53,7 +50,6 @@ class Plane:
         self._amplitude = np.asarray(amplitude) if amplitude is not None else None
         self._phase = np.asarray(phase) if phase is not None else None
         self._mask = np.asarray(mask) if mask is not None else None
-        self._segmask = np.asarray(segmask) if segmask is not None else None
 
         self.cache = {}
         self.tilt = []
@@ -66,7 +62,6 @@ class Plane:
         cls._amplitude = np.array(1)
         cls._phase = np.array(0)
         cls._mask = None
-        cls._segmask = None
 
         cls.cache = {}
         cls.tilt = []
@@ -164,50 +159,25 @@ class Plane:
             self._mask = None
 
     @property
-    def segmask(self):
-        """Binary segment mask
-
-        Returns
-        -------
-        segmask : (nseg,...) ndarray or None
-
-        """
-        return self._segmask
-
-    @segmask.setter
-    def segmask(self, value):
-        if value is None:
-            segmask = None
-        else:
-            # Note this operation implicitly converts a list or tuple of arrays
-            # to an appropriately stacked ndarray
-            segmask = np.asarray(value)
-            if segmask.ndim == 2:
-                segmask = segmask[np.newaxis, ...]
-            elif segmask.ndim > 3:
-                raise ValueError(f"don't know what to do with {segmask.ndim}th dimension")
-        self._segmask = segmask
-
-    @property
-    def nseg(self):
-        """Number of segments represented in the plane."""
-        if self.segmask is None:
-            return 0
-        else:
-            return self.segmask.shape[0]
-
-    @property
     def shape(self):
-        """Plane dimensions computed from :attr:`mask` or :attr:`segmask`. Returns None
-        if :attr:`mask` and :attr:`segmask` are None.
+        """Plane dimensions computed from :attr:`mask` Returns None if :attr:`mask` 
+        is None.
         """
-        if self.mask is None and self.segmask is None:
+        if self.mask is None:
             return None
         else:
-            if self.mask is not None:
+            if self._nmask == 1:
                 return self.mask.shape
             else:
-                return self.segmask.shape[1], self.segmask.shape[2]
+                return self.mask.shape[1], self.mask.shape[2]
+
+    @property
+    def _nmask(self):
+        """Number of independent masks (segments) in self.mask"""
+        if self.mask.ndim in (1, 2):
+            return 1
+        else:
+            return self.mask.shape[0]
 
     @staticmethod
     def rescale_amplitude(amplitude, scale):
@@ -290,39 +260,10 @@ class Plane:
         mask[np.nonzero(mask)] = 1
         return mask.astype(np.int)
 
-    @staticmethod
-    def rescale_segmask(segmask, scale):
-        """Rescale plane segmask
-
-        This method uses linear interpolation. If custom interpolation is required,
-        this method should be redefined.
-
-        Parameters
-        ----------
-        segmask : ndarray
-
-        scale : float
-            Scaling factor. Scale factors less than 1 will shrink the amplitude. Scale
-            factors greater than 1 will grow the amplitude.
-
-        Returns
-        -------
-        segmask : ndarray
-            Rescaled segmask
-
-        """
-        out = []
-        for seg in segmask:
-            mask = util.rescale(seg, scale=scale, shape=None, mask=None,
-                                order=1, mode='nearest', unitary=False)
-            mask[mask != 0] = 1
-            out.append(mask)
-        return np.asarray(out)
-
     @property
     def ptt_vector(self):
-        """2D vector representing piston and tilt in x and y. Planes with no mask or
-        segmask have ptt_vector = None.
+        """2D vector representing piston and tilt in x and y. Planes with no mask
+        have ptt_vector = None.
 
         Returns
         -------
@@ -331,7 +272,7 @@ class Plane:
         """
 
         # if there's no mask, we just set ptt_vector to None and move on
-        if (self.shape == () or self.shape is None) and self.segmask is None:
+        if self.shape == () or self.shape is None:
             ptt_vector = None
         else:
             # compute unmasked piston, tip, tilt vector
@@ -339,15 +280,15 @@ class Plane:
             unmasked_ptt_vector = np.einsum('ij,i->ij', [np.ones(x.size), x.ravel(), y.ravel()],
                                             [1, self.pixelscale[0], self.pixelscale[1]])
 
-            if self.segmask is None:
+            if self._nmask == 1:
                 ptt_vector = np.einsum('ij,j->ij', unmasked_ptt_vector, self.mask.ravel())
             else:
                 # prepare empty ptt_vector
-                ptt_vector = np.empty((self.nseg * 3, self.mask.size))
+                ptt_vector = np.empty((self._nmask * 3, np.prod(self.shape)))
 
-                # loop over the segments and fill in the masked ptt_vectors
-                for seg in np.arange(self.nseg):
-                    ptt_vector[3 * seg:3 * seg + 3] = unmasked_ptt_vector * self.segmask[seg].ravel()
+                # loop over the masks and fill in the masked ptt_vectors
+                for mask in np.arange(self._nmask):
+                    ptt_vector[3*mask:3*mask+3] = unmasked_ptt_vector * self.mask[mask].ravel()
 
         return ptt_vector
 
@@ -431,9 +372,8 @@ class Plane:
         ----------
         mask : array_like or None, optional
             Mask to use for identifying data extents. If None, the Plane's
-            :attr:`segmask` is used if available, otherwise the Plane's
-            :attr:`mask` is used. If both :attr:`segmask` and :attr:`mask` are
-            None, ``Ellipsis`` is returned (slice returns all data).
+            :attr:`mask` is used. If :attr:`mask` is None, ``Ellipsis`` is 
+            returned (slice returns all data).
 
         Returns
         -------
@@ -447,22 +387,17 @@ class Plane:
 
         """
 
-        # If a mask is not provided, we should prefer segmask over mask
         if mask is None:
-            if self.segmask is not None:
-                mask = self.segmask
-            else:
-                mask = self.mask
+            mask = self.mask
 
-        # self.mask and self.segmask may still return None so we
-        # catch that here
+        # self.mask may still return None so we catch that here
         if mask.ndim < 2 or mask is None:
             # np.s_[...] = Ellipsis -> returns the whole array
             s = [np.s_[...]]
         elif mask.ndim == 2:
             s = [util.boundary_slice(mask)]
         elif mask.ndim == 3:
-            s = [util.boundary_slice(segmask) for segmask in mask]
+            s = [util.boundary_slice(m) for m in mask]
         return s
 
     def slice_offset(self, slices, shape=None, indexing='xy'):
@@ -583,7 +518,7 @@ class Plane:
 
                 # This is the case we hit when tilt = 'angle' and nseg > 1
                 for seg in np.arange(phase.shape[0]):
-                    phasor = _phasor(amplitude, phase[seg], self.segmask[seg], wavefront.wavelength, slc[seg])
+                    phasor = _phasor(amplitude, phase[seg], self.mask[seg], wavefront.wavelength, slc[seg])
                     wavefront.data.append(d[slc[seg]] * phasor)
 
                     # we have a few rules for dealing with the slice offset here
@@ -600,8 +535,17 @@ class Plane:
 
                 # we should make some assertions about wavefront.offset here
 
+                # HACK: this is a temporary v0.6.0 hack. Think through what should really
+                # happen here and clean it up. Maybe a global_mask property or reworking
+                # of this if phase.ndim == 3 / else block?
+                if self._nmask > 1:
+                    mask = np.sum(self.mask, axis=0)
+                else:
+                    mask = self.mask
+                # /HACK
+
                 for s in slc:
-                    phasor = _phasor(amplitude, phase, self.mask, wavefront.wavelength, s)
+                    phasor = _phasor(amplitude, phase, mask, wavefront.wavelength, s)
                     wavefront.data.append(d[s] * phasor)
 
                     # we have a few rules for dealing with the slice offset here
@@ -659,9 +603,6 @@ class Pupil(Plane):
     mask : array_like, optional
         Binary mask. If not specified, a mask is created from the amplitude.
 
-    segmask : (nseg, ...) {array_like, None} optional
-        Binary segment mask. Default is None.
-
     Note
     ----
     By definition, a pupil is represented by a spherical wavefront. Any
@@ -670,10 +611,10 @@ class Pupil(Plane):
 
     """
     def __init__(self, diameter=None, focal_length=None, pixelscale=None, amplitude=1,
-                 phase=0, mask=None, segmask=None):
+                 phase=0, mask=None):
 
         super().__init__(pixelscale=pixelscale, amplitude=amplitude, phase=phase,
-                         mask=mask, segmask=segmask)
+                         mask=mask)
 
         # We directly set the local attributes here in case a subclass has redefined
         # the property (which could cause an weird behavior and will throw an
@@ -885,9 +826,9 @@ class Grism(DispersiveShift):
 
     """
     def __init__(self, trace, dispersion, pixelscale=None, amplitude=1,
-                 phase=0, mask=None, segmask=None):
+                 phase=0, mask=None):
         super().__init__(pixelscale=pixelscale, amplitude=amplitude, phase=phase,
-                         mask=mask, segmask=segmask)
+                         mask=mask)
 
         self.trace = np.asarray(trace)
         self._trace_order = self.trace.size - 1

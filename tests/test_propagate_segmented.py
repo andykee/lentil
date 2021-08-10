@@ -22,7 +22,7 @@ class SimpleSegmentedPupil(lentil.Pupil):
 
         super().__init__(diameter=1, focal_length=10, pixelscale=1/npix,
                          amplitude=lentil.modeltools.normalize_power(mask), phase=opd,
-                         mask=mask, segmask=segmask)
+                         mask=segmask)
 
 
 class SimpleDetector(lentil.Detector):

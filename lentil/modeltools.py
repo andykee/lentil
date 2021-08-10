@@ -96,26 +96,3 @@ def iterable_mask(iterable):
     for plane in iterable:
         mask = mask * plane.mask
     return mask
-
-
-def iterable_segmask(iterable):
-    """Construct a common segmask array from an iterable of planes
-
-    Parameters
-    ----------
-    iterable: list_like
-        List of planes
-
-    Returns
-    -------
-    segmask: ndarray
-
-    """
-    if all(plane.segmask is None for plane in iterable):
-        return None
-    else:
-        segmask = np.array(1)
-        for plane in iterable:
-            if plane.segmask is not None:
-                segmask = segmask * plane.segmask
-        return segmask
