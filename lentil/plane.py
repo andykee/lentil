@@ -154,13 +154,13 @@ class Plane:
         if self.mask is None:
             return None
         else:
-            if self._nmask == 1:
+            if self.depth == 1:
                 return self.mask.shape
             else:
                 return self.mask.shape[1], self.mask.shape[2]
 
     @property
-    def _nmask(self):
+    def depth(self):
         """Number of independent masks (segments) in self.mask"""
         if self.mask.ndim in (1, 2):
             return 1
@@ -268,14 +268,14 @@ class Plane:
             unmasked_ptt_vector = np.einsum('ij,i->ij', [np.ones(x.size), x.ravel(), y.ravel()],
                                             [1, self.pixelscale[0], self.pixelscale[1]])
 
-            if self._nmask == 1:
+            if self.depth == 1:
                 ptt_vector = np.einsum('ij,j->ij', unmasked_ptt_vector, self.mask.ravel())
             else:
                 # prepare empty ptt_vector
-                ptt_vector = np.empty((self._nmask * 3, np.prod(self.shape)))
+                ptt_vector = np.empty((self.depth * 3, np.prod(self.shape)))
 
                 # loop over the masks and fill in the masked ptt_vectors
-                for mask in np.arange(self._nmask):
+                for mask in np.arange(self.depth):
                     ptt_vector[3*mask:3*mask+3] = unmasked_ptt_vector * self.mask[mask].ravel()
 
         return ptt_vector
@@ -526,7 +526,7 @@ class Plane:
                 # HACK: this is a temporary v0.6.0 hack. Think through what should really
                 # happen here and clean it up. Maybe a global_mask property or reworking
                 # of this if phase.ndim == 3 / else block?
-                if self._nmask > 1:
+                if self.depth > 1:
                     mask = np.sum(self.mask, axis=0)
                 else:
                     mask = self.mask
