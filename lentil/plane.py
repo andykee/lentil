@@ -147,6 +147,13 @@ class Plane:
             self._mask = None
 
     @property
+    def global_mask(self):
+        if self.depth < 2:
+            return self.mask
+        else:
+            return np.sum(self.mask, axis=0)
+
+    @property
     def shape(self):
         """Plane dimensions computed from :attr:`mask` Returns None if :attr:`mask` 
         is None.
@@ -162,7 +169,9 @@ class Plane:
     @property
     def depth(self):
         """Number of independent masks (segments) in self.mask"""
-        if self.mask.ndim in (1, 2):
+        if self.mask is None:
+            return 0
+        elif self.mask.ndim in (1, 2):
             return 1
         else:
             return self.mask.shape[0]
@@ -319,9 +328,9 @@ class Plane:
             ptt_vector = self.ptt_vector
 
         # There are a couple of cases where we don't have enough information to remove the
-        # tilt, so we just return the phase as is and None tilt
+        # tilt, so we just return the Plane as-is
         if ptt_vector is None or phase.size == 1:
-            return phase, []
+            return
 
         nseg = len(ptt_vector)//3
 
@@ -334,7 +343,7 @@ class Plane:
             # coordinates to about the Tilt plane axes. We can transform from
             # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
             tilt = [Tilt(x=-t[2], y=t[1])]
-            return phase_no_tilt, tilt
+
         else:
             t = np.empty((nseg, 3))
             phase_no_tilt = np.empty((nseg, phase.shape[0], phase.shape[1]))
@@ -344,14 +353,17 @@ class Plane:
                 t[seg] = np.linalg.lstsq(ptt_vector[3 * seg:3 * seg + 3].T, phase.ravel(),
                                          rcond=None)[0]
                 seg_tilt = np.einsum('ij,i->j', ptt_vector[3 * seg + 1:3 * seg + 3], t[seg, 1:3])
-                phase_no_tilt[seg] = phase - seg_tilt.reshape(phase.shape)
+                phase_no_tilt[seg] = (phase - seg_tilt.reshape(phase.shape)) * self.mask[seg]
 
             # 01da13b transitioned from specifying tilt in terms of image plane
             # coordinates to about the Tilt plane axes. We can transform from
             # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
             tilt = [Tilt(x=-t[seg, 2], y=t[seg, 1]) for seg in range(nseg)]
 
-            return phase_no_tilt, tilt
+            phase_no_tilt = np.sum(phase_no_tilt, axis=0)
+
+        self.phase = phase_no_tilt
+        self.tilt.append(tilt)
 
     def slice(self, mask=None):
         """Compute slices defined by the data extent in ``mask``.
@@ -448,43 +460,21 @@ class Plane:
 
         """
 
-        if wavefront.pixelscale is None:
-            wavefront.pixelscale = self.pixelscale
+        if wavefront.pixelscale:
+            # We may interpolate in the future, but for now we'll enforce equality            
+            assert all(wavefront.pixelscale == self.pixelscale) 
         else:
-            if self.pixelscale is not None:
-                assert all(wavefront.pixelscale == self.pixelscale)
-
-        # TODO: functionalize grabbing cached attributes from self.cache
-        # Want to make overloading multiply() easier. This could probably be
-        # done in one of two ways:
-        #   1. Write a function that returns a tuple of cached values, handling
-        #      the defaults along the way
-        #   2. It might be possible to use a defaultdict for self.cache that
-        #      take care of the defaulting automatically?
-
-        amplitude = self.cache['amplitude'] if 'amplitude' in self.cache else self.amplitude
-        phase = self.cache['phase'] if 'phase' in self.cache else self.phase
-        tilt = self.cache['tilt'] if 'tilt' in self.cache else self.tilt
-        slc = self.cache['slice'] if 'slice' in self.cache else [np.s_[...]]
-        #ofst = self.cache['offset'] if 'offset' in self.cache else [None]
-
-        data = wavefront.data  # grab a pointer to the existing wavefront.data
+            wavefront.pixelscale = self.pixelscale
+            
+        # broadcast existing wavefront data to Plane shape and clear the 
+        # wavefront.data list
+        data = [np.broadcast_to(d, self.shape) for d in wavefront.data]
         wavefront.data = []
 
+        slc = self.slice()
+        depth = self.depth
+
         # TODO: need to develop a strategy for handling pre-existing offsets
-
-        # wavefront.offset = []
-        # then below, under wavefront.data.append:
-        # wavefront.offset.append(ofst[seg])
-        #   OR
-        # wavefront.offset.append(
-
-        # WAIT!
-        # -----------------------------
-        # what if we just compute the offset on the fly here with each slice?
-        #
-        # no need to cache it or deal with any of this BS?!
-        #
         # Still need to figure out how to deal with the fact that we may have an
         # incoming offset that may or may not be replaced by something new.
         #
@@ -500,58 +490,25 @@ class Plane:
         offset = []
 
         for d in data:
-            if phase.ndim == 3:
+            for n, slc in enumerate(self.slice()):
+                mask = self.mask if depth == 1 else self.mask[n]
+                p = _phasor(self.amplitude, self.phase, mask, wavefront.wavelength, slc)
+                
+                wavefront.data.append(d[slc] * p)
 
-                # we should make some assertions about wavefront.offset here
+                ofst = util.slice_offset(slc, self.amplitude.shape)
 
-                # This is the case we hit when tilt = 'angle' and nseg > 1
-                for seg in np.arange(phase.shape[0]):
-                    phasor = _phasor(amplitude, phase[seg], self.mask[seg], wavefront.wavelength, slc[seg])
-                    wavefront.data.append(d[slc[seg]] * phasor)
-
-                    # we have a few rules for dealing with the slice offset here
-                    ofst = util.slice_offset(slc[seg], amplitude.shape)
-
-                    # if wavefront.offset is empty, we will just append the offset for each slice as we go (even if offset is None)
-                    #if not wavefront.offset:
-                    if ofst:
-                        offset.append(ofst)
-                    else:
-                        offset.append(None)
-
-            else:
-
-                # we should make some assertions about wavefront.offset here
-
-                # HACK: this is a temporary v0.6.0 hack. Think through what should really
-                # happen here and clean it up. Maybe a global_mask property or reworking
-                # of this if phase.ndim == 3 / else block?
-                if self.depth > 1:
-                    mask = np.sum(self.mask, axis=0)
+                if ofst:
+                    offset.append(ofst)
                 else:
-                    mask = self.mask
-                # /HACK
-
-                for s in slc:
-                    phasor = _phasor(amplitude, phase, mask, wavefront.wavelength, s)
-                    wavefront.data.append(d[s] * phasor)
-
-                    # we have a few rules for dealing with the slice offset here
-                    ofst = util.slice_offset(s, amplitude.shape)
-
-                    # if wavefront.offset is empty, we will just append the offset for each slice as we go (even if offset is None)
-                    # if not wavefront.offset:
-                    if ofst:
-                        offset.append(ofst)
-                    else:
-                        offset.append(None)
+                    offset.append(None)
 
         if not wavefront.offset or not all(wavefront.offset):
             # of wavefront.offset is [] or a list of [None]:
              wavefront.offset = offset
 
-        # TODO: verify this should really be extend and not append
-        wavefront.tilt.extend(tilt)
+        # Use extend instead of append so that nothing happens if self.tilt = []
+        wavefront.tilt.extend(self.tilt)
 
         return wavefront
 

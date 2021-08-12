@@ -359,7 +359,7 @@ def slice_offset(slice, shape, indexing='xy'):
     Returns
     -------
     offset : tuple or None
-        Offset ordered according to ``order``. Note that if the computed offset
+        Offset ordered according to ``indexing``. Note that if the computed offset
         is (0, 0), None is returned instead.
 
     See Also
