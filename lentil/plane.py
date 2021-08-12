@@ -38,8 +38,6 @@ class Plane:
     ----------
     tilt : list
 
-    cache : dict
-
     """
 
     def __init__(self, pixelscale=None, amplitude=1, phase=0, mask=None):
@@ -51,7 +49,6 @@ class Plane:
         self._phase = np.asarray(phase) if phase is not None else None
         self._mask = np.asarray(mask) if mask is not None else None
 
-        self.cache = {}
         self.tilt = []
 
     def __init_subclass__(cls):
@@ -63,7 +60,6 @@ class Plane:
         cls._phase = np.array(0)
         cls._mask = None
 
-        cls.cache = {}
         cls.tilt = []
 
     def __repr__(self):
@@ -96,10 +92,6 @@ class Plane:
         -------
         amplitude : ndarray
 
-        Note
-        ----
-        If a cached value exists it is returned first.
-
         """
         return self._amplitude
 
@@ -117,10 +109,6 @@ class Plane:
         Returns
         -------
         phase : ndarray
-
-        Note
-        ----
-        If a cached value exists it is returned first.
 
         """
         return self._phase
