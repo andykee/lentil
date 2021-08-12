@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 
 
@@ -55,6 +57,16 @@ class Wavefront:
         self.tilt = []  # List of pre-propagation tilts
         self.offset = []  # List of (r,c) offsets from master array center for cropped DFTs
         self.center = []  # List of (r,c) center shifts of each item in data
+
+    def __mul__(self, plane):
+        out = copy.deepcopy(self)
+        return plane.multiply(out)
+
+    def __imul__(self, plane):
+        return plane.multiply(self)
+
+    def __rmul__(self, other):
+        raise TypeError(f"unsupported operation type(s) for *: '{other.__class__.__name__}' and 'Wavefront'")
 
     @property
     def depth(self):
