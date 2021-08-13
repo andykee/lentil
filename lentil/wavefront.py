@@ -38,8 +38,8 @@ class Wavefront:
 
     """
 
-    __slots__ = ('wavelength', 'pixelscale', 'focal_length', 'tilt', 'offset',
-                 'data', 'center')
+    __slots__ = ('wavelength', 'pixelscale', 'focal_length', 'offset',
+                 'data', 'shift')
 
     def __init__(self, wavelength, shape=(), pixelscale=None):
 
@@ -55,9 +55,8 @@ class Wavefront:
         # Wavefront focal length (which is infinity for a plane wave)
         self.focal_length = np.inf
 
-        self.tilt = []  # List of pre-propagation tilts
+        self.shift = []  # List of pre-propagation shifts
         self.offset = []  # List of (r,c) offsets from master array center for cropped DFTs
-        self.center = []  # List of (r,c) center shifts of each item in data
 
     def __mul__(self, plane):
         out = copy.deepcopy(self)
@@ -78,8 +77,9 @@ class Wavefront:
     def intensity(self):
         return np.abs(self.data**2)
 
-    def shift(self, pixelscale, oversample):
-        """Compute image plane shift due to wavefront tilt.
+    def center(self, pixelscale, oversample):
+        """Compute the Wavefront center which may be shifted due to WavefrontShift
+        objects in Wavefront.shift.
 
         This is a somewhat tricky method. Fundamentally it iterates over the
         :attr:`~lentil.Wavefront.tilt` list and computes the resulting shift in
@@ -116,41 +116,41 @@ class Wavefront:
         # All successive tilts are now applied in parallel:
         #   shift = [[160,160], [260,260]]
 
-        shift = np.zeros((1, 2))
+        center = np.zeros((1, 2))
 
-        for tilt in self.tilt:
-            if isinstance(tilt, list):
+        for shift in self.shift:
+            if isinstance(shift, list):
 
-                # Reshape the shift array. It should have shape (len(tilt), 2).
-                # If shift.shape is (1,2), we'll duplicate shift along the 0
-                # axis so that it has shape (len(tilt),2). If shift.shape is
+                # Reshape the center array. It should have shape (len(tilt), 2).
+                # If center.shape is (1,2), we'll duplicate center along the 0
+                # axis so that it has shape (len(shift),2). If center.shape is
                 # anything else, we can assume that the above duplication has
                 # already happened so we'll just verify that the sizes have
                 # remained consistent.
-                if shift.shape[0] == 1:
-                    shift = np.repeat(shift, len(tilt), axis=0)
+                if center.shape[0] == 1:
+                    center = np.repeat(center, len(shift), axis=0)
                 else:
-                    assert shift.shape[0] == len(tilt)
+                    assert center.shape[0] == len(shift)
 
-                # Now we can iterate over the tilts
-                for d, t in enumerate(tilt):
-                    shift[d, 0], shift[d, 1] = t.shift(xs=shift[d, 0],
-                                                       ys=shift[d, 1],
-                                                       z=self.focal_length,
-                                                       wavelength=self.wavelength)
+                # Now we can iterate over the shifts
+                for dim, shft in enumerate(shift):
+                    center[dim, 0], center[dim, 1] = shft.shift(xs=center[dim, 0],
+                                                                ys=center[dim, 1],
+                                                                z=self.focal_length,
+                                                                wavelength=self.wavelength)
             else:
-                for d in np.arange(shift.shape[0]):
-                    shift[d, 0], shift[d, 1] = tilt.shift(xs=shift[d, 0],
-                                                          ys=shift[d, 1],
-                                                          z=self.focal_length,
-                                                          wavelength=self.wavelength)
+                for dim in np.arange(center.shape[0]):
+                    center[dim, 0], center[dim, 1] = shift.shift(xs=center[dim, 0],
+                                                                 ys=center[dim, 1],
+                                                                 z=self.focal_length,
+                                                                 wavelength=self.wavelength)
 
-        shift = (shift/pixelscale) * oversample
+        center = (center/pixelscale) * oversample
 
-        if shift.shape[0] != self.depth:
-            shift = np.repeat(shift, self.depth, axis=0)
+        if center.shape[0] != self.depth:
+            center = np.repeat(center, self.depth, axis=0)
 
-        return shift
+        return center
 
 
 #TODO: need to figure out how to place grism chips efficiently
@@ -163,44 +163,44 @@ class Wavefront:
         out_shape = npix * oversample
         dft_shape = npix_chip * oversample
 
-        shift = self.shift(pixelscale, oversample)
+        center = self.center(pixelscale, oversample)
 
         data = self.data
         self.data = np.zeros(out_shape, dtype=complex)
         
-        self.tilt = []
+        #self.shift = []
 
         # Integer portion of the shift that will be accounted for later
-        fix_shift = np.fix(shift)
-        self.center = list(fix_shift)
+        fix_center = np.fix(center)
+        self.shift = list(fix_center)
 
         # Subpixel portion of the shift passed to the DFT
-        res_shift = shift - fix_shift
+        subpixel_center = center - fix_center
 
         alpha = _dft_alpha(dx=self.pixelscale, du=pixelscale, 
                            wave=self.wavelength, z=self.focal_length,
                            oversample=oversample)
 
-        if shift.shape[0] != len(data):
-            raise ValueError('dimension mismatch between tilt and wavefront depth')
+        if center.shape[0] != len(data):
+            raise ValueError('dimension mismatch between center and wavefront depth')
 
         for d in range(len(data)):
             data[d] = fourier.dft2(data[d], alpha, dft_shape, 
-                                   res_shift[d], offset=self.offset[d],
+                                   subpixel_center[d], offset=self.offset[d],
                                    unitary=True)
 
         ### place tiles
         # TODO: collapse this into the above for loop
         tiles = []
         for d in range(len(data)):
-            # The shift term is given in terms of (x,y) but we place the chip in
+            # The array center is given in terms of (x,y) but we place the chip in
             # terms of (r,c)
-            shift = np.flip(self.center[d], axis=0)
+            center = np.flip(self.shift[d], axis=0)
 
             # Compute the chip location
             data_slice, chip_slice = _chip_insertion_slices(out_shape,
                                                             (data[d].shape[0], data[d].shape[1]),
-                                                            shift)
+                                                            center)
             if data_slice:
                 tiles.append(imtile(data[d], data_slice, chip_slice))
         

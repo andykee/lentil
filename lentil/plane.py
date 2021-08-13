@@ -507,8 +507,8 @@ class Plane:
             # of wavefront.offset is [] or a list of [None]:
              wavefront.offset = offset
 
-        # Use extend instead of append so that nothing happens if self.tilt = []
-        wavefront.tilt.extend(self.tilt)
+        # Use extend instead of append so that nothing happens if self.shift = []
+        wavefront.shift.extend(self.tilt)
 
         return wavefront
 
