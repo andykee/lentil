@@ -40,7 +40,7 @@ class Plane:
 
     """
 
-    def __init__(self, pixelscale=None, amplitude=1, phase=0, mask=None):
+    def __init__(self, pixelscale=None, amplitude=1, phase=0, mask=1):
         # We directly set the local attributes here in case a subclass has redefined
         # the property (which could cause an weird behavior and will throw an
         # AttributeError if the subclass hasn't defined an accompanying getter
@@ -169,9 +169,7 @@ class Plane:
     @property
     def depth(self):
         """Number of independent masks (segments) in self.mask"""
-        if self.mask is None:
-            return 0
-        elif self.mask.ndim in (1, 2):
+        if self.mask.ndim in (0, 1, 2):
             return 1
         else:
             return self.mask.shape[0]
@@ -644,7 +642,7 @@ class Image(Plane):
         self._shape = value
 
     def fit_tilt(self, *args, **kwargs):
-        return self.phase, []
+        return self
 
     def slice(self, *args, **kwargs):
         # np.s_[...] = Ellipsis -> returns the whole array
@@ -667,7 +665,7 @@ class DispersiveShift(Plane):
 
     def multiply(self, wavefront):
         wavefront = super().multiply(wavefront)
-        wavefront.tilt.extend([self])
+        wavefront.shift.extend([self])
         return wavefront
 
 
@@ -867,7 +865,7 @@ class Tilt(Plane):
 
     def multiply(self, wavefront):
         wavefront = super().multiply(wavefront)
-        wavefront.tilt.extend([self])
+        wavefront.shift.extend([self])
         return wavefront
 
     def shift(self, xs=0, ys=0, z=0, **kwargs):
