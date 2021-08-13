@@ -68,7 +68,6 @@ def test_wavefront_pupil_multiply():
     phasor = p.amplitude * np.exp(1j*p.phase * 2 * np.pi / w.wavelength)
 
     assert np.array_equal(w.data[0], phasor)
-    assert w.planetype == 'pupil'
     assert w.focal_length == p.focal_length
 
 

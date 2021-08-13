@@ -7,7 +7,7 @@ import scipy.optimize
 
 from lentil import util
 
-__all__ = ['Plane', 'Pupil', 'Image', 'Detector', 'DispersiveShift', 'Grism',
+__all__ = ['Plane', 'Pupil', 'Image', 'DispersiveShift', 'Grism',
            'LensletArray', 'Tilt', 'Rotate', 'Flip']
 
 
@@ -600,7 +600,6 @@ class Pupil(Plane):
 
         # we inherit the plane's focal length as the wavefront's focal length
         wavefront.focal_length = self.focal_length
-        wavefront.planetype = 'pupil'
 
         return wavefront
 
@@ -650,41 +649,6 @@ class Image(Plane):
     def slice(self, *args, **kwargs):
         # np.s_[...] = Ellipsis -> returns the whole array
         return [np.s_[...]]
-
-    def multiply(self, wavefront):
-        """Multiply with a :class:`~lentil.wavefront.Wavefront`."""
-
-        # TODO: we should construct some version of Plane.multiply() here or just call super().multiply()
-
-        wavefront.planetype = 'image'
-
-        return wavefront
-
-
-class Detector(Image):
-
-    def multiply(self, wavefront):
-        # compute intensity
-        #wavefront.data = [np.abs(w)**2 for w in wavefront.data]
-        wavefront.planetype = 'image'
-        return wavefront
-
-    def frame(self, *args, **kwargs):
-        """Simulate reading out a frame
-
-        Returns
-        -------
-        frame : ndarray
-            Raw frame
-
-        Note
-        ----
-        This method just defines the ``frame`` interface. Any real functionality
-        should be defined in a subclass.
-
-        """
-        raise NotImplementedError
-
 
 class DispersivePhase(Plane):
 

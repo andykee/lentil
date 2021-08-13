@@ -141,11 +141,6 @@ class TiltPupil(lentil.Pupil):
         self.coeffs = coeffs
 
 
-class BasicDetector(lentil.Detector):
-    def __init__(self, pixelscale=5e-6, shape=(512, 512)):
-        super().__init__(pixelscale=pixelscale, shape=shape)
-
-
 def test_amplitude_normalize_power():
     p = TiltPupil(npix=256)
     w = lentil.Wavefront(wavelength=650e-9)
@@ -313,7 +308,6 @@ def test_propagate_tilt_angle_analytic():
     pixelscale = 5e-6
     npix = np.array([64, 64])
     pupil = TiltPupil(npix=256)
-    detector = BasicDetector()
 
     pupil.fit_tilt()
     w = lentil.Wavefront(650e-9)
@@ -321,8 +315,6 @@ def test_propagate_tilt_angle_analytic():
     w.propagate_image(pixelscale=pixelscale, npix=npix, oversample=oversample)
     psf = w.intensity
 
-    #psf = lentil.propagate([pupil, detector], wave=650e-9, npix=npix,
-    #                       oversample=oversample, rebin=False, tilt='angle')
     psf = psf/np.max(psf)
     psf[psf < 0.2] = 0  # threshold for centroiding
 

@@ -39,13 +39,12 @@ class Wavefront:
     """
 
     __slots__ = ('wavelength', 'pixelscale', 'focal_length', 'tilt', 'offset',
-                 'data', 'center', '_planetype')
+                 'data', 'center')
 
-    def __init__(self, wavelength, shape=(), pixelscale=None, planetype=None):
+    def __init__(self, wavelength, shape=(), pixelscale=None):
 
         self.wavelength = wavelength
         self.pixelscale = pixelscale
-        self.planetype = planetype
 
         shape = np.asarray(shape)
         if shape.size < 3:
@@ -74,15 +73,6 @@ class Wavefront:
     def depth(self):
         """Number of individual Wavefront arrays in :attr:`data`"""
         return len(self.data)
-
-    @property
-    def planetype(self):
-        return self._planetype
-
-    @planetype.setter
-    def planetype(self, value):
-        assert value in {'pupil', 'image', None}
-        self._planetype = value
 
     @property
     def intensity(self):
