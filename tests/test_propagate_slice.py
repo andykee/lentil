@@ -13,7 +13,7 @@ def test_propagate_slice_one():
     du = 5e-6
     dx = diameter/128
 
-    shift = np.random.uniform(low=-50, high=50, size=2).astype(np.int)
+    shift = np.random.uniform(low=-50, high=50, size=2).astype(int)
     amp = lentil.util.circle((256,256), 256//4, shift=shift)
 
     rho, theta = lentil.zernike.zernike_coordinates(amp, shift=shift)

@@ -528,12 +528,12 @@ def rescale(img, scale, shape=None, mask=None, order=3, mode='nearest',
         mask[img != 0] = 1
 
     if shape is None:
-        shape = np.ceil((img.shape[0]*scale, img.shape[1]*scale)).astype(np.int)
+        shape = np.ceil((img.shape[0]*scale, img.shape[1]*scale)).astype(int)
     else:
         if np.isscalar(shape):
-            shape = np.ceil((shape*scale, shape*scale)).astype(np.int)
+            shape = np.ceil((shape*scale, shape*scale)).astype(int)
         else:
-            shape = np.ceil((shape[0]*scale, shape[1]*scale)).astype(np.int)
+            shape = np.ceil((shape[0]*scale, shape[1]*scale)).astype(int)
 
     x = (np.arange(shape[1], dtype=np.float64) - shape[1]/2.)/scale + img.shape[1]/2.
     y = (np.arange(shape[0], dtype=np.float64) - shape[0]/2.)/scale + img.shape[0]/2.

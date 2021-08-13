@@ -323,7 +323,7 @@ def shot_noise(img, method='poisson', seed=None):
         # REF: https://stackoverflow.com/a/33701974
         with np.errstate(divide='raise'):
             try:
-                img = np.asarray(rng.normal(loc=img, scale=np.sqrt(img)), dtype=np.int)
+                img = np.asarray(rng.normal(loc=img, scale=np.sqrt(img)), dtype=int)
             except FloatingPointError:
                 raise ValueError('Counts must be positive')
 

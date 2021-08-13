@@ -10,7 +10,7 @@ def airy(diameter, focal_length, wavelength, pixelscale, length, oversample=1):
     length *= oversample
 
     c = (length - 1) / 2
-    x = np.arange(length, dtype=np.float)
+    x = np.arange(length, dtype=float)
     x -= c
 
     q = x * (pixelscale / oversample)
@@ -33,7 +33,7 @@ def airy2(diameter, focal_length, wavelength, pixelscale, shape, oversample=1):
     shape *= oversample
 
     c = (shape - 1) / 2
-    y, x = np.indices(shape, dtype=np.float)
+    y, x = np.indices(shape, dtype=float)
 
     x -= c[1]
     y -= c[0]
@@ -64,7 +64,7 @@ def test_airy():
     airy1 = airy(diameter, focal_length, wave, pixelscale, length, oversample)
 
     c = (length - 1) / 2
-    x = np.arange(length, dtype=np.float)
+    x = np.arange(length, dtype=float)
     x -= c
     x *= pixelscale
 
