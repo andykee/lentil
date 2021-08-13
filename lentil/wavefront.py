@@ -5,6 +5,7 @@ import numpy as np
 
 from lentil import fourier, util
 
+__all__ = ['Wavefront']
 
 class Wavefront:
     """A class representing a monochromatic wavefront. :class:`Wavefront` is
@@ -164,13 +165,11 @@ class Wavefront:
 
 #TODO: need to figure out how to place grism chips efficiently
 
-    def propagate_image(self, pixelscale, npix, npix_chip=None, oversample=2, 
-                        rebin=False):
+    def propagate_image(self, pixelscale, npix, npix_chip=None, oversample=2): 
 
         npix = _sanitize_shape(npix)
         npix_chip = _sanitize_shape(npix_chip, default=npix)
 
-        out_shape = npix if rebin else npix * oversample
         out_shape = npix * oversample
         dft_shape = npix_chip * oversample
 
@@ -219,12 +218,6 @@ class Wavefront:
 
         for tile in tiles:
             self.data[tile.slice] = tile.data
-        
-        if rebin:
-            self.data = util.rebin(self.data, factor=oversample)
-
-        
-
         
 
 def _sanitize_shape(shape, default=()):
