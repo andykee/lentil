@@ -3,7 +3,7 @@ Release notes
 
 v0.5.0
 ------
-Released 2021
+Released August 13, 2021
 
 * Propagations with ``tilt='angle'`` have tilt projected out of each
   plane once before the entire propagation rather than at each monochromatic
