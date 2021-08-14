@@ -26,20 +26,6 @@ def test_default_plane():
     assert p.mask == p.amplitude
 
 
-def test_set_plane_attrs_none():
-    p = lentil.Plane(pixelscale=1, amplitude=1, phase=0, mask=1)
-    p.pixelscale = None
-    p.amplitude = None
-    p.phase = None
-    p.mask = None
-
-    assert p.pixelscale is None
-    assert p.amplitude is None
-    assert p.phase is None
-    assert p.mask is None
-    assert p.shape is None
-
-
 def test_wavefront_plane_multiply():
     p = RandomPlane()
     w = lentil.wavefront.Wavefront(650e-9, p.shape)

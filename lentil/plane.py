@@ -40,13 +40,13 @@ class Plane:
 
     """
 
-    def __init__(self, pixelscale=None, amplitude=1, phase=0, mask=1):
+    def __init__(self, pixelscale=None, amplitude=1, phase=0, mask=None):
         # We directly set the local attributes here in case a subclass has redefined
         # the property (which could cause an weird behavior and will throw an
         # AttributeError if the subclass hasn't defined an accompanying getter
         self.pixelscale = pixelscale
-        self._amplitude = np.asarray(amplitude) if amplitude is not None else None
-        self._phase = np.asarray(phase) if phase is not None else None
+        self._amplitude = np.asarray(amplitude)
+        self._phase = np.asarray(phase)
         self._mask = np.asarray(mask) if mask is not None else None
 
         self.tilt = []
@@ -97,10 +97,7 @@ class Plane:
 
     @amplitude.setter
     def amplitude(self, value):
-        if value is not None:
-            self._amplitude = np.asarray(value)
-        else:
-            self._amplitude = None
+        self._amplitude = np.asarray(value)
 
     @property
     def phase(self):
@@ -115,10 +112,7 @@ class Plane:
 
     @phase.setter
     def phase(self, value):
-        if value is not None:
-            self._phase = np.asarray(value)
-        else:
-            self._phase = None
+        self._phase = np.asarray(value)
 
     @property
     def mask(self):
@@ -132,12 +126,9 @@ class Plane:
         if self._mask is not None:
             return self._mask
         else:
-            if self.amplitude is not None:
-                mask = np.copy(self.amplitude)
-                mask[mask != 0] = 1
-                return mask
-            else:
-                return None
+            mask = np.copy(self.amplitude)
+            mask[mask != 0] = 1
+            return mask
 
     @mask.setter
     def mask(self, value):
@@ -158,13 +149,10 @@ class Plane:
         """Plane dimensions computed from :attr:`mask` Returns None if :attr:`mask` 
         is None.
         """
-        if self.mask is None:
-            return None
+        if self.depth == 1:
+            return self.mask.shape
         else:
-            if self.depth == 1:
-                return self.mask.shape
-            else:
-                return self.mask.shape[1], self.mask.shape[2]
+            return self.mask.shape[1], self.mask.shape[2]
 
     @property
     def depth(self):

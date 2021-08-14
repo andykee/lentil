@@ -69,6 +69,11 @@ class Wavefront:
         raise TypeError(f"unsupported operation type(s) for *: '{other.__class__.__name__}' and 'Wavefront'")
 
     @property
+    def shape(self):
+        """Size of data array"""
+        return self.data[0].shape
+
+    @property
     def depth(self):
         """Number of individual Wavefront arrays in :attr:`data`"""
         return len(self.data)
