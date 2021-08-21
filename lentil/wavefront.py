@@ -39,7 +39,7 @@ class Wavefront:
     """
 
     __slots__ = ('wavelength', 'pixelscale', 'focal_length', 'offset',
-                 'data', 'shift')
+                 'data', 'shift', 'tiles')
 
     def __init__(self, wavelength, shape=(), pixelscale=None):
 
@@ -80,7 +80,13 @@ class Wavefront:
 
     @property
     def intensity(self):
-        return np.abs(self.data**2)
+        if self.tiles:
+            out = np.zeros(self.shape, dtype=float)
+            for tile in self.tiles:
+                out[tile.slice] = np.abs(tile.data**2)
+        else:
+            out = np.abs(self.data**2)
+        return out
 
     def center(self, pixelscale, oversample):
         """Compute the Wavefront center which may be shifted due to WavefrontShift
@@ -159,8 +165,11 @@ class Wavefront:
 
 
 #TODO: need to figure out how to place grism chips efficiently
+# I think we can just use the tiles attribute to do this
 
-    def propagate_image(self, pixelscale, npix, npix_chip=None, oversample=2): 
+# TODO: consider adding a place_tiles parameter that defaults to True?
+
+    def prop_image(self, pixelscale, npix, npix_chip=None, oversample=2): 
 
         npix = _sanitize_shape(npix)
         npix_chip = _sanitize_shape(npix_chip, default=npix)
@@ -171,7 +180,7 @@ class Wavefront:
         center = self.center(pixelscale, oversample)
 
         data = self.data
-        self.data = np.zeros(out_shape, dtype=complex)
+        self.data = [np.zeros(out_shape, dtype=complex)]
         
         #self.shift = []
 
@@ -209,10 +218,10 @@ class Wavefront:
             if data_slice:
                 tiles.append(imtile(data[d], data_slice, chip_slice))
         
-        tiles = consolidate(tiles)
+        self.tiles = consolidate(tiles)
 
-        for tile in tiles:
-            self.data[tile.slice] = tile.data
+        for tile in self.tiles:
+            self.data[0][tile.slice] = tile.data
         
 
 def _sanitize_shape(shape, default=()):
