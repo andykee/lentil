@@ -145,7 +145,7 @@ def test_amplitude_normalize_power():
     p = TiltPupil(npix=256)
     w = lentil.Wavefront(wavelength=650e-9)
     w *= p
-    w.propagate_image(pixelscale=5e-6, npix=(64,64), oversample=1)
+    w.prop_image(pixelscale=5e-6, npix=(64,64), oversample=1)
     psf = w.intensity
     assert (np.sum(psf) <= 1) and (np.sum(psf) >= 0.95)
 
@@ -154,7 +154,7 @@ def test_amplitude_normalize_power_oversample():
     p = TiltPupil(npix=256)
     w = lentil.Wavefront(wavelength=650e-9)
     w *= p
-    w.propagate_image(pixelscale=5e-6, npix=(64,64), oversample=2)
+    w.prop_image(pixelscale=5e-6, npix=(64,64), oversample=2)
     psf = w.intensity
 
     #planes = [TiltPupil(npix=256), BasicDetector()]
@@ -175,7 +175,7 @@ def test_propagate_airy():
 
     w = lentil.Wavefront(wavelength=650e-9)
     w *= p
-    w.propagate_image(pixelscale=5e-6, npix=511, oversample=1)
+    w.prop_image(pixelscale=5e-6, npix=511, oversample=1)
     psf = w.intensity
     psf = psf/np.max(psf)
     assert np.all(np.isclose(psf, psf_airy, atol=1e-3))
@@ -188,13 +188,13 @@ def test_propagate_tilt_angle():
     
     w_phase = lentil.Wavefront(650e-9)
     w_phase *= p
-    w_phase.propagate_image(pixelscale=5e-6, npix=128, oversample=2)
+    w_phase.prop_image(pixelscale=5e-6, npix=128, oversample=2)
     psf_phase = w_phase.intensity
 
     p.fit_tilt()
     w_angle = lentil.Wavefront(650e-9)
     w_angle *= p
-    w_angle.propagate_image(pixelscale=5e-6, npix=128, oversample=2)
+    w_angle.prop_image(pixelscale=5e-6, npix=128, oversample=2)
     psf_angle = w_angle.intensity
 
     # threshold the PSFs so that the centroiding is consistent
@@ -285,7 +285,7 @@ def test_propagate_tilt_phase_analytic():
 
     w = lentil.Wavefront(650e-9)
     w *= pupil
-    w.propagate_image(pixelscale=pixelscale, npix=npix, oversample=oversample)
+    w.prop_image(pixelscale=pixelscale, npix=npix, oversample=oversample)
     psf = w.intensity
 
     psf = psf/np.max(psf)
@@ -312,7 +312,7 @@ def test_propagate_tilt_angle_analytic():
     pupil.fit_tilt()
     w = lentil.Wavefront(650e-9)
     w *= pupil
-    w.propagate_image(pixelscale=pixelscale, npix=npix, oversample=oversample)
+    w.prop_image(pixelscale=pixelscale, npix=npix, oversample=oversample)
     psf = w.intensity
 
     psf = psf/np.max(psf)
