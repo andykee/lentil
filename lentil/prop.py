@@ -6,7 +6,7 @@ import numpy as np
 
 from lentil import util
 from lentil import fourier
-from lentil.plane import Plane, Pupil, Image, Detector, Tilt
+from lentil.plane import Plane, Pupil, Image, Tilt
 from lentil.wavefront import Wavefront
 
 __all__ = ['propagate']

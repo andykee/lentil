@@ -12,7 +12,7 @@ def test_boundary():
 
 def test_boundary_slice():
     a = np.zeros((10,10))
-    r,c = np.floor(np.random.uniform(low=0, high=10, size=2)).astype(np.int)
+    r,c = np.floor(np.random.uniform(low=0, high=10, size=2)).astype(int)
     a[r:r+3, c:c+3] = 1
 
     rmin = np.max((r, 0))
@@ -26,7 +26,7 @@ def test_boundary_slice():
 
 
 def test_slice_offset():
-    shift = np.random.uniform(low=-50, high=50, size=2).astype(np.int)
+    shift = np.random.uniform(low=-50, high=50, size=2).astype(int)
 
     a = lentil.util.circlemask((256,256), 256//4, shift=shift)
     slc = lentil.util.boundary_slice(a)

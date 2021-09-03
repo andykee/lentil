@@ -5,6 +5,7 @@ from lentil.plane import *
 from lentil.prop import propagate
 from lentil import radiometry
 from lentil import util
+from lentil.wavefront import *
 from lentil import wfe
 from lentil import zernike
 

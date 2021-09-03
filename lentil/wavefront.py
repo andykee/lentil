@@ -1,5 +1,11 @@
+import copy
+from itertools import combinations
+
 import numpy as np
 
+from lentil import fourier, util
+
+__all__ = ['Wavefront']
 
 class Wavefront:
     """A class representing a monochromatic wavefront. :class:`Wavefront` is
@@ -32,29 +38,40 @@ class Wavefront:
 
     """
 
-    __slots__ = ('wavelength', 'pixelscale', 'focal_length', 'tilt', 'offset',
-                 'data', 'center', '_planetype')
+    __slots__ = ('wavelength', 'pixelscale', 'focal_length', 'offset',
+                 'data', 'shift', 'tiles')
 
-    def __init__(self, wavelength, shape=None, pixelscale=None, planetype=None):
+    def __init__(self, wavelength, shape=(), pixelscale=None):
 
         self.wavelength = wavelength
         self.pixelscale = pixelscale
-        self.planetype = planetype
 
-        # All new Wavefront objects represent a perfect plane wave
-        # TODO: default shape=1, make sure we create separate list entries of shape
-        # has ndim = 3
-        if shape:
-            self.data = [np.ones((shape[0], shape[1]), dtype=np.complex)]
+        shape = np.asarray(shape)
+        if shape.size < 3:
+            self.data = [np.ones(shape, dtype=complex)]
         else:
-            self.data = [np.array([1], dtype=np.complex)]
+            self.data = [np.ones((shape[1], shape[2]), dtype=complex) for d in shape[0]]
 
         # Wavefront focal length (which is infinity for a plane wave)
         self.focal_length = np.inf
 
-        self.tilt = []  # List of pre-propagation tilts
+        self.shift = []  # List of pre-propagation shifts
         self.offset = []  # List of (r,c) offsets from master array center for cropped DFTs
-        self.center = []  # List of (r,c) center shifts of each item in data
+
+    def __mul__(self, plane):
+        out = copy.deepcopy(self)
+        return plane.multiply(out)
+
+    def __imul__(self, plane):
+        return plane.multiply(self)
+
+    def __rmul__(self, other):
+        raise TypeError(f"unsupported operation type(s) for *: '{other.__class__.__name__}' and 'Wavefront'")
+
+    @property
+    def shape(self):
+        """Size of data array"""
+        return self.data[0].shape
 
     @property
     def depth(self):
@@ -62,16 +79,18 @@ class Wavefront:
         return len(self.data)
 
     @property
-    def planetype(self):
-        return self._planetype
+    def intensity(self):
+        if self.tiles:
+            out = np.zeros(self.shape, dtype=float)
+            for tile in self.tiles:
+                out[tile.slice] = np.abs(tile.data**2)
+        else:
+            out = np.abs(self.data**2)
+        return out
 
-    @planetype.setter
-    def planetype(self, value):
-        assert value in {'pupil', 'image', None}
-        self._planetype = value
-
-    def shift(self, pixelscale, oversample):
-        """Compute image plane shift due to wavefront tilt.
+    def center(self, pixelscale, oversample):
+        """Compute the Wavefront center which may be shifted due to WavefrontShift
+        objects in Wavefront.shift.
 
         This is a somewhat tricky method. Fundamentally it iterates over the
         :attr:`~lentil.Wavefront.tilt` list and computes the resulting shift in
@@ -108,38 +127,221 @@ class Wavefront:
         # All successive tilts are now applied in parallel:
         #   shift = [[160,160], [260,260]]
 
-        shift = np.zeros((1, 2))
+        center = np.zeros((1, 2))
 
-        for tilt in self.tilt:
-            if isinstance(tilt, list):
+        for shift in self.shift:
+            if isinstance(shift, list):
 
-                # Reshape the shift array. It should have shape (len(tilt), 2).
-                # If shift.shape is (1,2), we'll duplicate shift along the 0
-                # axis so that it has shape (len(tilt),2). If shift.shape is
+                # Reshape the center array. It should have shape (len(tilt), 2).
+                # If center.shape is (1,2), we'll duplicate center along the 0
+                # axis so that it has shape (len(shift),2). If center.shape is
                 # anything else, we can assume that the above duplication has
                 # already happened so we'll just verify that the sizes have
                 # remained consistent.
-                if shift.shape[0] == 1:
-                    shift = np.repeat(shift, len(tilt), axis=0)
+                if center.shape[0] == 1:
+                    center = np.repeat(center, len(shift), axis=0)
                 else:
-                    assert shift.shape[0] == len(tilt)
+                    assert center.shape[0] == len(shift)
 
-                # Now we can iterate over the tilts
-                for d, t in enumerate(tilt):
-                    shift[d, 0], shift[d, 1] = t.shift(xs=shift[d, 0],
-                                                       ys=shift[d, 1],
-                                                       z=self.focal_length,
-                                                       wavelength=self.wavelength)
+                # Now we can iterate over the shifts
+                for dim, shft in enumerate(shift):
+                    center[dim, 0], center[dim, 1] = shft.shift(xs=center[dim, 0],
+                                                                ys=center[dim, 1],
+                                                                z=self.focal_length,
+                                                                wavelength=self.wavelength)
             else:
-                for d in np.arange(shift.shape[0]):
-                    shift[d, 0], shift[d, 1] = tilt.shift(xs=shift[d, 0],
-                                                          ys=shift[d, 1],
-                                                          z=self.focal_length,
-                                                          wavelength=self.wavelength)
+                for dim in np.arange(center.shape[0]):
+                    center[dim, 0], center[dim, 1] = shift.shift(xs=center[dim, 0],
+                                                                 ys=center[dim, 1],
+                                                                 z=self.focal_length,
+                                                                 wavelength=self.wavelength)
 
-        shift = (shift/pixelscale) * oversample
+        center = (center/pixelscale) * oversample
 
-        if shift.shape[0] != self.depth:
-            shift = np.repeat(shift, self.depth, axis=0)
+        if center.shape[0] != self.depth:
+            center = np.repeat(center, self.depth, axis=0)
 
-        return shift
+        return center
+
+
+#TODO: need to figure out how to place grism chips efficiently
+# I think we can just use the tiles attribute to do this
+
+# TODO: consider adding a place_tiles parameter that defaults to True?
+
+    def prop_image(self, pixelscale, npix, npix_chip=None, oversample=2): 
+
+        npix = _sanitize_shape(npix)
+        npix_chip = _sanitize_shape(npix_chip, default=npix)
+
+        out_shape = npix * oversample
+        dft_shape = npix_chip * oversample
+
+        center = self.center(pixelscale, oversample)
+
+        data = self.data
+        self.data = [np.zeros(out_shape, dtype=complex)]
+        
+        #self.shift = []
+
+        # Integer portion of the shift that will be accounted for later
+        fix_center = np.fix(center)
+        self.shift = list(fix_center)
+
+        # Subpixel portion of the shift passed to the DFT
+        subpixel_center = center - fix_center
+
+        alpha = _dft_alpha(dx=self.pixelscale, du=pixelscale, 
+                           wave=self.wavelength, z=self.focal_length,
+                           oversample=oversample)
+
+        if center.shape[0] != len(data):
+            raise ValueError('dimension mismatch between center and wavefront depth')
+
+        for d in range(len(data)):
+            data[d] = fourier.dft2(data[d], alpha, dft_shape, 
+                                   subpixel_center[d], offset=self.offset[d],
+                                   unitary=True)
+
+        ### place tiles
+        # TODO: collapse this into the above for loop
+        tiles = []
+        for d in range(len(data)):
+            # The array center is given in terms of (x,y) but we place the chip in
+            # terms of (r,c)
+            center = np.flip(self.shift[d], axis=0)
+
+            # Compute the chip location
+            data_slice, chip_slice = _chip_insertion_slices(out_shape,
+                                                            (data[d].shape[0], data[d].shape[1]),
+                                                            center)
+            if data_slice:
+                tiles.append(imtile(data[d], data_slice, chip_slice))
+        
+        self.tiles = consolidate(tiles)
+
+        for tile in self.tiles:
+            self.data[0][tile.slice] = tile.data
+        
+
+def _sanitize_shape(shape, default=()):
+    if shape is None:
+        shape = default
+    shape = np.asarray(shape)
+    if shape.shape == ():
+        shape = np.append(shape, shape)
+    return shape
+
+def _dft_alpha(dx, du, wave, z, oversample):
+    return (dx*du)/(wave*z*oversample)
+
+def _chip_insertion_slices(npix_canvas, npix_chip, shift):
+    npix_canvas = np.asarray(npix_canvas)
+    npix_chip = np.asarray(npix_chip)
+
+    # Canvas coordinates of the upper left corner of the shifted chip
+    chip_shifted_ul = (npix_canvas / 2) - (npix_chip / 2) + shift
+
+    # Chip slice indices
+    chip_top = int(0)
+    chip_bottom = int(npix_chip[0])
+    chip_left = int(0)
+    chip_right = int(npix_chip[1])
+
+    # Canvas insertion slice indices
+    canvas_top = int(chip_shifted_ul[0])
+    canvas_bottom = int(chip_shifted_ul[0] + npix_chip[0])
+    canvas_left = int(chip_shifted_ul[1])
+    canvas_right = int(chip_shifted_ul[1] + npix_chip[1])
+
+    # reconcile the chip and canvas insertion indices
+    if canvas_top < 0:
+        chip_top = -1 * canvas_top
+        canvas_top = 0
+
+    if canvas_bottom > npix_canvas[0]:
+        chip_bottom -= canvas_bottom - npix_canvas[0]
+        canvas_bottom = npix_canvas[0]
+
+    if canvas_left < 0:
+        chip_left = -1 * canvas_left
+        canvas_left = 0
+
+    if canvas_right > npix_canvas[1]:
+        chip_right -= canvas_right - npix_canvas[1]
+        canvas_right = npix_canvas[1]
+
+    if np.any(np.array([canvas_bottom, chip_bottom, canvas_right, chip_right]) < 0):
+        return None, None
+    else:
+        return (slice(canvas_top, canvas_bottom), slice(canvas_left, canvas_right)), \
+               (slice(chip_top, chip_bottom), slice(chip_left, chip_right))
+
+
+class imtile:
+    def __init__(self, data, global_slice, data_slice):
+        self._data = [data]
+        self._data_slice = [data_slice]
+        self._global_slice = [global_slice]
+        self._slice = global_slice
+
+    def join(self, imtile):
+        self._data = [*self._data, *imtile._data]
+        self._data_slice = [*self._data_slice, *imtile._data_slice]
+        self._global_slice = [*self._global_slice, *imtile._global_slice]
+
+        # update the bounding slice
+        self._slice = bounding_slice(self._slice, imtile.slice)  # the full output tile slice
+
+    @property
+    def slice(self):
+        return self._slice
+
+    @property
+    def _local_slice(self):
+        return [local_slice(self._slice, slc) for slc in self._global_slice]
+
+    @property
+    def data(self):
+        # this creates the output array and places everything
+
+        data = np.zeros((self.slice[0].stop - self.slice[0].start,
+                         self.slice[1].stop - self.slice[1].start),
+                        dtype=np.complex128)
+
+        # compute local slices based on slice and global slice
+
+        _local_slice = self._local_slice
+
+        for n in range(len(self._data)):
+            data[_local_slice[n]] += self._data[n][self._data_slice[n]]
+
+        return data
+
+
+def overlap(a, b):
+    return a[0].start <= b[0].stop and a[0].stop >= b[0].start and a[1].start <= b[1].stop and a[1].stop >= b[1].start
+
+
+def bounding_slice(a, b):
+    rmin = min(a[0].start, b[0].start)
+    rmax = max(a[0].stop, b[0].stop)
+    cmin = min(a[1].start, b[1].start)
+    cmax = max(a[1].stop, b[1].stop)
+    return slice(rmin, rmax), slice(cmin, cmax)
+
+
+def local_slice(output_slice, chip_slice):
+    row_slc = chip_slice[0].start - output_slice[0].start, chip_slice[0].stop - output_slice[0].start
+    col_slc = chip_slice[1].start - output_slice[1].start, chip_slice[1].stop - output_slice[1].start
+    return slice(*row_slc), slice(*col_slc)
+
+
+def consolidate(tiles):
+    for m, n in combinations(range(len(tiles)), 2):
+        if overlap(tiles[m].slice, tiles[n].slice):
+            tiles[m].join(tiles[n])
+            tiles.pop(n)
+            return consolidate(tiles)
+
+    return tiles

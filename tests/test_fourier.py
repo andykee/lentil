@@ -81,7 +81,7 @@ def test_dft2_offset():
     n = 10
     m = 3
 
-    f = np.zeros((n,n), dtype=np.complex)
+    f = np.zeros((n,n), dtype=complex)
     r,c = np.random.randint(0, n-m, size=2)
     f[r:r+m,c:c+m] = np.random.rand(m,m) + 1j * np.random.rand(m,m)
     slc = lentil.util.boundary_slice(f)
@@ -95,7 +95,7 @@ def test_dft2_offset():
 
 def test_dft2_out():
     n = 10
-    f = np.random.normal(size=(n,n)).astype(np.complex)
+    f = np.random.normal(size=(n,n)).astype(complex)
     F = lentil.fourier.dft2(f, 1/n, out=f)
     assert f is F
 

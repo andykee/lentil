@@ -7,7 +7,7 @@ import scipy.optimize
 
 from lentil import util
 
-__all__ = ['Plane', 'Pupil', 'Image', 'Detector', 'DispersiveShift', 'Grism',
+__all__ = ['Plane', 'Pupil', 'Image', 'DispersiveShift', 'Grism',
            'LensletArray', 'Tilt', 'Rotate', 'Flip']
 
 
@@ -34,28 +34,21 @@ class Plane:
     mask : array_like, optional
         Binary mask. If not specified, a mask is created from the amplitude.
 
-    segmask : (nseg, ...) {array_like, None} optional
-        Binary segment mask. Default is None.
-
     Attributes
     ----------
     tilt : list
 
-    cache : dict
-
     """
 
-    def __init__(self, pixelscale=None, amplitude=1, phase=0, mask=None, segmask=None):
+    def __init__(self, pixelscale=None, amplitude=1, phase=0, mask=None):
         # We directly set the local attributes here in case a subclass has redefined
         # the property (which could cause an weird behavior and will throw an
         # AttributeError if the subclass hasn't defined an accompanying getter
         self.pixelscale = pixelscale
-        self._amplitude = np.asarray(amplitude) if amplitude is not None else None
-        self._phase = np.asarray(phase) if phase is not None else None
+        self._amplitude = np.asarray(amplitude)
+        self._phase = np.asarray(phase)
         self._mask = np.asarray(mask) if mask is not None else None
-        self._segmask = np.asarray(segmask) if segmask is not None else None
 
-        self.cache = {}
         self.tilt = []
 
     def __init_subclass__(cls):
@@ -66,9 +59,7 @@ class Plane:
         cls._amplitude = np.array(1)
         cls._phase = np.array(0)
         cls._mask = None
-        cls._segmask = None
 
-        cls.cache = {}
         cls.tilt = []
 
     def __repr__(self):
@@ -101,19 +92,12 @@ class Plane:
         -------
         amplitude : ndarray
 
-        Note
-        ----
-        If a cached value exists it is returned first.
-
         """
         return self._amplitude
 
     @amplitude.setter
     def amplitude(self, value):
-        if value is not None:
-            self._amplitude = np.asarray(value)
-        else:
-            self._amplitude = None
+        self._amplitude = np.asarray(value)
 
     @property
     def phase(self):
@@ -123,19 +107,12 @@ class Plane:
         -------
         phase : ndarray
 
-        Note
-        ----
-        If a cached value exists it is returned first.
-
         """
         return self._phase
 
     @phase.setter
     def phase(self, value):
-        if value is not None:
-            self._phase = np.asarray(value)
-        else:
-            self._phase = None
+        self._phase = np.asarray(value)
 
     @property
     def mask(self):
@@ -149,12 +126,9 @@ class Plane:
         if self._mask is not None:
             return self._mask
         else:
-            if self.amplitude is not None:
-                mask = np.copy(self.amplitude)
-                mask[mask != 0] = 1
-                return mask
-            else:
-                return None
+            mask = np.copy(self.amplitude)
+            mask[mask != 0] = 1
+            return mask
 
     @mask.setter
     def mask(self, value):
@@ -164,50 +138,29 @@ class Plane:
             self._mask = None
 
     @property
-    def segmask(self):
-        """Binary segment mask
-
-        Returns
-        -------
-        segmask : (nseg,...) ndarray or None
-
-        """
-        return self._segmask
-
-    @segmask.setter
-    def segmask(self, value):
-        if value is None:
-            segmask = None
+    def global_mask(self):
+        if self.depth < 2:
+            return self.mask
         else:
-            # Note this operation implicitly converts a list or tuple of arrays
-            # to an appropriately stacked ndarray
-            segmask = np.asarray(value)
-            if segmask.ndim == 2:
-                segmask = segmask[np.newaxis, ...]
-            elif segmask.ndim > 3:
-                raise ValueError(f"don't know what to do with {segmask.ndim}th dimension")
-        self._segmask = segmask
-
-    @property
-    def nseg(self):
-        """Number of segments represented in the plane."""
-        if self.segmask is None:
-            return 0
-        else:
-            return self.segmask.shape[0]
+            return np.sum(self.mask, axis=0)
 
     @property
     def shape(self):
-        """Plane dimensions computed from :attr:`mask` or :attr:`segmask`. Returns None
-        if :attr:`mask` and :attr:`segmask` are None.
+        """Plane dimensions computed from :attr:`mask` Returns None if :attr:`mask` 
+        is None.
         """
-        if self.mask is None and self.segmask is None:
-            return None
+        if self.depth == 1:
+            return self.mask.shape
         else:
-            if self.mask is not None:
-                return self.mask.shape
-            else:
-                return self.segmask.shape[1], self.segmask.shape[2]
+            return self.mask.shape[1], self.mask.shape[2]
+
+    @property
+    def depth(self):
+        """Number of independent masks (segments) in self.mask"""
+        if self.mask.ndim in (0, 1, 2):
+            return 1
+        else:
+            return self.mask.shape[0]
 
     @staticmethod
     def rescale_amplitude(amplitude, scale):
@@ -290,39 +243,10 @@ class Plane:
         mask[np.nonzero(mask)] = 1
         return mask.astype(np.int)
 
-    @staticmethod
-    def rescale_segmask(segmask, scale):
-        """Rescale plane segmask
-
-        This method uses linear interpolation. If custom interpolation is required,
-        this method should be redefined.
-
-        Parameters
-        ----------
-        segmask : ndarray
-
-        scale : float
-            Scaling factor. Scale factors less than 1 will shrink the amplitude. Scale
-            factors greater than 1 will grow the amplitude.
-
-        Returns
-        -------
-        segmask : ndarray
-            Rescaled segmask
-
-        """
-        out = []
-        for seg in segmask:
-            mask = util.rescale(seg, scale=scale, shape=None, mask=None,
-                                order=1, mode='nearest', unitary=False)
-            mask[mask != 0] = 1
-            out.append(mask)
-        return np.asarray(out)
-
     @property
     def ptt_vector(self):
-        """2D vector representing piston and tilt in x and y. Planes with no mask or
-        segmask have ptt_vector = None.
+        """2D vector representing piston and tilt in x and y. Planes with no mask
+        have ptt_vector = None.
 
         Returns
         -------
@@ -331,7 +255,7 @@ class Plane:
         """
 
         # if there's no mask, we just set ptt_vector to None and move on
-        if (self.shape == () or self.shape is None) and self.segmask is None:
+        if self.shape == () or self.shape is None:
             ptt_vector = None
         else:
             # compute unmasked piston, tip, tilt vector
@@ -339,15 +263,15 @@ class Plane:
             unmasked_ptt_vector = np.einsum('ij,i->ij', [np.ones(x.size), x.ravel(), y.ravel()],
                                             [1, self.pixelscale[0], self.pixelscale[1]])
 
-            if self.segmask is None:
+            if self.depth == 1:
                 ptt_vector = np.einsum('ij,j->ij', unmasked_ptt_vector, self.mask.ravel())
             else:
                 # prepare empty ptt_vector
-                ptt_vector = np.empty((self.nseg * 3, self.mask.size))
+                ptt_vector = np.empty((self.depth * 3, np.prod(self.shape)))
 
-                # loop over the segments and fill in the masked ptt_vectors
-                for seg in np.arange(self.nseg):
-                    ptt_vector[3 * seg:3 * seg + 3] = unmasked_ptt_vector * self.segmask[seg].ravel()
+                # loop over the masks and fill in the masked ptt_vectors
+                for mask in np.arange(self.depth):
+                    ptt_vector[3*mask:3*mask+3] = unmasked_ptt_vector * self.mask[mask].ravel()
 
         return ptt_vector
 
@@ -390,9 +314,9 @@ class Plane:
             ptt_vector = self.ptt_vector
 
         # There are a couple of cases where we don't have enough information to remove the
-        # tilt, so we just return the phase as is and None tilt
+        # tilt, so we just return the Plane as-is
         if ptt_vector is None or phase.size == 1:
-            return phase, []
+            return
 
         nseg = len(ptt_vector)//3
 
@@ -405,7 +329,7 @@ class Plane:
             # coordinates to about the Tilt plane axes. We can transform from
             # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
             tilt = [Tilt(x=-t[2], y=t[1])]
-            return phase_no_tilt, tilt
+
         else:
             t = np.empty((nseg, 3))
             phase_no_tilt = np.empty((nseg, phase.shape[0], phase.shape[1]))
@@ -415,14 +339,17 @@ class Plane:
                 t[seg] = np.linalg.lstsq(ptt_vector[3 * seg:3 * seg + 3].T, phase.ravel(),
                                          rcond=None)[0]
                 seg_tilt = np.einsum('ij,i->j', ptt_vector[3 * seg + 1:3 * seg + 3], t[seg, 1:3])
-                phase_no_tilt[seg] = phase - seg_tilt.reshape(phase.shape)
+                phase_no_tilt[seg] = (phase - seg_tilt.reshape(phase.shape)) * self.mask[seg]
 
             # 01da13b transitioned from specifying tilt in terms of image plane
             # coordinates to about the Tilt plane axes. We can transform from
             # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
             tilt = [Tilt(x=-t[seg, 2], y=t[seg, 1]) for seg in range(nseg)]
 
-            return phase_no_tilt, tilt
+            phase_no_tilt = np.sum(phase_no_tilt, axis=0)
+
+        self.phase = phase_no_tilt
+        self.tilt.append(tilt)
 
     def slice(self, mask=None):
         """Compute slices defined by the data extent in ``mask``.
@@ -431,9 +358,8 @@ class Plane:
         ----------
         mask : array_like or None, optional
             Mask to use for identifying data extents. If None, the Plane's
-            :attr:`segmask` is used if available, otherwise the Plane's
-            :attr:`mask` is used. If both :attr:`segmask` and :attr:`mask` are
-            None, ``Ellipsis`` is returned (slice returns all data).
+            :attr:`mask` is used. If :attr:`mask` is None, ``Ellipsis`` is 
+            returned (slice returns all data).
 
         Returns
         -------
@@ -447,22 +373,17 @@ class Plane:
 
         """
 
-        # If a mask is not provided, we should prefer segmask over mask
         if mask is None:
-            if self.segmask is not None:
-                mask = self.segmask
-            else:
-                mask = self.mask
+            mask = self.mask
 
-        # self.mask and self.segmask may still return None so we
-        # catch that here
+        # self.mask may still return None so we catch that here
         if mask.ndim < 2 or mask is None:
             # np.s_[...] = Ellipsis -> returns the whole array
             s = [np.s_[...]]
         elif mask.ndim == 2:
             s = [util.boundary_slice(mask)]
         elif mask.ndim == 3:
-            s = [util.boundary_slice(segmask) for segmask in mask]
+            s = [util.boundary_slice(m) for m in mask]
         return s
 
     def slice_offset(self, slices, shape=None, indexing='xy'):
@@ -525,43 +446,21 @@ class Plane:
 
         """
 
-        if wavefront.pixelscale is None:
-            wavefront.pixelscale = self.pixelscale
+        if wavefront.pixelscale:
+            # We may interpolate in the future, but for now we'll enforce equality            
+            assert all(wavefront.pixelscale == self.pixelscale) 
         else:
-            if self.pixelscale is not None:
-                assert all(wavefront.pixelscale == self.pixelscale)
-
-        # TODO: functionalize grabbing cached attributes from self.cache
-        # Want to make overloading multiply() easier. This could probably be
-        # done in one of two ways:
-        #   1. Write a function that returns a tuple of cached values, handling
-        #      the defaults along the way
-        #   2. It might be possible to use a defaultdict for self.cache that
-        #      take care of the defaulting automatically?
-
-        amplitude = self.cache['amplitude'] if 'amplitude' in self.cache else self.amplitude
-        phase = self.cache['phase'] if 'phase' in self.cache else self.phase
-        tilt = self.cache['tilt'] if 'tilt' in self.cache else self.tilt
-        slc = self.cache['slice'] if 'slice' in self.cache else [np.s_[...]]
-        #ofst = self.cache['offset'] if 'offset' in self.cache else [None]
-
-        data = wavefront.data  # grab a pointer to the existing wavefront.data
+            wavefront.pixelscale = self.pixelscale
+            
+        # broadcast existing wavefront data to Plane shape and clear the 
+        # wavefront.data list
+        data = [np.broadcast_to(d, self.shape) for d in wavefront.data]
         wavefront.data = []
 
+        slc = self.slice()
+        depth = self.depth
+
         # TODO: need to develop a strategy for handling pre-existing offsets
-
-        # wavefront.offset = []
-        # then below, under wavefront.data.append:
-        # wavefront.offset.append(ofst[seg])
-        #   OR
-        # wavefront.offset.append(
-
-        # WAIT!
-        # -----------------------------
-        # what if we just compute the offset on the fly here with each slice?
-        #
-        # no need to cache it or deal with any of this BS?!
-        #
         # Still need to figure out how to deal with the fact that we may have an
         # incoming offset that may or may not be replaced by something new.
         #
@@ -577,49 +476,25 @@ class Plane:
         offset = []
 
         for d in data:
-            if phase.ndim == 3:
+            for n, slc in enumerate(self.slice()):
+                mask = self.mask if depth == 1 else self.mask[n]
+                p = _phasor(self.amplitude, self.phase, mask, wavefront.wavelength, slc)
+                
+                wavefront.data.append(d[slc] * p)
 
-                # we should make some assertions about wavefront.offset here
+                ofst = util.slice_offset(slc, self.amplitude.shape)
 
-                # This is the case we hit when tilt = 'angle' and nseg > 1
-                for seg in np.arange(phase.shape[0]):
-                    phasor = _phasor(amplitude, phase[seg], self.segmask[seg], wavefront.wavelength, slc[seg])
-                    wavefront.data.append(d[slc[seg]] * phasor)
-
-                    # we have a few rules for dealing with the slice offset here
-                    ofst = util.slice_offset(slc[seg], amplitude.shape)
-
-                    # if wavefront.offset is empty, we will just append the offset for each slice as we go (even if offset is None)
-                    #if not wavefront.offset:
-                    if ofst:
-                        offset.append(ofst)
-                    else:
-                        offset.append(None)
-
-            else:
-
-                # we should make some assertions about wavefront.offset here
-
-                for s in slc:
-                    phasor = _phasor(amplitude, phase, self.mask, wavefront.wavelength, s)
-                    wavefront.data.append(d[s] * phasor)
-
-                    # we have a few rules for dealing with the slice offset here
-                    ofst = util.slice_offset(s, amplitude.shape)
-
-                    # if wavefront.offset is empty, we will just append the offset for each slice as we go (even if offset is None)
-                    # if not wavefront.offset:
-                    if ofst:
-                        offset.append(ofst)
-                    else:
-                        offset.append(None)
+                if ofst:
+                    offset.append(ofst)
+                else:
+                    offset.append(None)
 
         if not wavefront.offset or not all(wavefront.offset):
             # of wavefront.offset is [] or a list of [None]:
              wavefront.offset = offset
 
-        # TODO: verify this should really be extend and not append
-        wavefront.tilt.extend(tilt)
+        # Use extend instead of append so that nothing happens if self.shift = []
+        wavefront.shift.extend(self.tilt)
 
         return wavefront
 
@@ -659,9 +534,6 @@ class Pupil(Plane):
     mask : array_like, optional
         Binary mask. If not specified, a mask is created from the amplitude.
 
-    segmask : (nseg, ...) {array_like, None} optional
-        Binary segment mask. Default is None.
-
     Note
     ----
     By definition, a pupil is represented by a spherical wavefront. Any
@@ -670,10 +542,10 @@ class Pupil(Plane):
 
     """
     def __init__(self, diameter=None, focal_length=None, pixelscale=None, amplitude=1,
-                 phase=0, mask=None, segmask=None):
+                 phase=0, mask=None):
 
         super().__init__(pixelscale=pixelscale, amplitude=amplitude, phase=phase,
-                         mask=mask, segmask=segmask)
+                         mask=mask)
 
         # We directly set the local attributes here in case a subclass has redefined
         # the property (which could cause an weird behavior and will throw an
@@ -714,7 +586,6 @@ class Pupil(Plane):
 
         # we inherit the plane's focal length as the wavefront's focal length
         wavefront.focal_length = self.focal_length
-        wavefront.planetype = 'pupil'
 
         return wavefront
 
@@ -759,46 +630,11 @@ class Image(Plane):
         self._shape = value
 
     def fit_tilt(self, *args, **kwargs):
-        return self.phase, []
+        return self
 
     def slice(self, *args, **kwargs):
         # np.s_[...] = Ellipsis -> returns the whole array
         return [np.s_[...]]
-
-    def multiply(self, wavefront):
-        """Multiply with a :class:`~lentil.wavefront.Wavefront`."""
-
-        # TODO: we should construct some version of Plane.multiply() here or just call super().multiply()
-
-        wavefront.planetype = 'image'
-
-        return wavefront
-
-
-class Detector(Image):
-
-    def multiply(self, wavefront):
-        # compute intensity
-        #wavefront.data = [np.abs(w)**2 for w in wavefront.data]
-        wavefront.planetype = 'image'
-        return wavefront
-
-    def frame(self, *args, **kwargs):
-        """Simulate reading out a frame
-
-        Returns
-        -------
-        frame : ndarray
-            Raw frame
-
-        Note
-        ----
-        This method just defines the ``frame`` interface. Any real functionality
-        should be defined in a subclass.
-
-        """
-        raise NotImplementedError
-
 
 class DispersivePhase(Plane):
 
@@ -817,7 +653,7 @@ class DispersiveShift(Plane):
 
     def multiply(self, wavefront):
         wavefront = super().multiply(wavefront)
-        wavefront.tilt.extend([self])
+        wavefront.shift.extend([self])
         return wavefront
 
 
@@ -885,9 +721,9 @@ class Grism(DispersiveShift):
 
     """
     def __init__(self, trace, dispersion, pixelscale=None, amplitude=1,
-                 phase=0, mask=None, segmask=None):
+                 phase=0, mask=None):
         super().__init__(pixelscale=pixelscale, amplitude=amplitude, phase=phase,
-                         mask=mask, segmask=segmask)
+                         mask=mask)
 
         self.trace = np.asarray(trace)
         self._trace_order = self.trace.size - 1
@@ -1017,7 +853,7 @@ class Tilt(Plane):
 
     def multiply(self, wavefront):
         wavefront = super().multiply(wavefront)
-        wavefront.tilt.extend([self])
+        wavefront.shift.extend([self])
         return wavefront
 
     def shift(self, xs=0, ys=0, z=0, **kwargs):
