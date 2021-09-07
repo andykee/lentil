@@ -9,342 +9,110 @@ from lentil import fourier
 from lentil.plane import Plane, Pupil, Image, Tilt
 from lentil.wavefront import Wavefront
 
-__all__ = ['propagate']
+__all__ = ['propagate_image']
 
 
-def propagate(planes, wave, weight=None, npix=None, npix_chip=None, oversample=2,
-              rebin=True, tilt='phase', interp_phasor=True, flatten=True,
-              use_multiprocessing=False):
-    """Compute a polychromatic point spread function using Fraunhofer
-    diffraction.
+def propagate_image(wavefront, pixelscale, npix, npix_prop=None, 
+                    oversample=2, place_tiles=True):
+    """Propagate a :class:`~lentil.Wavefront` from a :class:`~lentil.Pupil` 
+    plane to an image plane using the Fraunhoffer diffraction approximation.
 
     Parameters
     ----------
-    planes : list_like
-        List of :class:`~lentil.Plane` objects
-
-    wave : array_like
-        Array of wavelengths (in meters)
-
-    weight : array_like, optional
-        Weight multiple applied to each wavelength slice in :attr:`wave`.
-        :attr:`weight` can be relative (for example, when considering the
-        optical transmission through the optical system) or absolute (for
-        example, when performing radiometrically accurate propagations where
-        wavelength-dependent flux at the image plane is known). Must have
-        the same length as :attr:`wave`. If not specified, ones are used.
-
-    npix : int or (2,) tuple of ints, optional
-        Shape of output plane. If not specified,
-        ``npix = OpticalSystem.planes[-1].shape``.
-
-    npix_chip : int or (2,) tuple of ints, optional
-        Shape of propagation output plane. If None (default),
-        ``npix_chip = npix``. If ``npix_chip != npix``, the propagation
-        result is placed in the appropriate location in the output plane.
-        npix_chip cannot be larger than npix.
-
+    wavefront : :class:`~lentil.Wavefront`
+        The wavefront to propagate
+    pixelscale : float or (2,) array_like
+        Physical sampling of output plane in meters. If `pixelscale` is a
+        scalar, the sampling is assumed to be uniform in x and y.
+    npix : int or (2,) array_like
+        Output plane shape. If `npix` is a scalar, the output plane is assumed
+        to be square with shape (npix,npix).
+    npix_prop : int, (2,) array_like, or None, optional
+        Propagation plane shape. If None (default), `npix_prop` = `npix`. If
+        `npix_prop` is a scalar, the propagation plane is assumed to be square
+        with shape (npix_prop,npix_prop).
     oversample : int, optional
-        Number of times to oversample the output plane. Default is 2.
-
-    rebin : bool, optional
-        If ``True``, return the output plane in the sampling given by
-        ``pixelscale``, binning down the output plane by a factor of
-        ``oversample`` as needed. Note that this operation preserves power
-        in the output plane. Default is ``True``.
-
-    tilt : {'phase', 'angle'}, optional
-        Propagation tilt handling strategy
-
-        * 'phase' - any tilt present in the Element phase contribution is
-          included in the Element*Wavefront product. (Default)
-        * 'angle' - any tilt present in the Element phase is removed before
-          computing the Element*Wavefront product. The equivalent angular
-          tilt is included in the Wavefront's
-          :attr:`~lentil.Wavefront.tilt` attribute.
-
-    interp_phasor : bool, optional
-        If True (default), the phasor components will be automatically
-        interpolated to avoid aliasing and wraparound in the detector plane.
-        If False, no checking or interpolation is performed.
-
-    flatten : bool, optional
-        If ``True``, the cube of wavelength-dependent output planes is
-        flattened into a single 2D array before being returned. If
-        ``False``, a cube of output planes is returned. Default is ``True``.
-
+        Number of times to oversample the propagation. Default is 2.
+    place_tiles : bool, optional
+        ?
+    
     Returns
     -------
-    psf : ndarray
-        Resulting point spread function.
+    wavefront : :class:`~lentil.Wavefront`
+        A new wavefront propagated to the specified image plane
 
     """
+    
+    # TODO: this should return a NEW wavefront
 
-    npix = _standardize_shape(npix, default=planes[-1].shape)
-    npix_chip = _standardize_shape(npix_chip, default=npix)
-    wave = _standardize_bandpass(wave)
-    weight = _standardize_bandpass(weight, default=np.ones_like(wave))
+    npix = _sanitize_shape(npix)
+    npix_prop = _sanitize_shape(npix_prop, default=npix)
 
-    # TODO: this is temporarily commented out for v0.5.0 beta testing
-    # if (rebin is True) and (not isinstance(planes[-1], Detector)):
-    #     raise AttributeError('rebin is only supported when propagating to a Detector plane')
+    out_shape = npix * oversample
+    prop_shape = npix_prop * oversample
 
-    _prepare_planes(planes, wave, npix_chip, oversample, tilt, interp_phasor)
+    center = wavefront.center(pixelscale, oversample)
+    data = wavefront.data
+    wavefront.data = [np.zeros(out_shape, dtype=complex)]
 
-    # Create an empty output
+    # integer portion of the shift that will be accounted for later
+    fix_center = np.fix(center)
+    wavefront.shift = list(fix_center)
 
-    # TODO: temporary image = detector workaround for v0.5.0 beta testing
-    output_dtype = np.float64
-    #output_dtype = np.float64 if isinstance(planes[-1], Detector) else np.complex128
-    output_shape = (npix[0]*oversample, npix[1]*oversample)
+    # subpixel portion of the shift passed to the DFT
+    subpixel_center = center - fix_center
 
-    if flatten:
-        output = np.zeros(output_shape, dtype=output_dtype)
-    else:
-        output = np.zeros((len(wave), output_shape[0], output_shape[1]), dtype=output_dtype)
+    alpha = _dft_alpha(dx=wavefront.pixelscale, du=pixelscale,
+                       wave=wavefront.wavelength, z=wavefront.focal_length,
+                       oversample=oversample)
 
-    #_output = np.zeros(output_shape, dtype=np.complex128)
+    if center.shape[0] != len(data):
+        raise ValueError('dimension mismatch between center and wavefront depth')
 
-    for n, (wl, wt) in enumerate(zip(wave, weight)):
-        if wt > 0:
+    for d in range(len(data)):
+        data[d] = fourier.dft2(data[d], alpha, prop_shape, subpixel_center[d],
+                               offset=wavefront.offset[d], unitary=True)
 
-            w = _propagate_mono(planes, wl, npix_chip, oversample)
+    ### place tiles
+    # TODO: collapse this into the above for loop
+    tiles = []
+    for d in range(len(data)):
+        # The array center is given in terms of (x,y) but we place the chip in
+        # terms of (r,c)
+        center = np.flip(wavefront.shift[d], axis=0)
 
-            if w.planetype == 'image':
+        # Compute the chip location
+        data_slice, chip_slice = _chip_insertion_slices(out_shape, 
+                                                        (data[d].shape[0], 
+                                                         data[d].shape[1],),
+                                                        center)
 
-                tiles = []
-                for d in range(w.depth):
-                    # The shift term is given in terms of (x,y) but we place the chip in
-                    # terms of (r,c)
-                    shift = np.flip(w.center[d], axis=0)
+        if data_slice:
+            tiles.append(imtile(data[d], data_slice, chip_slice))
+        
+        wavefront.tiles = consolidate(tiles)
 
-                    # Compute the chip location
-                    data_slice, chip_slice = _chip_insertion_slices(output_shape,
-                                                                    (w.data[d].shape[0], w.data[d].shape[1]),
-                                                                    shift)
-                    if data_slice:
-                        tiles.append(imtile(w.data[d], data_slice, chip_slice))
+        # TODO: this is where we would skip a step if place_tiles=False
+        # Note also that we should move away from storing tiles in wf.tiles and 
+        # store them in wf.data?
+        for tile in wavefront.tiles:
+            wavefront.data[0][tile.slice] = tile.data
 
-                tiles = consolidate(tiles)
-
-                for tile in tiles:
-                    if flatten:
-                        output[tile.slice] += np.abs(tile.data)**2 * wt
-                    else:
-                        output[n][tile.slice] = np.abs(tile.data)**2 * wt
-
-
-
-                    # Insert the complex result in the output
-                    #if data_slice:
-                    #    _output[data_slice] += w.data[d][chip_slice] * np.sqrt(wt)
-
-                #if flatten:
-                #    output += np.abs(_output)**2
-                #else:
-                #    output[n] = np.abs(_output)**2
-
-                #_output[:] = 0
-
-    #output = np.abs(output)**2
-
-            # At this point w.data should always have len == 1
-            #if flatten:
-            #    output += w.data[0] * wt
-            #else:
-            #    output[n] = w.data[0] * wt
-
-    if rebin:
-        output = util.rebin(output, oversample)
-
-    _cleanup_planes(planes)
-
-    return output
+    return wavefront
 
 
-def _prepare_planes(planes, wave, npix, oversample, tilt, interp_phasor):
-
-    # What should happen here as a part of cache_propagate:
-    # -----------------------------------------------------
-    # * if fit_tilt = True, the tilt in each plane should be fit and removed
-    #   from the phase and bookkept in the plane.tilt attribute
-    #   - note that this can be done on the un-sliced data for ease of interaction
-    #     with ptt_vector
-    #   - note further that ptt_vector should be reworked as a property with a
-    #     setter that is called at object creation with the mask in case we need
-    #     to do some reinterpolation down the line
-    #
-    # *  Once this is done we can remove ptt_vector from the cache that is
-    #    created in cache_propagate() since it won't be needed anymore. As
-    #    a matter of fact, we can just turn this into a method that takes
-    #    a mask or segmask and returns the vector -> _ptt_vector(mask)
-    #
-    # * Somewhere in here (probably before we fit and remove tilt), we need
-    #   to sort out the sampling and make sure each plane is adequately
-    #   sampled. Write up sampling rules for this.
-    #
-    #
-
-    # note the actual order of operations is probably:
-    # 1. sampling
-    # 2. set slice
-    # 3. fit_tilt (but this can be done over full arrays)
-    # TODO: rework this
-    # Compute the wavefront shape required to support propagation through the
-    # provided list of planes
-
-    # TODO: not sure where we should reinterpolate and how it should be done.
-
-    # The current approach is to find the maximum row and column dimensions of
-    # only the Pupil elements in self.planes. This whole approach will have to
-    # change once we support more complicated multi-plane propagations.
-    #
-    # I think what we should really do is find the shape of the first Plane
-    # of consequence. What we have hwre works for now though
-    shapes = [plane.shape for plane in planes if isinstance(plane, Pupil)]
-    npix_wavefront = (max(shapes, key=itemgetter(0))[0],
-                      max(shapes, key=itemgetter(1))[1])
-
-    # Loop over the planes to build caches
-    for plane in planes:
-        # handle the tilt first
-        plane.cache['tilt'] = copy.deepcopy(plane.tilt)
-        if tilt == 'angle':
-            phase, fit_tilt = plane.fit_tilt()
-            plane.cache['phase'] = phase
-            if fit_tilt:
-                plane.cache['tilt'].extend([fit_tilt])
-        else:
-            plane.cache['phase'] = copy.deepcopy(plane.phase)
-
-        plane.cache['amplitude'] = copy.deepcopy(plane.amplitude)
-        plane.cache['pixelscale'] = copy.deepcopy(plane.pixelscale)
-        plane.cache['npix_wavefront'] = npix_wavefront
-
-        # reinterpolate as needed
-        # NOTE: if we reinterpolate, we'll have to make sure we provide the correct
-        # slices and offsets (using the appropriate reinterpolated mask, probably)
-        if interp_phasor:
-            # We'll have already computed the interpolation scale when
-            # figuring out npix_wavefront so we just need to rescale
-            # amplitude and phase here
-            pass
-
-        # We need to compute slice and affset after we've reinterpolated -> mask and segmask
-        # note that plane.slice takes a mask parameter
-        slc = plane.slice()
-        plane.cache['slice'] = slc
-        plane.cache['offset'] = plane.slice_offset(slices=slc, shape=plane.shape, indexing='xy')
+def _sanitize_shape(shape, default=()):
+    if shape is None:
+        shape = default
+    shape = np.asarray(shape)
+    if shape.shape == ():
+        shape = np.append(shape, shape)
+    return shape
 
 
-def _cleanup_planes(planes):
-    for plane in planes:
-        plane.cache.clear()
-
-
-def _propagate_mono(planes, wavelength, npix_chip, oversample):
-    """Propagate a monochromatic wavefront from plane to plane through the
-    optical system using Fraunhofer diffraction.
-
-    Parameters
-    ----------
-    w : :class:`~lentil.Wavefront`
-        Wavefront object to propagate through the optical system.
-
-    npix : int or (2,) ints
-        Shape of output plane.
-
-    oversample : int
-       Number of times to oversample the output plane.
-
-    tilt : {'phase', 'angle'}
-        * 'phase' - any tilt present in the Element phase contribution is
-          included in the Element*Wavefront product.
-        * 'angle' - any tilt present in the Element phase is removed
-          before computing the Element*Wavefront product. The equivalent
-          angular tilt is included in the Wavefront's
-          :attr:`~lentil.Wavefront.tilt` attribute.
-
-    Returns
-    -------
-    field : ndarray
-        Resulting complex field propagated though the optical system.
-
-    """
-
-    w = Wavefront(wavelength=wavelength, pixelscale=None,
-                  shape=planes[0].cache['npix_wavefront'], planetype=None)
-
-    for plane in planes:
-
-        # Propagate to plane
-        if w.planetype is None:
-            # free space propagation to first plane
-            pass
-        elif (w.planetype == 'pupil') and isinstance(plane, Image):
-            if plane.pixelscale is not None:
-                w = _propagate_pti(w, plane.pixelscale, npix_chip, oversample)
-            else:
-                pass
-        elif (w.planetype == 'image') and isinstance(plane, Pupil):
-            pass
-        elif (w.planetype == 'pupil') and isinstance(plane, Pupil):
-            pass
-        elif (w.planetype == 'image') and isinstance(plane, Image):
-            pass
-        elif isinstance(plane, Plane):
-            pass
-        else:
-            raise TypeError('Unsupported propagation type ', w.planetype, ' to ', plane)
-
-        # Multiply by plane
-        w = plane.multiply(w)
-
-    # TODO: More advanced use cases may fail this assertion. We should figure out a
-    # way to handle them here
-    #assert w.depth == 1
-
-    return w
-
-# NOTE - PROPAGATION RULES
-# 1. Pupil to image will always implement tilts
-# 2. Pupil to pupil
-# 3. Image to pupil
-
-
-# TODO:
-# 1. accept flatten parameter
-# 2. accept some sort of chip processing lambda function
-# 3. accept data dtype parameter
-
-def _propagate_pti(w, pixelscale, npix, oversample):
-
-    shift = w.shift(pixelscale, oversample)
-    w.tilt = []
-
-    # Integer portion of the shift that will be accounted for
-    # later
-    fix_shift = np.fix(shift)
-    w.center = list(fix_shift)
-
-    # Residual subpixel portion of the shift that is passed to
-    # the DFT
-    res_shift = shift - fix_shift
-
-    #chip = np.empty((npix[0]*oversample, npix[1]*oversample), dtype=np.complex128)
-
-    alpha = (w.pixelscale * pixelscale) / (w.wavelength * w.focal_length * oversample)
-
-    if shift.shape[0] != w.depth:
-        raise ValueError('Dimension mismatch between tilt and wavefront depth')
-
-    for d in range(w.depth):
-        # data[d] = fourier.dft2(w.data[d], alpha, npix, res_shift[d])
-        w.data[d] = fourier.dft2(w.data[d], alpha, (npix[0]*oversample, npix[1]*oversample),
-                                 res_shift[d], offset=w.offset[d], unitary=True)
-
-    return w
-
+def _dft_alpha(dx, du, wave, z, oversample):
+    return (dx*du)/(wave*z*oversample)
+    
 
 def _standardize_shape(shape, default=()):
     if shape is None:
