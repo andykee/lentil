@@ -9,8 +9,6 @@ from lentil import fourier
 from lentil.plane import Plane, Pupil, Image, Tilt
 from lentil.wavefront import Wavefront
 
-__all__ = ['propagate_image']
-
 
 def propagate_image(wavefront, pixelscale, npix, npix_prop=None, 
                     oversample=2, place_tiles=True):
@@ -112,7 +110,7 @@ def _sanitize_shape(shape, default=()):
 
 def _dft_alpha(dx, du, wave, z, oversample):
     return (dx*du)/(wave*z*oversample)
-    
+
 
 def _standardize_shape(shape, default=()):
     if shape is None:

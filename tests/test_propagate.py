@@ -122,14 +122,14 @@ def test_airy2():
 class TiltPupil(lentil.Pupil):
     def __init__(self, npix, coeffs=None):
 
-        amplitude = lentil.modeltools.normalize_power(lentil.util.circle((npix, npix), npix//2))
+        amplitude = lentil.normalize_power(lentil.util.circle((npix, npix), npix//2))
         mask = lentil.util.circlemask((npix, npix), npix//2)
 
         if coeffs is None:
             coeffs = 5e-6 * np.random.uniform(low=-0.5, high=0.5, size=3)
             coeffs[0] = 0
 
-        opd = lentil.zernike.zernike_compose(mask=mask, coeffs=coeffs)
+        opd = lentil.zernike_compose(mask=mask, coeffs=coeffs)
 
         super().__init__(diameter=1,
                          focal_length=10,

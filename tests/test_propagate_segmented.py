@@ -13,14 +13,14 @@ class SimpleSegmentedPupil(lentil.Pupil):
         zern = np.random.uniform(-0.5, 0.5, size=2) * 2e-6
         seg_zern = np.random.uniform(-0.5, 0.5, size=6) * 4e-6
 
-        opdp = lentil.zernike.zernike_compose(global_mask, np.concatenate(([0], zern)))
-        opd1 = lentil.zernike.zernike_compose(mask[0], np.concatenate(([0], seg_zern[0:2])))
-        opd2 = lentil.zernike.zernike_compose(mask[1], np.concatenate(([0], seg_zern[2:4])))
-        opd3 = lentil.zernike.zernike_compose(mask[2], np.concatenate(([0], seg_zern[4:6])))
+        opdp = lentil.zernike_compose(global_mask, np.concatenate(([0], zern)))
+        opd1 = lentil.zernike_compose(mask[0], np.concatenate(([0], seg_zern[0:2])))
+        opd2 = lentil.zernike_compose(mask[1], np.concatenate(([0], seg_zern[2:4])))
+        opd3 = lentil.zernike_compose(mask[2], np.concatenate(([0], seg_zern[4:6])))
         opd = opdp + opd1 + opd2 + opd3
 
         super().__init__(diameter=1, focal_length=10, pixelscale=1/npix,
-                         amplitude=lentil.modeltools.normalize_power(global_mask), phase=opd,
+                         amplitude=lentil.normalize_power(global_mask), phase=opd,
                          mask=mask)
 
 

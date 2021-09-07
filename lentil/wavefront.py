@@ -5,7 +5,6 @@ import numpy as np
 
 from lentil import fourier, util
 
-__all__ = ['Wavefront']
 
 class Wavefront:
     """A class representing a monochromatic wavefront. :class:`Wavefront` is

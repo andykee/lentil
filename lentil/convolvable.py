@@ -1,7 +1,5 @@
 import numpy as np
 
-__all__ = ['pixel', 'jitter', 'smear']
-
 
 def pixel(img, oversample=1):
     """Apply the aperture effects of a square pixel on a discretely sampled

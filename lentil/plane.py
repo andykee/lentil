@@ -7,9 +7,6 @@ import scipy.optimize
 
 from lentil import util
 
-__all__ = ['Plane', 'Pupil', 'Image', 'DispersiveShift', 'Grism',
-           'LensletArray', 'Tilt', 'Rotate', 'Flip']
-
 
 class Plane:
     """Base class for representing a finite geometric plane.
