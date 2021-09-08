@@ -1,16 +1,16 @@
-.. _api-zernike:
+.. _api.zernike:
 
-****************************************
-Zernike polynomials (``lentil.zernike``)
-****************************************
+*******************
+Zernike polynomials
+*******************
 
 .. autosummary::
     :toctree: ../generated/
 
-    lentil.zernike.zernike
-    lentil.zernike.zernike_basis
-    lentil.zernike.zernike_compose
-    lentil.zernike.zernike_coordinates
-    lentil.zernike.zernike_fit
-    lentil.zernike.zernike_remove
+    lentil.zernike
+    lentil.zernike_basis
+    lentil.zernike_compose
+    lentil.zernike_coordinates
+    lentil.zernike_fit
+    lentil.zernike_remove
     

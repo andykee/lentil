@@ -4,18 +4,32 @@
 API reference
 *************
 
-This reference manual details functions, modules, and objects included in Lentil, 
-describing what they are and what they do.
+This reference manual details public functions, modules, and objects included 
+in Lentil, describing what they are and what they do.
+
+Some subpackages are public including ``lentil.radiometry`` and
+``lentil.detector``.
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 2
 
-    lentil
-    convolvable
+    planes
+    wavefront
+    propagation
+    imaging
     detector
-    modeltools
     radiometry
     util
     wfe
     zernike
-    private
+
+
+.. lentil
+.. convolvable
+.. detector
+.. modeltools
+.. radiometry
+.. util
+.. wfe
+.. zernike
+.. private

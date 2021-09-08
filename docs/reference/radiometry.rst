@@ -1,8 +1,8 @@
 .. _api-radiometry:
 
-**********************************
-Radiometry (``lentil.radiometry``)
-**********************************
+**********
+Radiometry
+**********
 
 Spectrum
 ========

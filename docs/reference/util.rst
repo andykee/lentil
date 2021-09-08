@@ -1,8 +1,8 @@
-.. _api-util:
+.. _api.util:
 
-***********************************
-Utility functions (``lentil.util``)
-***********************************
+*********
+Utilities
+*********
 
 Array Manipulation
 ==================
@@ -54,3 +54,4 @@ Miscellaneous
 
     lentil.util.pixelscale_nyquist
     lentil.util.expc
+    lentil.util.normalize_power
