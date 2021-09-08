@@ -5,7 +5,7 @@ from scipy import ndimage
 import scipy.integrate
 import scipy.optimize
 
-from lentil import util
+import lentil
 
 
 class Plane:
@@ -61,6 +61,21 @@ class Plane:
 
     def __repr__(self):
         return f'{self.__class__.__name__}()'
+
+    def _copy(self, memo=None):
+        # Return a deep copy of self exclding amplitude, mask, phase,
+        # and pixelscale. This method is used by resample() and rescale().
+        if memo is None:
+            memo = {}
+        
+        cls = self.__class__
+        out = cls.__new__(cls)
+
+        memo[id(self)] = out
+        for k, v in self.__dict__.items():
+            if k not in ('_amplitude', '_mask', '_phase', '_pixelscale'):
+                setattr(out, k, deepcopy(v, memo))
+        return out
 
     @property
     def pixelscale(self):
@@ -159,87 +174,6 @@ class Plane:
         else:
             return self.mask.shape[0]
 
-    @staticmethod
-    def rescale_amplitude(amplitude, scale):
-        """Rescale plane amplitude
-
-        This method uses 3rd order interpolation and preserves the power of the amplitude
-        array. If custom interpolation is required, this method should be redefined.
-
-        Parameters
-        ----------
-        amplitude : array_like
-
-        scale : float
-            Scaling factor. Scale factors less than 1 will shrink the amplitude. Scale
-            factors greater than 1 will grow the amplitude.
-
-        Returns
-        -------
-        amplitude : ndarray
-            Rescaled amplitude
-
-        """
-        if scale == 1:
-            return amplitude
-        else:
-            return util.rescale(amplitude, scale=scale, shape=None, mask=None,
-                                order=3, mode='nearest', unitary=False)/scale**2
-
-    @staticmethod
-    def rescale_phase(phase, scale):
-        """Rescale plane phase
-
-        This method uses 3rd order interpolation. If custom interpolation is required,
-        this method should be redefined.
-
-        Parameters
-        ----------
-        phase : ndarray
-
-        scale : float
-            Scaling factor. Scale factors less than 1 will shrink the amplitude. Scale
-            factors greater than 1 will grow the amplitude.
-
-        Returns
-        -------
-        phase : ndarray
-            Rescaled phase
-
-        """
-        if scale == 1:
-            return phase
-        else:
-            return util.rescale(phase, scale=scale, shape=None, mask=None,
-                                order=3, mode='nearest', unitary=False)
-
-    @staticmethod
-    def rescale_mask(mask, scale):
-        """Rescale plane mask
-
-        This method uses linear interpolation. If custom interpolation is required,
-        this method should be redefined.
-
-        Parameters
-        ----------
-        mask : ndarray
-
-        scale : float
-            Scaling factor. Scale factors less than 1 will shrink the amplitude. Scale
-            factors greater than 1 will grow the amplitude.
-
-        Returns
-        -------
-        mask : ndarray
-            Rescaled mask
-
-        """
-        mask = util.rescale(mask, scale=scale, shape=None, mask=None, order=0,
-                            mode='constant', unitary=False)
-        # mask[mask < np.finfo(mask.dtype).eps] = 0
-        mask[np.nonzero(mask)] = 1
-        return mask.astype(np.int)
-
     @property
     def ptt_vector(self):
         """2D vector representing piston and tilt in x and y. Planes with no mask
@@ -256,7 +190,7 @@ class Plane:
             ptt_vector = None
         else:
             # compute unmasked piston, tip, tilt vector
-            x, y = util.mesh(self.shape)
+            x, y = lentil.util.mesh(self.shape)
             unmasked_ptt_vector = np.einsum('ij,i->ij', [np.ones(x.size), x.ravel(), y.ravel()],
                                             [1, self.pixelscale[0], self.pixelscale[1]])
 
@@ -287,21 +221,8 @@ class Plane:
 
         Returns
         -------
-        phase_no_tilt : ndarray
-            ``phase`` with tilt fitted and removed. If ``len(ptt_vector)//3 > 1``, the
-            returned phase array will contain one entry for each triad in ``ptt_vector``.
-
-        tilt : list
-            List of :class:`~lentil.Tilt` objects representing the fit and removed tilt.
-
-        Note
-        ----
-        This method is called during :func:`~lentil.propagate` when ``tilt='angle'``. If
-        custom tilt-removal behavior is required, this method should be modified in a
-        subclass.
-
-        If tilt-removal should `always` be skipped, this method should be modified in a
-        subclass to: ``return self.phase, []``
+        plane : :class:`~lentil.Plane`
+            Tilt-removed plane with tilt bookkept separately in Plane.tilt list
 
         """
         if phase is None:
@@ -348,6 +269,37 @@ class Plane:
         self.phase = phase_no_tilt
         self.tilt.append(tilt)
 
+    def rescale(self, scale):
+        
+        out = self._copy()
+
+        if self.amplitude.ndim > 1:
+            out.amplitude = lentil.rescale(self.amplitude, scale=scale, shape=None, mask=None,
+                                           order=3, mode='nearest', unitary=False)/scale**2 
+        
+        if self.phase.ndim > 1:
+            out.phase = lentil.rescale(self.phase, scale=scale, shape=None, mask=None,
+                                       order=3, mode='nearest', unitary=False)
+
+        if self.mask.ndim > 1:
+            out.mask = lentil.rescale(self.mask, scale=scale, shape=None, mask=None, order=0,
+                                      mode='constant', unitary=False)
+        # mask[mask < np.finfo(mask.dtype).eps] = 0
+        out.mask[np.nonzero(out.mask)] = 1
+        out.mask = out.mask.astype(int) 
+
+        out.pixelscale = self.pixelscale/scale
+        out.tilt = self.tilt.copy()
+
+        return out
+        
+    def resample(self, pixelscale):
+
+        if self.pixelscale[0] != self.pixelscale[1]:
+            raise NotImplementedError("Can't resample non-uniformly sampled Plane")
+
+        return self.rescale(scale=self.pixelscale[0]/pixelscale)
+
     def slice(self, mask=None):
         """Compute slices defined by the data extent in ``mask``.
 
@@ -378,9 +330,9 @@ class Plane:
             # np.s_[...] = Ellipsis -> returns the whole array
             s = [np.s_[...]]
         elif mask.ndim == 2:
-            s = [util.boundary_slice(mask)]
+            s = [lentil.util.boundary_slice(mask)]
         elif mask.ndim == 3:
-            s = [util.boundary_slice(m) for m in mask]
+            s = [lentil.util.boundary_slice(m) for m in mask]
         return s
 
     def slice_offset(self, slices, shape=None, indexing='xy'):
@@ -415,7 +367,7 @@ class Plane:
 
         offsets = []
         for s in slices:
-            offset = util.slice_offset(slice=s, shape=shape, indexing=indexing)
+            offset = lentil.util.slice_offset(slice=s, shape=shape, indexing=indexing)
             if offset:
                 offsets.append(offset)
         if offsets:
@@ -479,7 +431,7 @@ class Plane:
                 
                 wavefront.data.append(d[slc] * p)
 
-                ofst = util.slice_offset(slc, self.amplitude.shape)
+                ofst = lentil.util.slice_offset(slc, self.amplitude.shape)
 
                 if ofst:
                     offset.append(ofst)
@@ -500,7 +452,7 @@ def _phasor(amplitude, phase, mask, wavelength, slc=Ellipsis):
     amp = amplitude if amplitude.size == 1 else amplitude[slc]
     ph = phase if phase.size == 1 else phase[slc]
     msk = mask if mask.size == 1 else mask[slc]
-    return (amp * util.expc(2*np.pi*ph/wavelength)) * msk
+    return (amp * lentil.util.expc(2*np.pi*ph/wavelength)) * msk
 
 
 class Pupil(Plane):
