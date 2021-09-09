@@ -16,10 +16,10 @@ def test_propagate_slice_one():
     shift = np.random.uniform(low=-50, high=50, size=2).astype(int)
     amp = lentil.util.circle((256,256), 256//4, shift=shift)
 
-    rho, theta = lentil.zernike.zernike_coordinates(amp, shift=shift)
+    rho, theta = lentil.zernike_coordinates(amp, shift=shift)
     coeffs = np.random.uniform(low=-1, high=1, size=11)*100e-9
     coeffs[0:3] = 0 # no ptt
-    phase = lentil.zernike.zernike_compose(amp, coeffs, rho=rho, theta=theta)
+    phase = lentil.zernike_compose(amp, coeffs, rho=rho, theta=theta)
 
     alpha = (dx*du)/(wavelength*focal_length)
     oversample = 5
@@ -52,20 +52,20 @@ def test_propagate_slice_multi():
     slc1 = lentil.util.boundary_slice(amp1)
     ofst1 = lentil.util.slice_offset(slc1, shape=amp1.shape, indexing='xy')
 
-    rho, theta = lentil.zernike.zernike_coordinates(amp1, shift=(0, -0.3*n))
+    rho, theta = lentil.zernike_coordinates(amp1, shift=(0, -0.3*n))
     coeffs = np.random.uniform(low=-1, high=1, size=11)*100e-9
     coeffs[0:3] = 0 # no ptt
-    phase1 = lentil.zernike.zernike_compose(amp1, coeffs, rho=rho, theta=theta)
+    phase1 = lentil.zernike_compose(amp1, coeffs, rho=rho, theta=theta)
 
 
     amp2 = lentil.util.circle((n,n), n//5, shift=(0, .3*n))
     slc2 = lentil.util.boundary_slice(amp2)
     ofst2 = lentil.util.slice_offset(slc2, shape=amp2.shape, indexing='xy')
 
-    rho, theta = lentil.zernike.zernike_coordinates(amp2, shift=(0, 0.3*n))
+    rho, theta = lentil.zernike_coordinates(amp2, shift=(0, 0.3*n))
     coeffs = np.random.uniform(low=-1, high=1, size=11)*100e-9
     coeffs[0:3] = 0 # no ptt
-    phase2 = lentil.zernike.zernike_compose(amp2, coeffs, rho=rho, theta=theta)
+    phase2 = lentil.zernike_compose(amp2, coeffs, rho=rho, theta=theta)
 
 
     alpha = (dx*du)/(wavelength*focal_length)

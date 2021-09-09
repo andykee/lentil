@@ -1,56 +1,36 @@
-.. _api-util:
+.. _api.util:
 
-***********************************
-Utility functions (``lentil.util``)
-***********************************
-
-Array Manipulation
-==================
-.. autosummary::
-    :toctree: ../generated/
-
-    lentil.util.boundary
-    lentil.util.boundary_slice
-    lentil.util.centroid
-    lentil.util.slice_offset
-    lentil.util.pad
-    lentil.util.window
-    lentil.util.rebin
-    lentil.util.rescale
+*********
+Utilities
+*********
+.. currentmodule:: lentil
 
 Shapes
 ======
 .. autosummary::
     :toctree: ../generated/
 
+    lentil.circle
+    lentil.circlemask
+    lentil.hexagon
+    lentil.slit
 
-    lentil.util.circle
-    lentil.util.circlemask
-    lentil.util.hexagon
-    lentil.util.slit
-    lentil.util.mesh
-
-Kernels
-=======
+Array Manipulation
+==================
 .. autosummary::
     :toctree: ../generated/
 
-    lentil.util.gaussian2d
-
-Sparse Matrix Utilities
-=======================
-.. autosummary::
-    :toctree: ../generated/
-
-    lentil.util.v2m
-    lentil.util.m2v
-    lentil.util.make_mask
-    lentil.util.make_index
+    lentil.boundary
+    lentil.centroid
+    lentil.pad
+    lentil.window
+    lentil.rebin
+    lentil.rescale
 
 Miscellaneous
 =============
 .. autosummary::
     :toctree: ../generated/
 
-    lentil.util.pixelscale_nyquist
-    lentil.util.expc
+    lentil.pixelscale_nyquist
+    lentil.normalize_power

@@ -1,11 +1,19 @@
 .. _api-wfe:
 
-*********************************
-Wavefront errors (``lentil.wfe``)
-*********************************
+****************
+Wavefront errors
+****************
 
+Power spectrum
+--------------
 .. autosummary::
     :toctree: ../generated/
 
-    lentil.wfe.power_spectrum
-    lentil.wfe.translation_defocus
+    lentil.power_spectrum
+
+Defocus
+-------
+.. autosummary::
+    :toctree: ../generated/
+
+    lentil.translation_defocus

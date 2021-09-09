@@ -5,8 +5,8 @@ import lentil
 
 
 def test_boundary():
-    mask = lentil.util.hexagon((256, 256), 100, rotate=True)
-    bounds = lentil.util.boundary(mask)
+    mask = lentil.hexagon((256, 256), 100, rotate=True)
+    bounds = lentil.boundary(mask)
     assert np.array_equal(bounds, [42, 214, 28, 228])
 
 
@@ -152,6 +152,25 @@ def test_sparse():
     mat = lentil.util.v2m(vec, index)
     assert np.array_equal(mat, mask)
 
+
 def test_expc():
     a = np.random.uniform(low=-1, high=1, size=(5,5))
     assert np.allclose(np.exp(1j*a), lentil.util.expc(a))
+
+
+amp = lentil.circle((512, 512), 256)
+
+
+def test_amp_norm():
+    # make sure we're not starting with an already normalized array!
+    assert np.sum(np.abs(amp)**2) != 1.0
+
+
+def test_normalize_power():
+    amp_norm = lentil.normalize_power(amp)
+    assert np.isclose(np.sum(np.abs(amp_norm)**2), 1.0)
+
+
+def test_normalize_power_2():
+    amp_norm = lentil.normalize_power(amp, power=2)
+    assert np.isclose(np.sum(np.abs(amp_norm)**2), 2.0)

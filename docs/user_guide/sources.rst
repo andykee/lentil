@@ -5,7 +5,7 @@ Sources and Scenes
 Computational radiometry is used to model the propagation of radiant energy through an
 optical system. It uses geometry and known optical and imaging properties to compute the
 irradiance from an observed scene at a detector. Lentil's
-:ref:`radiometry<api-radiometry>` module provides a
+:ref:`radiometry<api.radiometry>` module provides a
 :class:`~lentil.radiometry.Spectrum` object for representing and working with
 radiometric quantities but because radiometric models tend to be very application=
 specific, not much additional help is provided.

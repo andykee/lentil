@@ -22,21 +22,16 @@ or space telescopes. Lentil was developed to be:
 
 Lentil organization
 ===================
-Lentil is organized into two parts: a standard library and a collection of 
-subpackages providing domain-specific tools. The features of the standard
-library and each of the subpackages is described in the table below:
+Lentil is organized into two parts: a standard library and a few subpackages 
+providing domain-specific tools. The features of the standard library and each
+of the subpackages is described in the table below:
 
 ============================================== ===============================================
-Subpackage                                     Purpose
+Namespace                                      Purpose
 ============================================== ===============================================
-:ref:`lentil (standard library) <api-lentil>`  Represent optical plsnes and model diffraction
-:ref:`lentil.convolvable <api-convolvable>`    Apply image artifacts via convolution 
-:ref:`lentil.detector <api-detector>`          Model focal planes
-:ref:`lentil.modeltools <api-modeltools>`      Simplify common higher-level modeling tasks
-:ref:`lentil.radiometry <api-radiometry>`      Work with spectral data
-:ref:`lentil.util <api-util>`                  General utilities 
-:ref:`lentil.wfe <api-wfe>`                    Represent wavefront errors 
-:ref:`lentil.zernike <api-zernike>`            Work with Zernike polynomials
+:ref:`lentil <api>`                            Standard library
+:ref:`lentil.detector <api.detector>`          Model focal planes
+:ref:`lentil.radiometry <api.radiometry>`      Work with spectral data
 ============================================== ===============================================
 
 Lentil's standard library can be imported as follows:
@@ -51,11 +46,7 @@ If you'd prefer to use Lentil *en français*, you can try
 
     >>> import lentil as le
 
-Lentil subpackages need to be imported separately. For example,
-
-.. code-block:: python3
-
-    >>> from lentil import radiometry
+Public subpackages are automatically imported with Lentil.
 
 
 Getting help
@@ -65,7 +56,7 @@ features/ideas is by opening a ticket on `Github <https://github.com/andykee/len
 
 License
 =======
-Copyright (c) 2020, California Institute of Technology ("Caltech"). U.S. Government sponsorship acknowledged.
+Copyright (c) 2021, California Institute of Technology ("Caltech"). U.S. Government sponsorship acknowledged.
 
 All rights reserved.
 
