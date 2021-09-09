@@ -4,9 +4,6 @@ Imaging Artifacts
 
 .. currentmodule:: lentil
 
-Lentil's :ref:`convolvable module <api-convolvable>` contains methods for applying various imaging
-artifacts via convolution.
-
 .. note::
 
     To ensure accuracy and avoid introducing ailiasing artifacts, the input data should
@@ -16,7 +13,7 @@ Smear
 =====
 Smear is used to represent image motion with a relatively low temporal frequency relative
 to integration time. The motion occurs in a slowly varying or fixed direction over one
-integration time. Lentil's :func:`convolvable.smear` method represents smear as a linear
+integration time. Lentil's :func:`smear` method represents smear as a linear
 directional blur over some distance (or number of pixels):
 
 .. code:: pycon
@@ -49,7 +46,7 @@ be provided:
 .. image:: /_static/img/api/convolvable/smear_px.png
     :width: 500px
 
-The default behavior is to choose a new random smear direction each time :func:`convolvable.smear`
+The default behavior is to choose a new random smear direction each time :func:`smear`
 is called, but a static direction can optionally be specified as needed:
 
 .. code:: pycon
@@ -69,7 +66,7 @@ is called, but a static direction can optionally be specified as needed:
 Jitter
 ======
 Jitter is used to represent image motion with a relatively high temporal frequency relative
-to integration time. Lentil's :func:`convolvable.jitter` method represents jitter with a
+to integration time. Lentil's :func:`jitter` method represents jitter with a
 Gaussian blur operation. Note this approach is only valid if the motion occurs randomly in all
 directions during one integration time.
 
@@ -95,8 +92,8 @@ A focal plane array samples a continuous light field to produce a digital image.
 Lentil models diffraction numerically by propagating a finite set of points through an
 optical system, the discretely sampled image plane intensity must be convolved with the
 pixel's aperture function to accurately represent the intensity signal seen by each
-pixel. Lentil's :func:`convolvable.pixel` method implements this convolution.
+pixel. Lentil's :func:`pixel` method implements this convolution.
 After convolving the image plane intensity with the pixel MTF, the data should be
-resampled to native detector sampling using :func:`util.rescale`. The
+resampled to native detector sampling using :func:`rescale`. The
 :func:`detector.pixelate` method combines the convolution and resampling operations
 into a single method.

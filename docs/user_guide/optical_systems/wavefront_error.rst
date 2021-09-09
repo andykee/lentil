@@ -20,7 +20,7 @@ Lentil to a Numpy array.
 
 Zernike Polynomials
 ===================
-Lentil's :ref:`zernike module <api-zernike>` contains methods for working with `Zernike
+Lentil's :ref:`zernike module <api.zernike>` contains methods for working with `Zernike
 polynomials <https://en.wikipedia.org/wiki/Zernike_polynomials>`_. Methods are provided 
 for creating, combining, fitting, and removing Zernikes.
 
@@ -28,9 +28,9 @@ for creating, combining, fitting, and removing Zernikes.
 
     Lentil uses the Noll indexing scheme for defining Zernike polynomials [1]_.
 
-Wavefront error maps are easily computed using either the :func:`zernike.zernike` or 
+Wavefront error maps are easily computed using either the :func:`zernike` or 
 :func:`zernike_compose` functions. For example, we can represent 100 nm of focus over a 
-circular aperture with :func:`zernike.zernike`:
+circular aperture with :func:`zernike`:
 
 .. code-block:: pycon
 
@@ -44,7 +44,7 @@ circular aperture with :func:`zernike.zernike`:
     :width: 300px
 
 Any combination of Zernike polynomials can be combined by providing a list of coefficients
-to the :func:`zernike.zernike_compose` function. For example, we can represent 200 nm of 
+to the :func:`zernike_compose` function. For example, we can represent 200 nm of 
 focus and -100 nm of astigmatism as:
 
 .. code-block:: pycon
@@ -64,7 +64,7 @@ first entry in the list represents piston, the second represents, tilt, and so o
 
 For models requiring many random trials, it may make more sense to pre-compute the 
 Zernike modes once and accumulate the error map for each new state. We can do this by 
-creating a vectorized basis set using :func:`zernike.zernike_basis` and accumulating
+creating a vectorized basis set using :func:`zernike_basis` and accumulating
 each independent term using Numpy's `einsum <https://numpy.org/doc/stable/reference/generated/numpy.einsum.html>`_ 
 function.
 
@@ -148,7 +148,7 @@ By default, all of Lentil's Zernike functions place the center of the coordinate
 at the centroid of the supplied mask with its axes aligned with Lentil's 
 :ref:`user-guide.coordinate-system`. This works as expected for the vast majority of 
 needs, but in some cases it may be desirable to manually define the coordinate system. 
-This is accomplished by using :func:`zernike.zernike_coordinates` to compute ``rho`` and
+This is accomplished by using :func:`zernike_coordinates` to compute ``rho`` and
 ``theta``, and providing these definitions to the appropriate Zernike function. For 
 example, if we have an off-centered sub-aperture but wish to compute focus relative to 
 the center of the defined array:

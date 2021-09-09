@@ -5,7 +5,7 @@ Planes
 ******
 .. currentmodule:: lentil
 
-Optical Planes
+Generic Planes
 --------------
 .. autosummary::
     :toctree: ../generated/

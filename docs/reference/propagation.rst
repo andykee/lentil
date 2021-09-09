@@ -18,4 +18,3 @@ Propagation utilities
 .. autosummary::
     :toctree: ../generated/
 
-    lentil.pixel

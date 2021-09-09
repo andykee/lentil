@@ -1,20 +1,8 @@
 __version__ = '0.6.0'
 
-from lentil.convolvable import jitter, pixel, smear
+from lentil.convolvable import jitter, smear
 
-from lentil.detector import (
-	collect_charge,
-	collect_charge_bayer, 
-	pixelate, 
-	adc,
-        shot_noise, 
-	read_noise, 
-	charge_diffusion,
-        rule07_dark_current, 
-	cosmic_rays
-)
-
-from lentil import fourier
+from lentil import detector 
 
 from lentil.plane import (
 	Plane,

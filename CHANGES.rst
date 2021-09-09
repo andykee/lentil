@@ -83,8 +83,7 @@ v0.3.1
 ------
 Released July 16, 2020
 
-* Objects in the :ref:`convolvable<api-convolvable>` module have been rearchitected as
-  functions.
+* Imaging artifact classes have been rearchitected as functions.
 * Legacy functionality from the ``detector.Windowable`` class has been resurrected into
   :func:`lentil.util.window`
 * Deprecate ``util.col_major_to_util_major()``
@@ -131,8 +130,8 @@ Released June 29, 2020
   ``pixelscale`` is None (propagate via FFT - eventually). ``Detector`` class has been
   deprecated. `#5`_
 * Deprecate ``FPA`` and ``BayerFPA``. Some functionality has been retained but converted
-  to atomic functions in the :ref:`detector<api-detector>` module. `#6`_
-* Completely rework the contents of the :ref:`detector<api-detector>` module. All
+  to atomic functions in the :ref:`detector<api.detector>` module. `#6`_
+* Completely rework the contents of the :ref:`detector<api.detector>` module. All
   objects have been deprecated. Some functionality has been retained but converted to
   atomic functions instead. `#6`_
 * Deprecate ``util.coordinates``

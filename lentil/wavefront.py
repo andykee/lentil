@@ -3,7 +3,6 @@ from itertools import combinations
 
 import numpy as np
 
-from lentil import fourier, util
 
 
 class Wavefront:

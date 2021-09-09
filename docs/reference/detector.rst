@@ -17,8 +17,8 @@ Pixel effects
 .. autosummary::
     :toctree: ../generated/
 
+    lentil.detector.pixel
     lentil.detector.pixelate 
-    lentil.pixel
 
 Noise
 -----

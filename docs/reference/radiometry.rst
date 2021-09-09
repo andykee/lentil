@@ -1,4 +1,4 @@
-.. _api-radiometry:
+.. _api.radiometry:
 
 **********
 Radiometry

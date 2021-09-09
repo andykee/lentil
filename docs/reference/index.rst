@@ -22,14 +22,5 @@ Some subpackages are public including ``lentil.radiometry`` and
     util
     wfe
     zernike
+    internal
 
-
-.. lentil
-.. convolvable
-.. detector
-.. modeltools
-.. radiometry
-.. util
-.. wfe
-.. zernike
-.. private

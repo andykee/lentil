@@ -36,7 +36,3 @@ def test_smear_unitary():
     assert np.isclose(np.sum(a), np.sum(b))
 
 
-def test_pixel_unitary():
-    a = np.random.uniform(low=0, high=1, size=(100, 100))
-    b = lentil.pixel(a, oversample=1)
-    assert np.isclose(np.sum(a), np.sum(b))

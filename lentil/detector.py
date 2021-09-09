@@ -4,12 +4,7 @@ import numpy as np
 import scipy.signal
 import scipy.ndimage
 
-import lentil.radiometry
-
-__all__ = ['collect_charge', 'collect_charge_bayer', 'pixelate', 'adc',
-           'shot_noise', 'read_noise', 'charge_diffusion',
-           'rule07_dark_current', 'cosmic_rays']
-
+import lentil
 
 def collect_charge(img, wave, qe, waveunit='nm'):
     """Convert photon count (or flux) to electron count (or flux) by
@@ -149,6 +144,64 @@ def qe_asarray(qe, wave, waveunit):
     return qe
 
 
+def pixel(img, oversample=1):
+    """Apply the aperture effects of a square pixel on a discretely sampled
+    image.
+
+    Parameters
+    ----------
+    img : array_like
+        Input image
+
+    oversample : int, optional
+        Oversampling factor of img. Default is 1.
+
+    Returns
+    -------
+    out : ndarray
+        Image with pixel sampling effects applied.
+
+    Example
+    -------
+    Apply pixel MTF to a 3x oversampled PSF:
+
+    .. code:: pycon
+
+        >>> import lentil
+        >>> import matplotlib.pyplot as plt
+        >>> psf = ...  # PSF calculation details omitted
+        >>> psf_mtf = lentil.pixel(psf, oversample=3)
+        >>> psf_detector = lentil.rescale(psf_mtf, 1/3)
+
+    Note that both the pixel MTF and detector resampling operations preserve
+    radiometry:
+
+    .. code:: pycon
+
+        >>> print(np.sum(psf), np.sum(psf_mtf), np.sum(psf_detector))
+        50398.80556524441 50398.80556524441 50398.80556524441
+
+    See Also
+    --------
+    :func:`lentil.detector.pixelate`
+
+    References
+    ----------
+    [1] https://en.wikipedia.org/wiki/Convolution_theorem
+
+    """
+
+    img = np.asarray(img)
+    x = np.fft.fftfreq(img.shape[1])
+    y = np.fft.fftfreq(img.shape[0])
+
+    mtf_x = np.sinc(x*oversample)
+    mtf_y = np.sinc(y*oversample)
+    kernel = np.dot(mtf_x[:, np.newaxis], mtf_y[np.newaxis, :])
+
+    return np.abs(np.fft.ifft2(np.fft.fft2(img)*kernel))
+
+
 def pixelate(img, oversample):
     """Convolve an image with the pixel MTF before rescaling to native sampling
 
@@ -171,12 +224,12 @@ def pixelate(img, oversample):
 
     See Also
     --------
-    :func:`lentil.convolvable.pixel`
+    :func:`lentil.detector.pixel`
 
     """
 
-    img = lentil.convolvable.pixel(img, oversample)
-    return lentil.util.rescale(img, 1/oversample, order=3, mode='nearest', unitary=True)
+    img = lentil.detector.pixel(img, oversample)
+    return lentil.rescale(img, 1/oversample, order=3, mode='nearest', unitary=True)
 
 
 def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):

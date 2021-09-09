@@ -1,4 +1,4 @@
-.. _api.imaging:
+.. _api.wavefront:
 
 *********
 Wavefront

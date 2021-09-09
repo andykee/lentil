@@ -232,7 +232,7 @@ def window(img, shape=None, slice=None):
     * If ``img`` is a single value (img.size == 1), self.data is returned
       regardless of what ``shape`` and ``slice`` are.
     * If ``shape`` is given but ``slice`` is ``None``, the returned ndarray
-      is trimmed about the center of the array using :func:`lentil.util.pad`.
+      is trimmed about the center of the array using :func:`lentil.pad`.
     * If ``slice`` is given but ``shape`` is ``None``, the returned ndarray
       is extracted from ``img`` according to the indices in ``slice``
     * If both ``shape`` and ``slice`` are given, the returned ndarray is
@@ -631,12 +631,12 @@ def make_index(mat):
 
         * ``row`` List of row indices which contain nonzero data
         * ``col`` List of column indices which contain nonzero data
-        * ``shape`` Tuple of dimensions of :attr:`~lentil.wfe.make_index.mat`
+        * ``shape`` Tuple of dimensions of :attr:`~lentil.util.make_index.mat`
 
     See Also
     --------
-    * :func:`~lentil.sparse.v2m` Convert sparse vectorized data to a full matrix
-    * :func:`~lentil.sparse.m2v` Convert a full matrix to sparse vectorized data
+    * :func:`~lentil.util.v2m` Convert sparse vectorized data to a full matrix
+    * :func:`~lentil.util.m2v` Convert a full matrix to sparse vectorized data
 
     """
     mat = np.asarray(mat)
@@ -668,8 +668,8 @@ def v2m(vec, index):
 
     See Also
     --------
-    * :func:`~lentil.sparse.m2v` Convert a full matrix to sparse vectorized data
-    * :func:`~lentil.sparse.make_index` Create a sparse coordinate list (COO)
+    * :func:`~lentil.util.m2v` Convert a full matrix to sparse vectorized data
+    * :func:`~lentil.util.make_index` Create a sparse coordinate list (COO)
       index dictionary
 
     """
@@ -698,8 +698,8 @@ def m2v(mat, index):
 
     See Also
     --------
-    * :func:`~lentil.sparse.v2m` Convert sparse vectorized data to a full matrix
-    * :func:`~lentil.sparse.make_index` Create a sparse coordinate list (COO)
+    * :func:`~lentil.util.v2m` Convert sparse vectorized data to a full matrix
+    * :func:`~lentil.util.make_index` Create a sparse coordinate list (COO)
       index dictionary
 
     """

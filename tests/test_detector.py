@@ -83,6 +83,12 @@ def test_collect_charge_bayer_oversample():
     assert np.array_equal(out, np.block([[ul, ur], [ll, lr]]))
 
 
+def test_pixel_unitary():
+    a = np.random.uniform(low=0, high=1, size=(100, 100))
+    b = lentil.detector.pixel(a, oversample=1)
+    assert np.isclose(np.sum(a), np.sum(b))
+
+
 def test_pixelate():
     # we've already tested rescale and the pixel MTF separately, so we're just
     # going to ensure the returned image has the right shape here
