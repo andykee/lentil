@@ -5,14 +5,11 @@ Getting started tutorial
 ************************
 
 In this short example, we'll walk through the steps to develop a very simple Lentil
-model of an imaging system with a single pupil and propagate light to an image plane. 
-The imaging system has a 1m diameter primary mirror, a secondary mirror obscuration 
-of 0.33m centered over the primary, a focal length of 10m, and a focal plane with 
-5um pixels.
-
-.. image:: /_static/img/telescope.png
-    :width: 650 px
-    :align: center
+model of an imaging system with a single pupil. We'll then propagate light through
+the imaging system to an image plane and view the resulting point spread function 
+(PSF). The imaging system has a 1m diameter primary mirror, a secondary mirror 
+obscuration of 0.33m centered over the primary, a focal length of 10m, and a focal 
+plane with 5um pixels.
 
 First, we'll import Lentil and matplotlib:
 
@@ -32,7 +29,7 @@ Now we can define the system amplitude and plot it:
 .. image:: /_static/img/getting_started_amp.png
     :width: 350px
 
-We'll create some Zernike-based wavefront error:
+We'll create some wavefront error constructed from a combination of Zernikes:
 
 .. code-block:: pycon
 
@@ -53,7 +50,10 @@ and the system diameter was specified as 1m, the pixelscale is 1/256.
     >>> pupil = lentil.Pupil(amplitude=amplitude, phase=opd, diameter=1, focal_length=10,
     ...                      pixelscale=1/256)
 
-We will create a monochromatic :class:`~lentil.Wavefront` with wavelength of 650nm, 
+We'll create a monochromatic :class:`~lentil.Wavefront` with wavelength of 650nm and 
+propagate it "through" the pupil plane. This operation is represented by multiplying the
+wavefront by the pupil:
+
 propagate the wavefront through the pupil plane, and finally on to an image plane with
 5um pixels. We'll also oversample the image plane by a factor of 10.
 
@@ -61,6 +61,13 @@ propagate the wavefront through the pupil plane, and finally on to an image plan
 
     >>> w = lentil.Wavefront(wavelength=650e-9)
     >>> w = w * pupil
+
+Now we can propagate the wavefront from the pupil plane to an image plane with 5 micron
+pixels. We'll perform this propagation 10x oversampled and look at the resulting intensity
+pattern:
+
+.. code-block:: pycon
+
     >>> w = lentil.propagate_image(w, pixelscale=5e-6, npix=32, oversample=10)
     >>> plt.imshow(w.intensity)
 
