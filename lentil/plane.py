@@ -1,4 +1,4 @@
-from copy import deepcopy
+import copy
 
 import numpy as np
 from scipy import ndimage
@@ -61,21 +61,6 @@ class Plane:
 
     def __repr__(self):
         return f'{self.__class__.__name__}()'
-
-    def _copy(self, memo=None):
-        # Return a deep copy of self exclding amplitude, mask, phase,
-        # and pixelscale. This method is used by resample() and rescale().
-        if memo is None:
-            memo = {}
-        
-        cls = self.__class__
-        out = cls.__new__(cls)
-
-        memo[id(self)] = out
-        for k, v in self.__dict__.items():
-            if k not in ('_amplitude', '_mask', '_phase', '_pixelscale'):
-                setattr(out, k, deepcopy(v, memo))
-        return out
 
     @property
     def pixelscale(self):
@@ -271,7 +256,7 @@ class Plane:
 
     def rescale(self, scale):
         
-        out = self._copy()
+        out = copy.deepcopy(self)
 
         if self.amplitude.ndim > 1:
             out.amplitude = lentil.rescale(self.amplitude, scale=scale, shape=None, mask=None,
