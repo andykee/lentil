@@ -32,3 +32,9 @@ def test_zernike_remove():
     phase = lentil.zernike_compose(mask, coeffs)
     residual = lentil.zernike_remove(phase, mask, np.arange(1, 5))
     assert np.all(np.isclose(residual, np.zeros_like(residual)))
+
+def test_zernike_random_mask():
+    mask = lentil.circlemask((256,256), 128)
+    random_mask = np.random.uniform(low=-1, high=1, size=mask.shape) * mask
+
+    assert np.array_equal(lentil.zernike(mask, 1), lentil.zernike(random_mask, 1))

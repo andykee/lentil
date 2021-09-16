@@ -14,8 +14,8 @@ def zernike(mask, index, normalize=True, rho=None, theta=None):
     Parameters
     ----------
     mask : array_like
-        Binary mask defining the extent to compute the Zernike polynomial
-        over.
+        Mask defining the extent to compute the Zernike polynomial over. All
+        nonzero entries are included in the result.
 
     index : int
         Noll Zernike index as defined in [1]
@@ -52,11 +52,12 @@ def zernike(mask, index, normalize=True, rho=None, theta=None):
     [1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).
 
     """
-    mask = np.asarray(mask)
+    mask = np.asarray(mask).astype(bool)
+
     #out = np.zeros_like(mask)
     #mask_slice = util.boundary_slice(mask, pad=0)
     #mask = mask[mask_slice]
-    
+
     if rho is None:
         rho, theta = zernike_coordinates(mask)
     else:
@@ -113,7 +114,8 @@ def zernike_compose(mask, coeffs, normalize=True, rho=None, theta=None):
     Parameters
     ----------
     mask : array_like
-        Binary mask defining the extent to compute the Zernike polynomial over.
+        Mask defining the extent to compute the Zernike polynomial over. All
+        nonzero entries are included in the result.
 
     coeffs : array_like
         List of coefficients corresponding to Zernike indices (Noll ordering)
@@ -184,7 +186,8 @@ def zernike_basis(mask, modes, vectorize=False, normalize=True, rho=None, theta=
     Parameters
     ----------
     mask : array_like
-        Binary mask defining the extent to compute the Zernike polynomial over.
+        Mask defining the extent to compute the Zernike polynomial over. All
+        nonzero entries are included in the result.
 
     modes : array_like
         List of modes (Noll ordering) to return.
@@ -242,7 +245,8 @@ def zernike_fit(opd, mask, modes, normalize=True, rho=None, theta=None):
         OPD to fit.
 
     mask : array_like
-        Binary mask defining the extent to compute the Zernike basis over.
+        Mask defining the extent to compute the Zernike polynomial over. All
+        nonzero entries are included in the result.
 
     modes : array_like
         List of modes (Noll ordering) to fit.
@@ -308,7 +312,8 @@ def zernike_remove(opd, mask, modes, rho=None, theta=None):
         OPD to fit.
 
     mask : array_like
-        Binary mask defining the extent to compute the Zernike basis over.
+        Mask defining the extent to compute the Zernike polynomial over. All
+        nonzero entries are included in the result.
 
     modes : array_like
         List of modes (Noll ordering) to remove.
@@ -396,25 +401,25 @@ def zernike_index(j):
 
 def zernike_coordinates(mask, shift=None, rotate=0):
     """Compute the Zernike coordinate system for a given mask.
-    
+
     Parameters
     ----------
     mask : array_like
-        Binary mask defining the extent to compute the Zernike polynomial 
-        over.
-    
+        Mask defining the extent to compute the Zernike polynomial over. All
+        nonzero entries are included in the result.
+
     shift : (2,) array_like or None, optional
-        x, y shift of the coordinate system origin in pixels. If None 
+        x, y shift of the coordinate system origin in pixels. If None
         (default), shift is computed automatically to locate the origin at the
         mask centroid.
 
     rotate: float, optional
-        Angle to rotate coordinate system by in degrees. rotate is specified 
+        Angle to rotate coordinate system by in degrees. rotate is specified
         relative to the x-axis. Default is 0.
 
     """
 
-    mask = np.asarray(mask)
+    mask = np.asarray(mask).astype(bool)
 
     if shift is None:
         center = np.asarray(mask.shape)/2
