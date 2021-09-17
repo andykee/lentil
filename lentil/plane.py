@@ -767,8 +767,8 @@ class Tilt(Plane):
     def __init__(self, x, y):
         super().__init__()
 
-        self.x = y  # y tilt is about the x-axis.
-        self.y = -x  # x tilt is about the y axis. There's also a sign flip to get the direction right.
+        self.x = -y  # y tilt is about the x-axis. There's also a sign flip to get the direction right.
+        self.y = x  # x tilt is about the y axis.
 
     def multiply(self, wavefront):
         wavefront = super().multiply(wavefront)
@@ -795,8 +795,8 @@ class Tilt(Plane):
             Updated x and y shift terms
 
         """
-        x = xs - (z * self.x)
-        y = ys - (z * self.y)
+        x = xs + (z * self.x)
+        y = ys + (z * self.y)
         return x, y
 
 
