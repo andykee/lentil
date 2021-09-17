@@ -143,7 +143,7 @@ class Plane:
 
     @property
     def shape(self):
-        """Plane dimensions computed from :attr:`mask` Returns None if :attr:`mask` 
+        """Plane dimensions computed from :attr:`mask` Returns None if :attr:`mask`
         is None.
         """
         if self.depth == 1:
@@ -191,7 +191,10 @@ class Plane:
 
         return ptt_vector
 
-    def fit_tilt(self, phase=None, ptt_vector=None):
+    def copy(self):
+        return copy.deepcopy(self)
+
+    def fit_tilt(self, inplace=True):
         """Fit and remove tilt from a phase via least squares.
 
         Parameters
@@ -210,23 +213,24 @@ class Plane:
             Tilt-removed plane with tilt bookkept separately in Plane.tilt list
 
         """
-        if phase is None:
-            phase = self.phase
+        if inplace:
+            plane = self
+        else:
+            plane = self.copy()
 
-        if ptt_vector is None:
-            ptt_vector = self.ptt_vector
+        ptt_vector = plane.ptt_vector
 
         # There are a couple of cases where we don't have enough information to remove the
         # tilt, so we just return the Plane as-is
-        if ptt_vector is None or phase.size == 1:
-            return
+        if ptt_vector is None or plane.phase.size == 1:
+            return plane
 
         nseg = len(ptt_vector)//3
 
         if nseg == 1:
-            t = np.linalg.lstsq(ptt_vector.T, phase.ravel(), rcond=None)[0]
+            t = np.linalg.lstsq(ptt_vector.T, plane.phase.ravel(), rcond=None)[0]
             phase_tilt = np.einsum('ij,i->j', ptt_vector[1:3], t[1:3])
-            phase_no_tilt = phase - phase_tilt.reshape(phase.shape)
+            phase_no_tilt = plane.phase - phase_tilt.reshape(plane.phase.shape)
 
             # 01da13b transitioned from specifying tilt in terms of image plane
             # coordinates to about the Tilt plane axes. We can transform from
@@ -235,14 +239,14 @@ class Plane:
 
         else:
             t = np.empty((nseg, 3))
-            phase_no_tilt = np.empty((nseg, phase.shape[0], phase.shape[1]))
+            phase_no_tilt = np.empty((nseg, plane.phase.shape[0], plane.phase.shape[1]))
 
             # iterate over the segments and compute the tilt term
             for seg in np.arange(nseg):
-                t[seg] = np.linalg.lstsq(ptt_vector[3 * seg:3 * seg + 3].T, phase.ravel(),
+                t[seg] = np.linalg.lstsq(ptt_vector[3 * seg:3 * seg + 3].T, plane.phase.ravel(),
                                          rcond=None)[0]
                 seg_tilt = np.einsum('ij,i->j', ptt_vector[3 * seg + 1:3 * seg + 3], t[seg, 1:3])
-                phase_no_tilt[seg] = (phase - seg_tilt.reshape(phase.shape)) * self.mask[seg]
+                phase_no_tilt[seg] = (plane.phase - seg_tilt.reshape(plane.phase.shape)) * self.mask[seg]
 
             # 01da13b transitioned from specifying tilt in terms of image plane
             # coordinates to about the Tilt plane axes. We can transform from
@@ -251,39 +255,43 @@ class Plane:
 
             phase_no_tilt = np.sum(phase_no_tilt, axis=0)
 
-        self.phase = phase_no_tilt
-        self.tilt.append(tilt)
+        plane.phase = phase_no_tilt
+        plane.tilt.append(tilt)
 
-    def rescale(self, scale):
-        
-        out = copy.deepcopy(self)
+        return plane
 
-        if self.amplitude.ndim > 1:
-            out.amplitude = lentil.rescale(self.amplitude, scale=scale, shape=None, mask=None,
-                                           order=3, mode='nearest', unitary=False)/scale**2 
-        
-        if self.phase.ndim > 1:
-            out.phase = lentil.rescale(self.phase, scale=scale, shape=None, mask=None,
-                                       order=3, mode='nearest', unitary=False)
+    def rescale(self, scale, inplace=True):
 
-        if self.mask.ndim > 1:
-            out.mask = lentil.rescale(self.mask, scale=scale, shape=None, mask=None, order=0,
-                                      mode='constant', unitary=False)
+        if inplace:
+            plane = self
+        else:
+            plane = self.copy()
+
+        if plane.amplitude.ndim > 1:
+            plane.amplitude = lentil.rescale(plane.amplitude, scale=scale, shape=None, mask=None,
+                                             order=3, mode='nearest', unitary=False)/scale**2
+
+        if plane.phase.ndim > 1:
+            plane.phase = lentil.rescale(plane.phase, scale=scale, shape=None, mask=None,
+                                         order=3, mode='nearest', unitary=False)
+
+        if plane.mask.ndim > 1:
+            plane.mask = lentil.rescale(plane.mask, scale=scale, shape=None, mask=None, order=0,
+                                        mode='constant', unitary=False)
         # mask[mask < np.finfo(mask.dtype).eps] = 0
-        out.mask[np.nonzero(out.mask)] = 1
-        out.mask = out.mask.astype(int) 
+        plane.mask[np.nonzero(plane.mask)] = 1
+        plane.mask = plane.mask.astype(int)
 
-        out.pixelscale = self.pixelscale/scale
-        out.tilt = self.tilt.copy()
+        plane.pixelscale = plane.pixelscale/scale
 
-        return out
-        
-    def resample(self, pixelscale):
+        return plane
+
+    def resample(self, pixelscale, inplace=True):
 
         if self.pixelscale[0] != self.pixelscale[1]:
             raise NotImplementedError("Can't resample non-uniformly sampled Plane")
 
-        return self.rescale(scale=self.pixelscale[0]/pixelscale)
+        return self.rescale(scale=self.pixelscale[0]/pixelscale, inplace=inplace)
 
     def slice(self, mask=None):
         """Compute slices defined by the data extent in ``mask``.
@@ -292,7 +300,7 @@ class Plane:
         ----------
         mask : array_like or None, optional
             Mask to use for identifying data extents. If None, the Plane's
-            :attr:`mask` is used. If :attr:`mask` is None, ``Ellipsis`` is 
+            :attr:`mask` is used. If :attr:`mask` is None, ``Ellipsis`` is
             returned (slice returns all data).
 
         Returns
@@ -381,56 +389,33 @@ class Plane:
         """
 
         if wavefront.pixelscale:
-            # We may interpolate in the future, but for now we'll enforce equality            
-            assert all(wavefront.pixelscale == self.pixelscale) 
-        else:
-            wavefront.pixelscale = self.pixelscale
-            
-        # broadcast existing wavefront data to Plane shape and clear the 
-        # wavefront.data list
-        data = [np.broadcast_to(d, self.shape) for d in wavefront.data]
-        wavefront.data = []
+            # We may interpolate in the future, but for now we'll enforce equality
+            assert all(wavefront.pixelscale == self.pixelscale)
+
+        out = lentil.Wavefront(wavelength=wavefront.wavelength,
+                               pixelscale=self.pixelscale)
+        # TODO: consider defaulting new wavefront.data = [] instead of 1+0j
+        out.data = []
 
         slc = self.slice()
-        depth = self.depth
 
-        # TODO: need to develop a strategy for handling pre-existing offsets
-        # Still need to figure out how to deal with the fact that we may have an
-        # incoming offset that may or may not be replaced by something new.
-        #
-        # this could be handled by a simple rule:
-        #   new offset always takes prescedence over old offset UNLESS new offset is None and old offset is not none
+        for d in wavefront.data:
+            for n, s in enumerate(slc):
+                mask = self.mask if self.depth == 1 else self.mask[n]
+                p = _phasor(self.amplitude, self.phase, mask, wavefront.wavelength, s)
 
+                out.data.append(np.broadcast_to(d, self.shape)[s] * p)
 
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        # maybe enforce a simple rule
-        # wavefront with offsets can only be multiplied with Planes that either introduce
-        # NO offset or have the SAME offset
-
-        offset = []
-
-        for d in data:
-            for n, slc in enumerate(self.slice()):
-                mask = self.mask if depth == 1 else self.mask[n]
-                p = _phasor(self.amplitude, self.phase, mask, wavefront.wavelength, slc)
-                
-                wavefront.data.append(d[slc] * p)
-
-                ofst = lentil.util.slice_offset(slc, self.amplitude.shape)
+                ofst = lentil.util.slice_offset(s, self.shape)
 
                 if ofst:
-                    offset.append(ofst)
+                    out.offset.append(ofst)
                 else:
-                    offset.append(None)
+                    out.offset.append(None) #TODO: make this [0,0]?
 
-        if not wavefront.offset or not all(wavefront.offset):
-            # of wavefront.offset is [] or a list of [None]:
-             wavefront.offset = offset
+        out.shift.extend(self.tilt)
 
-        # Use extend instead of append so that nothing happens if self.shift = []
-        wavefront.shift.extend(self.tilt)
-
-        return wavefront
+        return out
 
 
 def _phasor(amplitude, phase, mask, wavelength, slc=Ellipsis):
