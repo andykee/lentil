@@ -52,7 +52,7 @@ def zernike(mask, index, normalize=True, rho=None, theta=None):
     [1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).
 
     """
-    mask = np.asarray(mask).astype(bool)
+    mask = np.asarray(mask, dtype=bool)
 
     #out = np.zeros_like(mask)
     #mask_slice = util.boundary_slice(mask, pad=0)
@@ -419,7 +419,7 @@ def zernike_coordinates(mask, shift=None, rotate=0):
 
     """
 
-    mask = np.asarray(mask).astype(bool)
+    mask = np.asarray(mask, dtype=bool)
 
     if shift is None:
         center = np.asarray(mask.shape)/2
