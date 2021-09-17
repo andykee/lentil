@@ -422,7 +422,7 @@ def _phasor(amplitude, phase, mask, wavelength, slc=Ellipsis):
     amp = amplitude if amplitude.size == 1 else amplitude[slc]
     ph = phase if phase.size == 1 else phase[slc]
     msk = mask if mask.size == 1 else mask[slc]
-    return (amp * lentil.util.expc(2*np.pi*ph/wavelength)) * msk
+    return (amp * np.exp(-2*np.pi*1j*ph/wavelength)) * msk
 
 
 class Pupil(Plane):
@@ -795,8 +795,8 @@ class Tilt(Plane):
             Updated x and y shift terms
 
         """
-        x = xs + (z * self.x)
-        y = ys + (z * self.y)
+        x = xs - (z * self.x)
+        y = ys - (z * self.y)
         return x, y
 
 

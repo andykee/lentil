@@ -185,7 +185,7 @@ def test_propagate_tilt_angle():
     #planes = [TiltPupil(npix=256), BasicDetector()]
 
     p = TiltPupil(npix=256)
-    
+
     w_phase = lentil.Wavefront(650e-9)
     w_phase *= p
     w_phase = lentil.propagate_image(w_phase, pixelscale=5e-6, npix=128, oversample=2)
@@ -298,7 +298,7 @@ def test_propagate_tilt_phase_analytic():
     pupil_tilt = pupil.coeffs[1:3]
 
     # The factor of 4 gets you from RMS to PV
-    analytic_shift = -((pupil_tilt/pupil.diameter)*pupil.focal_length/pixelscale) * oversample * 4
+    analytic_shift = ((pupil_tilt/pupil.diameter)*pupil.focal_length/pixelscale) * oversample * 4
 
     assert np.all((np.abs(shift - analytic_shift)/oversample) < 0.2)
 
@@ -325,7 +325,7 @@ def test_propagate_tilt_angle_analytic():
     pupil_tilt = pupil.coeffs[1:3]
 
     # The factor of 4 gets you from RMS to PV
-    analytic_shift = -((pupil_tilt/pupil.diameter)*pupil.focal_length/pixelscale) * oversample * 4
+    analytic_shift = ((pupil_tilt/pupil.diameter)*pupil.focal_length/pixelscale) * oversample * 4
 
     assert np.all((np.abs(shift - analytic_shift)/oversample) < 0.2)
 
