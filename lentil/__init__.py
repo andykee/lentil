@@ -2,7 +2,9 @@ __version__ = '0.6.0'
 
 from lentil.convolvable import jitter, smear
 
-from lentil import detector 
+from lentil import detector
+
+from lentil import fourier
 
 from lentil.plane import (
 	Plane,
@@ -15,8 +17,6 @@ from lentil.plane import (
 	Rotate,
 	Flip
 )
-
-from lentil.propagate import propagate_image
 
 from lentil import radiometry
 
