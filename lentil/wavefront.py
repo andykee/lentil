@@ -57,13 +57,10 @@ class Wavefront:
         self.offset = []  # List of (r,c) offsets from master array center for cropped DFTs
 
     def __mul__(self, plane):
-        return plane.multiply(self.copy())
-
-    def __imul__(self, plane):
         return plane.multiply(self)
 
     def __rmul__(self, other):
-        raise TypeError(f"unsupported operation type(s) for *: '{other.__class__.__name__}' and 'Wavefront'")
+        return self.__mul__(other)
 
     @property
     def shape(self):
@@ -81,6 +78,7 @@ class Wavefront:
 
     @property
     def intensity(self):
+        # TODO: return np.abs(self.field**2)
         if self.tiles:
             out = np.zeros(self.shape, dtype=float)
             for tile in self.tiles:
