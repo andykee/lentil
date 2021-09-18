@@ -393,9 +393,8 @@ class Plane:
             assert all(wavefront.pixelscale == self.pixelscale)
 
         out = lentil.Wavefront(wavelength=wavefront.wavelength,
-                               pixelscale=self.pixelscale)
-        # TODO: consider defaulting new wavefront.data = [] instead of 1+0j
-        out.data = []
+                               pixelscale=self.pixelscale,
+                               data=[])
 
         slc = self.slice()
 
@@ -414,6 +413,7 @@ class Plane:
                     out.offset.append(None) #TODO: make this [0,0]?
 
         out.shift.extend(self.tilt)
+        out.shape = self.shape
 
         return out
 
@@ -422,7 +422,7 @@ def _phasor(amplitude, phase, mask, wavelength, slc=Ellipsis):
     amp = amplitude if amplitude.size == 1 else amplitude[slc]
     ph = phase if phase.size == 1 else phase[slc]
     msk = mask if mask.size == 1 else mask[slc]
-    return (amp * np.exp(-2*np.pi*1j*ph/wavelength)) * msk
+    return amp * np.exp(-2*np.pi*1j*ph/wavelength)
 
 
 class Pupil(Plane):

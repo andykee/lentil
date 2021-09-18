@@ -14,12 +14,10 @@ class Wavefront:
     ----------
     wavelength : float
         Wavelength in meters
-
-    shape : array_like
-        Wavefront shape
-
     pixelscale : float, optional
         Wavefront array spatial sampling in meters/pixel
+    data : list_like, optional
+        Wavefront data. Default is [1+0j] (a plane wave).
 
     Attributes
     ----------
@@ -38,18 +36,17 @@ class Wavefront:
     """
 
     __slots__ = ('wavelength', 'pixelscale', 'focal_length', 'offset',
-                 'data', 'shift', 'tiles')
+                 'data', 'shift', 'tiles', 'shape')
 
-    def __init__(self, wavelength, shape=(), pixelscale=None):
+    def __init__(self, wavelength, pixelscale=None, data=None):
 
         self.wavelength = wavelength
         self.pixelscale = pixelscale
 
-        shape = np.asarray(shape)
-        if shape.size < 3:
-            self.data = [np.ones(shape, dtype=complex)]
+        if data is None:
+            self.data = [np.array(1+0j)]
         else:
-            self.data = [np.ones((shape[1], shape[2]), dtype=complex) for d in shape[0]]
+            self.data = [np.asarray(d, dtype=complex) for d in data]
 
         # Wavefront focal length (which is infinity for a plane wave)
         self.focal_length = np.inf
@@ -62,11 +59,6 @@ class Wavefront:
 
     def __rmul__(self, other):
         return self.__mul__(other)
-
-    @property
-    def shape(self):
-        """Size of data array"""
-        return self.data[0].shape
 
     @property
     def depth(self):
@@ -184,8 +176,6 @@ class Wavefront:
             with shape (npix_prop,npix_prop).
         oversample : int, optional
             Number of times to oversample the propagation. Default is 2.
-        place_tiles : bool, optional
-            ?
 
         Returns
         -------
@@ -194,21 +184,22 @@ class Wavefront:
 
         """
 
-        # TODO: this should return a NEW wavefront
+        out = Wavefront(wavelength=self.wavelength,
+                        pixelscale=pixelscale/oversample,
+                        data=[])
 
         npix = _sanitize_shape(npix)
         npix_prop = _sanitize_shape(npix_prop, default=npix)
 
-        out_shape = npix * oversample
+        out.shape = npix * oversample
         prop_shape = npix_prop * oversample
 
         center = self.center(pixelscale, oversample)
-        data = self.data
-        self.data = [np.zeros(out_shape, dtype=complex)]
+        out.data = [np.zeros(out.shape, dtype=complex)]
 
         # integer portion of the shift that will be accounted for later
         fix_center = np.fix(center)
-        self.shift = list(fix_center)
+        out.shift = list(fix_center)
 
         # subpixel portion of the shift passed to the DFT
         subpixel_center = center - fix_center
@@ -217,39 +208,41 @@ class Wavefront:
                            wave=self.wavelength, z=self.focal_length,
                            oversample=oversample)
 
-        if center.shape[0] != len(data):
+        if center.shape[0] != len(self.data):
             raise ValueError('dimension mismatch between center and wavefront depth')
 
-        for d in range(len(data)):
-            data[d] = lentil.fourier.dft2(data[d], alpha, prop_shape, subpixel_center[d],
-                                          offset=self.offset[d], unitary=True)
+        # TODO: this is wrong - we're modifying the contents of self.data rather than
+        # out
+        for d in range(len(self.data)):
+            self.data[d] = lentil.fourier.dft2(self.data[d], alpha, prop_shape, subpixel_center[d],
+                                               offset=self.offset[d], unitary=True)
 
         ### place tiles
         # TODO: collapse this into the above for loop
         tiles = []
-        for d in range(len(data)):
+        for d in range(len(self.data)):
             # The array center is given in terms of (x,y) but we place the chip in
             # terms of (r,c)
-            center = np.flip(self.shift[d], axis=0)
+            center = np.flip(out.shift[d], axis=0)
 
             # Compute the chip location
-            data_slice, chip_slice = _chip_insertion_slices(out_shape,
-                                                            (data[d].shape[0],
-                                                             data[d].shape[1],),
+            data_slice, chip_slice = _chip_insertion_slices(out.shape,
+                                                            (self.data[d].shape[0],
+                                                             self.data[d].shape[1],),
                                                             center)
 
             if data_slice:
-                tiles.append(imtile(data[d], data_slice, chip_slice))
+                tiles.append(imtile(self.data[d], data_slice, chip_slice))
 
-            self.tiles = consolidate(tiles)
+            out.tiles = consolidate(tiles)
 
             # TODO: this is where we would skip a step if place_tiles=False
             # Note also that we should move away from storing tiles in wf.tiles and
             # store them in wf.data?
-            for tile in self.tiles:
-                self.data[0][tile.slice] = tile.data
+            for tile in out.tiles:
+                out.data[0][tile.slice] = tile.data
 
-        return self
+        return out
 
 
 def _sanitize_shape(shape, default=()):
@@ -337,7 +330,7 @@ class imtile:
 
         data = np.zeros((self.slice[0].stop - self.slice[0].start,
                          self.slice[1].stop - self.slice[1].start),
-                        dtype=np.complex128)
+                        dtype=complex)
 
         # compute local slices based on slice and global slice
 

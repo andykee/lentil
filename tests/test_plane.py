@@ -28,7 +28,7 @@ def test_default_plane():
 
 def test_wavefront_plane_multiply():
     p = RandomPlane()
-    w = lentil.wavefront.Wavefront(650e-9, p.shape)
+    w = lentil.wavefront.Wavefront(650e-9)
 
     w1 = p.multiply(w)
 
@@ -49,7 +49,7 @@ class CircularPupil(lentil.Pupil):
 
 def test_wavefront_pupil_multiply():
     p = CircularPupil()
-    w = lentil.wavefront.Wavefront(650e-9, shape=p.shape)
+    w = lentil.wavefront.Wavefront(650e-9)
     w = p.multiply(w)
     phasor = p.amplitude * np.exp(1j*p.phase * 2 * np.pi / w.wavelength)
 
