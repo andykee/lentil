@@ -3,7 +3,9 @@ from itertools import combinations
 
 import numpy as np
 
-import lentil
+import lentil.field
+from lentil.field import Field
+import lentil.fourier
 
 
 class Wavefront:
@@ -44,9 +46,9 @@ class Wavefront:
         self.pixelscale = pixelscale
 
         if data is None:
-            self.data = [np.array(1+0j)]
+            self.data = [Field(data=1, pixelscale=pixelscale, offset=[0,0])]
         else:
-            self.data = [np.asarray(d, dtype=complex) for d in data]
+            self.data = [*data]
 
         # Wavefront focal length (which is infinity for a plane wave)
         self.focal_length = np.inf
