@@ -29,7 +29,7 @@ class Field:
     def __init__(self, data, pixelscale, offset=None, tilt=None):
         self.data = np.asarray(data, dtype=complex)
         self.pixelscale = pixelscale
-        self.offset = offset if offset is not None else [0,0]
+        self.offset = offset if offset is not None else [0, 0]
         self.tilt = tilt if tilt else []
 
     @property
@@ -153,7 +153,7 @@ def insert(field, out, intensity=False, indexing='xy'):
         raise ValueError(f"Unknown indexing {indexing}. indexing must be 'ij' or 'xy'.")
 
     # Output coordinates of the upper left corner of the shifted data array
-    field_shifted_ul = (output_shape / 2) - (field_shape / 2) + field_offset
+    field_shifted_ul = (output_shape // 2) - (field_shape // 2) + field_offset
 
     # Field slice indices
     field_top = int(0)
@@ -246,29 +246,28 @@ def merge(a, b, check_overlap=True):
                  offset=_merge_offset(a, b))
 
 
-def _merge_shape(a, b):
+def _merge_shape(*fields):
     # shape required to merge a and b
-    rmin, rmax, cmin, cmax = boundary(a, b)
+    rmin, rmax, cmin, cmax = boundary(*fields)
     return rmax - rmin + 1, cmax - cmin + 1
 
 
-def _merge_slices(a, b):
+def _merge_slices(*fields):
     # slices in the merged array where a and b go
-    armin, armax, acmin, acmax = a.extent
-    brmin, brmax, bcmin, bcmax = b.extent
-    rmin, rmax, cmin, cmax = boundary(a, b)
+    rmin, rmax, cmin, cmax = boundary(*fields)
 
-    arow = slice(armin-rmin, armax-rmin+1)
-    acol = slice(acmin-cmin, acmax-cmin+1)
-    brow = slice(brmin-rmin, brmax-rmin+1)
-    bcol = slice(bcmin-cmin, bcmax-cmin+1)
+    out = []
+    for field in fields:
+        frmin, frmax, fcmin, fcmax = field.extent
+        row = slice(frmin-rmin, frmax-rmin+1)
+        col = slice(fcmin-cmin, fcmax-cmin+1)
+        out.append((row, col))
+    return out
 
-    return (arow, acol), (brow, bcol)
 
-
-def _merge_offset(a, b):
+def _merge_offset(*fields):
     # offset of the resulting merged array
-    rmin, rmax, cmin, cmax = boundary(a, b)
+    rmin, rmax, cmin, cmax = boundary(*fields)
     nrow = rmax - rmin + 1
     ncol = cmax - cmin + 1
     return rmin + nrow//2, cmin + ncol//2
@@ -390,3 +389,40 @@ def _mul_offset(a_shape, a_offset, b_shape, b_offset):
     nrow = rmax - rmin + 1
     ncol = cmax - cmin + 1
     return rmin + nrow//2, cmin + ncol//2
+
+
+class NDField:
+    __slots__ = 'fields'
+
+    # NDField looks like a standard field but may actually contain multiple
+    # possibly overlapping fiuelds that aren't combined until the data attribute
+    # is accessed
+    def __init__(self, field):
+        self.fields = [field]
+
+    @property
+    def data(self):
+        # can use _merge shape and merge slices
+        out = np.zeros(self.shape, dtype=complex)
+        slices = _merge_slices(*self.fields)
+        for field, slc in zip(self.fields, slices):
+            out[slc] += field.data
+        return out
+
+    @property
+    def offset(self):
+        return _merge_offset(*self.fields)
+
+    @property
+    def extent(self):
+        return boundary(*self.fields)
+
+    @property
+    def shape(self):
+        return _merge_shape(*self.fields)
+
+    def append(self, field):
+        self.fields.append(field)
+
+    def overlap(self, other):
+        return overlap(self, other)

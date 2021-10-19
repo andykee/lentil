@@ -4,7 +4,7 @@ from itertools import combinations
 import numpy as np
 
 import lentil.field
-from lentil.field import Field
+from lentil.field import Field, NDField
 import lentil.fourier
 
 
@@ -73,7 +73,12 @@ class Wavefront:
 
     @property
     def intensity(self):
+
         return np.abs(self.field**2)
+        #out = np.zeros(self.shape, dtype=float)
+        #for field in lentil.field.reduce(self.data):
+        #    out = lentil.field.insert(field, out, intensity=True)
+        #return out
 
     def copy(self):
         return copy.deepcopy(self)
