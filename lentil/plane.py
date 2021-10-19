@@ -6,6 +6,7 @@ import scipy.integrate
 import scipy.optimize
 
 import lentil
+from lentil.field import Field
 
 
 class Plane:
@@ -225,38 +226,33 @@ class Plane:
         if ptt_vector is None or plane.phase.size == 1:
             return plane
 
-        nseg = len(ptt_vector)//3
-
-        if nseg == 1:
+        if self.depth == 1:
             t = np.linalg.lstsq(ptt_vector.T, plane.phase.ravel(), rcond=None)[0]
             phase_tilt = np.einsum('ij,i->j', ptt_vector[1:3], t[1:3])
-            phase_no_tilt = plane.phase - phase_tilt.reshape(plane.phase.shape)
+            plane.phase -= phase_tilt.reshape(plane.phase.shape)
 
             # 01da13b transitioned from specifying tilt in terms of image plane
             # coordinates to about the Tilt plane axes. We can transform from
             # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
-            tilt = [Tilt(x=-t[2], y=t[1])]
+            plane.tilt.append(Tilt(x=-t[2], y=t[1]))
 
         else:
-            t = np.empty((nseg, 3))
-            phase_no_tilt = np.empty((nseg, plane.phase.shape[0], plane.phase.shape[1]))
+            t = np.empty((self.depth, 3))
+            phase_no_tilt = np.empty((self.depth, plane.phase.shape[0], plane.phase.shape[1]))
 
             # iterate over the segments and compute the tilt term
-            for seg in np.arange(nseg):
+            for seg in np.arange(self.depth):
                 t[seg] = np.linalg.lstsq(ptt_vector[3 * seg:3 * seg + 3].T, plane.phase.ravel(),
                                          rcond=None)[0]
                 seg_tilt = np.einsum('ij,i->j', ptt_vector[3 * seg + 1:3 * seg + 3], t[seg, 1:3])
                 phase_no_tilt[seg] = (plane.phase - seg_tilt.reshape(plane.phase.shape)) * self.mask[seg]
 
+            plane.phase = np.sum(phase_no_tilt, axis=0)
+
             # 01da13b transitioned from specifying tilt in terms of image plane
             # coordinates to about the Tilt plane axes. We can transform from
             # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
-            tilt = [Tilt(x=-t[seg, 2], y=t[seg, 1]) for seg in range(nseg)]
-
-            phase_no_tilt = np.sum(phase_no_tilt, axis=0)
-
-        plane.phase = phase_no_tilt
-        plane.tilt.append(tilt)
+            plane.tilt.extend([Tilt(x=-t[seg, 2], y=t[seg, 1]) for seg in range(self.depth)])
 
         return plane
 
@@ -398,31 +394,28 @@ class Plane:
 
         slc = self.slice()
 
-        for d in wavefront.data:
+        for field in wavefront.data:
             for n, s in enumerate(slc):
-                mask = self.mask if self.depth == 1 else self.mask[n]
-                p = _phasor(self.amplitude, self.phase, mask, wavefront.wavelength, s)
 
-                out.data.append(np.broadcast_to(d, self.shape)[s] * p)
+                # construct complex phsor
+                amp = self.amplitude if self.amplitude.size == 1 else self.amplitude[s]
+                phase = self.phase if self.phase.size == 1 else self.phase[s]
+                phasor = amp * np.exp(-2*np.pi*1j*phase/wavefront.wavelength)
 
-                ofst = lentil.util.slice_offset(s, self.shape)
+                # include tilt if it exists
+                tilt = field.tilt.copy()
+                if self.tilt:
+                    tilt.append(self.tilt[n])
 
-                if ofst:
-                    out.offset.append(ofst)
-                else:
-                    out.offset.append(None) #TODO: make this [0,0]?
+                out.data.append(Field(data=np.broadcast_to(field.data, self.shape)[s] * phasor,
+                                      pixelscale=self.pixelscale,
+                                      offset=lentil.util.slice_offset(s, self.shape),
+                                      tilt=tilt))
 
-        out.shift.extend(self.tilt)
-        out.shape = self.shape
+            out.shape = self.shape
+            return out
 
         return out
-
-
-def _phasor(amplitude, phase, mask, wavelength, slc=Ellipsis):
-    amp = amplitude if amplitude.size == 1 else amplitude[slc]
-    ph = phase if phase.size == 1 else phase[slc]
-    msk = mask if mask.size == 1 else mask[slc]
-    return amp * np.exp(-2*np.pi*1j*ph/wavelength)
 
 
 class Pupil(Plane):

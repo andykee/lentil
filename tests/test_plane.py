@@ -35,7 +35,7 @@ def test_wavefront_plane_multiply():
     slc = lentil.util.boundary_slice(p.mask)
     phasor = p.amplitude[slc] * np.exp(-2*np.pi*1j*p.phase[slc]/w.wavelength)
 
-    assert np.array_equal(w1.data[0], phasor)
+    assert np.array_equal(w1.data[0].data, phasor)
 
 
 class CircularPupil(lentil.Pupil):
@@ -53,7 +53,7 @@ def test_wavefront_pupil_multiply():
     w = p.multiply(w)
     phasor = p.amplitude * np.exp(1j*p.phase * 2 * np.pi / w.wavelength)
 
-    assert np.array_equal(w.data[0], phasor)
+    assert np.array_equal(w.data[0].data, phasor)
     assert w.focal_length == p.focal_length
 
 

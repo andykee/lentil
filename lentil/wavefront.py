@@ -37,8 +37,8 @@ class Wavefront:
 
     """
 
-    __slots__ = ('wavelength', 'pixelscale', 'focal_length', 'offset',
-                 'data', 'shift', 'tiles', 'shape')
+    __slots__ = ('wavelength', 'pixelscale', 'focal_length',
+                 'data', 'shape')
 
     def __init__(self, wavelength, pixelscale=None, data=None):
 
@@ -46,15 +46,12 @@ class Wavefront:
         self.pixelscale = pixelscale
 
         if data is None:
-            self.data = [Field(data=1, pixelscale=pixelscale, offset=[0,0])]
+            self.data = [Field(data=1, pixelscale=pixelscale, offset=[0, 0], tilt=[])]
         else:
             self.data = [*data]
 
         # Wavefront focal length (which is infinity for a plane wave)
         self.focal_length = np.inf
-
-        self.shift = []  # List of pre-propagation shifts
-        self.offset = []  # List of (r,c) offsets from master array center for cropped DFTs
 
     def __mul__(self, plane):
         return plane.multiply(self)
@@ -64,131 +61,25 @@ class Wavefront:
 
     @property
     def depth(self):
-        """Number of individual Wavefront arrays in :attr:`data`"""
+        """Number of Fields in :attr:`data`"""
         return len(self.data)
 
     @property
     def field(self):
-        pass
+        out = np.zeros(self.shape, dtype=complex)
+        for field in self.data:
+            out = lentil.field.insert(field, out)
+        return out
 
     @property
     def intensity(self):
-        # TODO: return np.abs(self.field**2)
-        if self.tiles:
-            out = np.zeros(self.shape, dtype=float)
-            for tile in self.tiles:
-                out[tile.slice] = np.abs(tile.data**2)
-        else:
-            out = np.abs(self.data**2)
-        return out
+        return np.abs(self.field**2)
 
     def copy(self):
         return copy.deepcopy(self)
 
-    def center(self, pixelscale, oversample):
-        """Compute the Wavefront center which may be shifted due to WavefrontShift
-        objects in Wavefront.shift.
-
-        This is a somewhat tricky method. Fundamentally it iterates over the
-        :attr:`~lentil.Wavefront.tilt` list and computes the resulting shift in
-        terms of number of pixels in oversampled space. This calculation is
-        complicated by the fact that in some cases, an element in
-        :attr:`~lentil.Wavefront.tilt` will itself be a list. In this case, the
-        shift should be tracked individually for each entry in the list. All
-        ensuing calculations should be done in parallel (i.e. the
-        multi-dimensional shift array should not be recollapsed. This behavior
-        allows SegmentedPupil to handle segment tilts individually.
-
-        Parameters
-        ----------
-        pixelscale : float
-            Image plane spatial sampling in meters/pixel
-
-        oversample : int
-            Oversampling factor
-
-        Returns
-        -------
-        shift : (depth, 2) ndarray
-            Image plane shift in number of (possibly oversampled) pixels
-
-        """
-
-        # Example:
-        # tilt = [Shift(10,10), [Shift(100,100), Shift(200,200)], Shift(50,50)]
-        # Beginning shift = [0,0]
-        # After first tilt:
-        #   shift = [10,10]
-        # After second tilt, shift is duplicated before each shift is applied:
-        #   shift = [[110,110], [210,210]]
-        # All successive tilts are now applied in parallel:
-        #   shift = [[160,160], [260,260]]
-
-        center = np.zeros((1, 2))
-
-        for shift in self.shift:
-            if isinstance(shift, list):
-
-                # Reshape the center array. It should have shape (len(tilt), 2).
-                # If center.shape is (1,2), we'll duplicate center along the 0
-                # axis so that it has shape (len(shift),2). If center.shape is
-                # anything else, we can assume that the above duplication has
-                # already happened so we'll just verify that the sizes have
-                # remained consistent.
-                if center.shape[0] == 1:
-                    center = np.repeat(center, len(shift), axis=0)
-                else:
-                    assert center.shape[0] == len(shift)
-
-                # Now we can iterate over the shifts
-                for dim, shft in enumerate(shift):
-                    center[dim, 0], center[dim, 1] = shft.shift(xs=center[dim, 0],
-                                                                ys=center[dim, 1],
-                                                                z=self.focal_length,
-                                                                wavelength=self.wavelength)
-            else:
-                for dim in np.arange(center.shape[0]):
-                    center[dim, 0], center[dim, 1] = shift.shift(xs=center[dim, 0],
-                                                                 ys=center[dim, 1],
-                                                                 z=self.focal_length,
-                                                                 wavelength=self.wavelength)
-
-        center = (center/pixelscale) * oversample
-
-        if center.shape[0] != self.depth:
-            center = np.repeat(center, self.depth, axis=0)
-
-        return center
-
     def propagate_image(self, pixelscale, npix, npix_prop=None, oversample=2):
-        """Propagate a :class:`~lentil.Wavefront` from a :class:`~lentil.Pupil`
-        plane to an image plane using the Fraunhoffer diffraction approximation.
-
-        Parameters
-        ----------
-        pixelscale : float or (2,) array_like
-            Physical sampling of output plane in meters. If `pixelscale` is a
-            scalar, the sampling is assumed to be uniform in x and y.
-        npix : int or (2,) array_like
-            Output plane shape. If `npix` is a scalar, the output plane is assumed
-            to be square with shape (npix,npix).
-        npix_prop : int, (2,) array_like, or None, optional
-            Propagation plane shape. If None (default), `npix_prop` = `npix`. If
-            `npix_prop` is a scalar, the propagation plane is assumed to be square
-            with shape (npix_prop,npix_prop).
-        oversample : int, optional
-            Number of times to oversample the propagation. Default is 2.
-
-        Returns
-        -------
-        wavefront : :class:`~lentil.Wavefront`
-            A new wavefront propagated to the specified image plane
-
-        """
-
-        out = Wavefront(wavelength=self.wavelength,
-                        pixelscale=pixelscale/oversample,
-                        data=[])
+        out = Wavefront(wavelength=self.wavelength, data=[])
 
         npix = _sanitize_shape(npix)
         npix_prop = _sanitize_shape(npix_prop, default=npix)
@@ -196,55 +87,53 @@ class Wavefront:
         out.shape = npix * oversample
         prop_shape = npix_prop * oversample
 
-        center = self.center(pixelscale, oversample)
-        out.data = [np.zeros(out.shape, dtype=complex)]
+        for field in self.data:
+            shift = field.shift(z=self.focal_length, wavelength=self.wavelength,
+                                pixelscale=pixelscale, oversample=oversample)
 
-        # integer portion of the shift that will be accounted for later
-        fix_center = np.fix(center)
-        out.shift = list(fix_center)
+            fix_shift = np.fix(shift)
+            dft_shift = shift - fix_shift
 
-        # subpixel portion of the shift passed to the DFT
-        subpixel_center = center - fix_center
-
-        alpha = _dft_alpha(dx=self.pixelscale, du=pixelscale,
-                           wave=self.wavelength, z=self.focal_length,
-                           oversample=oversample)
-
-        if center.shape[0] != len(self.data):
-            raise ValueError('dimension mismatch between center and wavefront depth')
-
-        # TODO: this is wrong - we're modifying the contents of self.data rather than
-        # out
-        for d in range(len(self.data)):
-            self.data[d] = lentil.fourier.dft2(self.data[d], alpha, prop_shape, subpixel_center[d],
-                                               offset=self.offset[d], unitary=True)
-
-        ### place tiles
-        # TODO: collapse this into the above for loop
-        tiles = []
-        for d in range(len(self.data)):
-            # The array center is given in terms of (x,y) but we place the chip in
-            # terms of (r,c)
-            center = np.flip(out.shift[d], axis=0)
-
-            # Compute the chip location
-            data_slice, chip_slice = _chip_insertion_slices(out.shape,
-                                                            (self.data[d].shape[0],
-                                                             self.data[d].shape[1],),
-                                                            center)
-
-            if data_slice:
-                tiles.append(imtile(self.data[d], data_slice, chip_slice))
-
-            out.tiles = consolidate(tiles)
-
-            # TODO: this is where we would skip a step if place_tiles=False
-            # Note also that we should move away from storing tiles in wf.tiles and
-            # store them in wf.data?
-            for tile in out.tiles:
-                out.data[0][tile.slice] = tile.data
-
+            if _overlap(prop_shape, fix_shift, out.shape, indexing='xy'):
+                alpha = _dft_alpha(dx=self.pixelscale, du=pixelscale,
+                                   wave=self.wavelength, z=self.focal_length,
+                                   oversample=oversample)
+                data = lentil.fourier.dft2(f=field.data, alpha=alpha,
+                                           npix=prop_shape, shift=dft_shift,
+                                           offset=field.offset, unitary=True)
+                out.data.append(Field(data=data, pixelscale=pixelscale/oversample,
+                                      offset=fix_shift))
         return out
+
+
+def _overlap(field_shape, field_shift, output_shape, indexing='xy'):
+
+    # Return True if there's any overlap between a shifted field and the
+    # output shape
+    output_shape = np.asarray(output_shape)
+    field_shape = np.asarray(field_shape)
+    field_shift = np.asarray(field_shift)
+
+    if indexing == 'xy':
+        field_shift = np.flip(field_shift)
+        # field_shift[0] = -field_shift[0]
+    elif indexing == 'ij':
+        field_shift = np.asarray(field_shift)
+    else:
+        raise ValueError(f"Unknown indexing {indexing}. indexing must be 'ij' or 'xy'.")
+
+    # Output coordinates of the upper left corner of the shifted data array
+    field_shifted_ul = (output_shape / 2) - (field_shape / 2) + field_shift
+
+    if field_shifted_ul[0] > output_shape[0]:
+        return False
+    if field_shifted_ul[0] + field_shape[0] < 0:
+        return False
+    if field_shifted_ul[1] > output_shape[1]:
+        return False
+    if field_shifted_ul[1] + field_shape[1] < 0:
+        return False
+    return True
 
 
 def _sanitize_shape(shape, default=()):
@@ -258,49 +147,6 @@ def _sanitize_shape(shape, default=()):
 
 def _dft_alpha(dx, du, wave, z, oversample):
     return (dx*du)/(wave*z*oversample)
-
-
-def _chip_insertion_slices(npix_canvas, npix_chip, shift):
-    npix_canvas = np.asarray(npix_canvas)
-    npix_chip = np.asarray(npix_chip)
-
-    # Canvas coordinates of the upper left corner of the shifted chip
-    chip_shifted_ul = (npix_canvas / 2) - (npix_chip / 2) + shift
-
-    # Chip slice indices
-    chip_top = int(0)
-    chip_bottom = int(npix_chip[0])
-    chip_left = int(0)
-    chip_right = int(npix_chip[1])
-
-    # Canvas insertion slice indices
-    canvas_top = int(chip_shifted_ul[0])
-    canvas_bottom = int(chip_shifted_ul[0] + npix_chip[0])
-    canvas_left = int(chip_shifted_ul[1])
-    canvas_right = int(chip_shifted_ul[1] + npix_chip[1])
-
-    # reconcile the chip and canvas insertion indices
-    if canvas_top < 0:
-        chip_top = -1 * canvas_top
-        canvas_top = 0
-
-    if canvas_bottom > npix_canvas[0]:
-        chip_bottom -= canvas_bottom - npix_canvas[0]
-        canvas_bottom = npix_canvas[0]
-
-    if canvas_left < 0:
-        chip_left = -1 * canvas_left
-        canvas_left = 0
-
-    if canvas_right > npix_canvas[1]:
-        chip_right -= canvas_right - npix_canvas[1]
-        canvas_right = npix_canvas[1]
-
-    if np.any(np.array([canvas_bottom, chip_bottom, canvas_right, chip_right]) < 0):
-        return None, None
-    else:
-        return (slice(canvas_top, canvas_bottom), slice(canvas_left, canvas_right)), \
-               (slice(chip_top, chip_bottom), slice(chip_left, chip_right))
 
 
 class imtile:
