@@ -74,8 +74,7 @@ class Wavefront:
     @property
     def intensity(self):
         out = np.zeros(self.shape, dtype=float)
-        fields = [NDField(field) for field in self.data]
-        for field in lentil.field.reduce(fields):
+        for field in lentil.field.reduce(*self.data):
             out = lentil.field.insert(field, out, intensity=True)
         return out
         #return np.abs(self.field**2)

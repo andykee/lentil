@@ -397,7 +397,7 @@ class Plane:
         for field in wavefront.data:
             for n, s in enumerate(slc):
 
-                # construct complex phsor
+                # construct complex phasor
                 amp = self.amplitude if self.amplitude.size == 1 else self.amplitude[s]
                 phase = self.phase if self.phase.size == 1 else self.phase[s]
                 phasor = amp * np.exp(-2*np.pi*1j*phase/wavefront.wavelength)

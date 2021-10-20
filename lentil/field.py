@@ -190,7 +190,7 @@ def boundary(*fields):
     return min(rmin), max(rmax), min(cmin), max(cmax)
 
 
-def insert(field, out, intensity=False, indexing='xy'):
+def insert(field, out, intensity=False, indexing='ij'):
     output_shape = np.asarray(out.shape)
     field_shape = np.asarray(field.shape)
 
@@ -476,11 +476,12 @@ class NDField:
         return overlap(self, other)
 
 
-def reduce(fields):
+def reduce(*fields):
+    fields = [NDField(field) if not isinstance(field, NDField) else field for field in fields]
     for m, n in combinations(range(len(fields)), 2):
         if overlap(fields[m], fields[n]):
             fields[m].append(fields[n])
             fields.pop(n)
-            return reduce(fields)
+            return reduce(*fields)
 
     return fields
