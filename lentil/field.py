@@ -1,5 +1,7 @@
 import copy
+from itertools import combinations
 import numpy as np
+
 
 class Field:
     """A Field object represents a two-dimensional discretely sampled complex
@@ -13,14 +15,21 @@ class Field:
     pixelscale : float
         Data array spatial sampling
     offset : (2,) array_like of ints
-        Shift in (row, column) from (0, 0)
+        Shift of the Field in (row, column) from (0, 0)
+    tilt : list
+        List of objects which implement a ``shift`` method. This method should
+        accept the following parameters:
+
+        ``shift(xs, ys, z, wavelength)``
+
+        and return an updated x and y shift.
 
     Attributes
     ----------
     shape : tuple of inte
         Tuple of Field dimensions
-    extent : typle of ints
-        Tuple of Field extent given as (row min, row max, col min, col max)
+    extent : tuple of ints
+        Field extent given as (row min, row max, col min, col max)
 
     """
 
@@ -69,6 +78,7 @@ class Field:
 
     def shift(self, z, wavelength, pixelscale, oversample, indexing='xy'):
         """Compute Field shift.
+
         The center may be shifted due to objects that implement the
         :class:`~lentil.Tilt` interface in Field.tilt.
         Parameters
@@ -79,6 +89,11 @@ class Field:
             Wavelength
         pixelscale : float
             Output plane spatial sampling
+        oversample : int
+
+        indexing : {'xy' or 'ij'}, optional
+
+
         Returns
         -------
         x, y : float
@@ -96,6 +111,25 @@ class Field:
 
 
 def extent(shape, offset):
+    """Compute shifted array extent
+
+    Parameters
+    ----------
+    shape : array_like
+
+    offset : array_like
+
+    Returns
+    -------
+    rmin, rmax, cmin, cmax
+        Indicees that define the span of the shifted array. Note that for use
+        as a slice, rmax and cmax should be increased by 1.
+
+    See Also
+    --------
+    :func:`~lentil.field.boundary`
+
+    """
     shape = np.asarray(shape)
     offset = np.asarray(offset)
 
@@ -128,6 +162,22 @@ def overlap(a, b):
 
 
 def boundary(*fields):
+    """Compute the bounding extents around a number of Fields.
+
+    Parameters
+    ----------
+    fields : :class:`~lentil.field.Field` objects
+
+    Returns
+    -------
+    rmin, rmax, cmin, cmax
+        Indicees that define the span of the shifted arrays. Note that for use
+        as a slice, rmax and cmax should be increased by 1.
+    See Also
+    --------
+    :func:`~lentil.field.extent`
+
+    """
     rmin, rmax, cmin, cmax = [], [], [], []
 
     for field in fields:
@@ -190,45 +240,43 @@ def insert(field, out, intensity=False, indexing='xy'):
         out[output_top:output_bottom, output_left:output_right] += field.data[field_top:field_bottom, field_left:field_right]
     return out
 
-
-
-# TODO: update insert() above with this syntax
-def test():
-    # field slices
-    field_rmin, field_cmin = 0, 0
-    field_rmax, field_cmax = field.shape
-
-    # slices defining where field goes in out
-    out_rmin = int(out.shape[0]/2 - field.shape[0]/2 + field.offset[0])
-    out_rmax = out_rmin + field.shape[0]
-    out_cmin = int(out.shape[1]/2 - field.shape[1]/2 + field.offset[1])
-    out_cmax = out_cmin + field.shape[1]
-
-    # figure out how much of the field is in out and
-    # where to trim if it falls off an edge
-    if out_rmin < 0:
-        field_rmin = -1 * out_rmin
-        out_rmin = 0
-
-    if out_rmax > out.shape[0]:
-        field_rmax -= out_rmax - out.shape[0]
-        out_rmax = out.shape[0]
-
-    if out_cmin < 0:
-        field_cmin = -1 * out_rmin
-        out_cmin = 0
-
-    if out_cmax > out.shape[1]:
-        field_cmax -= out_cmax - out.shape[1]
-        out_cmax = out.shape[1]
-
-    if not np.any(np.array([out_rmax, field_rmax, out_cmax, field_cmax]) < 0):
-        if intensity:
-            out[out_rmin:out_rmax, out_cmin:out_cmax] = np.abs(field.data[field_rmin:field_rmax, field_cmin:field_cmax])**2
-        else:
-            out[out_rmin:out_rmax, out_cmin:out_cmax] += field.data[field_rmin:field_rmax, field_cmin:field_cmax]
-
-    return out
+# # TODO: update insert() above with this syntax
+# def test():
+#     # field slices
+#     field_rmin, field_cmin = 0, 0
+#     field_rmax, field_cmax = field.shape
+#
+#     # slices defining where field goes in out
+#     out_rmin = int(out.shape[0]/2 - field.shape[0]/2 + field.offset[0])
+#     out_rmax = out_rmin + field.shape[0]
+#     out_cmin = int(out.shape[1]/2 - field.shape[1]/2 + field.offset[1])
+#     out_cmax = out_cmin + field.shape[1]
+#
+#     # figure out how much of the field is in out and
+#     # where to trim if it falls off an edge
+#     if out_rmin < 0:
+#         field_rmin = -1 * out_rmin
+#         out_rmin = 0
+#
+#     if out_rmax > out.shape[0]:
+#         field_rmax -= out_rmax - out.shape[0]
+#         out_rmax = out.shape[0]
+#
+#     if out_cmin < 0:
+#         field_cmin = -1 * out_rmin
+#         out_cmin = 0
+#
+#     if out_cmax > out.shape[1]:
+#         field_cmax -= out_cmax - out.shape[1]
+#         out_cmax = out.shape[1]
+#
+#     if not np.any(np.array([out_rmax, field_rmax, out_cmax, field_cmax]) < 0):
+#         if intensity:
+#             out[out_rmin:out_rmax, out_cmin:out_cmax] = np.abs(field.data[field_rmin:field_rmax, field_cmin:field_cmax])**2
+#         else:
+#             out[out_rmin:out_rmax, out_cmin:out_cmax] += field.data[field_rmin:field_rmax, field_cmin:field_cmax]
+#
+#     return out
 
 
 def merge(a, b, check_overlap=True):
@@ -247,13 +295,13 @@ def merge(a, b, check_overlap=True):
 
 
 def _merge_shape(*fields):
-    # shape required to merge a and b
+    # shape required to merge fields
     rmin, rmax, cmin, cmax = boundary(*fields)
     return rmax - rmin + 1, cmax - cmin + 1
 
 
 def _merge_slices(*fields):
-    # slices in the merged array where a and b go
+    # slices in the merged array where fields go
     rmin, rmax, cmin, cmax = boundary(*fields)
 
     out = []
@@ -266,7 +314,7 @@ def _merge_slices(*fields):
 
 
 def _merge_offset(*fields):
-    # offset of the resulting merged array
+    # common offset of the resulting merged array
     rmin, rmax, cmin, cmax = boundary(*fields)
     nrow = rmax - rmin + 1
     ncol = cmax - cmin + 1
@@ -395,7 +443,7 @@ class NDField:
     __slots__ = 'fields'
 
     # NDField looks like a standard field but may actually contain multiple
-    # possibly overlapping fiuelds that aren't combined until the data attribute
+    # possibly overlapping fields that aren't combined until the data attribute
     # is accessed
     def __init__(self, field):
         self.fields = [field]
@@ -426,3 +474,13 @@ class NDField:
 
     def overlap(self, other):
         return overlap(self, other)
+
+
+def reduce(fields):
+    for m, n in combinations(range(len(fields)), 2):
+        if overlap(fields[m], fields[n]):
+            fields[m].append(fields[n])
+            fields.pop(n)
+            return reduce(fields)
+
+    return fields

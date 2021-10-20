@@ -73,12 +73,12 @@ class Wavefront:
 
     @property
     def intensity(self):
-
-        return np.abs(self.field**2)
-        #out = np.zeros(self.shape, dtype=float)
-        #for field in lentil.field.reduce(self.data):
-        #    out = lentil.field.insert(field, out, intensity=True)
-        #return out
+        out = np.zeros(self.shape, dtype=float)
+        fields = [NDField(field) for field in self.data]
+        for field in lentil.field.reduce(fields):
+            out = lentil.field.insert(field, out, intensity=True)
+        return out
+        #return np.abs(self.field**2)
 
     def copy(self):
         return copy.deepcopy(self)
