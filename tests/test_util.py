@@ -7,12 +7,12 @@ import lentil
 def test_boundary():
     mask = lentil.hexagon((256, 256), 100, rotate=True)
     bounds = lentil.boundary(mask)
-    assert np.array_equal(bounds, [42, 214, 28, 228])
+    assert np.array_equal(bounds, [28, 228, 42, 214])
 
 
 def test_boundary_slice():
-    a = np.zeros((10,10))
-    r,c = np.floor(np.random.uniform(low=0, high=10, size=2)).astype(int)
+    a = np.zeros((10, 10))
+    r, c = np.floor(np.random.uniform(low=0, high=10, size=2)).astype(int)
     a[r:r+3, c:c+3] = 1
 
     rmin = np.max((r, 0))
@@ -22,17 +22,17 @@ def test_boundary_slice():
 
     slc = lentil.util.boundary_slice(a)
 
-    assert (slice(rmin,rmax), slice(cmin,cmax)) == slc
+    assert (slice(rmin, rmax), slice(cmin, cmax)) == slc
 
 
 def test_slice_offset():
     shift = np.random.uniform(low=-50, high=50, size=2).astype(int)
 
-    a = lentil.util.circlemask((256,256), 256//4, shift=shift)
+    a = lentil.util.circlemask((256, 256), 256//4, shift=shift)
     slc = lentil.util.boundary_slice(a)
-    offset = lentil.util.slice_offset(slc, shape=a.shape, indexing='xy')
+    offset = lentil.util.slice_offset(slc, shape=a.shape)
 
-    assert np.all(offset[::-1] == shift)
+    assert np.all(offset == shift)
 
 
 def test_rebin():

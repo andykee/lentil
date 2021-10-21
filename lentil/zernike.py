@@ -422,18 +422,19 @@ def zernike_coordinates(mask, shift=None, rotate=0):
     mask = np.asarray(mask, dtype=bool)
 
     if shift is None:
-        center = np.asarray(mask.shape)/2
-        centroid = util.centroid(mask)
-        shift = (centroid[1]-center[1], centroid[0]-center[0])
+        center = np.asarray(mask.shape)/2  # center in (r, c)
+        centroid = util.centroid(mask)     # centroid in (r, c)
+        shift = (centroid[0]-center[0], centroid[1]-center[1])
 
+    rr, cc = util.mesh(mask.shape, shift)
 
-    yy, xx = util.mesh(mask.shape, shift)
-
-    r = np.abs(xx+1j*yy)
+    r = np.abs(rr+1j*cc)
     rho = r/np.max(r*mask)  # rho is defined to be 1 on the edge of the aperture
 
     # there is a 90 degree offset since np.angle places 0 degrees up
     angle = (90-rotate) * np.pi/180
-    theta = np.angle(xx*np.exp(1j*angle) + 1j*yy*np.exp(1j*angle))
+
+    # rr is negative here since +y is in the -row direction
+    theta = np.angle(-rr*np.exp(1j*angle) + 1j*cc*np.exp(1j*angle))
 
     return rho, theta

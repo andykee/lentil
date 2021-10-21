@@ -49,11 +49,11 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=Non
         ``F.shape = (npix, npix)``. Default is ``f.shape``.
 
     shift : array_like, optional
-        Number of pixels in (x,y) to shift the DC pixel in the output plane
+        Number of pixels in (r,c) to shift the DC pixel in the output plane
         with the origin centrally located in the plane. Default is ``(0,0)``.
 
     offset : array_like, optional
-        Number of pixels in (x,y) that the input plane is shifted relative to
+        Number of pixels in (r,c) that the input plane is shifted relative to
         the origin. Default is ``(0,0)``.
 
     unitary : bool, optional
@@ -99,7 +99,7 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=Non
 
     """
 
-    ax, ay = _sanitize_alpha(alpha)
+    alpha_row, alpha_col = _sanitize_alpha(alpha)
 
     f = np.asarray(f)
     m, n = f.shape
@@ -111,42 +111,43 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=Non
     if offset is None:
         offset = (0, 0)
 
-    sx, sy = _sanitize_shift(shift)
-    ox, oy = _sanitize_npix(offset)
+    shift_row, shift_col = _sanitize_shift(shift)
+    offset_row, offset_col = _sanitize_npix(offset)
 
     if out is not None:
         if not np.can_cast(complex, out.dtype):
             raise TypeError(f"Cannot cast complex output to dtype('{out.dtype}')")
 
-    E1, E2 = _dft2_matrices(m, n, M, N, ax, ay, sx, sy, ox, oy)
+    E1, E2 = _dft2_matrices(m, n, M, N, alpha_row, alpha_col, shift_row, shift_col,
+                            offset_row, offset_col)
     F = np.dot(E1.dot(f), E2, out=out)
 
     # now calculate the answer, without reallocating memory
     if unitary:
-        np.multiply(F, np.sqrt(np.abs(ax * ay)), out=F)
+        np.multiply(F, np.sqrt(np.abs(alpha_row * alpha_col)), out=F)
 
     return F
 
 
 @functools.lru_cache(maxsize=32)
-def _dft2_matrices(m, n, M, N, ax, ay, sx, sy, ox, oy):
-    X, Y, U, V = _dft2_coords(m, n, M, N)
-    E1 = util.expc(-2.0 * np.pi * ay * np.outer(Y-sy+oy, V-sy)).T
-    E2 = util.expc(-2.0 * np.pi * ax * np.outer(X-sx+ox, U-sx))
+def _dft2_matrices(m, n, M, N, alphar, alphac, shiftr, shiftc, offsetr, offsetc):
+    R, S, U, V = _dft2_coords(m, n, M, N)
+    E1 = util.expc(-2.0 * np.pi * alphar * np.outer(R-shiftr+offsetr, U-shiftr)).T
+    E2 = util.expc(-2.0 * np.pi * alphac * np.outer(S-shiftc+offsetc, V-shiftc))
     return E1, E2
 
 
 @functools.lru_cache(maxsize=32)
 def _dft2_coords(m, n, M, N):
-    # Y and X are (r,c) coordinates in the (m x n) input plane f
-    # V and U are (r,c) coordinates in the (M x N) ourput plane F
+    # R and S are (r,c) coordinates in the (m x n) input plane f
+    # V and U are (r,c) coordinates in the (M x N) output plane F
 
-    X = np.arange(n) - np.floor(n/2.0)
-    Y = np.arange(m) - np.floor(m/2.0)
-    U = np.arange(N) - np.floor(N/2.0)
-    V = np.arange(M) - np.floor(M/2.0)
+    R = np.arange(m) - np.floor(m/2.0)
+    S = np.arange(n) - np.floor(n/2.0)
+    U = np.arange(M) - np.floor(M/2.0)
+    V = np.arange(N) - np.floor(N/2.0)
 
-    return X, Y, U, V
+    return R, S, U, V
 
 
 def idft2(F, alpha, npix=None, shift=(0,0), unitary=True, out=None):
@@ -470,13 +471,13 @@ def _czt2_optimal_L(N, M):
 
 
 def _sanitize_alpha(x):
-    """Return consistent representation of alpha as ax, ay"""
+    """Return consistent representation of alpha as ar, ac"""
     x = np.asarray(x)
     if x.size == 1:
-        ay, ax = float(x), float(x)
+        ar, ac = float(x), float(x)
     else:
-        ay, ax = float(x[0]), float(x[1])
-    return ax, ay
+        ar, ac = float(x[0]), float(x[1])
+    return ar, ac
 
 
 def _sanitize_npix(x):
@@ -490,9 +491,9 @@ def _sanitize_npix(x):
 
 
 def _sanitize_shift(x):
-    """Return consistent representation of shift as sx, sy"""
+    """Return consistent representation of shift as sr, sc"""
     if isinstance(x, np.ndarray):
-        sx, sy = float(x[0]), float(x[1])
+        sr, sc = float(x[0]), float(x[1])
     else:
-        sx, sy = x
-    return sx, sy
+        sr, sc = x
+    return sr, sc

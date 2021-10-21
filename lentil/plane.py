@@ -175,9 +175,13 @@ class Plane:
         if self.shape == () or self.shape is None:
             ptt_vector = None
         else:
-            # compute unmasked piston, tip, tilt vector
-            x, y = lentil.util.mesh(self.shape)
-            unmasked_ptt_vector = np.einsum('ij,i->ij', [np.ones(x.size), x.ravel(), y.ravel()],
+            # compute unmasked piston, x-tilt, y-tilt vector
+            r, c = lentil.util.mesh(self.shape)
+            # note c is negative here. this is done to match Lentil's
+            # definition of what +x tilt and +y tilt look like. The columns of
+            # unmasked_ptt_vector should match the shapes returned by lentil.zernike for
+            # modes 1:3
+            unmasked_ptt_vector = np.einsum('ij,i->ij', [np.ones(r.size), r.ravel(), -c.ravel()],
                                             [1, self.pixelscale[0], self.pixelscale[1]])
 
             if self.depth == 1:
@@ -230,11 +234,7 @@ class Plane:
             t = np.linalg.lstsq(ptt_vector.T, plane.phase.ravel(), rcond=None)[0]
             phase_tilt = np.einsum('ij,i->j', ptt_vector[1:3], t[1:3])
             plane.phase -= phase_tilt.reshape(plane.phase.shape)
-
-            # 01da13b transitioned from specifying tilt in terms of image plane
-            # coordinates to about the Tilt plane axes. We can transform from
-            # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
-            plane.tilt.append(Tilt(x=-t[2], y=t[1]))
+            plane.tilt.append(Tilt(x=t[1], y=t[2]))
 
         else:
             t = np.empty((self.depth, 3))
@@ -248,11 +248,7 @@ class Plane:
                 phase_no_tilt[seg] = (plane.phase - seg_tilt.reshape(plane.phase.shape)) * self.mask[seg]
 
             plane.phase = np.sum(phase_no_tilt, axis=0)
-
-            # 01da13b transitioned from specifying tilt in terms of image plane
-            # coordinates to about the Tilt plane axes. We can transform from
-            # notional image plane to Tilt plane with x_tilt = -y_img, y_tilt = x_img
-            plane.tilt.extend([Tilt(x=-t[seg, 2], y=t[seg, 1]) for seg in range(self.depth)])
+            plane.tilt.extend([Tilt(x=t[seg, 1], y=t[seg, 2]) for seg in range(self.depth)])
 
         return plane
 
@@ -324,7 +320,7 @@ class Plane:
             s = [lentil.util.boundary_slice(m) for m in mask]
         return s
 
-    def slice_offset(self, slices, shape=None, indexing='xy'):
+    def slice_offset(self, slices, shape=None, indexing='ij'):
         """Compute (r,c) offsets of the centers of each slice in a list of slices.
 
         Parameters
@@ -337,7 +333,7 @@ class Plane:
             ``shape = Plane.shape``.
 
         indexing : {'xy', 'ij'}, optional
-            Offset ordering. Default is 'xy'.
+            Offset ordering. Default is 'ij'.
 
         Returns
         -------
@@ -752,7 +748,6 @@ class Tilt(Plane):
     ----------
     x : float
         Radians of tilt about the x-axis
-
     y : float
         Radians of tilt about the y-axis
 
@@ -760,12 +755,13 @@ class Tilt(Plane):
     def __init__(self, x, y):
         super().__init__()
 
-        self.x = -y  # y tilt is about the x-axis. There's also a sign flip to get the direction right.
+        self.x = y  # y tilt is about the x-axis.
         self.y = x  # x tilt is about the y axis.
 
     def multiply(self, wavefront):
         wavefront = super().multiply(wavefront)
-        wavefront.shift.extend([self])
+        for field in wavefront.data:
+            field.tilt.append(self)
         return wavefront
 
     def shift(self, xs=0, ys=0, z=0, **kwargs):
@@ -774,11 +770,9 @@ class Tilt(Plane):
         Parameters
         ----------
         xs : float
-            Incoming x shift in meters. Default is 0.
-
+            Incoming x shift distance. Default is 0.
         ys : float
-            Incoming y shift in meters. Default is 0.
-
+            Incoming y shift distance. Default is 0.
         z : float
             Propagation distance
 

@@ -22,8 +22,8 @@ def circle(shape, radius, shift=(0, 0)):
     circle : ndarray
 
     """
-    x, y = lentil.util.mesh(shape)
-    r = np.sqrt(np.square(x - shift[1]) + np.square(y - shift[0]))
+    rr, cc = lentil.util.mesh(shape)
+    r = np.sqrt(np.square(rr - shift[0]) + np.square(cc - shift[1]))
     return np.clip(radius + 0.5 - r, 0.0, 1.0)
 
 
@@ -77,11 +77,11 @@ def hexagon(shape, radius, rotate=False):
     inner_radius = radius * np.sqrt(3)/2
     side_length = radius/2
 
-    y, x = lentil.util.mesh(shape)
+    rr, cc = lentil.util.mesh(shape)
 
-    rect = np.where((np.abs(x) <= side_length) & (np.abs(y) <= inner_radius))
-    left_tri = np.where((x <= -side_length) & (x >= -radius) & (np.abs(y) <= (x + radius)*np.sqrt(3)))
-    right_tri = np.where((x >= side_length) & (x <= radius) & (np.abs(y) <= (radius - x)*np.sqrt(3)))
+    rect = np.where((np.abs(cc) <= side_length) & (np.abs(rr) <= inner_radius))
+    left_tri = np.where((cc <= -side_length) & (cc >= -radius) & (np.abs(rr) <= (cc + radius)*np.sqrt(3)))
+    right_tri = np.where((cc >= side_length) & (cc <= radius) & (np.abs(rr) <= (radius - cc)*np.sqrt(3)))
 
     mask = np.zeros(shape)
     mask[rect] = 1
@@ -111,10 +111,10 @@ def slit(shape, width):
 
     """
 
-    y, x = lentil.util.mesh(shape)
+    rr, cc = lentil.util.mesh(shape)
 
     mask = np.zeros(shape)
-    mask[np.abs(x) <= width/2] = 1
+    mask[np.abs(rr) <= width/2] = 1
 
     return mask
 
@@ -130,18 +130,18 @@ def centroid(img):
     Returns
     -------
     tuple
-        ``(x,y)`` centroid location.
+        ``(r,c)`` centroid location.
     """
 
     img = np.asarray(img)
     img = img/np.sum(img)
     nr, nc = img.shape
-    yy, xx = np.mgrid[0:nr, 0:nc]
+    rr, cc = np.mgrid[0:nr, 0:nc]
 
-    x = np.dot(xx.ravel(), img.ravel())
-    y = np.dot(yy.ravel(), img.ravel())
+    r = np.dot(rr.ravel(), img.ravel())
+    c = np.dot(cc.ravel(), img.ravel())
 
-    return x, y
+    return r, c
 
 
 def pad(array, shape):
@@ -525,7 +525,7 @@ def boundary_slice(x, threshold=0, pad=(0, 0)):
     return np.s_[rmin:rmax, cmin:cmax]
 
 
-def slice_offset(slice, shape, indexing='xy'):
+def slice_offset(slice, shape):
     """Compute the offset of the center of a 2D slice relative to the center of a larger
     array.
 
@@ -538,12 +538,8 @@ def slice_offset(slice, shape, indexing='xy'):
     ----------
     slice : (2,) array_like
         2D slice. Entries must be ``slice`` objects or ``Ellipsis``.
-
     shape : (2,) array_like
         Shape of containing array the slice is taken from.
-
-    indexing : {'xy', 'ij'}, optional
-        Offset ordering. Default is 'xy'.
 
     Returns
     -------
@@ -576,22 +572,18 @@ def slice_offset(slice, shape, indexing='xy'):
             raise ValueError(f"Can't compute offset from slice {slice}")
     else:
         slice_shape = np.array((slice[0].stop-slice[0].start-1, slice[1].stop-slice[1].start-1))
-        slice_center = slice_shape - np.floor(slice_shape/2)
+        slice_center = slice_shape//2
 
         shape = np.asarray(shape)
-        center = shape - np.floor(shape/2)
+        center = shape//2
 
         slice_offset = np.array((slice[0].start+slice_center[0], slice[1].start+slice_center[1])) - center
 
+        # TODO: can this be [0,0] instead?
         if np.all(slice_offset == 0):
             offset = None
         else:
-            if indexing == 'xy':
-                offset = tuple(slice_offset[::-1])
-            elif indexing == 'ij':
-                offset = tuple(slice_offset)
-            else:
-                raise ValueError(f"Unknown indexing {indexing}. indexing must be 'ij' or 'xy'.")
+            offset = tuple(slice_offset)
 
     return offset
 
@@ -602,10 +594,10 @@ def mesh(shape, shift=(0, 0)):
     nr = shape[0]
     nc = shape[1]
 
-    x = np.arange(shape[1]) - np.floor(shape[1]/2.0) - shift[1]
-    y = np.arange(shape[0]) - np.floor(shape[0]/2.0) - shift[0]
+    r = np.arange(nr) - np.floor(nr/2.0) - shift[0]
+    c = np.arange(nc) - np.floor(nc/2.0) - shift[1]
 
-    return np.meshgrid(x, y)
+    return np.meshgrid(r, c, indexing='ij')
 
 
 def gaussian2d(size, sigma):

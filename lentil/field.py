@@ -76,7 +76,7 @@ class Field:
         """
         return overlap(self, other)
 
-    def shift(self, z, wavelength, pixelscale, oversample, indexing='xy'):
+    def shift(self, z, wavelength, pixelscale, oversample, indexing='ij'):
         """Compute Field shift.
 
         The center may be shifted due to objects that implement the
@@ -91,23 +91,34 @@ class Field:
             Output plane spatial sampling
         oversample : int
 
-        indexing : {'xy' or 'ij'}, optional
-
+        indexing : {'ij', 'xy'}, optional
+            Cartesian ('xy') or matrix ('ij', default) indexing of output.
 
         Returns
         -------
-        x, y : float
-            (x,y) location of the center of the field
+        shift : tuple of floats
+            Shifted location of the center of the field
+
+        Notes
+        -----
+        This function is capable of doing the conversion between the (x, y) coordinates
+        of a Tilt and the (r, c) coordinates of a Field.
+
         """
+        if indexing not in ('xy', 'ij'):
+            raise ValueError("Valid values for `indexing` are 'xy' and 'ij'")
+
         x, y = 0, 0
 
         for tilt in self.tilt:
             x, y = tilt.shift(xs=x, ys=y, z=z, wavelength=wavelength)
 
-        if indexing == 'xy':
-            return x/pixelscale*oversample, y/pixelscale*oversample
-        elif indexing == 'ij':
-            return -y/pixelscale*oversample, x/pixelscale*oversample
+        out = x/pixelscale * oversample, y/pixelscale * oversample
+
+        if indexing == 'ij':
+            out = -out[1], out[0]
+
+        return out
 
 
 def extent(shape, offset):

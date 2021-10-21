@@ -92,13 +92,16 @@ class Wavefront:
         prop_shape = npix_prop * oversample
 
         for field in self.data:
+            # compute the field shift from any embedded tilts. note the return value
+            # is specified in terms of (r, c)
             shift = field.shift(z=self.focal_length, wavelength=self.wavelength,
-                                pixelscale=pixelscale, oversample=oversample)
+                                pixelscale=pixelscale, oversample=oversample,
+                                indexing='ij')
 
             fix_shift = np.fix(shift)
             dft_shift = shift - fix_shift
 
-            if _overlap(prop_shape, fix_shift, out.shape, indexing='xy'):
+            if _overlap(prop_shape, fix_shift, out.shape):
                 alpha = _dft_alpha(dx=self.pixelscale, du=pixelscale,
                                    wave=self.wavelength, z=self.focal_length,
                                    oversample=oversample)
@@ -110,21 +113,12 @@ class Wavefront:
         return out
 
 
-def _overlap(field_shape, field_shift, output_shape, indexing='xy'):
-
+def _overlap(field_shape, field_shift, output_shape):
     # Return True if there's any overlap between a shifted field and the
     # output shape
     output_shape = np.asarray(output_shape)
     field_shape = np.asarray(field_shape)
     field_shift = np.asarray(field_shift)
-
-    if indexing == 'xy':
-        field_shift = np.flip(field_shift)
-        # field_shift[0] = -field_shift[0]
-    elif indexing == 'ij':
-        field_shift = np.asarray(field_shift)
-    else:
-        raise ValueError(f"Unknown indexing {indexing}. indexing must be 'ij' or 'xy'.")
 
     # Output coordinates of the upper left corner of the shifted data array
     field_shifted_ul = (output_shape / 2) - (field_shape / 2) + field_shift
