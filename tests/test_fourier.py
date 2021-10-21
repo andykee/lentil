@@ -100,4 +100,12 @@ def test_dft2_out():
     assert f is F
 
 
+def test_dft2_rect():
+    m, n = 10, 11
+    f = np.random.rand(m, n) + 1j * np.random.rand(m, n)
+
+    F_dft = lentil.fourier.dft2(f, [1/m, 1/n], unitary=False)
+    F_fft = np.fft.fftshift(np.fft.fft2(np.fft.ifftshift(f)))
+
+    assert np.allclose(F_dft, F_fft)
 
