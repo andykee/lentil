@@ -260,19 +260,24 @@ class Plane:
             plane = self.copy()
 
         if plane.amplitude.ndim > 1:
-            plane.amplitude = lentil.rescale(plane.amplitude, scale=scale, shape=None, mask=None,
-                                             order=3, mode='nearest', unitary=False)/scale**2
+            plane.amplitude = lentil.rescale(plane.amplitude, scale=scale, shape=None,
+                                                mask=None, order=3, mode='nearest',
+                                                unitary=False)/scale
 
         if plane.phase.ndim > 1:
             plane.phase = lentil.rescale(plane.phase, scale=scale, shape=None, mask=None,
                                          order=3, mode='nearest', unitary=False)
 
-        if plane.mask.ndim > 1:
-            plane.mask = lentil.rescale(plane.mask, scale=scale, shape=None, mask=None, order=0,
-                                        mode='constant', unitary=False)
+        # because plane.mask is automatically computed from amplitude if it is not
+        # provided, we really only want to reinterpolate if a mask was provided (stored
+        # in plane._mask) vs computed on the fly (by the plane.mask property)
+        if plane._mask is not None:
+            if plane.mask.ndim > 1:
+                plane.mask = lentil.rescale(plane.mask, scale=scale, shape=None, mask=None, order=0,
+                                            mode='constant', unitary=False)
         # mask[mask < np.finfo(mask.dtype).eps] = 0
-        plane.mask[np.nonzero(plane.mask)] = 1
-        plane.mask = plane.mask.astype(int)
+            plane.mask[np.nonzero(plane.mask)] = 1
+            plane.mask = plane.mask.astype(int)
 
         plane.pixelscale = plane.pixelscale/scale
 
