@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 import lentil
@@ -55,6 +56,15 @@ def test_wavefront_pupil_multiply():
 
     assert np.array_equal(w.data[0].data, phasor)
     assert w.focal_length == p.focal_length
+
+
+def test_pupil_rescale_power():
+    p = CircularPupil()
+    pr = p.rescale(3, inplace=False)
+
+    amp_power = np.sum(np.abs(p.amplitude)**2)
+    ampr_power = np.sum(np.abs(pr.amplitude)**2)
+    assert math.isclose(amp_power, ampr_power, rel_tol=1e-3)
 
 
 def test_f_number():
