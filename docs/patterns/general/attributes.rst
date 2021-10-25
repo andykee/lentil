@@ -13,11 +13,10 @@ but only need to be changed/updated in one place. For example:
     import lentil
 
     FOCAL_LENGTH = 3
-    PM_DIAMETER = 0.3
 
     class TinyPupil(lentil.Pupil):
         def __init__(self):
-            super().__init__(focal_length=FOCAL_LENGTH, diameter=PM_DIAMETER)
+            super().__init__(focal_length=FOCAL_LENGTH)
 
 
 Loading Numpy ``.npy`` and ``.npz`` files
@@ -38,14 +37,12 @@ We'll update the example above to load in some additional Numpy data:
     import lentil
 
     FOCAL_LENGTH = 3
-    PM_DIAMETER = 0.3
 
     AMPLITUDE = np.load('amp.npy')
     with np.load('mask.npz') as data:
         MASK = data['mask']
 
     pupil = lentil.Pupil(focal_length=FOCAL_LENGTH,
-                         diameter=DIAMETER,
                          mask=MASK,
                          amplitude=AMPLITUDE)
 

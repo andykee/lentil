@@ -421,9 +421,6 @@ class Pupil(Plane):
 
     Parameters
     ----------
-    diameter : float
-        Diameter in meters
-
     focal_length : float
         Focal length in meters
 
@@ -451,7 +448,7 @@ class Pupil(Plane):
     sphere. The primary use of :class:`Pupil` is to represent these aberrations
 
     """
-    def __init__(self, diameter=None, focal_length=None, pixelscale=None, amplitude=1,
+    def __init__(self, focal_length=None, pixelscale=None, amplitude=1,
                  phase=0, mask=None):
 
         super().__init__(pixelscale=pixelscale, amplitude=amplitude, phase=phase,
@@ -460,21 +457,10 @@ class Pupil(Plane):
         # We directly set the local attributes here in case a subclass has redefined
         # the property (which could cause an weird behavior and will throw an
         # AttributeError if the subclass hasn't defined an accompanying getter
-        self._diameter = diameter
         self._focal_length = focal_length
 
     def __init_subclass__(cls):
-        cls._diameter = None
         cls._focal_length = None
-
-    @property
-    def diameter(self):
-        """Optical system diameter in meters."""
-        return self._diameter
-
-    @diameter.setter
-    def diameter(self, value):
-        self._diameter = value
 
     @property
     def focal_length(self):
@@ -484,11 +470,6 @@ class Pupil(Plane):
     @focal_length.setter
     def focal_length(self, value):
         self._focal_length = value
-
-    @property
-    def f_number(self):
-        """F-number."""
-        return self.focal_length/self.diameter
 
     def multiply(self, wavefront):
 

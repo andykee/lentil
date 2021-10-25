@@ -121,7 +121,7 @@ def test_airy2():
 
 
 class TiltPupil(lentil.Pupil):
-    def __init__(self, npix, coeffs=None):
+    def __init__(self, npix, diameter=1, coeffs=None):
 
         amplitude = lentil.normalize_power(lentil.util.circle((npix, npix), npix//2))
         mask = lentil.util.circlemask((npix, npix), npix//2)
@@ -132,13 +132,13 @@ class TiltPupil(lentil.Pupil):
 
         opd = lentil.zernike_compose(mask=mask, coeffs=coeffs)
 
-        super().__init__(diameter=1,
-                         focal_length=10,
+        super().__init__(focal_length=10,
                          pixelscale=1/npix,
                          amplitude=amplitude,
                          phase=opd,
                          mask=mask)
 
+        self.diameter = diameter
         self.coeffs = coeffs
 
 
@@ -168,7 +168,7 @@ def test_propagate_airy():
     # so that we can more easily enforce an odd npix. having an odd npix enables
     # comparison between numerical propagations via dft2() and the airy2() function
     # since their DC pixels will be coincident.
-    p = TiltPupil(npix=512, coeffs=[0])
+    p = TiltPupil(npix=512, diameter=1, coeffs=[0])
 
     psf_airy = airy2(diameter=p.diameter, focal_length=p.focal_length, wavelength=650e-9,
                      pixelscale=[5e-6, 5e-6], shape=(511, 511), oversample=1)
@@ -210,7 +210,7 @@ def test_propagate_tilt_phase_analytic():
     oversample = 10
     pixelscale = 5e-6
     npix = np.array([64, 64])
-    pupil = TiltPupil(npix=256)
+    pupil = TiltPupil(npix=256, diameter=1)
 
     w = lentil.Wavefront(650e-9)
     w = pupil.multiply(w)
@@ -239,7 +239,7 @@ def test_propagate_tilt_angle_analytic():
     oversample = 10
     pixelscale = 5e-6
     npix = np.array([64, 64])
-    pupil = TiltPupil(npix=256)
+    pupil = TiltPupil(npix=256, diameter=1)
 
     pupil.fit_tilt()
     w = lentil.Wavefront(650e-9)
@@ -271,7 +271,7 @@ def test_propagate_resample():
     coeffs = np.random.uniform(low=-200e-9, high=200e-9, size=6)
     opd = lentil.zernike_compose(amp, coeffs)
 
-    p = lentil.Pupil(diameter=1, focal_length=10, pixelscale=1 / 240, amplitude=amp, phase=opd)
+    p = lentil.Pupil(focal_length=10, pixelscale=1 / 240, amplitude=amp, phase=opd)
     w = lentil.Wavefront(650e-9)
     w *= p
     wi = w.propagate_image(pixelscale=5e-6, npix=64, oversample=10)

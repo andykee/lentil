@@ -14,7 +14,7 @@ plt.imshow(mask)
 plt.savefig('../../_static/img/quickstart_pupil.png', transparent=True, bbox_inches='tight', dpi=150)
 plt.close()
 
-simple_pupil = mo.Pupil(diameter=0.5, focal_length=10, pixelscale=0.5/512, amplitude=mask)
+simple_pupil = mo.Pupil(focal_length=10, pixelscale=0.5/512, amplitude=mask)
 simple_detector = mo.Detector(pixelscale=15e-6, shape=(512, 512))
 planes = [simple_pupil, simple_detector]
 psf = mo.propagate(planes, wave=550e-9, npix=(128,128))
@@ -29,8 +29,7 @@ plt.imshow(psf**0.1)
 plt.savefig('../../_static/img/quickstart_psf_broadband_5.png', transparent=True, bbox_inches='tight', dpi=150)
 
 
-simple_pupil = mo.Pupil(diameter=0.5,
-                        focal_length=10,
+simple_pupil = mo.Pupil(focal_length=10,
                         pixelscale=0.5/512,
                         amplitude=mask,
                         phase=-1400e-9 * mo.zernike.zernike(mask, index=11))
@@ -71,8 +70,7 @@ detector_attrs = {
         'dark_signal': mo.detector.DarkCurrent(500)}
 
 simple_detector = mo.FPA(pixelscale=15e-6, shape=(512, 512), **detector_attrs)
-simple_pupil = mo.Pupil(diameter=0.5,
-                        focal_length=10,
+simple_pupil = mo.Pupil(focal_length=10,
                         pixelscale=0.5/512,
                         amplitude=mo.util.normalize_power(mask),
                         phase=-1400e-9 * mo.zernike.zernike(mask, index=11))

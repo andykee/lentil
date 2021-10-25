@@ -13,7 +13,7 @@ system, and detector:
     class TinyInstrument:
         def __init__(self):
             self.pupil = lentil.Pupil(amplitude=lentil.util.circle((256,256), 128),
-                                      diameter=1, focal_length=10, pixelscale=1/256)
+                                      focal_length=10, pixelscale=1/256)
             self.detector = lentil.Image(pixelscale=5e-6)
 
         @property

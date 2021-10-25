@@ -41,8 +41,7 @@ def test_wavefront_plane_multiply():
 
 class CircularPupil(lentil.Pupil):
     def __init__(self):
-        super().__init__(diameter=2,
-                         focal_length=10,
+        super().__init__(focal_length=10,
                          pixelscale=2/256,
                          amplitude=lentil.util.circle((256, 256), 128),
                          phase=np.zeros((256, 256)))
@@ -65,13 +64,6 @@ def test_pupil_rescale_power():
     amp_power = np.sum(np.abs(p.amplitude)**2)
     ampr_power = np.sum(np.abs(pr.amplitude)**2)
     assert math.isclose(amp_power, ampr_power, rel_tol=1e-3)
-
-
-def test_f_number():
-    p = lentil.Pupil()
-    p.diameter = np.random.normal(loc=1)
-    p.focal_length = np.random.normal(loc=10)
-    assert p.f_number == p.focal_length/p.diameter
 
 
 def test_grism_center():

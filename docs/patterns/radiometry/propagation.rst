@@ -13,7 +13,7 @@ through the diffraction propagation.
     >>> import lentil
     >>> amp = lentil.util.circle((256, 256), 128)
     >>> amp = lentil.util.normalize_power(amp)
-    >>> pupil = lentil.Pupil(diameter=1, focal_length=10, pixelscale=1/256, amplitude=amp)
+    >>> pupil = lentil.Pupil(focal_length=10, pixelscale=1/256, amplitude=amp)
     >>> detector = lentil.Detector(pixelscale=5e-6, shape=(1024,1024))
     >>> source = lentil.radiometry.Spectrum(wave=np.arange(350,701),
     ...                                     value=1e4*np.ones(351),

@@ -6,9 +6,9 @@ Getting started tutorial
 
 In this short example, we'll walk through the steps to develop a very simple Lentil
 model of an imaging system with a single pupil. We'll then propagate light through
-the imaging system to an image plane and view the resulting point spread function 
-(PSF). The imaging system has a 1m diameter primary mirror, a secondary mirror 
-obscuration of 0.33m centered over the primary, a focal length of 10m, and a focal 
+the imaging system to an image plane and view the resulting point spread function
+(PSF). The imaging system has a 1m diameter primary mirror, a secondary mirror
+obscuration of 0.33m centered over the primary, a focal length of 10m, and a focal
 plane with 5um pixels.
 
 First, we'll import Lentil and matplotlib:
@@ -47,10 +47,10 @@ and the system diameter was specified as 1m, the pixelscale is 1/256.
 
 .. code-block:: pycon
 
-    >>> pupil = lentil.Pupil(amplitude=amplitude, phase=opd, diameter=1, focal_length=10,
+    >>> pupil = lentil.Pupil(amplitude=amplitude, phase=opd, focal_length=10,
     ...                      pixelscale=1/256)
 
-We'll create a monochromatic :class:`~lentil.Wavefront` with wavelength of 650nm and 
+We'll create a monochromatic :class:`~lentil.Wavefront` with wavelength of 650nm and
 propagate it "through" the pupil plane. This operation is represented by multiplying the
 wavefront by the pupil:
 

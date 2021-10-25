@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import lentil
 
-pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 128), diameter=1,
+pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 128),
                      focal_length=10, pixelscale=1/256)
 
 detector = lentil.Detector(pixelscale=5e-6, shape=(1024, 1024))

@@ -127,7 +127,6 @@ A pupil is defined by the following required parameters:
 
 * :attr:`~lentil.Pupil.focal_length` - The effective focal length (in meters)
   represented by the pupil
-* :attr:`~lentil.Pupil.diameter` - The outscribing diameter of the pupil (in meters)
 * :attr:`~lentil.Pupil.pixelscale` - Defines the physical sampling of each pixel in
   the discretely sampled attributes described below
 
@@ -160,16 +159,16 @@ of the following can be specified:
   ensure the results are at least Nyquist sampled.
 * :attr:`~lentil.Image.shape` - Defines the shape of the image plane. If not provided,
   the image plane will grow as necessary to capture all data.
-* :attr:`~lentil.Image.amplitude` - Definers the relative electric field amplitude 
+* :attr:`~lentil.Image.amplitude` - Definers the relative electric field amplitude
   transmission through the image plane.
 * :attr:`~lentil.Image.phase` - Defines the electric field phase shift that a wavefront
   experiences when propagating through the image plane.
 
 Detector
 ========
-Lentil's |Detector| plane is used to accumulate the intensity in an image plane. 
-Intensity is computed as the absolute value of the complex amplitude in the image plane 
-squared.  Similar to the |Image| plane, a detector plane does not have any required parameters 
+Lentil's |Detector| plane is used to accumulate the intensity in an image plane.
+Intensity is computed as the absolute value of the complex amplitude in the image plane
+squared.  Similar to the |Image| plane, a detector plane does not have any required parameters
 although any of the following can be specified:
 
 * :attr:`~lentil.Detector.pixelscale` - Defines the physical sampling of each pixel in
@@ -179,24 +178,24 @@ although any of the following can be specified:
   the image plane will grow as necessary to capture all data.
 
 While an |Image| plane can be used to compute intensity, the |Detector| plane implements
-an algorithm that greatly reduces the memory footprint and increases the speed of this 
+an algorithm that greatly reduces the memory footprint and increases the speed of this
 operation. Details of this algorithm are available in the :ref:`technical-notes`.
 
 .. note::
 
   An |Image| plane is interchangeable with a |Detector| plane, but the converse is not
-  true. This is becuse the calculation of the real-valued intensity discards the complex 
-  field information. Because of this, |Detector| planes can only be used as the final 
+  true. This is becuse the calculation of the real-valued intensity discards the complex
+  field information. Because of this, |Detector| planes can only be used as the final
   plane in a Lentil model.
 
 Representing Dispersion
 =======================
 Dispersion is most commonly seen in an optical system as a wavelength-dependent phase
-change. In some cases, like with a grating or prism, dispersion is used to achieve some 
-desired optical effect. In other cases, dispersion causes an unwanted chromatic 
+change. In some cases, like with a grating or prism, dispersion is used to achieve some
+desired optical effect. In other cases, dispersion causes an unwanted chromatic
 aberration.
 
-Lentil provides two classes for representing the effects of dispersion: 
+Lentil provides two classes for representing the effects of dispersion:
 :class:`~lentil.DispersivePhase` and :class:`~lentil.DispersiveShift`.
 
 Active Optics and Deformable Mirrors
@@ -205,7 +204,7 @@ Active optics and deformable mirrors are easily represented by defining a phase 
 depends on some parameterized state. Because there is no standard architecture for these
 types of optical elements, Lentil does not provide a concrete implementation. Instead,
 a custom subclass of either |Plane| or |Pupil| should be defined. The exact
-implementation details will vary by application, but a simple example of a tip-tilt 
+implementation details will vary by application, but a simple example of a tip-tilt
 mirror is provided below and additional examples can be found in Model Patterns under
 :ref:`patterns.planes`.
 
@@ -254,7 +253,7 @@ Given the following :class:`~lentil.Pupil` and :class:`~lentil.Image` planes:
 
     >>> import lentil
     >>> import matplotlib.pyplot as plt
-    >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 128), diameter=1,
+    >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 128),
     ...                      focal_length=10, pixelscale=1/256)
     >>> detector = lentil.Image(pixelscale=5e-6, shape=(1024, 1024))
     >>> psf = lentil.propagate([pupil, detector], wave=650e-9, npix=(64, 64))
@@ -282,7 +281,7 @@ The plane transformation examples below are used to modify the following image:
 
     >>> import lentil
     >>> import matplotlib.pyplot as plt
-    >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 128), diameter=1,
+    >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 128),
     ...                      focal_length=10, pixelscale=1/256)
     >>> detector = lentil.Image(pixelscale=5e-6, shape=(1024, 1024))
     >>> psf = lentil.propagate([pupil, detector], wave=650e-9, npix=(128, 128))
