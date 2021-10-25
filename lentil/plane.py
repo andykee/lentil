@@ -7,6 +7,7 @@ import scipy.optimize
 
 import lentil
 from lentil.field import Field
+import lentil.helper
 
 
 class Plane:
@@ -77,10 +78,9 @@ class Plane:
     @pixelscale.setter
     def pixelscale(self, value):
         if value is not None:
-            value = np.asarray(value)
-            if value.shape == ():
-                value = np.append(value, value)
-        self._pixelscale = value
+            self._pixelscale = lentil.helper.sanitize_shape(value)
+        else:
+            self._pixelscale = None
 
     @property
     def amplitude(self):
@@ -200,22 +200,19 @@ class Plane:
         return copy.deepcopy(self)
 
     def fit_tilt(self, inplace=True):
-        """Fit and remove tilt from a phase via least squares.
+        """Fit and remove tilt from Plane :attr:`phase` via least squares. The
+        equivalent angular tilt is bookkept in Plane :attr:`tilt`.
 
         Parameters
         ----------
-        phase : array_like or None
-            Phase to fit. If None (default), the Plane's :attr:`~lentil.Plane.phase`
-            attribute it used.
-
-        ptt_vector : array_like or None
-            Piston, tip, tilt basis used for fitting. If None (default), the Plane's
-            :attr:`~lentil.Plane.ptt_vector` attribute it used.
+        inplace : bool, optional
+            Modify the original object in place (True) or create a copy (False,
+            default).
 
         Returns
         -------
         plane : :class:`~lentil.Plane`
-            Tilt-removed plane with tilt bookkept separately in Plane.tilt list
+            Tilt-removed plane with tilt bookkept separately in :attr:`tilt`.
 
         """
         if inplace:
@@ -323,9 +320,12 @@ class Plane:
             s = [lentil.util.boundary_slice(mask)]
         elif mask.ndim == 3:
             s = [lentil.util.boundary_slice(m) for m in mask]
+        else:
+            raise ValueError('mask has invalid dimensions')
         return s
 
-    def slice_offset(self, slices, shape=None, indexing='ij'):
+    # TODO: deprecate this
+    def slice_offset(self, slices, shape=None):
         """Compute (r,c) offsets of the centers of each slice in a list of slices.
 
         Parameters
@@ -336,9 +336,6 @@ class Plane:
         shape : (2,) array_like or None, optional
             Shape of containing array each slice is taken from. If None (default),
             ``shape = Plane.shape``.
-
-        indexing : {'xy', 'ij'}, optional
-            Offset ordering. Default is 'ij'.
 
         Returns
         -------
@@ -357,7 +354,7 @@ class Plane:
 
         offsets = []
         for s in slices:
-            offset = lentil.util.slice_offset(slice=s, shape=shape, indexing=indexing)
+            offset = lentil.util.slice_offset(slice=s, shape=shape)
             if offset:
                 offsets.append(offset)
         if offsets:
@@ -387,7 +384,7 @@ class Plane:
 
         if wavefront.pixelscale:
             # We may interpolate in the future, but for now we'll enforce equality
-            assert all(wavefront.pixelscale == self.pixelscale)
+            assert np.all(wavefront.pixelscale == self.pixelscale)
 
         out = lentil.Wavefront(wavelength=wavefront.wavelength,
                                pixelscale=self.pixelscale,
@@ -499,6 +496,7 @@ class Pupil(Plane):
 
         # we inherit the plane's focal length as the wavefront's focal length
         wavefront.focal_length = self.focal_length
+        wavefront.planetype = 'pupil'
 
         return wavefront
 
@@ -548,6 +546,12 @@ class Image(Plane):
     def slice(self, *args, **kwargs):
         # np.s_[...] = Ellipsis -> returns the whole array
         return [np.s_[...]]
+
+    def multiply(self, wavefront):
+        wavefront = super().multiply(wavefront)
+        wavefront.planetype = 'image'
+        return wavefront
+
 
 class DispersivePhase(Plane):
 
@@ -734,8 +738,8 @@ class Grism(DispersiveShift):
         a, b: float
             Lower and upper integration bounds
 
-        Reference
-        ---------
+        References
+        ----------
         https://en.wikipedia.org/wiki/Arc_length#Finding_arc_lengths_by_integrating
 
         """

@@ -1,6 +1,7 @@
-import copy
 from itertools import combinations
 import numpy as np
+
+import lentil.helper
 
 
 class Field:
@@ -33,13 +34,21 @@ class Field:
 
     """
 
-    __slots__ = ('data', 'pixelscale', 'offset', 'tilt')
+    __slots__ = ('data', '_pixelscale', 'offset', 'tilt')
 
     def __init__(self, data, pixelscale, offset=None, tilt=None):
         self.data = np.asarray(data, dtype=complex)
         self.pixelscale = pixelscale
         self.offset = offset if offset is not None else [0, 0]
         self.tilt = tilt if tilt else []
+
+    @property
+    def pixelscale(self):
+        return self._pixelscale
+
+    @pixelscale.setter
+    def pixelscale(self, value):
+        self._pixelscale = lentil.helper.sanitize_shape(value)
 
     @property
     def shape(self):
@@ -87,7 +96,7 @@ class Field:
             Propagation distance
         wavelength : float
             Wavelength
-        pixelscale : float
+        pixelscale : (2,) float
             Output plane spatial sampling
         oversample : int
 
@@ -113,7 +122,8 @@ class Field:
         for tilt in self.tilt:
             x, y = tilt.shift(xs=x, ys=y, z=z, wavelength=wavelength)
 
-        out = x/pixelscale * oversample, y/pixelscale * oversample
+        pixelscale = lentil.helper.sanitize_shape(pixelscale)
+        out = x/pixelscale[0] * oversample, y/pixelscale[1] * oversample
 
         if indexing == 'ij':
             out = -out[1], out[0]
@@ -158,7 +168,7 @@ def overlap(a, b):
 
     Parameters
     ----------
-    a1, a2 : `~lentil.Field`
+    a, b : `~lentil.Field`
         Input fields.
 
     Returns
@@ -201,17 +211,16 @@ def boundary(*fields):
     return min(rmin), max(rmax), min(cmin), max(cmax)
 
 
-def insert(field, out, intensity=False, indexing='ij'):
+def insert(field, out, intensity=False, weight=1, indexing='ij'):
+    if indexing not in ('xy', 'ij'):
+        raise ValueError("Valid values for `indexing` are 'xy' and 'ij'")
+
     output_shape = np.asarray(out.shape)
     field_shape = np.asarray(field.shape)
+    field_offset = np.asarray(field.offset)
 
     if indexing == 'xy':
-        field_offset = np.flip(field.offset)
-        # field_offset[0] = -field_offset[0]
-    elif indexing == 'ij':
-        field_offset = np.asarray(field.offset)
-    else:
-        raise ValueError(f"Unknown indexing {indexing}. indexing must be 'ij' or 'xy'.")
+        field_offset = -field_offset[1], field_offset[0]
 
     # Output coordinates of the upper left corner of the shifted data array
     field_shifted_ul = (output_shape // 2) - (field_shape // 2) + field_offset
@@ -246,9 +255,9 @@ def insert(field, out, intensity=False, indexing='ij'):
         output_right = output_shape[1]
 
     if intensity:
-        out[output_top:output_bottom, output_left:output_right] = np.abs(field.data[field_top:field_bottom, field_left:field_right]**2)
+        out[output_top:output_bottom, output_left:output_right] = (np.abs(field.data[field_top:field_bottom, field_left:field_right]**2) * weight)
     else:
-        out[output_top:output_bottom, output_left:output_right] += field.data[field_top:field_bottom, field_left:field_right]
+        out[output_top:output_bottom, output_left:output_right] += (field.data[field_top:field_bottom, field_left:field_right] * weight)
     return out
 
 # # TODO: update insert() above with this syntax
@@ -291,8 +300,8 @@ def insert(field, out, intensity=False, indexing='ij'):
 
 
 def merge(a, b, check_overlap=True):
-    if a.pixelscale != b.pixelscale:
-        raise ValueError(f'pixelscales {a.pixelscale} and '\
+    if not np.all(a.pixelscale == b.pixelscale):
+        raise ValueError(f'pixelscales {a.pixelscale} and '
                          f'{b.pixelscale} are not equal')
     if check_overlap and not overlap(a, b):
         raise ValueError("can't merge non-overlapping fields")
@@ -359,8 +368,8 @@ def multiply(x1, x2):
           size when multiplied by a "real" field.
 
     """
-    if x1.pixelscale != x2.pixelscale:
-        raise ValueError(f'pixelscales {x1.pixelscale} and '\
+    if not np.all(x1.pixelscale == x2.pixelscale):
+        raise ValueError(f'pixelscales {x1.pixelscale} and '
                          f'{x2.pixelscale} are not equal')
 
     a_data, b_data = x1.data, x2.data

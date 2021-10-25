@@ -1,26 +1,103 @@
-import copy
-from itertools import combinations
-from operator import itemgetter
-
 import numpy as np
 
-
-def _standardize_shape(shape, default=()):
-    if shape is None:
-        shape = default
-    shape = np.asarray(shape)
-    if shape.shape == ():
-        shape = np.append(shape, shape)
-    return shape
+import lentil
+import lentil.field
+import lentil.helper
 
 
-def _standardize_bandpass(vec, default=()):
-    if vec is None:
-        vec = default
-    vec = np.asarray(vec)
-    if vec.shape == ():
-        vec = vec[np.newaxis, ...]
-    return vec
+def propagate(planes, wave, weight=None, npix=None, npix_prop=None, oversample=2,
+              rebin=True, fit_tilt=False, flatten=True, min_q=2):
+    """Compute a polychromatic point spread function using Fraunhofer
+    diffraction.
+    Parameters
+    ----------
+    planes : list_like
+        List of :class:`~lentil.Plane` objects
+    wave : array_like
+        Array of wavelengths (in meters)
+    weight : array_like, optional
+        Weight multiple applied to each wavelength slice in :attr:`wave`.
+        :attr:`weight` can be relative (for example, when considering the
+        optical transmission through the optical system) or absolute (for
+        example, when performing radiometrically accurate propagations where
+        wavelength-dependent flux at the image plane is known). Must have
+        the same length as :attr:`wave`. If not specified, ones are used.
+    npix : int or (2,) tuple of ints, optional
+        Shape of output plane.
+    npix_prop : int or (2,) tuple of ints, optional
+        Shape of propagation output plane. If None (default),
+        ``npix_prop = npix``. If ``npix_prop != npix``, the propagation
+        result is placed in the appropriate location in the output plane.
+        npix_prop cannot be larger than npix.
+    oversample : int, optional
+        Number of times to oversample the output plane. Default is 2.
+    rebin : bool, optional
+        If ``True``, return the output plane in the sampling given by
+        ``pixelscale``, binning down the output plane by a factor of
+        ``oversample`` as needed. Note that this operation preserves power
+        in the output plane. Default is ``True``.
+    fit_tilt : bool, optional
+        If True, tilt is removed from each Plane and bookkept separately. The
+        effective tilt is included by directly placing the propagation result
+        in the correct location in the output. Setting fit_tilt = True can help
+        to eliminate periodic wraparound errors caused by large tilts aliasing
+        in the complex phasor. Default is False. See :func:`lentil.Plane.fit_tilt`
+        for more details.
+    flatten : bool, optional
+        If ``True``, the cube of wavelength-dependent output planes is
+        flattened into a single 2D array before being returned. If
+        ``False``, a cube of output planes is returned. Default is ``True``.
+    min_q : float, optional
+
+    Returns
+    -------
+    psf : ndarray
+        Resulting point spread function.
+
+    """
+    npix = lentil.helper.sanitize_shape(npix)
+    npix_prop = lentil.helper.sanitize_shape(npix_prop, default=npix)
+    wave = lentil.helper.sanitize_bandpass(wave)
+    weight = lentil.helper.sanitize_bandpass(weight, default=np.ones_like(wave))
+
+    # Create empty output
+    out_dtype = float
+    out_shape = npix * oversample
+
+    if flatten:
+        out = np.zeros(out_shape, dtype=out_dtype)
+    else:
+        out = np.zeros((len(wave), *out_shape), dtype=out_dtype)
+
+    if fit_tilt:
+        planes = [plane.fit_tilt(inplace=False) for plane in planes]
+
+    for n, (wl, wt) in enumerate(zip(wave, weight)):
+        if wt > 0:
+            w = lentil.Wavefront(wl)
+            for plane, next_plane in _iterate_planes(planes):
+                # propagate through the current plane
+                w *= plane
+                if w.planetype == 'pupil' and isinstance(next_plane, lentil.Image):
+                    w = w.propagate_image(pixelscale=next_plane.pixelscale,
+                                          npix=npix, npix_prop=npix_prop,
+                                          oversample=oversample)
+                else:
+                    continue
+
+            # place w
+            if flatten:
+                for field in lentil.field.reduce(*w.data):
+                    out = lentil.field.insert(field, out, intensity=True, weight=wt)
+            else:
+                for field in lentil.field.reduce(*w.data):
+                    out[n] = lentil.field.insert(field, out[n], intensity=True,
+                                                 weight=wt)
+
+    if rebin:
+        out = lentil.rebin(out, oversample)
+
+    return out
 
 
 class _iterate_planes:

@@ -1,3 +1,8 @@
+# Lentil
+# Heart-healthy physical optics
+#
+# Copyright (c) 2021, California Institute of Technology ("Caltech"). U.S.
+# Government sponsorship acknowledged.
 __version__ = '0.6.0'
 
 from lentil.convolvable import jitter, smear
@@ -17,6 +22,8 @@ from lentil.plane import (
 	Rotate,
 	Flip
 )
+
+from lentil.propagate import propagate
 
 from lentil import radiometry
 
