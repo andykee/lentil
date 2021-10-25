@@ -13,12 +13,11 @@ Detailed information on any specific class or method can be found in the :ref:`a
 
 .. note::
     Many of the topics covered in this user guide and the API reference require some
-    understanding of the underlying physics that govern the processes modeled
-    by Lentil.
+    understanding of the underlying physics that govern the phsyical and optical
+    processes modeled by Lentil.
 
-    This documentation does not attempt to provide a comprehensive reference to these
-    topics but does provide links and references to supporting materials where
-    applicable.
+    This documentation does not attempt to be a guide to these topics but does provide
+    links and references to supporting materials where applicable.
 
 
 .. toctree::
