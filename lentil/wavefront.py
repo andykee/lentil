@@ -9,8 +9,7 @@ import lentil.helper
 
 
 class Wavefront:
-    """A class representing a monochromatic wavefront. :class:`Wavefront` is
-    used internally by Lentil to perform diffraction propagation calculations.
+    """A class representing a monochromatic wavefront.
 
     Parameters
     ----------

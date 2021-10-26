@@ -1,8 +1,8 @@
 .. _diffraction.sampling:
 
-*******
-Samping
-*******
+**********************
+Samping considerations
+**********************
 
 .. image:: /_static/img/propagate_sampling.png
     :width: 450px

@@ -1,11 +1,11 @@
 .. _diffraction.tilt:
 
-****
-Tilt
-****
+************************
+Working with large tilts
+************************
 
 
-Talk abnout the Plane.shift interface
+Talk about the Plane.shift interface
 
 
 

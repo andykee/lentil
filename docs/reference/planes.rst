@@ -5,14 +5,15 @@ Planes
 ******
 .. currentmodule:: lentil
 
-Generic Planes
---------------
+Principal Planes
+----------------
 .. autosummary::
     :toctree: ../generated/
 
     lentil.Plane
     lentil.Pupil
     lentil.Image
+    lentil.Detector
 
 Special Planes
 --------------

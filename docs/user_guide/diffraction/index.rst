@@ -1,7 +1,7 @@
 .. _user-guide.diffraction:
 
 ********************
-Modeling Diffraction
+Modeling diffraction
 ********************
 
 .. toctree::
@@ -11,4 +11,3 @@ Modeling Diffraction
     sampling
     tilt
     segmented
-    fresnel

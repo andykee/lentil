@@ -3,9 +3,9 @@
 .. |Wavefront| replace:: :class:`~lentil.wavefront.Wavefront`
 .. |Plane| replace:: :class:`~lentil.Plane`
 
-********
-Overview
-********
+*********************************
+Numerical diffraction propagation
+*********************************
 
 This section of the User Guide assumes an undergraduate-level understanding of
 physical and Fourier optics. In-depth mathematical background and an extensive

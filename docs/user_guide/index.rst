@@ -23,7 +23,10 @@ Detailed information on any specific class or method can be found in the :ref:`a
 .. toctree::
     :maxdepth: 2
 
-    optical_systems/index
+    coordinates
+    planes
+    wavefront_error
+    optical_systems
     diffraction/index
     sources
     image_sensors/index
