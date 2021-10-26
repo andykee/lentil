@@ -542,11 +542,19 @@ class Image(Plane):
     ----------
     pixelscale : float, optional
         Pixel size in meters. Pixels are assumed to be square. Default is None.
-
     shape : {int, (2,) array_like}, optional
         Number of pixels as (rows, cols). If a single value is provided,
         :class:`Image` is assumed to be square with nrows = ncols = shape.
         Default is None.
+
+    Note
+    ----
+    If image plane intensity is desired, significant performance improvements
+    can be realized by using a :class:`Detector` plane instead.
+
+    See Also
+    --------
+    * :class:`Detector`
 
     """
 
@@ -585,6 +593,31 @@ class Image(Plane):
         wavefront = super().multiply(wavefront)
         wavefront.planetype = 'image'
         return wavefront
+
+
+class Detector(Image):
+    """Class for representing an image plane that returns intensity.
+
+    The Detector should only be used as the last plane in a propagation. If
+    individual wavelength results or access to the complex field is required, an
+    :class:`Image` plane should be used instead.
+
+    Parameters
+    ----------
+    pixelscale : float, optional
+        Pixel size in meters. Pixels are assumed to be square. Default is None.
+    shape : {int, (2,) array_like}, optional
+        Number of pixels as (rows, cols). If a single value is provided,
+        :class:`Image` is assumed to be square with nrows = ncols = shape.
+        Default is None.
+
+    See Also
+    --------
+    * :class:`Image`
+
+    """
+    def __init__(self, pixelscale=None, shape=None):
+        super().__init__(pixelscale=pixelscale, shape=shape)
 
 
 class DispersivePhase(Plane):
@@ -661,14 +694,10 @@ class Grism(DispersiveShift):
         Polynomial coefficients describing the spectral trace produced by the
         grism in decreasing powers (i.e. trace[0] represents the highest order
         coefficient and trace[-1] represents the lowest).
-
     dispersion : array_like
         Polynomial coefficients describing the dispersion produced by the grism
         in decreasing powers (i.e. dispersion[0] represents the highest order
         coefficient and dispersion[-1] represents the lowest.)
-
-    See Also
-    --------
 
     """
     def __init__(self, trace, dispersion, pixelscale=None, amplitude=1,
@@ -712,7 +741,6 @@ class Grism(DispersiveShift):
             Distance along spectral trace relative to self.dispersion[-1]
 
         """
-
         if self._dispersion_order == 1:
             # For a first order polynomial we have lambda = dispersion[0] * dist + dispersion[1]
             # Solving for distance gives dist = (lambda - dispersion[1])/dispersion[0]
@@ -892,7 +920,6 @@ class Flip(Plane):
         counts from the last to the first axis.
 
     """
-
     def __init__(self, axis=None):
         super().__init__()
 

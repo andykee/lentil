@@ -253,10 +253,13 @@ def insert(field, out, intensity=False, weight=1, indexing='ij'):
         field_right -= output_right - output_shape[1]
         output_right = output_shape[1]
 
+    output_slice = slice(output_top, output_bottom), slice(output_left, output_right)
+    field_slice = slice(field_top, field_bottom), slice(field_left, field_right)
+
     if intensity:
-        out[output_top:output_bottom, output_left:output_right] = (np.abs(field.data[field_top:field_bottom, field_left:field_right]**2) * weight)
+        out[output_slice] += (np.abs(field.data[field_slice]**2) * weight)
     else:
-        out[output_top:output_bottom, output_left:output_right] += (field.data[field_top:field_bottom, field_left:field_right] * weight)
+        out[output_slice] += (field.data[field_slice] * weight)
     return out
 
 # # TODO: update insert() above with this syntax

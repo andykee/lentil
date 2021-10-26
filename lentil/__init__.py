@@ -15,6 +15,7 @@ from lentil.plane import (
 	Plane,
 	Pupil,
 	Image,
+	Detector,
 	DispersiveShift,
 	Grism,
 	LensletArray,

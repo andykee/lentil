@@ -6,7 +6,7 @@ import lentil.helper
 
 
 def propagate(planes, wave, weight=None, npix=None, npix_prop=None, oversample=2,
-              rebin=True, fit_tilt=False, flatten=True, min_q=2):
+              rebin=True, fit_tilt=False, min_q=2):
     """Compute a polychromatic point spread function using Fraunhofer
     diffraction.
 
@@ -44,10 +44,6 @@ def propagate(planes, wave, weight=None, npix=None, npix_prop=None, oversample=2
         to eliminate periodic wraparound errors caused by large tilts aliasing
         in the complex phasor. Default is False. See :func:`lentil.Plane.fit_tilt`
         for more details.
-    flatten : bool, optional
-        If ``True``, the cube of wavelength-dependent output planes is
-        flattened into a single 2D array before being returned. If
-        ``False``, a cube of output planes is returned. Default is ``True``.
     min_q : float, optional
 
     Returns
@@ -62,13 +58,16 @@ def propagate(planes, wave, weight=None, npix=None, npix_prop=None, oversample=2
     weight = lentil.helper.sanitize_bandpass(weight, default=np.ones_like(wave))
 
     # Create empty output
-    out_dtype = float
     out_shape = npix * oversample
 
-    if flatten:
-        out = np.zeros(out_shape, dtype=out_dtype)
+    # If the final plane is a Detector, we return intensity, otherwise we return
+    # the complex field
+    detector = True if isinstance(planes[-1], lentil.Detector) else False
+
+    if detector:
+        out = np.zeros(out_shape, dtype=float)
     else:
-        out = np.zeros((len(wave), *out_shape), dtype=out_dtype)
+        out = np.zeros((len(wave), *out_shape), dtype=complex)
 
     if fit_tilt:
         planes = [plane.fit_tilt(inplace=False) for plane in planes]
@@ -87,13 +86,14 @@ def propagate(planes, wave, weight=None, npix=None, npix_prop=None, oversample=2
                     continue
 
             # place w
-            if flatten:
+            if detector:
                 for field in lentil.field.reduce(*w.data):
                     out = lentil.field.insert(field, out, intensity=True, weight=wt)
             else:
                 for field in lentil.field.reduce(*w.data):
-                    out[n] = lentil.field.insert(field, out[n], intensity=True,
+                    out[n] = lentil.field.insert(field, out[n], intensity=False,
                                                  weight=wt)
+                out = np.squeeze(out)  # squeeze out singleton dimension
 
     if rebin:
         out = lentil.rebin(out, oversample)
