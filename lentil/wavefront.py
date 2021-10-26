@@ -28,7 +28,6 @@ class Wavefront:
         length (``np.inf``).
 
     """
-
     __slots__ = ('wavelength', 'pixelscale', 'focal_length',
                  'data', 'shape', 'planetype')
 

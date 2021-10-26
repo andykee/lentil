@@ -9,6 +9,7 @@ def propagate(planes, wave, weight=None, npix=None, npix_prop=None, oversample=2
               rebin=True, fit_tilt=False, flatten=True, min_q=2):
     """Compute a polychromatic point spread function using Fraunhofer
     diffraction.
+
     Parameters
     ----------
     planes : list_like

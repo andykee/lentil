@@ -13,22 +13,17 @@ def power_spectrum(mask, pixelscale, rms, half_power_freq, exp, seed=None):
     ----------
     mask : array_like
         Binary [0,1] mask defining pupil extent
-
     pixelscale : float
         Physical size of each pixel in the resulting opd in meters.
-
     rms : float
         RMS value of the PSD error in meters
-
     half_power_freq : float
         Half-power frequency in number of cycles per pixel
-
     exp : float
         Exponent of the inverse-power law
-
     seed : int, optional
         Random seed used to initialize the pseudo-random number generator. If
-        seed is `None` (default), the seed will be randomly generated from 
+        seed is `None` (default), the seed will be randomly generated from
         ``/dev/urandom`` if available or the system clock.
 
     Returns
@@ -84,10 +79,8 @@ def translation_defocus(mask, f_number, translation):
     mask : array_like
         Binary [0,1] mask defining the pupil extent to compute the wavefront
         over.
-
     f_number : float
         System or beam f-number.
-
     translation : float
         Axial translation from best focus given in the same units as the
         resulting OPD.

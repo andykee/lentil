@@ -8,21 +8,18 @@ def jitter(img, scale, pixelscale=1, oversample=1):
     ----------
     img : array_like
         Input image
-
     scale : float
         1-sigma jitter motion
 
         If ``pixelscale = 1``, ``scale`` should give jitter in terms of
         fractional pixels. If ``pixelscale`` is the physical dimension of
         one pixel, ``scale`` should give jitter in terms of the same units.
-
     pixelscale : float, optional
         Pixel size. If ``pixelscale = 1`` (default), the ``scale`` parameter
         provided when Jitter is called should give jitter in terms of fractional
         pixels. If ``pixelscale`` is the physical dimension of one pixel, ``the
         ``scale`` parameter provided when Jitter is called should give jitter in
         terms of the same units.
-
     oversample : int, optional
         Oversampling factor of img. Default is 1.
 
@@ -91,7 +88,6 @@ def smear(img, distance, angle=None, pixelscale=1, oversample=1):
     ----------
     img : array_like
         Input image
-
     distance : float
         Linear smear distance
 
@@ -99,19 +95,16 @@ def smear(img, distance, angle=None, pixelscale=1, oversample=1):
         fractional pixels. If ``pixelscale`` is the physical dimension of
         one pixel, ``distance`` should give smear in terms of the same
         units.
-
     angle : float, optional
         Smear direction in degrees measured clockwise from the x-axis. If
         ``None`` (default), a new direction is randomly chosen every time
         :class:`Smear` is called.
-
     pixelscale : float, optional
         Pixel size. If ``pixelscale = 1`` (default), the ``scale`` parameter
         provided when Smear is called should give jitter in terms of fractional
         pixels. If ``pixelscale`` is the physical dimension of one pixel, ``the
         ``scale`` parameter provided when Smear is called should give jitter in
         terms of the same units.
-
     oversample : int, optional
         Oversampling factor of img. Default is 1.
 

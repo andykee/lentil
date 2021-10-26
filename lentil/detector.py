@@ -15,14 +15,11 @@ def collect_charge(img, wave, qe, waveunit='nm'):
     img : array_like
         The photons presented to the sensor. Should have shape (nwave,
         nrows, ncols)
-
     wave : array_like
         Wavelengths corresponding to each slice in ``count``. The length of
         ``wave`` must be equal to the number of samples ``nwave`` in ``count``.
-
     qe : {:class:`lentil.radiometry.Spectrum` array_like, or scalar}
         Quantum efficiency used to convert detected photons to electrons.
-
     waveunit : str, optional
         Units of ``wave``. Defaults is ``nm``
 
@@ -59,27 +56,20 @@ def collect_charge_bayer(img, wave, qe_red, qe_green, qe_blue, bayer_pattern, ov
     img : array_like
         The photons presented to the sensor. Should have shape (nwave,
         nrows, ncols)
-
     wave : array_like
         Wavelengths corresponding to each slice in ``count``. The length of
         ``wave`` must be equal to the first dimension in ``count``.
-
     qe_red : {:class:`lentil.radiometry.Spectrum`, array_like, scalar}
         Red channel quantum efficiency
-
     qe_green : {:class:`lentil.radiometry.Spectrum`, array_like, scalar}
         Green channel quantum efficiency
-
     qe_blue : {:class:`lentil.radiometry.Spectrum`, array_like, scalar}
         Blue channel quantum efficiency
-
     bayer_pattern : array_like
         Layout of the detector's Bayer pattern. For example, [['B','G'],['G','R']]
         describes a BGGR pattern.
-
     oversample : int, optional
         Oversampling factor present in ``count``. Default is 1.
-
     waveunit : str, optional
         Units of ``wave``. Defaults is ``nm``
 
@@ -152,7 +142,6 @@ def pixel(img, oversample=1):
     ----------
     img : array_like
         Input image
-
     oversample : int, optional
         Oversampling factor of img. Default is 1.
 
@@ -209,7 +198,6 @@ def pixelate(img, oversample):
     ----------
     img : array_like
         Input image
-
     oversample : int
         Number of times `img` is oversampled
 
@@ -239,7 +227,6 @@ def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
     ----------
     img : ndarray
         Array of electron counts
-
     gain : saclar or array_like
         Conversion gain in DN/e-. Can be specified in multiple ways:
 
@@ -253,15 +240,12 @@ def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
 
             * As a three-dimensional array of pixel-by-pixel gain where the
               first dimension gives polynomial coefficients of each pixel
-
     saturation_capacity : int or None
         Electron count resulting in pixel saturation. If None, pixels will not
         saturate. This is obviously nonphysical, but can be useful for testing
         or debugging.
-
     warn_saturate : bool, optional
         Raise a warning when pixels saturate. Default is False.
-
     dtype : data-type or None, optional
         Output data-type. If None (default), no data-type casting is performed.
 
@@ -332,10 +316,8 @@ def shot_noise(img, method='poisson', seed=None):
     ----------
     img : array_like
         Array of counts. All values must be >= 0.
-
     method : 'poisson' or 'gaussian'
         Noise method.
-
     seed : None, int, or array_like, optional
         Random seed used to initialize ``numpy.random.RandomState``. If
         ``None``, then ``RandomState`` will try to read data from /dev/urandom
@@ -390,10 +372,8 @@ def read_noise(img, electrons, seed=None):
     ----------
     img : array_like
         Array of electrons
-
     electrons : int
         Read noise per frame
-
     seed : None, int, or array_like, optional
         Random seed used to initialize ``numpy.random.RandomState``. If
         ``None``, then ``RandomState`` will try to read data from /dev/urandom
@@ -418,10 +398,8 @@ def charge_diffusion(img, sigma, oversample=1):
     ----------
     img : array_like
         Frame to apply charge diffusion to
-
     sigma : float
         Diffusion sigma
-
     oversample : int
         Oversample factor in img
 
@@ -431,7 +409,6 @@ def charge_diffusion(img, sigma, oversample=1):
         Input frame blurred by charge diffusion
 
     """
-
     kernel = lentil.util.gaussian2d(3*oversample, sigma)
     return scipy.signal.convolve2d(img, kernel, mode='same')
 
@@ -447,14 +424,11 @@ def dark_current(rate, shape=1, fpn_factor=0, seed=None):
     ----------
     rate : int
         Dark current rate in electrons/second/pixel
-
     shape : array_like or 1
         Output shape. If not specified, a scalar is returned.
-
     fpn_factor : float
         Dark current FPN factor. Should be between 0.1 and 0.4 for CCD and CMOS
         sensors [1].
-
     seed : None, int, or array_like, optional
         Random seed used to initialize ``numpy.random.RandomState``. If
         ``None``, then ``RandomState`` will try to read data from /dev/urandom
@@ -499,21 +473,16 @@ def rule07_dark_current(temperature, cutoff_wavelength, pixelscale, shape=1,
     ----------
     temperature : float
         Focal plane temperature in K
-
     cutoff_wavelength : float
         Focal plane cutoff wavelength in m
-
     pixelscale : float
         Size of one pixel in m
-
     shape : array_like or 1
         Output shape. If not specified, a scalar is returned.
-
     fpn_factor : float
         Dark current FPN factor. Should be between 0.1 and 0.4 for CCD and CMOS
         sensors [2]. When fpn_factor is nonzero, seed must be provided. When
         fpn_factor is 0 (default), dark current FPN is not applied.
-
     seed : None, int, or array_like, optional
         Random seed used to initialize ``numpy.random.RandomState``. If
         ``None``, then ``RandomState`` will try to read data from /dev/urandom
@@ -535,7 +504,6 @@ def rule07_dark_current(temperature, cutoff_wavelength, pixelscale, shape=1,
     [3] Janesick, J. R., Photon Transfer, Vol. PM170, SPIE (2007)
 
     """
-
     J0 = 8367.00001853855  # A/cm^2
     C = -1.16239134096245
     k = 1.3802e-23  # J/K - Boltzmanns' constant
@@ -574,21 +542,16 @@ def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, alpha_flux=4e9
     ----------
     shape : array_like
         Frame size defined as (rows, cols)
-
     pixelscale : array_like
         Pixel dimensions as (y,x,z) where z is the pixel depth
-
     ts : float
         Integration time in seconds
-
     rate : float, optional
         Cosmic ray rate expressed as number of events per square meter of
         detector area. Default is 40000 hits/m^2.
-
     proton_flux : float, optional
         Number of electrons liberated per meter of travel for a proton. Default
         is 1e9 e-/m.
-
     alpha_flux : float, optional
         Number of electrons liberated per meter of travel for an alpha particle.
         By definition, alpha particles have four times the energy of protons.
@@ -620,8 +583,8 @@ def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, alpha_flux=4e9
     [1] Offenberg, J.D. et. al.  Multi-Read Out Data Simulator. (2000).
 
     [2] `Cosmic ray - Wikipedia <https://en.wikipedia.org/wiki/Cosmic_ray>`_
-    """
 
+    """
     # compute the number of rays that strike the detector during the
     # integration time
     nrays = _nrays(shape, pixelscale, ts, rate)
@@ -730,10 +693,8 @@ def _cubeplane_ray_intersection(xyz, dxdydz, extent):
         xyz[:, 0] is the x coordinate of the starting point of the ray,
         xyz[:, 1] is the y coordinate of the starting point of the ray.
         xyz[:, 2] is the z coordinate of the starting point.
-
     dxdydz : double ndim=2
         Unit vector representing the direction of travel of the ray.
-
     extent : tuple of int
         Integer address for the detector edge on the -x, +x, -y,
         +y, -z and +z edges. Should be representable as an int16.
@@ -851,12 +812,10 @@ def _process_cube_intersections(inter, xyz, dxdydz):
     ----------
     inter : list of tuple
         Output of _cubeplane_ray_intersection() or _cubeplane_ray_intersection()
-
     xyz : ndarray, ndim=2
         xyz[:, 0] is the x coordinate of the starting point of the ray,
         xyz[:, 1] is the y coordinate of the starting point of the ray.
         xyz[:, 2] is the z coordinate of the starting point.
-
     dxdydz : double ndim=2
         Unit vector representing the direction of travel of the ray.
 
@@ -864,23 +823,18 @@ def _process_cube_intersections(inter, xyz, dxdydz):
     -------
     indx : ndarray of np.uint64
         Index of the ray for each ray intersection
-
     raylength : ndarray of np.float32
         Length along each ray that the intersection happened
-
     draylength : ndarray of np.float32
         Length along ray travsersed since ray was born or last intersection,
         which ever came most recently
-
     interpoint : ndarray of np.float32
         One row for each ray intersection, values are x,y,z of intersection
         point
-
     last_coord : ndarray of np.int16
         One row for each ray intersection, values are the x,y,z coordinate of
         the cube that the ray is leaving. (May not be inside extent, you should
         check if you care.)
-
     next_coord : ndarray of np.int16
         One row for each ray intersection, values are the x,y,z coordinate of
         the cube that the ray is entering. (May not be inside extent, you should
@@ -895,7 +849,6 @@ def _process_cube_intersections(inter, xyz, dxdydz):
     Originally developed by Dustin Moore.
 
     """
-
     _xyz = xyz[inter['indx'], :].astype(np.float32)
     _dxdydz = dxdydz[inter['indx'], :].astype(np.float32)
 

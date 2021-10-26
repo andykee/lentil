@@ -15,31 +15,27 @@ class Plane:
 
     Parameters
     ----------
-    pixelscale : float or (2,) array_like
-        Physical sampling (in meters) of each pixel in the plane. If :attr:`pixelscale`
-        is a scalar, uniform sampling in x and y is assumed.
-
     amplitude : array_like, optional
         Electric field amplitude transmission. Amplitude should be normalized
         with :func:`~lentil.util.normalize_power` if conservation of power
         through a diffraction propagation is required. If not specified, a
         default amplitude is created which has no effect on wavefront
         propagation.
-
     phase : array_like, optional
         Phase change caused by plane. If not specified, a default phase is
         created which has no effect on wavefront propagation.
-
     mask : array_like, optional
         Binary mask. If not specified, a mask is created from the amplitude.
+    pixelscale : float or (2,) array_like
+        Physical sampling (in meters) of each pixel in the plane. If :attr:`pixelscale`
+        is a scalar, uniform sampling in x and y is assumed.
 
     Attributes
     ----------
     tilt : list
 
     """
-
-    def __init__(self, pixelscale=None, amplitude=1, phase=0, mask=None):
+    def __init__(self, amplitude=1, phase=0, mask=None, pixelscale=None):
         # We directly set the local attributes here in case a subclass has redefined
         # the property (which could cause an weird behavior and will throw an
         # AttributeError if the subclass hasn't defined an accompanying getter
@@ -63,24 +59,6 @@ class Plane:
 
     def __repr__(self):
         return f'{self.__class__.__name__}()'
-
-    @property
-    def pixelscale(self):
-        """Physical sampling (in meters) of each pixel in the plane.
-
-        Returns
-        -------
-        pixelscale : ndarray
-            (dx,dy) sampling of the Plane
-        """
-        return self._pixelscale
-
-    @pixelscale.setter
-    def pixelscale(self, value):
-        if value is not None:
-            self._pixelscale = lentil.helper.sanitize_shape(value)
-        else:
-            self._pixelscale = None
 
     @property
     def amplitude(self):
@@ -141,6 +119,24 @@ class Plane:
             return self.mask
         else:
             return np.sum(self.mask, axis=0)
+
+    @property
+    def pixelscale(self):
+        """Physical sampling (in meters) of each pixel in the plane.
+
+        Returns
+        -------
+        pixelscale : ndarray
+            (dx,dy) sampling of the Plane
+        """
+        return self._pixelscale
+
+    @pixelscale.setter
+    def pixelscale(self, value):
+        if value is not None:
+            self._pixelscale = lentil.helper.sanitize_shape(value)
+        else:
+            self._pixelscale = None
 
     @property
     def shape(self):
@@ -250,7 +246,39 @@ class Plane:
         return plane
 
     def rescale(self, scale, inplace=True):
+        """Rescale a plane via interpolation.
 
+        The following Plane attributes are resampled:
+
+        * `Plane.amplitude` is rescaled via 3rd order spline interpolation. The
+            result is scaled to preserve total power.
+        * `Plane.phase` is rescaled via 3rd order spline interpolation.
+        * `Plane.mask` is rescaled via 0-order nearest neighbor interpolation.
+        * `Plane.pixelscale` is adjusted appropriately.
+
+        Parameters
+        ----------
+        scale : float
+            Scale factor for interpolation. Scale factors less than 1 shrink the
+            Plane while scale factors greater than 1 grow it.
+        inplace : bool, optional
+            Modify the original object in place (True, default) or create a
+            copy (False).
+
+        Returns
+        -------
+        plane : :class:`Plane`
+            Rescaled Plane.
+
+        Note
+        ----
+        All interpolation is performed via `scipy.ndimage.map_coordinates`
+
+        See Also
+        --------
+        * :func:`Plane.resample`
+
+        """
         if inplace:
             plane = self
         else:
@@ -281,7 +309,38 @@ class Plane:
         return plane
 
     def resample(self, pixelscale, inplace=True):
+        """Resample a plane via interpolation.
 
+        The following Plane attributes are resampled:
+
+        * `Plane.amplitude` is resampled via 3rd order spline interpolation. The
+          result is scaled to preserve total power.
+        * `Plane.phase` is resampled via 3rd order spline interpolation.
+        * `Plane.mask` is resampled via 0-order nearest neighbor interpolation.
+        * `Plane.pixelscale` is adjusted appropriately.
+
+        Parameters
+        ----------
+        pixelscale : float
+            Desired Plane pixelscale.
+        inplace : bool, optional
+            Modify the original object in place (True, default) or create a
+            copy (False).
+
+        Returns
+        -------
+        plane : :class:`Plane`
+            Resampled Plane.
+
+        Note
+        ----
+        All interpolation is performed via `scipy.ndimage.map_coordinates`
+
+        See Also
+        --------
+        * :func:`Plane.rescale`
+
+        """
         if self.pixelscale[0] != self.pixelscale[1]:
             raise NotImplementedError("Can't resample non-uniformly sampled Plane")
 
@@ -308,7 +367,6 @@ class Plane:
         * :func:`~lentil.Plane.slice_offset`
 
         """
-
         if mask is None:
             mask = self.mask
 
@@ -332,7 +390,6 @@ class Plane:
         ----------
         slices : list
             List of slices
-
         shape : (2,) array_like or None, optional
             Shape of containing array each slice is taken from. If None (default),
             ``shape = Plane.shape``.
@@ -423,21 +480,17 @@ class Pupil(Plane):
     ----------
     focal_length : float
         Focal length in meters
-
     pixelscale : float
         Physical sampling (in meters) of each pixel in the pupil
-
     amplitude : array_like, optional
         Electric field amplitude transmission. Amplitude should be normalized
         with :func:`~lentil.util.normalize_power` if conservation of power
         through a diffraction propagation is required. If not specified, a
         default amplitude is created which has no effect on wavefront
         propagation.
-
     phase : array_like, optional
         Phase change caused by plane. If not specified, a default phase is
         created which has no effect on wavefront propagation.
-
     mask : array_like, optional
         Binary mask. If not specified, a mask is created from the amplitude.
 

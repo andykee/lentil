@@ -35,34 +35,28 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=Non
     ----------
     f : array_like
         2D array to Fourier Transform
-
     alpha : float or array_like
         Output plane sampling interval (frequency). If :attr:`alpha` is an
         array, ``alpha[1]`` represents row-wise sampling and ``alpha[2]``
         represents column-wise sampling. If :attr:`alpha` is a scalar,
         ``alpha[1] = alpha[2] = alpha`` gives uniform sampling across the rows
         and columns of the output plane.
-
     npix : int or array_like, optional
         Size of the output array :attr:`F`. If :attr:`npix` is an array,
         ``F.shape = (npix[1], npix[2])``. If :attr:`npi`` is a scalar,
         ``F.shape = (npix, npix)``. Default is ``f.shape``.
-
     shift : array_like, optional
         Number of pixels in (r,c) to shift the DC pixel in the output plane
         with the origin centrally located in the plane. Default is ``(0,0)``.
-
     offset : array_like, optional
         Number of pixels in (r,c) that the input plane is shifted relative to
         the origin. Default is ``(0,0)``.
-
     unitary : bool, optional
         Normalization flag. If ``True``, a normalization is performed on the
         output such that the DFT operation is unitary and energy is conserved
         through the Fourier transform operation (Parseval's theorem). In this
         way, the energy in in a limited-area DFT is a fraction of the total
         energy corresponding to the limited area. Default is ``True``.
-
     out : ndarray or None
         A location into which the result is stored. If provided, it must have
         shape = npix and dtype = np.complex. If not provided or None, a
@@ -98,7 +92,6 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=Non
     [1] Soummer, et. al. Fast computation of Lyot-style coronagraph propagation (2007)
 
     """
-
     alpha_row, alpha_col = _sanitize_alpha(alpha)
 
     f = np.asarray(f)
@@ -161,23 +154,19 @@ def idft2(F, alpha, npix=None, shift=(0,0), unitary=True, out=None):
     ----------
     F : array_like
         2D array to Fourier Transform
-
     alpha : float or array_like
         Input plane sampling interval (frequency). If :attr:`alpha` is an array,
         ``alpha[1]`` represents row-wise sampling and ``alpha[2]`` represents
         column-wise sampling. If :attr:`alpha` is a scalar,
         ``alpha[1] = alpha[2] = alpha`` represents uniform sampling across the
         rows and columns of the input plane.
-
     npix : int or array_like, optional
         Size of the output array :attr:`F`. If :attr:`npix` is an array,
         ``F.shape = (npix[1], npix[2])``. If :attr:`npix` is a scalar,
         ``F.shape = (npix, npix)``. Default is ``F.shape``
-
     shift : array_like, optional
         Number of pixels in (x,y) to shift the DC pixel in the output plane with
         the origin centrally located in the plane. Default is `[0,0]`.
-
     unitary : bool, optional
         Normalization flag. If ``True``, a normalization is performed on the
         output such that the DFT operation is unitary and energy is conserved
@@ -225,7 +214,6 @@ def idft2(F, alpha, npix=None, shift=(0,0), unitary=True, out=None):
     return np.divide(F, N, out=F)
 
 
-
 def czt2(f, alpha, npix=None, shift=(0, 0), unitary=True):
     """Compute the 2-dimensional discrete Fourier Transform using the chirp
     z-transform.
@@ -234,23 +222,19 @@ def czt2(f, alpha, npix=None, shift=(0, 0), unitary=True):
     ----------
     f : array_like
         2D array to Fourier Transform
-
     alpha : float or array_like
         Output plane sampling interval (frequency). If :attr:`alpha` is an
         array, ``alpha[1]`` represents row-wise sampling and ``alpha[2]``
         represents column-wise sampling. If :attr:`alpha` is a scalar,
         ``alpha[1] = alpha[2] = alpha`` gives uniform sampling across the rows
         and columns of the output plane.
-
     npix : int or array_like, optional
         Size of the output array :attr:`F`. If :attr:`npix` is an array,
         ``F.shape = (npix[1], npix[2])``. If :attr:`npi`` is a scalar,
         ``F.shape = (npix, npix)``. Default is ``f.shape``.
-
     shift : array_like, optional
         Number of pixels in (x,y) to shift the DC pixel in the output plane
         with the origin centrally located in the plane. Default is ``[0,0]``.
-
     unitary : bool, optional
         Normalization flag. If ``True``, a normalization is performed on the
         output such that the DFT operation is unitary and energy is conserved
@@ -335,25 +319,21 @@ def iczt2(F, alpha, npix=None, shift=(0, 0), unitary=True):
 
     Parameters
     ----------
-    f : array_like
+    F : array_like
         2D array to Fourier Transform
-
     alpha : float or array_like
         Output plane sampling interval (frequency). If :attr:`alpha` is an
         array, ``alpha[1]`` represents row-wise sampling and ``alpha[2]``
         represents column-wise sampling. If :attr:`alpha` is a scalar,
         ``alpha[1] = alpha[2] = alpha`` gives uniform sampling across the rows
         and columns of the output plane.
-
     npix : int or array_like, optional
         Size of the output array :attr:`F`. If :attr:`npix` is an array,
         ``F.shape = (npix[1], npix[2])``. If :attr:`npi`` is a scalar,
         ``F.shape = (npix, npix)``. Default is ``f.shape``.
-
     shift : array_like, optional
         Number of pixels in (x,y) to shift the DC pixel in the output plane
         with the origin centrally located in the plane. Default is ``[0,0]``.
-
     unitary : bool, optional
         Normalization flag. If ``True``, a normalization is performed on the
         output such that the DFT operation is unitary and energy is conserved
@@ -431,6 +411,7 @@ def _czt_coeffs(N, M, L, shift, alpha, unitary):
 
     return z, beta, gamma
 
+
 @functools.lru_cache(maxsize=32, typed=True)
 def _czt_beta(N, dN, L, alpha, unitary):
     n_hat = np.linspace(start=-dN, stop=N-dN-1, num=N)
@@ -444,6 +425,7 @@ def _czt_beta(N, dN, L, alpha, unitary):
         scale_factor /= L
 
     return scale_factor * util.expc(-np.pi * np.square(n_hat) * alpha)
+
 
 @functools.lru_cache(maxsize=32, typed=True)
 def _czt2_optimal_L(N, M):

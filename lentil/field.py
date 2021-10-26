@@ -33,7 +33,6 @@ class Field:
         Field extent given as (row min, row max, col min, col max)
 
     """
-
     __slots__ = ('data', '_pixelscale', 'offset', 'tilt')
 
     def __init__(self, data, pixelscale, offset=None, tilt=None):

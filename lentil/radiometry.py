@@ -30,13 +30,10 @@ class Spectrum:
     ----------
     wave : array_like
         Array of wavelengths.
-
     value : array_like
         Array of values corresponding to wavelengths in :attr:`wave`.
-
     waveunit : str, optional
         Wavelength units, as accepted by :func:`Unit`. Default is ``nm``.
-
     valueunit : str or None, optional
         Value units, as accepted by :func:`Unit`. Default is None.
 
@@ -176,7 +173,6 @@ class Spectrum:
         ----------
         other : scalar, sequence, or Spectrum
             Any accepted data structure
-
         sampling : {'min', 'left', 'right', float}, optional
             Method used for computing wavelength sampling when Spectrum
             resampling is required prior to adding
@@ -185,12 +181,10 @@ class Spectrum:
             * 'left' uses the minimum sampling in the left Spectrum
             * 'right' uses the minimum sampling in the right Spectrum
             * <float> uses the float value specified
-
         method : {'linear', 'quadratic', 'cubic'}, optional
             * 'linear' uses linear interpolation (Default)
             * 'quadratic' uses second-order spline interpolation
             * 'cubic' uses third-order spline interpolation
-
         fill_value : float or array_like, optional
             * If a float, this value will be used to fill in requested points
               outside of the data range.
@@ -214,7 +208,6 @@ class Spectrum:
         ----------
         other : scalar, sequence, or Spectrum
             Any accepted data structure
-
         sampling : {'min', 'left', 'right'} or float, optional
             Method used for computing wavelength sampling when Spectrum
             resampling is required prior to adding
@@ -223,12 +216,10 @@ class Spectrum:
             * 'left' uses the minimum sampling in the left Spectrum
             * 'right' uses the minimum sampling in the right Spectrum
             * <float> uses the float value specified
-
         method : {'linear', 'quadratic', 'cubic'}, optional
             * 'linear' uses linear interpolation (Default)
             * 'quadratic' uses second-order spline interpolation
             * 'cubic' uses third-order spline interpolation
-
         fill_value : float or array_like, optional
             * If a float, this value will be used to fill in requested points
               outside of the data range.
@@ -252,7 +243,6 @@ class Spectrum:
         ----------
         other : scalar, sequence, or Spectrum
             Any accepted data structure
-
         sampling : {'min', 'left', 'right'} or float, optional
             Method used for computing wavelength sampling when Spectrum
             resampling is required prior to adding
@@ -261,12 +251,10 @@ class Spectrum:
             * 'left' uses the minimum sampling in the left Spectrum
             * 'right' uses the minimum sampling in the right Spectrum
             * <float> uses the float value specified
-
         method : {'linear', 'quadratic', 'cubic'}, optional
             * 'linear' uses linear interpolation (Default)
             * 'quadratic' uses second-order spline interpolation
             * 'cubic' uses third-order spline interpolation
-
         fill_value : float or array_like, optional
             * If a float, this value will be used to fill in requested points
               outside of the data range.
@@ -290,7 +278,6 @@ class Spectrum:
         ----------
         other : scalar, sequence, or Spectrum
             Any accepted data structure
-
         sampling : {'min', 'left', 'right'} or float, optional
             Method used for computing wavelength sampling when Spectrum
             resampling is required prior to adding
@@ -299,12 +286,10 @@ class Spectrum:
             * 'left' uses the minimum sampling in the left Spectrum
             * 'right' uses the minimum sampling in the right Spectrum
             * <float> uses the float value specified
-
         method : {'linear', 'quadratic', 'cubic'}, optional
             * 'linear' uses linear interpolation (Default)
             * 'quadratic' uses second-order spline interpolation
             * 'cubic' uses third-order spline interpolation
-
         fill_value : float or array_like, optional
             * If a float, this value will be used to fill in requested points
               outside of the data range.
@@ -328,7 +313,6 @@ class Spectrum:
         ----------
         other : scalar, sequence, or Spectrum
             Any accepted data structure
-
         sampling : {'min', 'left', 'right'} or float, optional
             Method used for computing wavelength sampling when Spectrum
             resampling is required prior to adding
@@ -337,12 +321,10 @@ class Spectrum:
             * 'left' uses the minimum sampling in the left Spectrum
             * 'right' uses the minimum sampling in the right Spectrum
             * <float> uses the float value specified
-
         method : {'linear', 'quadratic', 'cubic'}, optional
             * 'linear' uses linear interpolation (Default)
             * 'quadratic' uses second-order spline interpolation
             * 'cubic' uses third-order spline interpolation
-
         fill_value : float or array_like, optional
             * If a float, this value will be used to fill in requested points
               outside of the data range.
@@ -366,13 +348,11 @@ class Spectrum:
         ----------
         other : Spectrum
             Spectrum to be appended with
-
         copy : bool, optional
             If True, the a new :class:`Spectrum` object is returned. If False
             (default), the append operation occurs in place.
 
         """
-
         if not isinstance(other, Spectrum):
             raise ValueError('Spectrum objects can only be appended with other '
                              'Spectrum objects')
@@ -399,12 +379,10 @@ class Spectrum:
         ----------
         wave : array_like or float
             Wavelength set for sampling.
-
         method : {'linear', 'quadratic', 'cubic'}, optional
             * 'linear' uses linear interpolation (default)
             * 'quadratic' uses second order spline interpolation
             * 'cubic' uses third order spline interpolation
-
         fill_value : float or array_like, optional
             * If a float, this value will be used to fill in requested
               points outside of the data range.
@@ -412,7 +390,6 @@ class Spectrum:
               `value_new < value[0]` and the second element is used for
               `value_new > value[-1]`.
             * If not provided, the default is 0.
-
         waveunit : str
             Wavelength units, as accepted by :func:`Unit`. Default is ``nm``.
 
@@ -422,7 +399,6 @@ class Spectrum:
             An array of sampled values.
 
         """
-
         if waveunit != self.waveunit:
             self.to(waveunit)
 
@@ -442,12 +418,10 @@ class Spectrum:
         ----------
         wave : array_like or float
             Wavelength set for sampling.
-
         method : {'linear', 'quadratic', 'cubic'}, optional
             * 'linear' uses linear interpolation (default)
             * 'quadratic' uses second order spline interpolation
             * 'cubic' uses third order spline interpolation
-
         fill_value : float or array_like, optional
             * If a float, this value will be used to fill in requested points
               outside of the data range.
@@ -502,23 +476,19 @@ class Spectrum:
         wave : array_like
             Central wavelength set for binning. At least two wavelengths must be
             provided.
-
         interp_method : {'simps', 'trapz'}, optional
             Numerical integration method. 'simps' (default) is better for smooth
             data while 'trapz' is better for linear data.
-
         ends : {'symmetric', 'inside'}, optional
             Method for handling the first and last bin edge value. Default is
             'symmetric'. See the notes below for details on the available
             methods.
-
         preserve_power : bool, optional
 
         sample_method : {'linear', 'quadratic', 'cubic'}, optional
             * 'linear' uses linear interpolation (default)
             * 'quadratic' uses second order spline interpolation
             * 'cubic' uses third order spline interpolation
-
         fill_value : float or array_like, optional
             * If a float, this value will be used to fill in requested points
               outside of the data range.
@@ -533,7 +503,6 @@ class Spectrum:
             The binned values, same shape as wave.
 
         """
-
         wave = np.asarray(wave)
 
         if wave.size < 2:
@@ -605,11 +574,9 @@ class Spectrum:
         start : float, optional
             Lower wavelength bound. If not specified (default),
             ``min(self.wave)`` is used.
-
         end : float, optional
             Upper wavelength bound. If not specified (default),
             ``max(self.wave)`` is used.
-
         method : {'simps', 'trapz'}, optional
             Numerical integration method. 'simps' (default) is better for smooth
             data while 'trapz' is better for linear data.
@@ -710,22 +677,18 @@ class Spectrum:
             Wavelength ends to pad to. If None (default), a single value is
             padded to each end of the Spectrum according to the sampling and
             mode parameters.
-
         sampling : 'min' or float, optional
             * 'min' (Default)
             * float
-
         mode : {'constant', 'edge'}, optional
             * 'constant' pads with a constant value (Default)
             * 'edge' pads with the edge values
-
         values : sequence or int, optional
             Used in 'constant'. The (before, after) values to set the padded
             values for each end. int is a shortcut for before = after. Default
             is 0.
 
         """
-
         if mode == 'constant':
             if 'values' in kwargs:
                 values = np.asarray(kwargs['values'])
@@ -765,6 +728,7 @@ class Spectrum:
         -------
         array : ndarray
             Spectral data as an array with ``array[0] = wave`` and ``array[1] = value``.
+
         """
         return np.array((self.wave, self.value))
 
@@ -823,18 +787,15 @@ class Spectrum:
         ----------
         filename : str
             csv file to load
-
         waveunit : str
             Wavelength units, as accepted by :func:`Unit`.
-
         valueunit : str
             Value units, as accepted by :func:`Unit`.
-
         zero_negatives : bool, optional
             If true (default), negative values are replaced with zeros.
-
         header_rows : int, optional
             Number of header rows in csv file to ignore. Default is 1.
+
         """
 
         dat = np.genfromtxt(filename, delimiter=',', skip_header=header_rows)
@@ -851,7 +812,6 @@ def _sampling(wave, method='min'):
     ----------
     wave : array_like
         Single wavelength array or 2D collection of wavelength arrays
-
     method: {'min', 'left', 'right'} or float
         Method used for computing wavelength sampling when Spectrum resampling
         is required prior to adding
@@ -860,8 +820,8 @@ def _sampling(wave, method='min'):
         * 'left' uses the minimum sampling in the left Spectrum
         * 'right' uses the minimum sampling in the right Spectrum
         * <float> uses the float value specified
-    """
 
+    """
     if method == 'min':
 
         if isinstance(wave, (list, tuple)):
@@ -937,7 +897,6 @@ def _interp_common(s1, s2, sampling, method, fill_value):
     s2_value : ndarray
 
     """
-
     # compute a common wavelength array that spans both spectrum and has the
     # desired sampling
     minwave = min(s1.wave.min(), s2.wave.min())
@@ -977,13 +936,10 @@ class Blackbody(Spectrum):
     ----------
     wave : array_like
         Array of wavelengths or wavenumbers
-
     temp : float
         Temperature in K
-
     waveunit : str
         Wavelength units, as accepted by :func:`Unit`. Default is ``nm``.
-
     valueunit : str
         Flux units, as accepted by :func:`Unit`. Default is ``photlam``.
 
@@ -1011,7 +967,6 @@ class Blackbody(Spectrum):
         :width: 400px
 
     """
-
     def __init__(self, wave, temp, waveunit='nm', valueunit='photlam'):
         wave = np.asarray(wave)
         flux = planck_radiance(wave, temp, waveunit, valueunit)
@@ -1055,20 +1010,15 @@ class Blackbody(Spectrum):
         ----------
         wave : array_like
             Array of wavelengths or wavenumbers
-
         temp : float
             Temperature in K
-
         mag : float
             Apparent magnitude
-
         band : str
             Observing band closest to the wavelengths in :attr:`wave`. See
             :func:`vegaflux` for supported bands.
-
         waveunit : str
             Wavelength units, as accepted by :func:`Unit`. Default is ``nm``.
-
         valueunit : str
             Flux units, as accepted by :func:`Unit`. Default is ``photlam``.
 
@@ -1076,7 +1026,7 @@ class Blackbody(Spectrum):
         --------
         Create a Blackbody object with wavelength range 400-900 nm, a temperature of
         4000K, and a visible magnitude of 2:
-        
+
         .. code:: pycon
 
             >>> import numpy as np
@@ -1112,7 +1062,6 @@ class Blackbody(Spectrum):
            :math:`E = E_{\mbox{Vega}} \ f \left(\frac{M}{M_0}\right)`
 
         """
-
         wave = np.asarray(wave)
 
         # Get Vega zero point data for requested band
@@ -1148,11 +1097,9 @@ class Material:
     transmission : :class:`~lentil.radiometry.Spectrum` or float, optional
         Spectral transmission. If not specified, a default transmission is
         created which has no radiometric effect.
-
     emission : :class:`~lentil.radiometry.Spectrum` or float, optional
         Spectral thermal emission of the element. If not specified, a default
         emission is created which has no radiometric contribution.
-
     contam : float or :class:`~lentil.radiometry.Spectrum`, optional
         Material contamination factor. Can be used for representing EOL/BOL
         optical properties. Should be within [0,1]. Both
@@ -1162,7 +1109,7 @@ class Material:
 
     Note
     ----
-    There is no separate reflection attribute. Reflective optics should use the
+    There is no explicit reflection attribute. Reflective optics should use the
     :attr:`~lentil.radiometry.Material.transmission` attribute to represent
     reflectivity.
 
@@ -1253,13 +1200,10 @@ def planck_exitance(wave, temp, waveunit='nm', valueunit='wlam'):
     ----------
     wave : array_like or float
         Wavelength or array of wavelengths
-
     temp : float
         Blackbody temperature in K
-
     waveunit : str
         Wavelength units, as accepted by :func:`Unit`.
-
     valueunit : str
         Flux units, as accepted by :func:`Unit`.
 
@@ -1269,7 +1213,6 @@ def planck_exitance(wave, temp, waveunit='nm', valueunit='wlam'):
         Spectral exitance in ``valueunit``.
 
     """
-
     # convert wave to meters
     wave = wave * Unit(waveunit).to('meter')
 
@@ -1297,13 +1240,10 @@ def planck_radiance(wave, temp, waveunit='nm', valueunit='wlam'):
     ----------
     wave : array_like or float
         Wavelength or array of wavelengths
-
     temp : float
         Blackbody temperature in K
-
     waveunit : str
         Wavelength units, as accepted by :func:`Unit`. Default is ``nm``.
-
     valueunit : str
         Flux units, as accepted by :func:`Unit`. Default is ``wlam``.
 
@@ -1352,10 +1292,8 @@ def vegaflux(band, waveunit='nm', valueunit='photlam'):
     ----------
     band : str
         Observing band.
-
     waveunit : str
         Wavelength units, as accepted by :func:`Unit`. Default is ``nm``.
-
     valueunit : str
         Flux units, as accepted by :func:`Unit`. Default is ``photlam``.
 
