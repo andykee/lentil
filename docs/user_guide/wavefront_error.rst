@@ -17,12 +17,22 @@ Lentil to a Numpy array.
     For :class:`~lentil.Pupil` planes, the :attr:`~lentil.Pupil.phase` attribute represents the optical
     path difference (OPD) relative to the pupil's reference sphere.
 
+Static Errors
+=============
+Lentil can use static error maps from a multitude of formats, provided you can get the
+data into Python. The simplest example is using data stored in a `.npy` file:
+
+.. code-block:: pycon
+
+    >>> import numpy as np
+    >>> import lentil
+    >>> phase = np.load('/path/to/phase.npy')
+    >>> pupil = lentil.Pupil(focal_length=10, pixelscale=1/100, phase=phase)
 
 Zernike Polynomials
 ===================
-Lentil's :ref:`zernike module <api.zernike>` contains methods for working with `Zernike
-polynomials <https://en.wikipedia.org/wiki/Zernike_polynomials>`_. Methods are provided
-for creating, combining, fitting, and removing Zernikes.
+Lentil provides methods for creating, combining, fitting, and removing `Zernike
+polynomials <https://en.wikipedia.org/wiki/Zernike_polynomials>`_.
 
 .. note::
 
@@ -35,25 +45,25 @@ circular aperture with :func:`~lentil.zernike`:
 .. code-block:: pycon
 
     >>> import matplotlib.pyplot as plt
-    >>> import lentil as le
-    >>> mask = le.util.circlemask((256,256), 128)
-    >>> z4 = 100e-9 * le.zernike.zernike(mask, index=4)
+    >>> import lentil
+    >>> mask = le.circlemask((256,256), 128)
+    >>> z4 = 100e-9 * lentil.zernike(mask, index=4)
     >>> plt.imshow(z4)
 
 .. image:: /_static/img/circle_focus.png
     :width: 300px
 
 Any combination of Zernike polynomials can be combined by providing a list of coefficients
-to the :func:`zernike_compose` function. For example, we can represent 200 nm of
+to the :func:`~lentil.zernike_compose` function. For example, we can represent 200 nm of
 focus and -100 nm of astigmatism as:
 
 .. code-block:: pycon
 
     >>> import matplotlib.pyplot as plt
-    >>> import lentil as le
-    >>> mask = le.util.circlemask((256,256), 128)
+    >>> import lentil
+    >>> mask = lentil.circlemask((256,256), 128)
     >>> coefficients = [0, 0, 0, 200e-9, 0, -100e-9]
-    >>> z = le.zernike.zernike_compose(mask, coefficients)
+    >>> z = lentil.zernike_compose(mask, coefficients)
     >>> plt.imshow(z)
 
 .. image:: /_static/img/api/zernike/zernike_compose_2.png
@@ -64,9 +74,9 @@ first entry in the list represents piston, the second represents, tilt, and so o
 
 For models requiring many random trials, it may make more sense to pre-compute the
 Zernike modes once and accumulate the error map for each new state. We can do this by
-creating a vectorized basis set using :func:`zernike_basis` and accumulating
-each independent term using Numpy's `einsum <https://numpy.org/doc/stable/reference/generated/numpy.einsum.html>`_
-function.
+creating a vectorized basis set using :func:`~lentil.zernike_basis` and accumulating
+each independent term using Numpy's `einsum
+<https://numpy.org/doc/stable/reference/generated/numpy.einsum.html>`_ function.
 
 Note that in this case we are only computing the Zernike modes we intend to use (Noll
 indices 4 and 6) so now the first entry in ``coefficients`` corresponds to focus and the
@@ -76,10 +86,10 @@ second corresponds to astigmatism.
 
     >>> import matplotlib.pyplot as plt
     >>> import numpy as np
-    >>> import lentil as le
-    >>> mask = le.util.circlemask((256,256), 128)
+    >>> import lentil
+    >>> mask = lentil.circlemask((256,256), 128)
     >>> coefficients = [200e-9, -100e-9]
-    >>> basis = le.zernike.zernike_basis(mask, modes=(4,6))
+    >>> basis = lentil.zernike_basis(mask, modes=(4,6))
     >>> z = np.einsum('ijk,i->jk', basis, coefficients)
     >>> plt.imshow(z)
 
@@ -93,10 +103,10 @@ If you don't love ``einsum``, it's possible to achieve the same result with Nump
 
     >>> import matplotlib.pyplot as plt
     >>> import numpy as np
-    >>> import lentil as le
-    >>> mask = le.util.circlemask((256,256), 128)
+    >>> import lentil
+    >>> mask = lentil.circlemask((256,256), 128)
     >>> coefficients = [200e-9, -100e-9]
-    >>> basis = le.zernike.zernike_basis(mask, modes=(4,6))
+    >>> basis = lentil.zernike_basis(mask, modes=(4,6))
     >>> z = np.tensordot(basis, coefficients, axes=(0,0))
     >>> plt.imshow(z)
 
@@ -118,10 +128,10 @@ the error magnitude:
 
 .. code-block:: pycon
 
-    >>> import lentil as le
     >>> import numpy as np
-    >>> mask = le.util.circlemask((256,256), 128)
-    >>> z4 = 100e-9 * le.zernike.zernike(mask, mode=4, normalize=True)
+    >>> import lentil
+    >>> mask = lentil.circlemask((256,256), 128)
+    >>> z4 = 100e-9 * lentil.zernike(mask, mode=4, normalize=True)
     >>> np.std(z4[np.nonzero(z4)])
 
     9.986295346152438e-08
@@ -132,10 +142,10 @@ the discretely sampled mode spans [-0.5 0.5] before multiplying by the error mag
 
 .. code-block:: pycon
 
-    >>> import lentil as le
     >>> import numpy as np
-    >>> mask = le.util.circlemask((256,256), 128)
-    >>> z4 = le.zernike.zernike(mask, mode=4)
+    >>> import lentil
+    >>> mask = lentil.circlemask((256,256), 128)
+    >>> z4 = lentil.zernike(mask, mode=4)
     >>> z4 /= np.max(z4) - np.min(z4)
     >>> z4 *= 100e-9
     >>> np.max(z4) - np.min(z4)
@@ -146,9 +156,9 @@ Defining custom coordinates
 ---------------------------
 By default, all of Lentil's Zernike functions place the center of the coordinate system
 at the centroid of the supplied mask with its axes aligned with Lentil's
-:ref:`user-guide.coordinate-system`. This works as expected for the vast majority of
+:ref:`user_guide.coordinate_system`. This works as expected for the vast majority of
 needs, but in some cases it may be desirable to manually define the coordinate system.
-This is accomplished by using :func:`zernike_coordinates` to compute ``rho`` and
+This is accomplished by using :func:`~lentil.zernike_coordinates` to compute ``rho`` and
 ``theta``, and providing these definitions to the appropriate Zernike function. For
 example, if we have an off-centered sub-aperture but wish to compute focus relative to
 the center of the defined array:
@@ -156,10 +166,10 @@ the center of the defined array:
 .. code-block:: pycon
 
     >>> import matplotlib.pyplot as plt
-    >>> import lentil as le
-    >>> mask = le.util.circlemask((256,256), radius=50, shift=(0,60))
-    >>> rho, theta = le.zernike.zernike_coordinates(mask, shift=(0,0))
-    >>> z4 = le.zernike.zernike(mask, 4, rho=rho, theta=theta)
+    >>> import lentil
+    >>> mask = lentil.circlemask((256,256), radius=50, shift=(0,60))
+    >>> rho, theta = lentil.zernike_coordinates(mask, shift=(0,0))
+    >>> z4 = lentil.zernike(mask, 4, rho=rho, theta=theta)
     >>> plt.imshow(z4)
 
 If we wish to align a tilt mode with one side of a hexagon:
@@ -167,10 +177,10 @@ If we wish to align a tilt mode with one side of a hexagon:
 .. code-block:: pycon
 
     >>> import matplotlib.pyplot as plt
-    >>> import lentil as le
-    >>> mask = le.util.hexagon((256,256), radius=128)
-    >>> rho, theta = le.zernike.zernike_coordinates(mask, shift=(0,0), rotate=60)
-    >>> z2 = le.zernike.zernike(mask, 2, rho=rho, theta=theta)
+    >>> import lentil
+    >>> mask = lentil.hexagon((256,256), radius=128)
+    >>> rho, theta = lentil.zernike_coordinates(mask, shift=(0,0), rotate=60)
+    >>> z2 = lentil.zernike(mask, 2, rho=rho, theta=theta)
     >>> plt.imshow(z2)
 
 Sensitivity Matrices
@@ -208,6 +218,24 @@ wavefront map:
     >>> theta = np.dot(S, dx)
     >>> theta.reshape((256,256))
 
+Surface roughness
+=================
+Random optical surface errors that result from the manufacturing and figuring process
+are typically small in magnitude and are commonly expressed through their power
+spectral density (PSD). The :func:`~lentil.power_spectrum` function computes random
+wavefront error map given a PSD:
+
+.. code-block:: pycon
+
+    >>> import lentil
+    >>> mask = lentil.circle((256, 256), 128)
+    >>> w = lentil.power_spectrum(mask, pixelscale=1/100, rms=25e-9, half_power_freq=8,
+    ...                           exp=3)
+    >>> plt.imshow(w)
+
+
+.. image:: /_static/img/power_spectrum_wfe.png
+    :width: 350px
 
 .. Chromatic Aberrations
 .. =====================
@@ -253,17 +281,14 @@ wavefront map:
 
 
 
-.. Static Errors
-.. =============
 
-.. File-based errors
-.. -----------------
-
-.. Parametric errors
-.. -----------------
-
-.. Parameterized Timeseries Errors
-.. ===============================
-
+.. Time-varying wavefront errors
+.. =============================
+..
+.. Parameterized errors
+.. --------------------
+..
+.. Precomputed phases
+.. ------------------
 
 .. [1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).

@@ -33,8 +33,8 @@ def power_spectrum(mask, pixelscale, rms, half_power_freq, exp, seed=None):
 
     References
     ----------
-    [1] Sidick (2009) Power Spectral Density Specification and Analysis of
-    Large Optical Surfaces
+    * Sidick (2009) Power Spectral Density Specification and Analysis of
+      Large Optical Surfaces
 
     """
 

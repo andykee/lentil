@@ -1,8 +1,8 @@
-.. _user-guide.coordinate-system:
+.. _user_guide.coordinate_system:
 
-************************
-Lentil Coordinate System
-************************
+*****************
+Coordinate system
+*****************
 
 .. |Pupil| replace:: :class:`~lentil.Pupil`
 .. |Image| replace:: :class:`~lentil.Image`

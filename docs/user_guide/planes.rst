@@ -42,6 +42,8 @@ optical effects:
 * The :class:`~lentil.Flip` plane flips a wavefront about its x, y, or both x and y
   axes.
 
+Finally, some special purpose planes are described in :ref:`user_guide.planes.dispersive`.
+
 Plane
 =====
 Lentil's |Plane| class represents a discretely sampled plane in an optical model. Planes
@@ -185,59 +187,6 @@ operation. Details of this algorithm are available in the :ref:`technical-notes`
   field information. Because of this, |Detector| planes can only be used as the final
   plane in a Lentil model.
 
-Dispersive optics
-=================
-Dispersion is most commonly seen in an optical system as a wavelength-dependent phase
-change. In some cases, like with a grating or prism, dispersion is used to achieve some
-desired optical effect. In other cases, dispersion causes an unwanted chromatic
-aberration.
-
-Lentil provides two classes for representing the effects of dispersion:
-:class:`~lentil.DispersivePhase` and :class:`~lentil.DispersiveShift`.
-
-Active optics and deformable mirrors
-====================================
-Active optics and deformable mirrors are easily represented by defining a phase that
-depends on some parameterized state. Because there is no standard architecture for these
-types of optical elements, Lentil does not provide a concrete implementation. Instead,
-a custom subclass of either |Plane| or |Pupil| should be defined. The exact
-implementation details will vary by application, but a simple example of a tip-tilt
-mirror where the plane's phase is computed dynamically based on the state `x` is
-provided below. Additional examples can be found in Model Patterns under
-:ref:`patterns.planes`.
-
-.. code-block:: python3
-
-    import lentil
-    import numpy as np
-
-    class TipTiltMirror(lentil.Plane):
-
-        def __init__(self):
-            self.amplitude = lentil.util.circle((256,256),128)
-
-            self.x = np.zeros(2)
-
-            # Note that we set normalize=False so that each mode spans [-1, 1] and then
-            # multiply by 0.5 so that each mode has peak-valley = 1
-            self._infl_fn = 0.5 * lentil.zernike.zernike_basis(mask=self.amplitude,
-                                                               modes=[2,3],
-                                                               normalize=False)
-
-        @property
-        def phase(self):
-            return np.einsum('ijk,i->jk', self._infl_fn, self.x)
-
-.. code-block:: pycon
-
-    >>> tt = TipTiltMirror()
-    >>> tt.x = [1e-6, 3e-6]
-    >>> plt.imshow(tt.phase)
-    >>> plt.colorbar()
-
-.. image:: /_static/img/circle_tilt.png
-    :width: 350px
-
 Tilt
 ====
 The :class:`~lentil.Tilt` plane provides a mechanism for directly specifying wavefront
@@ -311,11 +260,89 @@ Flip
 .. image:: /_static/img/psf_coma_flip.png
     :width: 300px
 
-Creating custom planes
-======================
+.. _user_guide.planes.dispersive:
 
-Depending on their use, sometimes it will be more convenient to define Planes in a
-module. In this case, you should subclass Plane:
+Dispersive optics
+=================
+Dispersion is most commonly seen in an optical system as a wavelength-dependent phase
+change. In some cases, like with a grating or prism, dispersion is used to achieve some
+desired optical effect. In other cases, dispersion causes an unwanted chromatic
+aberration.
+
+Lentil provides two classes for representing the effects of dispersion:
+:class:`~lentil.DispersivePhase` and :class:`~lentil.DispersiveShift`.
+
+Active optics and deformable mirrors
+====================================
+Active optics and deformable mirrors are easily represented by defining a phase that
+depends on some parameterized state. Because there is no standard architecture for these
+types of optical elements, Lentil does not provide a concrete implementation. Instead,
+a custom subclass of either |Plane| or |Pupil| should be defined. The exact
+implementation details will vary by application, but a simple example of a tip-tilt
+mirror where the plane's phase is computed dynamically based on the state `x` is
+provided below. Additional examples can be found in Model Patterns under
+:ref:`patterns.planes`.
+
+.. code-block:: python3
+
+    import lentil
+    import numpy as np
+
+    class TipTiltMirror(lentil.Plane):
+
+        def __init__(self):
+            self.amplitude = lentil.util.circle((256,256),128)
+
+            self.x = np.zeros(2)
+
+            # Note that we set normalize=False so that each mode spans [-1, 1] and then
+            # multiply by 0.5 so that each mode has peak-valley = 1
+            self._infl_fn = 0.5 * lentil.zernike.zernike_basis(mask=self.amplitude,
+                                                               modes=[2,3],
+                                                               normalize=False)
+
+        @property
+        def phase(self):
+            return np.einsum('ijk,i->jk', self._infl_fn, self.x)
+
+.. code-block:: pycon
+
+    >>> tt = TipTiltMirror()
+    >>> tt.x = [1e-6, 3e-6]
+    >>> plt.imshow(tt.phase)
+    >>> plt.colorbar()
+
+.. image:: /_static/img/circle_tilt.png
+    :width: 350px
+
+Customizing Plane
+=================
+The Plane class or any of the classes derived from Plane can be subclassed to modify
+any of the default Plane behavior. Reasons to do this may include but are not limited
+to:
+
+* Dynamically computing the :attr:`~lentil.Plane.phase` attribute
+* Changing the Plane-Wavefront interaction by redefining the `Plane.multiply()` method
+* Modifying the way a Plane is resampled or rescaled
+
+Some general guidance for how to safely subclass Plane is provided below.
+
+.. note::
+
+    Lentil's |Plane| class and its subclasses all use Python's ``__init_subclass__()``
+    method to ensure any required default values are set - even if a user-defined
+    subclass does not explicitly call ``Plane``'s constructor ``__init__()`` method. For
+    this reason, it is not strictly necessary to call ``super().__init__()`` when
+    implementing a custom Plane subclass. It also won't hurt, as long as you're careful
+    to either call ``super().__init__()`` before defining any static plane attributes or
+    passing these attributes along to the ``super().__init__()`` call to ensure they are
+    properly set.
+
+Redefining the amplitude, phase, or mask attributes
+---------------------------------------------------
+Plane :attr:`~lentil.Plane.amplitude`, :attr:`~lentil.Plane.phase`, and
+:attr:`~lentil.Plane.mask` are all defined as properties, but Python allows you to
+redefine them as class attributes without issue:
 
 .. code-block:: python3
 
@@ -323,39 +350,54 @@ module. In this case, you should subclass Plane:
 
     class CustomPlane(le.Plane):
         def __init__(self):
-            self.amplitude = lentil.util.circle((256,256), 128)
-            self.opd = 2e-6 * lentil.zernike.zernike(lentil.util.circlemask((256,256),128), 4)
+            self.amplitude = lentil.circle((256,256), 128)
+            self.phase = lentil.zernike(lentil.circlemask((256,256),128), 4)
 
-Any of Plane's attributes can also be redefined as properties if further customization
-is needed. This is typically necessary if an attribute is stateful or has some sort of
-randomness:
+If more dynamic behavior is required, the property can be redefined. For example, to
+return a new random phase each time the :attr:`~lentil.Plane.phase` attribute is
+accessed:
 
 .. code-block:: python3
 
+    import numpy as np
     import lentil
 
     class CustomPlane(lentil.Plane):
-        def __init__(self, focus = 0):
-            self.mask = lentil.util.circlemask((256,256), 128)
-            self.amplitude = lentil.util.circle((256,256), 128)
-            self.focus = focus
+        def __init__(self):
+            self.mask = lentil.circlemask((256,256), 128)
+            self.amplitude = lentil.circle((256,256), 128)
 
         @property
         def phase(self):
-            focus_opd = self.focus * lentil.zernike.zernike(self.mask)
-            random_opd = lentil.zernike.zernike_compose(self.mask, 1e-6*np.random.random(10))
-            return focus_opd + random_opd
+            return lentil.zernike_compose(self.mask, np.random.random(10))
 
-.. note::
+It is also straightforward to implement a custom :attr:`~lentil.Plane.phase` property to
+provide a stateful phase attribute:
 
-    Lentil's |Plane| class and its standard library subclasses all use Python's
-    ``__init_subclass__()`` method to ensure any required default values are set - even
-    if a user-defined subclass does not explicitly call ``Plane``'s constructor
-    ``__init__()`` method. For this reason, it is not strictly necessary to call
-    ``super().__init__()`` when implementing a custom Plane subclass. It also won't
-    hurt, as long as you're careful to either call ``super().__init__()`` before
-    defining any static plane attributes or passing these attributes along to the
-    ``super().__init__()`` call to ensure they are properly set.
+.. code-block:: python3
+
+    import numpy as np
+    import lentil
+
+    class CustomPlane(lentil.Plane):
+        def __init__(self, x=np.zeros(10)):
+            self.mask = lentil.circlemask((256,256), 128)
+            self.amplitude = lentil.circle((256,256), 128)
+            self.x = x
+
+        @property
+        def phase(self):
+            return lentil.zernike_compose(self.mask, self.x)
+
+
+Customizing Plane.multiply()
+----------------------------
+
+Customizing other Plane methods
+-------------------------------
+Any of the |Plane| methods with the exception of :func:`~lentil.Plane.multiply` (see
+above) can be redefined in a subclass without restriction.
+
 
 
 
