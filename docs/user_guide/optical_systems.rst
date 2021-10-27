@@ -9,6 +9,7 @@ Describing optical systems
 .. |Detector| replace:: :class:`~lentil.Detector`
 .. |Plane| replace:: :class:`~lentil.Plane`
 .. |Wavefront| replace:: :class:`~lentil.Wavefront`
+.. |Tilt| replace:: :class:`~lentil.Tilt`
 
 Lentil uses |Plane| objects to represent discretely sampled planes in an
 optical system and Fourier transform-based algorithms to numerically model
@@ -22,6 +23,8 @@ the optical system. The basic propagation flow is:
 
 This process may be repeated a number of times (once per discrete wavelength being
 represented) to simulate the propagation of broadband light through the system.
+
+.. _user_guide.optical_systems.plane_wavefront:
 
 How a plane affects a wavefront
 ===============================
@@ -37,6 +40,10 @@ array:
 .. math::
 
     \mathbf{W} = \mathbf{A} \exp(\frac{-2\pi j}{\lambda} \mathbf{\theta}) \circ \mathbf{W}
+
+If the |Plane| :attr:`~lentil.Plane.tilt` attribute is not empty, its contents are appended
+to the |Wavefront|. See :ref:`user_guide.planes.fit_tilt` and :ref:`user_guide.diffraction.tilt`
+for additional details.
 
 Planes in a simple optical system
 =================================

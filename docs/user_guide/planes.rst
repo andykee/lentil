@@ -61,7 +61,12 @@ plane. A plane is defined by the following parameters:
   allocated along the first dimension. If mask is not provided, it is automatically
   created as needed from the nonzero values in :attr:`~lentil.Plane.amplitude`.
 * :attr:`~lentil.Plane.pixelscale` - Defines the physical sampling of each pixel in
-  the above attributes
+  the above attributes. A simple example of how to calculate the pixelscale for a
+  discretely sampled circular aperture is given below:
+
+  .. image:: /_static/img/propagate_sampling.png
+    :width: 450px
+    :align: center
 
 .. note::
 
@@ -92,6 +97,7 @@ Once a Plane is defined, its attributes can be modified at any time:
 Resampling or rescaling a Plane
 -------------------------------
 
+.. _user_guide.planes.fit_tilt:
 
 Fitting and removing Plane tilt
 -------------------------------
@@ -187,6 +193,8 @@ operation. Details of this algorithm are available in the :ref:`technical-notes`
   field information. Because of this, |Detector| planes can only be used as the final
   plane in a Lentil model.
 
+.. _user_guide.planes.tilt:
+
 Tilt
 ====
 The :class:`~lentil.Tilt` plane provides a mechanism for directly specifying wavefront
@@ -217,6 +225,8 @@ it is simple to see the effect of introducing a tilted wavefront into the system
 
 .. image:: /_static/img/psf_64_tilt.png
     :width: 300px
+
+.. _user_guide.planes.transformations:
 
 Plane transformations
 =====================

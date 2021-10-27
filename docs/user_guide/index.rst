@@ -7,7 +7,7 @@ User Guide
 The User Guide provides documentation for all of Lentil's features and capabilities. It
 is generally organized by topic area.
 
-Brand new users should start with the :ref:`package-overview` and :ref:`tutorial`.
+Brand new users should start with the :ref:`package-overview` and :ref:`tutorials`.
 
 Detailed information on any specific class or method can be found in the :ref:`api`.
 
@@ -27,7 +27,7 @@ Detailed information on any specific class or method can be found in the :ref:`a
     planes
     wavefront_error
     optical_systems
-    diffraction/index
+    diffraction
     sources
     image_sensors/index
     ../patterns/index
