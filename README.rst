@@ -37,8 +37,8 @@ Links
 .. |pypi version| image:: https://img.shields.io/pypi/v/lentil.svg
     :target: https://pypi.python.org/pypi/lentil
 
-.. |build status| image:: https://travis-ci.com/andykee/lentil.svg?branch=master
-    :target: https://travis-ci.com/andykee/lentil
+.. |build status| image:: https://github.com/andykee/lentil/actions/workflows/test.yml/badge.svg
+    :target: https://github.com/andykee/lentil/actions/workflows/test.yml
 
 .. |coverage| image:: https://coveralls.io/repos/github/andykee/lentil/badge.svg
     :target: https://coveralls.io/github/andykee/lentil
