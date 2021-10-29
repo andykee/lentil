@@ -29,7 +29,7 @@ Detailed information on any specific class or method can be found in the :ref:`a
     optical_systems
     diffraction
     sources
-    image_sensors/index
+    image_sensors
     ../patterns/index
     performance
     matlab

@@ -297,6 +297,8 @@ Working with large tilts
     :width: 600px
     :align: center
 
+.. _user_guide.diffraction.segmented:
+
 Differences for segmented apertures
 ===================================
 

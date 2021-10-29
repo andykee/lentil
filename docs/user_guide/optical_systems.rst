@@ -79,6 +79,22 @@ a focal plane with 5um pixels. We describe this optical system using a |Pupil| a
 
 Segmented optical systems
 =========================
+Creating a model of a segmented aperture optical system in Lentil doesn't require any
+special treatment. The |Plane| and |Pupil| objects work just as well with sparse or
+segmented amplitude, phase, and mask attributes as with monolithic ones.
+
+That being said, it is advantageous from a performance point of view to supply a
+3-dimensional "segment mask" when specifying a Plane's :attr:`~lentil.Plane.mask`
+attribute rather than a flattened 2-dimensional mask when working
+with a segmented aperture, as depicted below:
+
+.. image:: /_static/img/segmask.png
+    :width: 650px
+    :align: center
+
+This modification is not necessary to achieve physically correct propagations, but can
+greatly improve performance. For additional details, see
+:ref:`user_guide.diffraction.segmented`.
 
 
 More complicated optical systems

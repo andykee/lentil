@@ -28,7 +28,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.autosummary',
               'sphinx.ext.mathjax',
               'sphinx.ext.napoleon',
-              'sphinx.ext.viewcode']
+              'sphinx.ext.viewcode',
+              'sphinx_remove_toctrees']
 templates_path = ['_templates']
 source_suffix = '.rst'
 master_doc = 'index'
@@ -69,3 +70,5 @@ autodoc_default_options = {
 }
 
 autosummary_generate = True
+
+remove_from_toctrees = ["generated/*"]

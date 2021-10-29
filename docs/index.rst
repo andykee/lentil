@@ -3,5 +3,5 @@
 
     getting_started/index
     user_guide/index
-    reference/index
+    reference
     dev/index

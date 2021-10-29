@@ -73,6 +73,33 @@ class Wavefront:
         return copy.deepcopy(self)
 
     def propagate_image(self, pixelscale, npix, npix_prop=None, oversample=2):
+        """Propagate the Wavefront from a Pupil to an Image plane using
+        Fraunhofer diffraction.
+
+        Parameters
+        ----------
+        pixelscale : float or (2,) float
+            Physical sampling of output (image) plane. If a single value is supplied,
+            the output is assumed to be uniformly sampled in both x and y.
+        npix : int or (2,) tuple of ints
+            Shape of output plane.
+        npix_prop : int or (2,) tuple of ints, optional
+            Shape of propagation output plane. If None (default),
+            ``npix_prop = npix``. If ``npix_prop != npix``, the propagation
+            result is placed in the appropriate location in the output plane.
+            npix_prop cannot be larger than npix.
+        oversample : int, optional
+            Number of times to oversample the output plane. Default is 2.
+
+        Returns
+        -------
+        wavefront : :class:`~lentil.Wavefront`
+            A new Wavefront propagated to the specified image plane
+
+        """
+        if self.planetype != 'pupil':
+            raise ValueError("Wavefront must have planetype 'pupil'")
+
         out = Wavefront(wavelength=self.wavelength, data=[])
 
         npix = lentil.helper.sanitize_shape(npix)

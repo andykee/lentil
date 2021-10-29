@@ -26,6 +26,14 @@ class Plane:
         created which has no effect on wavefront propagation.
     mask : array_like, optional
         Binary mask. If not specified, a mask is created from the amplitude.
+        If ``mask`` has 2 dimensions, the plane is assumed to be monolithic. If
+        ``mask`` has 3 dimensions, the plane is assumed to be segmented with the
+        individual segment masks inserted along the first dimension.
+
+        .. image:: /_static/img/segmask.png
+            :width: 550px
+            :align: center
+
     pixelscale : float or (2,) array_like
         Physical sampling (in meters) of each pixel in the plane. If :attr:`pixelscale`
         is a scalar, uniform sampling in x and y is assumed.
@@ -481,7 +489,7 @@ class Pupil(Plane):
     focal_length : float
         Focal length in meters
     pixelscale : float
-        Physical sampling (in meters) of each pixel in the pupil
+        Physical sampling of each pixel in the pupil
     amplitude : array_like, optional
         Electric field amplitude transmission. Amplitude should be normalized
         with :func:`~lentil.util.normalize_power` if conservation of power
@@ -493,6 +501,13 @@ class Pupil(Plane):
         created which has no effect on wavefront propagation.
     mask : array_like, optional
         Binary mask. If not specified, a mask is created from the amplitude.
+        If ``mask`` has 2 dimensions, the plane is assumed to be monolithic. If
+        ``mask`` has 3 dimensions, the plane is assumed to be segmented with the
+        individual segment masks inserted along the first dimension.
+
+        .. image:: /_static/img/segmask.png
+            :width: 550px
+            :align: center
 
     Note
     ----

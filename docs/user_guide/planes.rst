@@ -57,9 +57,14 @@ plane. A plane is defined by the following parameters:
   experiences when propagating through the plane
 * :attr:`~lentil.Plane.mask` - Defines the binary mask over which the plane data is
   valid. If `mask` is 2-dimensional, the plane is assumed to be monolithic. If `mask`
-  is 3-dimensional, the plane is assumed to be segmented with the segment masks
-  allocated along the first dimension. If mask is not provided, it is automatically
+  is 3-dimensional, the plane is assumed to be segmented with the individual segment
+  masks inserted along the first dimension. If mask is not provided, it is automatically
   created as needed from the nonzero values in :attr:`~lentil.Plane.amplitude`.
+
+  .. image:: /_static/img/segmask.png
+    :width: 550px
+    :align: center
+
 * :attr:`~lentil.Plane.pixelscale` - Defines the physical sampling of each pixel in
   the above attributes. A simple example of how to calculate the pixelscale for a
   discretely sampled circular aperture is given below:

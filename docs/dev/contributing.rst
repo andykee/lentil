@@ -332,9 +332,9 @@ Building the documentation
 
 .. note::
 
-  Building the documentation requires `Sphinx <https://www.sphinx-doc.org/en/master/>`_
-  and the `PyData Sphinx Theme
-  <https://pydata-sphinx-theme.readthedocs.io/en/latest/index.html>`_.
+  Building the documentation requires `Sphinx <https://www.sphinx-doc.org/en/master/>`_,
+  `PyData Sphinx Theme <https://pydata-sphinx-theme.readthedocs.io/en/latest/index.html>`_,
+  and the ``sphinx-remove-toctrees`` extension.
 
 To build the documentation, navigate to your local ``docs/`` directory and run::
 

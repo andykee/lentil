@@ -47,8 +47,8 @@ With a model defined in this way, users can interact with it in a standard way:
     setup(
         name='tiny-lentil',
         version='1.0.0',
-        author='Steve Jobs',
-        author_email='steve@apple.com',
+        author='Tim Apple',
+        author_email='tim@apple.com',
         packages=['tiny_telescope'],
         package_data={'tiny_telescope': ['data/*']},
         install_requires=['lentil>=0.1'],
