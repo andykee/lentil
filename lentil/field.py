@@ -214,47 +214,52 @@ def insert(field, out, intensity=False, weight=1, indexing='ij'):
     if indexing not in ('xy', 'ij'):
         raise ValueError("Valid values for `indexing` are 'xy' and 'ij'")
 
-    output_shape = np.asarray(out.shape)
-    field_shape = np.asarray(field.shape)
-    field_offset = np.asarray(field.offset)
+    if field.shape == out.shape and np.array_equal(field.offset, [0, 0]):
+        field_slice = Ellipsis
+        output_slice = Ellipsis
+    else:
 
-    if indexing == 'xy':
-        field_offset = -field_offset[1], field_offset[0]
+        output_shape = np.asarray(out.shape)
+        field_shape = np.asarray(field.shape)
+        field_offset = np.asarray(field.offset)
 
-    # Output coordinates of the upper left corner of the shifted data array
-    field_shifted_ul = (output_shape // 2) - (field_shape // 2) + field_offset
+        if indexing == 'xy':
+            field_offset = -field_offset[1], field_offset[0]
 
-    # Field slice indices
-    field_top = int(0)
-    field_bottom = int(field_shape[0])
-    field_left = int(0)
-    field_right = int(field_shape[1])
+        # Output coordinates of the upper left corner of the shifted data array
+        field_shifted_ul = (output_shape // 2) - (field_shape // 2) + field_offset
 
-    # Output insertion slice indices
-    output_top = int(field_shifted_ul[0])
-    output_bottom = int(field_shifted_ul[0] + field_shape[0])
-    output_left = int(field_shifted_ul[1])
-    output_right = int(field_shifted_ul[1] + field_shape[1])
+        # Field slice indices
+        field_top = int(0)
+        field_bottom = int(field_shape[0])
+        field_left = int(0)
+        field_right = int(field_shape[1])
 
-    # reconcile the field and output insertion indices
-    if output_top < 0:
-        field_top = -1 * output_top
-        output_top = 0
+        # Output insertion slice indices
+        output_top = int(field_shifted_ul[0])
+        output_bottom = int(field_shifted_ul[0] + field_shape[0])
+        output_left = int(field_shifted_ul[1])
+        output_right = int(field_shifted_ul[1] + field_shape[1])
 
-    if output_bottom > output_shape[0]:
-        field_bottom -= output_bottom - output_shape[0]
-        output_bottom = output_shape[0]
+        # reconcile the field and output insertion indices
+        if output_top < 0:
+            field_top = -1 * output_top
+            output_top = 0
 
-    if output_left < 0:
-        field_left = -1 * output_left
-        output_left = 0
+        if output_bottom > output_shape[0]:
+            field_bottom -= output_bottom - output_shape[0]
+            output_bottom = output_shape[0]
 
-    if output_right > output_shape[1]:
-        field_right -= output_right - output_shape[1]
-        output_right = output_shape[1]
+        if output_left < 0:
+            field_left = -1 * output_left
+            output_left = 0
 
-    output_slice = slice(output_top, output_bottom), slice(output_left, output_right)
-    field_slice = slice(field_top, field_bottom), slice(field_left, field_right)
+        if output_right > output_shape[1]:
+            field_right -= output_right - output_shape[1]
+            output_right = output_shape[1]
+
+        output_slice = slice(output_top, output_bottom), slice(output_left, output_right)
+        field_slice = slice(field_top, field_bottom), slice(field_left, field_right)
 
     if intensity:
         out[output_slice] += (np.abs(field.data[field_slice]**2) * weight)
@@ -319,19 +324,24 @@ def merge(a, b, check_overlap=True):
 def _merge_shape(*fields):
     # shape required to merge fields
     rmin, rmax, cmin, cmax = boundary(*fields)
-    return rmax - rmin + 1, cmax - cmin + 1
+    if not np.any([rmin, rmax, cmin, cmax]):  # evaluates to True if all zeros
+        return ()
+    else:
+        return rmax - rmin + 1, cmax - cmin + 1
 
 
 def _merge_slices(*fields):
     # slices in the merged array where fields go
     rmin, rmax, cmin, cmax = boundary(*fields)
-
     out = []
-    for field in fields:
-        frmin, frmax, fcmin, fcmax = field.extent
-        row = slice(frmin-rmin, frmax-rmin+1)
-        col = slice(fcmin-cmin, fcmax-cmin+1)
-        out.append((row, col))
+    if not np.any([rmin, rmax, cmin, cmax]):  # evaluates to True if all zeros
+        out.append(Ellipsis)
+    else:
+        for field in fields:
+            frmin, frmax, fcmin, fcmax = field.extent
+            row = slice(frmin-rmin, frmax-rmin+1)
+            col = slice(fcmin-cmin, fcmax-cmin+1)
+            out.append((row, col))
     return out
 
 

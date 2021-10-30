@@ -17,6 +17,9 @@ class Wavefront:
         Wavelength in meters
     pixelscale : float, optional
         Wavefront array spatial sampling in meters/pixel
+    shape : (2,) array_like, optional
+        Wavefront shape. If ``shape`` is None (default), the wavefront is
+        assumed to be infinite (broadcastable to any shape).
     data : list_like, optional
         Wavefront data. Default is [1+0j] (a plane wave).
 
@@ -30,10 +33,11 @@ class Wavefront:
     __slots__ = ('wavelength', 'pixelscale', 'focal_length',
                  'data', 'shape', 'planetype')
 
-    def __init__(self, wavelength, pixelscale=None, data=None):
+    def __init__(self, wavelength, pixelscale=None, shape=None, data=None):
 
         self.wavelength = wavelength
         self.pixelscale = pixelscale
+        self.shape = shape
 
         if data is None:
             self.data = [Field(data=1, pixelscale=pixelscale, offset=[0, 0], tilt=[])]
