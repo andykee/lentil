@@ -25,16 +25,6 @@ def test_boundary_slice():
     assert (slice(rmin, rmax), slice(cmin, cmax)) == slc
 
 
-def test_slice_offset():
-    shift = np.random.uniform(low=-50, high=50, size=2).astype(int)
-
-    a = lentil.util.circlemask((256, 256), 256//4, shift=shift)
-    slc = lentil.util.boundary_slice(a)
-    offset = lentil.util.slice_offset(slc, shape=a.shape)
-
-    assert np.all(offset == shift)
-
-
 def test_rebin():
     img = np.array([[1, 1, 2, 2], [1, 1, 2, 2], [3, 3, 4, 4], [3, 3, 4, 4]])
     factor = 2

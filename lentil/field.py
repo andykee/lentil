@@ -13,29 +13,31 @@ class Field:
     data : array_like
         Array containing the sampled field. Note that real-valued data is
         cast to complex.
-    pixelscale : float
-        Data array spatial sampling
-    offset : (2,) array_like of ints
-        Shift of the Field in (row, column) from (0, 0)
-    tilt : list
+    pixelscale : float or None, optional
+        Data array spatial sampling. If None (default), the field is assumed to
+        be broadcastable to any legal shape without interpolation.
+    offset : (2,) array_like of ints or None, optional.
+        Shift of the Field in (row, column) from (0, 0). If None (default),
+        offset = (0, 0).
+    tilt : list, optional
         List of objects which implement a ``shift`` method. This method should
         accept the following parameters:
 
         ``shift(xs, ys, z, wavelength)``
 
-        and return an updated x and y shift.
+        and return an updated x and y shift. If None (default), tilt = [].
 
     Attributes
     ----------
-    shape : tuple of inte
+    shape : tuple of ints
         Tuple of Field dimensions
     extent : tuple of ints
         Field extent given as (row min, row max, col min, col max)
 
     """
-    __slots__ = ('data', '_pixelscale', 'offset', 'tilt')
+    __slots__ = ('data', 'offset', 'tilt', '_pixelscale')
 
-    def __init__(self, data, pixelscale, offset=None, tilt=None):
+    def __init__(self, data, pixelscale=None, offset=None, tilt=None):
         self.data = np.asarray(data, dtype=complex)
         self.pixelscale = pixelscale
         self.offset = offset if offset is not None else [0, 0]
@@ -47,7 +49,10 @@ class Field:
 
     @pixelscale.setter
     def pixelscale(self, value):
-        self._pixelscale = lentil.helper.sanitize_shape(value)
+        if value is not None:
+            self._pixelscale = lentil.helper.sanitize_shape(value)
+        else:
+            self._pixelscale = None
 
     @property
     def shape(self):
@@ -115,6 +120,9 @@ class Field:
         """
         if indexing not in ('xy', 'ij'):
             raise ValueError("Valid values for `indexing` are 'xy' and 'ij'")
+
+        if pixelscale is None:
+            raise ValueError('pixelscale must be defined to compute shift')
 
         x, y = 0, 0
 
@@ -380,13 +388,10 @@ def multiply(x1, x2):
           size when multiplied by a "real" field.
 
     """
-    if not np.all(x1.pixelscale == x2.pixelscale):
-        raise ValueError(f'pixelscales {x1.pixelscale} and '
-                         f'{x2.pixelscale} are not equal')
-
     a_data, b_data = x1.data, x2.data
     a_offset, b_offset = x1.offset, x2.offset
-    pixelscale = x1.pixelscale
+    pixelscale = multiply_pixelscale(x1.pixelscale, x2.pixelscale)
+    tilt = x1.tilt + x2.tilt
 
     if a_data.size == 1 and b_data.size == 1:
         data, offset = _mul_scalar(a_data, a_offset, b_data, b_offset)
@@ -395,7 +400,23 @@ def multiply(x1, x2):
                                                                b_data, b_offset)
         data, offset = _mul_array(a_data, a_offset, b_data, b_offset)
 
-    return Field(data=data, pixelscale=pixelscale, offset=offset)
+    return Field(data=data, pixelscale=pixelscale, offset=offset, tilt=tilt)
+
+
+def multiply_pixelscale(a_pixelscale, b_pixelscale):
+    if np.all(a_pixelscale == b_pixelscale):
+        out = a_pixelscale
+    else:
+        if a_pixelscale is None:
+            out = b_pixelscale
+        elif b_pixelscale is None:
+            out = a_pixelscale
+        else:
+            if not np.all(a_pixelscale == b_pixelscale):
+                raise ValueError(f"can't multiply with inconsistent pixelscales: {a_pixelscale} != {b_pixelscale}")
+            out = a_pixelscale
+
+    return out
 
 
 def _mul_scalar(a_data, a_offset, b_data, b_offset):

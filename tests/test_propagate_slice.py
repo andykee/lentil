@@ -3,6 +3,8 @@
 
 import numpy as np
 import lentil
+import lentil.helper
+
 
 def test_propagate_slice_one():
     # Single monolithic aperture
@@ -30,7 +32,7 @@ def test_propagate_slice_one():
 
 
     slc = lentil.util.boundary_slice(amp)
-    ofst = lentil.util.slice_offset(slc, shape=amp.shape)
+    ofst = lentil.helper.slice_offset(slc, shape=amp.shape)
 
     phasor = amp[slc]*lentil.util.expc(-2*np.pi*phase[slc]/wavelength)
     F_slc = lentil.fourier.dft2(phasor, alpha=alpha/oversample, npix=npix*oversample, offset=ofst)
@@ -50,7 +52,7 @@ def test_propagate_slice_multi():
 
     amp1 = lentil.util.circle((n,n), n//5, shift=(0, -0.3*n))
     slc1 = lentil.util.boundary_slice(amp1)
-    ofst1 = lentil.util.slice_offset(slc1, shape=amp1.shape)
+    ofst1 = lentil.helper.slice_offset(slc1, shape=amp1.shape)
 
     rho, theta = lentil.zernike_coordinates(amp1, shift=(0, -0.3*n))
     coeffs = np.random.uniform(low=-1, high=1, size=11)*100e-9
@@ -60,7 +62,7 @@ def test_propagate_slice_multi():
 
     amp2 = lentil.util.circle((n,n), n//5, shift=(0, .3*n))
     slc2 = lentil.util.boundary_slice(amp2)
-    ofst2 = lentil.util.slice_offset(slc2, shape=amp2.shape)
+    ofst2 = lentil.helper.slice_offset(slc2, shape=amp2.shape)
 
     rho, theta = lentil.zernike_coordinates(amp2, shift=(0, 0.3*n))
     coeffs = np.random.uniform(low=-1, high=1, size=11)*100e-9

@@ -308,7 +308,7 @@ class Plane:
             if plane.mask.ndim > 1:
                 plane.mask = lentil.rescale(plane.mask, scale=scale, shape=None, mask=None, order=0,
                                             mode='constant', unitary=False)
-        # mask[mask < np.finfo(mask.dtype).eps] = 0
+            # mask[mask < np.finfo(mask.dtype).eps] = 0
             plane.mask[np.nonzero(plane.mask)] = 1
             plane.mask = plane.mask.astype(int)
 
@@ -390,43 +390,7 @@ class Plane:
             raise ValueError('mask has invalid dimensions')
         return s
 
-    # TODO: deprecate this
-    def slice_offset(self, slices, shape=None):
-        """Compute (r,c) offsets of the centers of each slice in a list of slices.
-
-        Parameters
-        ----------
-        slices : list
-            List of slices
-        shape : (2,) array_like or None, optional
-            Shape of containing array each slice is taken from. If None (default),
-            ``shape = Plane.shape``.
-
-        Returns
-        -------
-        offsets : list
-           List of center offsets corresponding to the provided slices
-
-        See also
-        --------
-        * :func:`~lentil.util.slice_offset`
-        * :func:`~lentil.Plane.slice`
-
-        """
-
-        if shape is None:
-            shape = self.shape
-
-        offsets = []
-        for s in slices:
-            offset = lentil.util.slice_offset(slice=s, shape=shape)
-            if offset:
-                offsets.append(offset)
-        if offsets:
-            return offsets
-        else:
-            return [None]
-
+    # TODO: add out=None to actually handle in-place multiplication
     def multiply(self, wavefront):
         """Multiply with a wavefront
 
@@ -446,37 +410,26 @@ class Plane:
             Updated wavefront
 
         """
-
-        if wavefront.pixelscale:
-            # We may interpolate in the future, but for now we'll enforce equality
-            assert np.all(wavefront.pixelscale == self.pixelscale)
-
+        pixelscale = lentil.field.multiply_pixelscale(self.pixelscale, wavefront.pixelscale)
         out = lentil.Wavefront(wavelength=wavefront.wavelength,
-                               pixelscale=self.pixelscale,
+                               pixelscale=pixelscale,
+                               planetype=wavefront.planetype,
+                               focal_length=wavefront.focal_length,
                                data=[])
 
         slc = self.slice()
-
         for field in wavefront.data:
             for n, s in enumerate(slc):
-
-                # construct complex phasor
                 amp = self.amplitude if self.amplitude.size == 1 else self.amplitude[s]
                 phase = self.phase if self.phase.size == 1 else self.phase[s]
-                phasor = amp * np.exp(-2*np.pi*1j*phase/wavefront.wavelength)
 
-                # include tilt if it exists
-                tilt = field.tilt.copy()
-                if self.tilt:
-                    tilt.append(self.tilt[n])
+                # construct complex phasor
+                phasor = Field(data=amp*np.exp(-2*np.pi*1j*phase/wavefront.wavelength),
+                               pixelscale=self.pixelscale,
+                               offset=lentil.helper.slice_offset(s, self.shape),
+                               tilt=[self.tilt[n]] if self.tilt else [])
 
-                out.data.append(Field(data=np.broadcast_to(field.data, self.shape)[s] * phasor,
-                                      pixelscale=self.pixelscale,
-                                      offset=lentil.util.slice_offset(s, self.shape),
-                                      tilt=tilt))
-
-            out.shape = self.shape
-            return out
+                out.data.append(field * phasor)
 
         return out
 

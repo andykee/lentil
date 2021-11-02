@@ -30,10 +30,11 @@ class Wavefront:
         length (``np.inf``).
 
     """
-    __slots__ = ('wavelength', 'pixelscale', 'focal_length',
+    __slots__ = ('wavelength', '_pixelscale', 'focal_length',
                  'data', 'shape', 'planetype')
 
-    def __init__(self, wavelength, pixelscale=None, shape=None, data=None):
+    def __init__(self, wavelength, pixelscale=None, shape=None, planetype=None,
+                 data=None, focal_length=None):
 
         self.wavelength = wavelength
         self.pixelscale = pixelscale
@@ -45,14 +46,25 @@ class Wavefront:
             self.data = [*data]
 
         # Wavefront focal length (which is infinity for a plane wave)
-        self.focal_length = np.inf
-        self.planetype = None
+        self.focal_length = focal_length if focal_length else np.inf
+        self.planetype = planetype
 
     def __mul__(self, plane):
         return plane.multiply(self)
 
     def __rmul__(self, other):
         return self.__mul__(other)
+
+    @property
+    def pixelscale(self):
+        return self._pixelscale
+
+    @pixelscale.setter
+    def pixelscale(self, value):
+        if value is not None:
+            self._pixelscale = lentil.helper.sanitize_shape(value)
+        else:
+            self._pixelscale = None
 
     @property
     def depth(self):
@@ -104,13 +116,13 @@ class Wavefront:
         if self.planetype != 'pupil':
             raise ValueError("Wavefront must have planetype 'pupil'")
 
-        out = Wavefront(wavelength=self.wavelength, data=[])
-
         npix = lentil.helper.sanitize_shape(npix)
         npix_prop = lentil.helper.sanitize_shape(npix_prop, default=npix)
-
-        out.shape = npix * oversample
         prop_shape = npix_prop * oversample
+
+        out = Wavefront(wavelength=self.wavelength, data=[],
+                        pixelscale=pixelscale*oversample, shape=npix*oversample,
+                        planetype='image')
 
         for field in self.data:
             # compute the field shift from any embedded tilts. note the return value
