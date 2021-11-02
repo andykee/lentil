@@ -11,13 +11,14 @@ import lentil.helper
 
 
 class Plane:
-    """Base class for representing a finite geometric plane.
+    """
+    Base class for representing a finite geometric plane.
 
     Parameters
     ----------
     amplitude : array_like, optional
         Electric field amplitude transmission. Amplitude should be normalized
-        with :func:`~lentil.util.normalize_power` if conservation of power
+        with :func:`~lentil.normalize_power` if conservation of power
         through a diffraction propagation is required. If not specified, a
         default amplitude is created which has no effect on wavefront
         propagation.
@@ -37,11 +38,6 @@ class Plane:
     pixelscale : float or (2,) array_like
         Physical sampling (in meters) of each pixel in the plane. If :attr:`pixelscale`
         is a scalar, uniform sampling in x and y is assumed.
-
-    Attributes
-    ----------
-    tilt : list
-
     """
     def __init__(self, amplitude=1, phase=0, mask=None, pixelscale=None):
         # We directly set the local attributes here in case a subclass has redefined
@@ -62,20 +58,19 @@ class Plane:
         cls._amplitude = np.array(1)
         cls._phase = np.array(0)
         cls._mask = None
-
-        cls.tilt = []
+        cls._tilt = []
 
     def __repr__(self):
         return f'{self.__class__.__name__}()'
 
     @property
     def amplitude(self):
-        """Electric field amplitude transmission.
+        """
+        Electric field amplitude transmission
 
         Returns
         -------
         amplitude : ndarray
-
         """
         return self._amplitude
 
@@ -85,12 +80,12 @@ class Plane:
 
     @property
     def phase(self):
-        """Electric field phase shift.
+        """
+        Electric field phase shift
 
         Returns
         -------
         phase : ndarray
-
         """
         return self._phase
 
@@ -102,10 +97,17 @@ class Plane:
     def mask(self):
         """Binary mask
 
+        If ``mask`` has 2 dimensions, the plane is assumed to be monolithic. If
+        ``mask`` has 3 dimensions, the plane is assumed to be segmented with the
+        individual segment masks inserted along the first dimension.
+
+        .. image:: /_static/img/segmask.png
+            :width: 550px
+            :align: center
+
         Returns
         -------
         mask : ndarray
-
         """
         if self._mask is not None:
             return self._mask
@@ -123,6 +125,13 @@ class Plane:
 
     @property
     def global_mask(self):
+        """
+        Flattened view of :attr:`mask`
+
+        Returns
+        -------
+        mask : ndarray
+        """
         if self.depth < 2:
             return self.mask
         else:
@@ -130,12 +139,12 @@ class Plane:
 
     @property
     def pixelscale(self):
-        """Physical sampling (in meters) of each pixel in the plane.
+        """
+        Physical (row, col) sampling of each pixel in the Plane.
 
         Returns
         -------
         pixelscale : ndarray
-            (dx,dy) sampling of the Plane
         """
         return self._pixelscale
 
@@ -147,9 +156,32 @@ class Plane:
             self._pixelscale = None
 
     @property
+    def tilt(self):
+        """
+        List of additional :class:`~lentil.Tilt` terms associated wirth this Plane
+
+        Returns
+        -------
+        tilt : list
+
+        See Also
+        --------
+        Tilt : Tilt object
+        Plane.fit_tilt : Method for fitting and removing tilt
+        """
+        return self._tilt
+
+    @tilt.setter
+    def tilt(self, value):
+        self._tilt = value
+
+    @property
     def shape(self):
-        """Plane dimensions computed from :attr:`mask` Returns None if :attr:`mask`
-        is None.
+        """
+        Plane dimensions computed from :attr:`mask`.
+
+        Returns (mask.shape[1], mask.shape[2]) if mask has ``ndim == 3``. Returns
+        None if :attr:`mask` is None.
         """
         if self.depth == 1:
             return self.mask.shape
@@ -158,7 +190,13 @@ class Plane:
 
     @property
     def depth(self):
-        """Number of independent masks (segments) in self.mask"""
+        """
+        Number of independent masks (segments) in :attr:`mask`
+
+        Returns
+        -------
+        depth : int
+        """
         if self.mask.ndim in (0, 1, 2):
             return 1
         else:
@@ -166,13 +204,14 @@ class Plane:
 
     @property
     def ptt_vector(self):
-        """2D vector representing piston and tilt in x and y. Planes with no mask
-        have ptt_vector = None.
+        """
+        2D vector representing piston and tilt in x and y.
+
+        Planes with no mask have ``ptt_vector = None``.
 
         Returns
         -------
         ptt_vector : ndarray or None
-
         """
 
         # if there's no mask, we just set ptt_vector to None and move on
@@ -201,10 +240,18 @@ class Plane:
         return ptt_vector
 
     def copy(self):
+        """
+        Make a copy of this object.
+
+        Returns
+        -------
+        copy : :class:`~lentil.Plane`
+        """
         return copy.deepcopy(self)
 
     def fit_tilt(self, inplace=True):
-        """Fit and remove tilt from Plane :attr:`phase` via least squares. The
+        """
+        Fit and remove tilt from Plane :attr:`phase` via least squares. The
         equivalent angular tilt is bookkept in Plane :attr:`tilt`.
 
         Parameters
@@ -216,8 +263,6 @@ class Plane:
         Returns
         -------
         plane : :class:`~lentil.Plane`
-            Tilt-removed plane with tilt bookkept separately in :attr:`tilt`.
-
         """
         if inplace:
             plane = self
@@ -254,7 +299,8 @@ class Plane:
         return plane
 
     def rescale(self, scale, inplace=True):
-        """Rescale a plane via interpolation.
+        """
+        Rescale a plane via interpolation.
 
         The following Plane attributes are resampled:
 
@@ -276,7 +322,6 @@ class Plane:
         Returns
         -------
         plane : :class:`Plane`
-            Rescaled Plane.
 
         Note
         ----
@@ -284,7 +329,7 @@ class Plane:
 
         See Also
         --------
-        * :func:`Plane.resample`
+        Plane.resample
 
         """
         if inplace:
@@ -440,12 +485,12 @@ class Pupil(Plane):
     Parameters
     ----------
     focal_length : float
-        Focal length in meters
+        Focal length
     pixelscale : float
         Physical sampling of each pixel in the pupil
     amplitude : array_like, optional
         Electric field amplitude transmission. Amplitude should be normalized
-        with :func:`~lentil.util.normalize_power` if conservation of power
+        with :func:`~lentil.normalize_power` if conservation of power
         through a diffraction propagation is required. If not specified, a
         default amplitude is created which has no effect on wavefront
         propagation.
@@ -485,7 +530,7 @@ class Pupil(Plane):
 
     @property
     def focal_length(self):
-        """Optical system focal length in meters."""
+        """Pupil focal length"""
         return self._focal_length
 
     @focal_length.setter
@@ -522,7 +567,7 @@ class Image(Plane):
 
     See Also
     --------
-    * :class:`Detector`
+    Detector
 
     """
 
@@ -581,7 +626,7 @@ class Detector(Image):
 
     See Also
     --------
-    * :class:`Image`
+    Image
 
     """
     def __init__(self, pixelscale=None, shape=None):

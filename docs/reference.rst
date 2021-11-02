@@ -191,6 +191,21 @@ Internals
     top-level modules are intended for internal use. Stable functionality in these
     modules is not guaranteed.
 
+Field
+-----
+.. autosummary::
+    :toctree: generated/
+
+    lentil.field.Field
+    lentil.field.NDField
+    lentil.field.extent
+    lentil.field.overlap
+    lentil.field.boundary
+    lentil.field.insert
+    lentil.field.merge
+    lentil.field.multiply
+    lentil.field.reduce
+
 Fourier transforms
 ------------------
 .. autosummary::

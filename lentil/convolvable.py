@@ -2,7 +2,8 @@ import numpy as np
 
 
 def jitter(img, scale, pixelscale=1, oversample=1):
-    """Apply image jitter via convolution.
+    """
+    Apply image jitter via convolution.
 
     Parameters
     ----------
@@ -82,7 +83,8 @@ def jitter(img, scale, pixelscale=1, oversample=1):
 
 
 def smear(img, distance, angle=None, pixelscale=1, oversample=1):
-    """Apply image smear via convolution.
+    """
+    Apply image smear via convolution.
 
     Parameters
     ----------

@@ -7,7 +7,8 @@ import scipy.ndimage
 import lentil
 
 def collect_charge(img, wave, qe, waveunit='nm'):
-    """Convert photon count (or flux) to electron count (or flux) by
+    """
+    Convert photon count (or flux) to electron count (or flux) by
     applying the detector's wavelength-dependent quantum efficiency.
 
     Parameters
@@ -46,7 +47,8 @@ def collect_charge(img, wave, qe, waveunit='nm'):
 
 
 def collect_charge_bayer(img, wave, qe_red, qe_green, qe_blue, bayer_pattern, oversample=1, waveunit='nm'):
-    """Convert photon count (or flux) to electron count (or flux) by
+    """
+    Convert photon count (or flux) to electron count (or flux) by
     applying the detector's wavelength-dependent quantum efficiency.
     Additional processing is performed to apply separate QE curves and
     location masks for the separate red, green, and blue channels.
@@ -85,7 +87,6 @@ def collect_charge_bayer(img, wave, qe_red, qe_green, qe_blue, bayer_pattern, ov
     whatever. Whatever is nothing for counts and seconds for flux.
 
     """
-
     img = np.asarray(img)
     if img.ndim == 2:
         img = img[np.newaxis, ...]
@@ -135,7 +136,8 @@ def qe_asarray(qe, wave, waveunit):
 
 
 def pixel(img, oversample=1):
-    """Apply the aperture effects of a square pixel on a discretely sampled
+    """
+    Apply the aperture effects of a square pixel on a discretely sampled
     image.
 
     Parameters
@@ -172,7 +174,7 @@ def pixel(img, oversample=1):
 
     See Also
     --------
-    :func:`lentil.detector.pixelate`
+    lentil.detector.pixelate : Apply pixel MTF effect before rescaling to native sampling
 
     References
     ----------
@@ -192,14 +194,14 @@ def pixel(img, oversample=1):
 
 
 def pixelate(img, oversample):
-    """Convolve an image with the pixel MTF before rescaling to native sampling
+    """Convolve an image with the pixel MTF and rescale the result to native sampling
 
     Parameters
     ----------
     img : array_like
         Input image
     oversample : int
-        Number of times `img` is oversampled
+        Number of times ``img`` is oversampled
 
     Returns
     -------
@@ -208,11 +210,11 @@ def pixelate(img, oversample):
 
     Note
     ----
-    :func:`pixelate` should only be used if ``oversample`` > 2
+    ``pixelate`` should only be used if ``oversample`` > 2
 
     See Also
     --------
-    :func:`lentil.detector.pixel`
+    lentil.detector.pixel : Apply pixel MTF effect without rescaling the result
 
     """
 
@@ -221,7 +223,8 @@ def pixelate(img, oversample):
 
 
 def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
-    """Analog to digital conversion
+    """
+    Analog to digital conversion
 
     Parameters
     ----------
@@ -262,7 +265,6 @@ def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
     reached.
 
     """
-
     img = np.asarray(img)
 
     # Enforce saturation capacity
@@ -310,7 +312,8 @@ def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
 
 
 def shot_noise(img, method='poisson', seed=None):
-    r"""Apply shot noise to an image
+    r"""
+    Apply shot noise to an image
 
     Parameters
     ----------
@@ -366,7 +369,8 @@ def shot_noise(img, method='poisson', seed=None):
 
 
 def read_noise(img, electrons, seed=None):
-    """Apply read noise to a frame
+    """
+    Apply read noise to a frame
 
     Parameters
     ----------
@@ -392,7 +396,8 @@ def read_noise(img, electrons, seed=None):
 
 
 def charge_diffusion(img, sigma, oversample=1):
-    """Apply charge diffusion represented by a Gaussian blur
+    """
+    Apply charge diffusion represented by a Gaussian blur
 
     Parameters
     ----------
@@ -414,7 +419,8 @@ def charge_diffusion(img, sigma, oversample=1):
 
 
 def dark_current(rate, shape=1, fpn_factor=0, seed=None):
-    """Create dark current frame
+    """
+    Create dark current frame
 
     If applied, dark current fixed pattern noise (FPN) is modeled by a
     log-normal distribution [1], [2] with mean = 1.0 and sigma = fpn_factor
@@ -463,10 +469,11 @@ def dark_current(rate, shape=1, fpn_factor=0, seed=None):
 
 def rule07_dark_current(temperature, cutoff_wavelength, pixelscale, shape=1,
                         fpn_factor=0, seed=None):
-    """Create dark current frame for HgCdTe infrared detectors using Rule 07 [1].
+    """
+    Create dark current frame for HgCdTe infrared detectors using Rule 07
 
     If applied, dark current fixed pattern noise (FPN) is modeled by a
-    log-normal distribution [2], [3] with mean = 1.0 and sigma = fpn_factor
+    log-normal distribution with mean = 1.0 and sigma = fpn_factor
     where rate = rate * FPN.
 
     Parameters
@@ -532,7 +539,8 @@ def rule07_dark_current(temperature, cutoff_wavelength, pixelscale, shape=1,
 
 
 def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, alpha_flux=4e9):
-    """Cosmic ray generator for simulating cosmic ray hits on a detector.
+    """
+    Cosmic ray generator for simulating cosmic ray hits on a detector.
 
     The default values for cosmic ray rates and electron fluxes are taken from
     [1]. It is commonly accepted at about 90% of cosmic rays are protons and the

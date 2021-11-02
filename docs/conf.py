@@ -71,4 +71,4 @@ autodoc_default_options = {
 
 autosummary_generate = True
 
-remove_from_toctrees = ["generated/*"]
+#remove_from_toctrees = ["generated/*"]
