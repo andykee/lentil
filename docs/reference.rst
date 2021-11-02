@@ -6,8 +6,8 @@
 API reference
 *************
 
-This reference manual details public functions, modules, and objects included
-in Lentil, describing what they are and what they do.
+This page gives an overview of all public functions, modules, and objects included
+in Lentil. All classes and functions exposed in the ``lentil.*`` namespace are public.
 
 Some subpackages are public including ``lentil.radiometry`` and
 ``lentil.detector``.
@@ -187,9 +187,9 @@ Internals
 
 .. warning::
 
-    The ``lentil.fourier`` and ``lentil.util`` top-level modules are intended
-    for internal use. Stable functionality is the goal, but is not explicitly
-    guaranteed.
+    The ``lentil.field``, ``lentil.fourier``, ``lentil.helper``, and ``lentil.util``
+    top-level modules are intended for internal use. Stable functionality in these
+    modules is not guaranteed.
 
 Fourier transforms
 ------------------
@@ -201,6 +201,14 @@ Fourier transforms
     lentil.fourier.czt2
     lentil.fourier.iczt2
 
+Helper functions
+----------------
+.. autosummary::
+    :toctree: generated/
+
+
+    lentil.helper.slice_offset
+
 Utilities
 ---------
 
@@ -210,7 +218,6 @@ Utilities
     lentil.util.mesh
     lentil.util.gaussian2d
     lentil.util.boundary_slice
-    lentil.util.slice_offset
     lentil.util.expc
     lentil.util.v2m
     lentil.util.m2v

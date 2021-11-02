@@ -943,11 +943,6 @@ class Blackbody(Spectrum):
     valueunit : str
         Flux units, as accepted by :func:`Unit`. Default is ``photlam``.
 
-    Attributes
-    ----------
-    value : ndarray
-       Spectral radiance computed with :func:`planck_radiance`
-
     Examples
     --------
     Create a Blackbody object with wavelength range 400-4000 nm and a temperature of

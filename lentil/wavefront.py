@@ -22,9 +22,6 @@ class Wavefront:
         assumed to be infinite (broadcastable to any shape).
     data : list_like, optional
         Wavefront data. Default is [1+0j] (a plane wave).
-
-    Attributes
-    ----------
     focal_length : float or np.inf
         Wavefront focal length. A plane wave (default) has an infinite focal
         length (``np.inf``).
@@ -45,7 +42,6 @@ class Wavefront:
         else:
             self.data = [*data]
 
-        # Wavefront focal length (which is infinity for a plane wave)
         self.focal_length = focal_length if focal_length else np.inf
         self.planetype = planetype
 
