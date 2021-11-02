@@ -291,10 +291,10 @@ def insert(field, out, intensity=False, weight=1, indexing='ij'):
 
     if field.shape == out.shape and np.array_equal(field.offset, [0, 0]):
         field_slice = Ellipsis
-        output_slice = Ellipsis
+        out_slice = Ellipsis
     else:
 
-        output_shape = np.asarray(out.shape)
+        out_shape = np.asarray(out.shape)
         field_shape = np.asarray(field.shape)
         field_offset = np.asarray(field.offset)
 
@@ -302,83 +302,45 @@ def insert(field, out, intensity=False, weight=1, indexing='ij'):
             field_offset = -field_offset[1], field_offset[0]
 
         # Output coordinates of the upper left corner of the shifted data array
-        field_shifted_ul = (output_shape // 2) - (field_shape // 2) + field_offset
+        field_shifted_ul = (out_shape // 2) - (field_shape // 2) + field_offset
 
         # Field slice indices
-        field_top = int(0)
-        field_bottom = int(field_shape[0])
-        field_left = int(0)
-        field_right = int(field_shape[1])
+        field_rmin = int(0)
+        field_rmax = int(field_shape[0])
+        field_cmin = int(0)
+        field_cmax = int(field_shape[1])
 
         # Output insertion slice indices
-        output_top = int(field_shifted_ul[0])
-        output_bottom = int(field_shifted_ul[0] + field_shape[0])
-        output_left = int(field_shifted_ul[1])
-        output_right = int(field_shifted_ul[1] + field_shape[1])
+        out_rmin = int(field_shifted_ul[0])
+        out_rmax = int(field_shifted_ul[0] + field_shape[0])
+        out_cmin = int(field_shifted_ul[1])
+        out_cmax = int(field_shifted_ul[1] + field_shape[1])
 
         # reconcile the field and output insertion indices
-        if output_top < 0:
-            field_top = -1 * output_top
-            output_top = 0
+        if out_rmin < 0:
+            field_rmin = -1 * out_rmin
+            out_rmin = 0
 
-        if output_bottom > output_shape[0]:
-            field_bottom -= output_bottom - output_shape[0]
-            output_bottom = output_shape[0]
+        if out_rmax > out_shape[0]:
+            field_rmax -= out_rmax - out_shape[0]
+            out_rmax = out_shape[0]
 
-        if output_left < 0:
-            field_left = -1 * output_left
-            output_left = 0
+        if out_cmin < 0:
+            field_cmin = -1 * out_cmin
+            out_cmin = 0
 
-        if output_right > output_shape[1]:
-            field_right -= output_right - output_shape[1]
-            output_right = output_shape[1]
+        if out_cmax > out_shape[1]:
+            field_cmax -= out_cmax - out_shape[1]
+            out_cmax = out_shape[1]
 
-        output_slice = slice(output_top, output_bottom), slice(output_left, output_right)
-        field_slice = slice(field_top, field_bottom), slice(field_left, field_right)
+        out_slice = slice(out_rmin, out_rmax), slice(out_cmin, out_cmax)
+        field_slice = slice(field_rmin, field_rmax), slice(field_cmin, field_cmax)
 
     if intensity:
-        out[output_slice] += (np.abs(field.data[field_slice]**2) * weight)
+        out[out_slice] += (np.abs(field.data[field_slice]**2) * weight)
     else:
-        out[output_slice] += (field.data[field_slice] * weight)
+        out[out_slice] += (field.data[field_slice] * weight)
     return out
-
-# # TODO: update insert() above with this syntax
-# def test():
-#     # field slices
-#     field_rmin, field_cmin = 0, 0
-#     field_rmax, field_cmax = field.shape
-#
-#     # slices defining where field goes in out
-#     out_rmin = int(out.shape[0]/2 - field.shape[0]/2 + field.offset[0])
-#     out_rmax = out_rmin + field.shape[0]
-#     out_cmin = int(out.shape[1]/2 - field.shape[1]/2 + field.offset[1])
-#     out_cmax = out_cmin + field.shape[1]
-#
-#     # figure out how much of the field is in out and
-#     # where to trim if it falls off an edge
-#     if out_rmin < 0:
-#         field_rmin = -1 * out_rmin
-#         out_rmin = 0
-#
-#     if out_rmax > out.shape[0]:
-#         field_rmax -= out_rmax - out.shape[0]
-#         out_rmax = out.shape[0]
-#
-#     if out_cmin < 0:
-#         field_cmin = -1 * out_rmin
-#         out_cmin = 0
-#
-#     if out_cmax > out.shape[1]:
-#         field_cmax -= out_cmax - out.shape[1]
-#         out_cmax = out.shape[1]
-#
-#     if not np.any(np.array([out_rmax, field_rmax, out_cmax, field_cmax]) < 0):
-#         if intensity:
-#             out[out_rmin:out_rmax, out_cmin:out_cmax] = np.abs(field.data[field_rmin:field_rmax, field_cmin:field_cmax])**2
-#         else:
-#             out[out_rmin:out_rmax, out_cmin:out_cmax] += field.data[field_rmin:field_rmax, field_cmin:field_cmax]
-#
-#     return out
 
 
 def merge(a, b, check_overlap=True):
