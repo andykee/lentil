@@ -69,14 +69,16 @@ class Wavefront:
 
     @property
     def field(self):
-        out = np.zeros(self.shape, dtype=complex)
+        shape = self.shape if self.shape is not None else ()
+        out = np.zeros(shape, dtype=complex)
         for field in self.data:
             out = lentil.field.insert(field, out)
         return out
 
     @property
     def intensity(self):
-        out = np.zeros(self.shape, dtype=float)
+        shape = self.shape if self.shape is not None else ()
+        out = np.zeros(shape, dtype=float)
         for field in lentil.field.reduce(*self.data):
             out = lentil.field.insert(field, out, intensity=True)
         return out
