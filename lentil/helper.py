@@ -2,6 +2,27 @@
 
 import numpy as np
 
+import lentil
+
+def mesh(shape, shift=(0, 0)):
+    """Generate a standard mesh."""
+
+    nr = shape[0]
+    nc = shape[1]
+
+    r = np.arange(nr) - np.floor(nr/2.0) - shift[0]
+    c = np.arange(nc) - np.floor(nc/2.0) - shift[1]
+
+    return np.meshgrid(r, c, indexing='ij')
+
+
+def gaussian2d(size, sigma):
+    """2D Gaussian kernel."""
+    x, y = np.meshgrid(np.linspace(-1, 1, size), np.linspace(-1, 1, size))
+
+    G = np.exp(-((x**2/(2*sigma**2)) + (y**2/(2*sigma**2))))
+    return G/np.sum(G)
+
 
 def sanitize_shape(shape, default=()):
     if shape is None:
@@ -23,6 +44,44 @@ def sanitize_bandpass(vec, default=()):
 
 def dft_alpha(dx, du, wave, z, oversample):
     return (dx*du)/(wave*z*oversample)
+
+
+def boundary_slice(x, threshold=0, pad=(0, 0)):
+    """Find bounding row and column indices of data within an array and
+    return the results as slice objects.
+
+    Parameters
+    ----------
+    x : array_like
+        Input array
+
+    threshold : float, optional
+        Masking threshold to apply before boundary finding. Only values
+        in x that are larger than threshold are considered in the boundary
+        finding operation. Default is 0.
+
+    pad : int or tuple of ints
+        Additional number of pixels to pad the boundary finding result by.
+        Default is (0,0).
+
+    Returns
+    -------
+    row_slice, col_slice : tuple of slices
+        Boundary slices
+
+    """
+    pad = np.asarray(pad)
+    if pad.shape == ():
+        pad = np.append(pad, pad)
+
+    rmin, rmax, cmin, cmax = lentil.boundary(x, threshold)
+
+    rmin = np.max((rmin-pad[0], 0))
+    rmax = np.min((rmax+pad[0]+1, x.shape[0]))
+    cmin = np.max((cmin-pad[1], 0))
+    cmax = np.min((cmax+pad[1]+1, x.shape[1]))
+
+    return np.s_[rmin:rmax, cmin:cmax]
 
 
 def slice_offset(slice, shape):

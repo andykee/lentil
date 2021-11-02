@@ -187,8 +187,8 @@ Internals
 
 .. warning::
 
-    The ``lentil.field``, ``lentil.fourier``, ``lentil.helper``, and ``lentil.util``
-    top-level modules are intended for internal use. Stable functionality in these
+    The ``lentil.field``, ``lentil.fourier``, and ``lentil.helper`` top-level
+    modules are intended for internal use. Stable functionality in these
     modules is not guaranteed.
 
 Field
@@ -221,20 +221,8 @@ Helper functions
 .. autosummary::
     :toctree: generated/
 
-
+    lentil.helper.boundary_slice
+    lentil.helper.gaussian2d
+    lentil.helper.mesh
     lentil.helper.slice_offset
 
-Utilities
----------
-
-.. autosummary::
-    :toctree: generated/
-
-    lentil.util.mesh
-    lentil.util.gaussian2d
-    lentil.util.boundary_slice
-    lentil.util.expc
-    lentil.util.v2m
-    lentil.util.m2v
-    lentil.util.make_mask
-    lentil.util.make_index

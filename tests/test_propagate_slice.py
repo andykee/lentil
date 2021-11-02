@@ -27,14 +27,14 @@ def test_propagate_slice_one():
     oversample = 5
     npix = 64
 
-    phasor = amp*lentil.util.expc(-2*np.pi*phase/wavelength)
+    phasor = amp*np.exp(-2*1j*np.pi*phase/wavelength)
     F = lentil.fourier.dft2(phasor, alpha=alpha/oversample, npix=npix*oversample)
 
 
-    slc = lentil.util.boundary_slice(amp)
+    slc = lentil.helper.boundary_slice(amp)
     ofst = lentil.helper.slice_offset(slc, shape=amp.shape)
 
-    phasor = amp[slc]*lentil.util.expc(-2*np.pi*phase[slc]/wavelength)
+    phasor = amp[slc]*np.exp(-2*1j*np.pi*phase[slc]/wavelength)
     F_slc = lentil.fourier.dft2(phasor, alpha=alpha/oversample, npix=npix*oversample, offset=ofst)
 
     assert np.allclose(F, F_slc)
@@ -51,7 +51,7 @@ def test_propagate_slice_multi():
     n = 256
 
     amp1 = lentil.util.circle((n,n), n//5, shift=(0, -0.3*n))
-    slc1 = lentil.util.boundary_slice(amp1)
+    slc1 = lentil.helper.boundary_slice(amp1)
     ofst1 = lentil.helper.slice_offset(slc1, shape=amp1.shape)
 
     rho, theta = lentil.zernike_coordinates(amp1, shift=(0, -0.3*n))
@@ -61,7 +61,7 @@ def test_propagate_slice_multi():
 
 
     amp2 = lentil.util.circle((n,n), n//5, shift=(0, .3*n))
-    slc2 = lentil.util.boundary_slice(amp2)
+    slc2 = lentil.helper.boundary_slice(amp2)
     ofst2 = lentil.helper.slice_offset(slc2, shape=amp2.shape)
 
     rho, theta = lentil.zernike_coordinates(amp2, shift=(0, 0.3*n))
@@ -76,13 +76,13 @@ def test_propagate_slice_multi():
     amp = amp1 + amp2
     phase = phase1 + phase2
 
-    phasor = amp*lentil.util.expc(-2*np.pi*phase/wavelength)
+    phasor = amp*np.exp(-2*1j*np.pi*phase/wavelength)
     F = lentil.fourier.dft2(phasor, alpha=alpha/oversample, npix=npix*oversample)
 
-    phasor1 = amp1[slc1]*lentil.util.expc(-2*np.pi*phase1[slc1]/wavelength)
+    phasor1 = amp1[slc1]*np.exp(-2*1j*np.pi*phase1[slc1]/wavelength)
     F1 = lentil.fourier.dft2(phasor1, alpha=alpha/oversample, npix=npix*oversample, offset=ofst1)
 
-    phasor2 = amp2[slc2]*lentil.util.expc(-2*np.pi*phase2[slc2]/wavelength)
+    phasor2 = amp2[slc2]*np.exp(-2*1j*np.pi*phase2[slc2]/wavelength)
     F2 = lentil.fourier.dft2(phasor2, alpha=alpha/oversample, npix=npix*oversample, offset=ofst2)
 
     F_slc = F1 + F2

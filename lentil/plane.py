@@ -219,7 +219,7 @@ class Plane:
             ptt_vector = None
         else:
             # compute unmasked piston, x-tilt, y-tilt vector
-            r, c = lentil.util.mesh(self.shape)
+            r, c = lentil.helper.mesh(self.shape)
             # note c is negative here. this is done to match Lentil's
             # definition of what +x tilt and +y tilt look like. The columns of
             # unmasked_ptt_vector should match the shapes returned by lentil.zernike for
@@ -416,7 +416,7 @@ class Plane:
 
         See also
         --------
-        * :func:`~lentil.util.boundary_slice`
+        * :func:`~lentil.helper.boundary_slice`
         * :func:`~lentil.Plane.slice_offset`
 
         """
@@ -428,9 +428,9 @@ class Plane:
             # np.s_[...] = Ellipsis -> returns the whole array
             s = [np.s_[...]]
         elif mask.ndim == 2:
-            s = [lentil.util.boundary_slice(mask)]
+            s = [lentil.helper.boundary_slice(mask)]
         elif mask.ndim == 3:
-            s = [lentil.util.boundary_slice(m) for m in mask]
+            s = [lentil.helper.boundary_slice(m) for m in mask]
         else:
             raise ValueError('mask has invalid dimensions')
         return s

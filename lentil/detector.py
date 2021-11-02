@@ -414,7 +414,7 @@ def charge_diffusion(img, sigma, oversample=1):
         Input frame blurred by charge diffusion
 
     """
-    kernel = lentil.util.gaussian2d(3*oversample, sigma)
+    kernel = lentil.helper.gaussian2d(3*oversample, sigma)
     return scipy.signal.convolve2d(img, kernel, mode='same')
 
 

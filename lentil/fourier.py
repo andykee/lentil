@@ -125,8 +125,8 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=Non
 @functools.lru_cache(maxsize=32)
 def _dft2_matrices(m, n, M, N, alphar, alphac, shiftr, shiftc, offsetr, offsetc):
     R, S, U, V = _dft2_coords(m, n, M, N)
-    E1 = util.expc(-2.0 * np.pi * alphar * np.outer(R-shiftr+offsetr, U-shiftr)).T
-    E2 = util.expc(-2.0 * np.pi * alphac * np.outer(S-shiftc+offsetc, V-shiftc))
+    E1 = np.exp(-2.0 * 1j * np.pi * alphar * np.outer(R-shiftr+offsetr, U-shiftr)).T
+    E2 = np.exp(-2.0 * 1j * np.pi * alphac * np.outer(S-shiftc+offsetc, V-shiftc))
     return E1, E2
 
 
@@ -393,7 +393,7 @@ def _czt_coeffs(N, M, L, shift, alpha, unitary):
 
     beta = _czt_beta(N, dN, L, alpha, unitary)
 
-    gamma = util.expc(-np.pi * np.square(m_hat) * alpha)
+    gamma = np.exp(-np.pi * 1j * np.square(m_hat) * alpha)
 
 
     z_hat_i = np.zeros(L)
@@ -405,7 +405,7 @@ def _czt_coeffs(N, M, L, shift, alpha, unitary):
     p = np.linspace(start=start-N+1, stop=start-1, num=N-1)
     z_hat_i[L-N+1:L] = np.pi * np.square(p)
 
-    z_hat = util.expc(z_hat_i * alpha)
+    z_hat = np.exp(z_hat_i * alpha * 1j)
     z_hat[M:L-N+1] = 0
     z = np.fft.fft(z_hat)
 
@@ -424,7 +424,7 @@ def _czt_beta(N, dN, L, alpha, unitary):
     if pyfftw:
         scale_factor /= L
 
-    return scale_factor * util.expc(-np.pi * np.square(n_hat) * alpha)
+    return scale_factor * np.exp(-np.pi * 1j * np.square(n_hat) * alpha)
 
 
 @functools.lru_cache(maxsize=32, typed=True)

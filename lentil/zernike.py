@@ -2,7 +2,7 @@ from math import factorial
 
 import numpy as np
 
-from lentil import util
+import lentil
 
 __all__ = ['zernike', 'zernike_compose', 'zernike_fit', 'zernike_remove',
            'zernike_basis', 'zernike_coordinates']
@@ -146,7 +146,7 @@ def zernike_compose(mask, coeffs, normalize=True, rho=None, theta=None):
         >>> import numpy as np
         >>> import matplotlib.pyplot as plt
         >>> import lentil
-        >>> mask = lentil.util.circlemask((256,256), 128)
+        >>> mask = lentil.circlemask((256,256), 128)
         >>> coeffs = np.random.rand(10)*1e-8
         >>> opd = lentil.zernike.zernike_compose(mask, coeffs)
         >>> plt.imshow(opd)
@@ -274,7 +274,7 @@ def zernike_fit(opd, mask, modes, normalize=True, rho=None, theta=None):
 
         >>> import numpy as np
         >>> import lentil
-        >>> mask = lentil.util.circlemask((256,256),128)
+        >>> mask = lentil.circlemask((256,256),128)
         >>> coeffs = np.random.rand(4)*100e-9
         >>> opd = lentil.zernike.zernike_compose(mask, coeffs)
         >>> fit_coeffs = lentil.zernike.zernike_fit(opd, mask, np.arange(2,4))
@@ -423,10 +423,10 @@ def zernike_coordinates(mask, shift=None, rotate=0):
 
     if shift is None:
         center = np.asarray(mask.shape)/2  # center in (r, c)
-        centroid = util.centroid(mask)     # centroid in (r, c)
+        centroid = lentil.centroid(mask)     # centroid in (r, c)
         shift = (centroid[0]-center[0], centroid[1]-center[1])
 
-    rr, cc = util.mesh(mask.shape, shift)
+    rr, cc = lentil.helper.mesh(mask.shape, shift)
 
     r = np.abs(rr+1j*cc)
     rho = r/np.max(r*mask)  # rho is defined to be 1 on the edge of the aperture

@@ -33,7 +33,7 @@ def test_wavefront_plane_multiply():
 
     w1 = p.multiply(w)
 
-    slc = lentil.util.boundary_slice(p.mask)
+    slc = lentil.helper.boundary_slice(p.mask)
     phasor = p.amplitude[slc] * np.exp(-2*np.pi*1j*p.phase[slc]/w.wavelength)
 
     assert np.array_equal(w1.data[0].data, phasor)

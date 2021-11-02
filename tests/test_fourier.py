@@ -85,7 +85,7 @@ def test_dft2_offset():
     f = np.zeros((n,n), dtype=complex)
     r,c = np.random.randint(0, n-m, size=2)
     f[r:r+m, c:c+m] = np.random.rand(m, m) + 1j * np.random.rand(m,m)
-    slc = lentil.util.boundary_slice(f)
+    slc = lentil.helper.boundary_slice(f)
     offset = lentil.helper.slice_offset(slc, f.shape)
 
     F = lentil.fourier.dft2(f, alpha=1/m, npix=10)

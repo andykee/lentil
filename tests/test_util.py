@@ -10,21 +10,6 @@ def test_boundary():
     assert np.array_equal(bounds, [28, 228, 42, 214])
 
 
-def test_boundary_slice():
-    a = np.zeros((10, 10))
-    r, c = np.floor(np.random.uniform(low=0, high=10, size=2)).astype(int)
-    a[r:r+3, c:c+3] = 1
-
-    rmin = np.max((r, 0))
-    rmax = np.min((r+3, a.shape[0]))
-    cmin = np.max((c, 0))
-    cmax = np.min((c+3, a.shape[1]))
-
-    slc = lentil.util.boundary_slice(a)
-
-    assert (slice(rmin, rmax), slice(cmin, cmax)) == slc
-
-
 def test_rebin():
     img = np.array([[1, 1, 2, 2], [1, 1, 2, 2], [3, 3, 4, 4], [3, 3, 4, 4]])
     factor = 2
@@ -113,11 +98,6 @@ def test_window_shape_mismatch():
         lentil.util.window(win_data, shape=(3, 3), slice=(0, 2, 0, 2))
 
 
-def test_mesh_nonsquare():
-    xx, yy = lentil.util.mesh((256, 512))
-    assert xx.shape == (256, 512)
-
-
 def test_pixelscle_nyquist():
     wave = np.random.uniform(low=350e-9, high=750e-9)
     f_number = np.random.uniform(low=5, high=30)
@@ -127,25 +107,6 @@ def test_pixelscle_nyquist():
 def test_slit():
     slit = lentil.util.slit((5, 5), 1)
     assert np.array_equal(slit[:, 0], np.array([0,0,1,0,0]))
-
-
-def test_make_mask():
-    mask = lentil.util.circlemask((256, 256), 128)
-    index = lentil.util.make_index(mask)
-    assert np.array_equal(lentil.util.make_mask(index), mask)
-
-
-def test_sparse():
-    mask = lentil.util.circlemask((256, 256), 128)
-    index = lentil.util.make_index(mask)
-    vec = lentil.util.m2v(mask, index)
-    mat = lentil.util.v2m(vec, index)
-    assert np.array_equal(mat, mask)
-
-
-def test_expc():
-    a = np.random.uniform(low=-1, high=1, size=(5,5))
-    assert np.allclose(np.exp(1j*a), lentil.util.expc(a))
 
 
 amp = lentil.circle((512, 512), 256)

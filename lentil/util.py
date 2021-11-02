@@ -22,7 +22,7 @@ def circle(shape, radius, shift=(0, 0)):
     circle : ndarray
 
     """
-    rr, cc = lentil.util.mesh(shape)
+    rr, cc = lentil.helper.mesh(shape)
     r = np.sqrt(np.square(rr - shift[0]) + np.square(cc - shift[1]))
     return np.clip(radius + 0.5 - r, 0.0, 1.0)
 
@@ -77,7 +77,7 @@ def hexagon(shape, radius, rotate=False):
     inner_radius = radius * np.sqrt(3)/2
     side_length = radius/2
 
-    rr, cc = lentil.util.mesh(shape)
+    rr, cc = lentil.helper.mesh(shape)
 
     rect = np.where((np.abs(cc) <= side_length) & (np.abs(rr) <= inner_radius))
     left_tri = np.where((cc <= -side_length) & (cc >= -radius) & (np.abs(rr) <= (cc + radius)*np.sqrt(3)))
@@ -111,7 +111,7 @@ def slit(shape, width):
 
     """
 
-    rr, cc = lentil.util.mesh(shape)
+    rr, cc = lentil.helper.mesh(shape)
 
     mask = np.zeros(shape)
     mask[np.abs(rr) <= width/2] = 1
@@ -487,169 +487,3 @@ def normalize_power(array, power=1):
     return array * np.sqrt(power/np.sum(np.abs(array)**2))
 
 
-def boundary_slice(x, threshold=0, pad=(0, 0)):
-    """Find bounding row and column indices of data within an array and
-    return the results as slice objects.
-
-    Parameters
-    ----------
-    x : array_like
-        Input array
-
-    threshold : float, optional
-        Masking threshold to apply before boundary finding. Only values
-        in x that are larger than threshold are considered in the boundary
-        finding operation. Default is 0.
-
-    pad : int or tuple of ints
-        Additional number of pixels to pad the boundary finding result by.
-        Default is (0,0).
-
-    Returns
-    -------
-    row_slice, col_slice : tuple of slices
-        Boundary slices
-
-    """
-    pad = np.asarray(pad)
-    if pad.shape == ():
-        pad = np.append(pad, pad)
-
-    rmin, rmax, cmin, cmax = lentil.boundary(x, threshold)
-
-    rmin = np.max((rmin-pad[0], 0))
-    rmax = np.min((rmax+pad[0]+1, x.shape[0]))
-    cmin = np.max((cmin-pad[1], 0))
-    cmax = np.min((cmax+pad[1]+1, x.shape[1]))
-
-    return np.s_[rmin:rmax, cmin:cmax]
-
-
-def mesh(shape, shift=(0, 0)):
-    """Generate a standard mesh."""
-
-    nr = shape[0]
-    nc = shape[1]
-
-    r = np.arange(nr) - np.floor(nr/2.0) - shift[0]
-    c = np.arange(nc) - np.floor(nc/2.0) - shift[1]
-
-    return np.meshgrid(r, c, indexing='ij')
-
-
-def gaussian2d(size, sigma):
-    """2D Gaussian kernel."""
-    x, y = np.meshgrid(np.linspace(-1, 1, size), np.linspace(-1, 1, size))
-
-    G = np.exp(-((x**2/(2*sigma**2)) + (y**2/(2*sigma**2))))
-    return G/np.sum(G)
-
-
-def make_index(mat):
-    """Create a sparse coordinate list (COO) index dictionary.
-
-    Parameters
-    ----------
-    mat : array_like
-        Full matrix to ve vectorized
-
-    Returns
-    -------
-    dict
-        Index dictionary with the following attributes:
-
-        * ``row`` List of row indices which contain nonzero data
-        * ``col`` List of column indices which contain nonzero data
-        * ``shape`` Tuple of dimensions of :attr:`~lentil.util.make_index.mat`
-
-    See Also
-    --------
-    * :func:`~lentil.util.v2m` Convert sparse vectorized data to a full matrix
-    * :func:`~lentil.util.m2v` Convert a full matrix to sparse vectorized data
-
-    """
-    mat = np.asarray(mat)
-    row, col = mat.nonzero()
-    shape = mat.shape
-    return {'row': row, 'col': col, 'shape': shape}
-
-
-def make_mask(index):
-    """Create a mask from a sparse oordinate list (COO) index dictionary."""
-    return v2m(np.ones(index['row'].shape), index)
-
-
-def v2m(vec, index):
-    """Convert a sparse vector to a full matrix.
-
-    Parameters
-    ----------
-    vec : array_like
-        Sparse vector to be reformed as a full matrix
-
-    index : dict
-        Corresponding index dictionary
-
-    Returns
-    -------
-    ndarray
-        Full matrix
-
-    See Also
-    --------
-    * :func:`~lentil.util.m2v` Convert a full matrix to sparse vectorized data
-    * :func:`~lentil.util.make_index` Create a sparse coordinate list (COO)
-      index dictionary
-
-    """
-    mat = np.zeros(index['shape'])
-    nnz = len(index['row'])
-    for i in range(nnz):
-        mat[index['row'][i], index['col'][i]] = vec[i]
-    return mat
-
-
-def m2v(mat, index):
-    """Convert a full matrix to a sparse vector.
-
-    Parameters
-    ----------
-    mat : array_like
-        Full matrix to be reformed as a sparse vector
-
-    index : dict
-        Corresponding index dictionary
-
-    Returns
-    -------
-    ndarray
-        Sparse vector
-
-    See Also
-    --------
-    * :func:`~lentil.util.v2m` Convert sparse vectorized data to a full matrix
-    * :func:`~lentil.util.make_index` Create a sparse coordinate list (COO)
-      index dictionary
-
-    """
-    raveled_indices = np.ravel_multi_index((index['row'], index['col']),
-                                           index['shape'], order='C')
-    vec = mat.ravel()
-    return vec[raveled_indices]
-
-
-def omega(f_number):
-    return np.pi*np.sin(np.arctan(1/(2*f_number)))**2
-
-
-def expc(x):
-    """Computes np.exp(1.0j * x) for real valued x... FAST!"""
-    x = np.asarray(x)
-    if x.dtype == np.float32:
-        out = np.empty(x.shape, dtype=np.complex64)
-    elif x.dtype == np.float64:
-        out = np.empty(x.shape, dtype=np.complex128)
-
-    out.real = np.cos(x)
-    out.imag = np.sin(x)
-    return out

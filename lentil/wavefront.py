@@ -63,11 +63,6 @@ class Wavefront:
             self._pixelscale = None
 
     @property
-    def depth(self):
-        """Number of Fields in :attr:`data`"""
-        return len(self.data)
-
-    @property
     def field(self):
         shape = self.shape if self.shape is not None else ()
         out = np.zeros(shape, dtype=complex)
