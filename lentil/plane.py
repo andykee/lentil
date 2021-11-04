@@ -47,6 +47,8 @@ class Plane:
         self._amplitude = np.asarray(amplitude)
         self._phase = np.asarray(phase)
         self._mask = np.asarray(mask) if mask is not None else None
+        
+        self._slice = _plane_slice(self._mask)
 
         self.tilt = []
 
@@ -123,6 +125,8 @@ class Plane:
         else:
             self._mask = None
 
+        self._slice = _plane_slice(self._mask)
+
     @property
     def global_mask(self):
         """
@@ -174,6 +178,10 @@ class Plane:
     @tilt.setter
     def tilt(self, value):
         self._tilt = value
+
+    @property
+    def slice(self):
+        return self._slice
 
     @property
     def shape(self):
@@ -399,41 +407,6 @@ class Plane:
 
         return self.rescale(scale=self.pixelscale[0]/pixelscale, inplace=inplace)
 
-    def slice(self, mask=None):
-        """Compute slices defined by the data extent in ``mask``.
-
-        Parameters
-        ----------
-        mask : array_like or None, optional
-            Mask to use for identifying data extents. If None, the Plane's
-            :attr:`mask` is used. If :attr:`mask` is None, ``Ellipsis`` is
-            returned (slice returns all data).
-
-        Returns
-        -------
-        slices : list
-            List of slices corresponding to the data extent defined by ``mask``.
-
-        See also
-        --------
-        * :func:`~lentil.helper.boundary_slice`
-        * :func:`~lentil.Plane.slice_offset`
-
-        """
-        if mask is None:
-            mask = self.mask
-
-        # self.mask may still return None so we catch that here
-        if mask.ndim < 2 or mask is None:
-            # np.s_[...] = Ellipsis -> returns the whole array
-            s = [np.s_[...]]
-        elif mask.ndim == 2:
-            s = [lentil.helper.boundary_slice(mask)]
-        elif mask.ndim == 3:
-            s = [lentil.helper.boundary_slice(m) for m in mask]
-        else:
-            raise ValueError('mask has invalid dimensions')
-        return s
 
     # TODO: add out=None to actually handle in-place multiplication
     def multiply(self, wavefront):
@@ -462,9 +435,8 @@ class Plane:
                                focal_length=wavefront.focal_length,
                                data=[])
 
-        slc = self.slice()
         for field in wavefront.data:
-            for n, s in enumerate(slc):
+            for n, s in enumerate(self.slice):
                 amp = self.amplitude if self.amplitude.size == 1 else self.amplitude[s]
                 phase = self.phase if self.phase.size == 1 else self.phase[s]
 
@@ -477,6 +449,42 @@ class Plane:
                 out.data.append(field * phasor)
 
         return out
+
+
+def _plane_slice(mask):
+    """Compute slices defined by the data extent in ``mask``.
+
+    Parameters
+    ----------
+    mask : array_like or None, optional
+        Mask to use for identifying data extents. If None, the Plane's
+        :attr:`mask` is used. If :attr:`mask` is None, ``Ellipsis`` is
+        returned (slice returns all data).
+
+    Returns
+    -------
+    slices : list
+        List of slices corresponding to the data extent defined by ``mask``.
+
+    See also
+    --------
+    * :func:`~lentil.helper.boundary_slice`
+    * :func:`~lentil.Plane.slice_offset`
+     """
+
+    # self.mask may still return None so we catch that here
+    if mask is None:
+        s = [Ellipsis]
+    elif mask.ndim < 2:
+        # np.s_[...] = Ellipsis -> returns the whole array
+        s = [np.s_[...]]
+    elif mask.ndim == 2:
+        s = [lentil.helper.boundary_slice(mask)]
+    elif mask.ndim == 3:
+        s = [lentil.helper.boundary_slice(m) for m in mask]
+    else:
+        raise ValueError('mask has invalid dimensions')
+    return s
 
 
 class Pupil(Plane):

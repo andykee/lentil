@@ -1,3 +1,4 @@
+import sys
 from itertools import combinations
 import numpy as np
 
@@ -28,13 +29,14 @@ class Field:
         and return an updated x and y shift. If None (default), tilt = [].
 
     """
-    __slots__ = ('data', 'offset', 'tilt', '_pixelscale')
+    __slots__ = ('data', 'offset', 'tilt', '_pixelscale', '_extent')
 
     def __init__(self, data, pixelscale=None, offset=None, tilt=None):
         self.data = np.asarray(data, dtype=complex)
         self.pixelscale = pixelscale
         self.offset = offset if offset is not None else [0, 0]
         self.tilt = tilt if tilt else []
+        self._extent = extent(self.shape, self.offset)
 
     @property
     def pixelscale(self):
@@ -104,7 +106,8 @@ class Field:
         To use the values returned by ``extent()`` in a slice, ``rmax`` and ``cmax``
         should be increased by 1.
         """
-        return extent(self.shape, self.offset)
+        return self._extent
+        #return extent(self.shape, self.offset)
 
     def __mul__(self, other):
         return multiply(self, other)
@@ -198,14 +201,13 @@ def extent(shape, offset):
     lentil.field.boundary : compute the extent around a number of Fields
 
     """
-    shape = np.asarray(shape)
-    offset = np.asarray(offset)
+    if len(shape) < 2:
+        shape = (1, 1)
 
-    if np.prod(shape) == 1:
-        shape = np.array([1, 1])
-
-    rmin, cmin = (-(shape//2) + offset).astype(int)
-    rmax, cmax = ([rmin, cmin] + shape - 1).astype(int)
+    rmin = int(-(shape[0]//2) + offset[0])
+    cmin = int(-(shape[1]//2) + offset[1])
+    rmax = int(rmin + shape[0] - 1)
+    cmax = int(cmin + shape[1] - 1)
 
     return rmin, rmax, cmin, cmax
 
@@ -252,16 +254,16 @@ def boundary(*fields):
     lentil.field.extent : Compute the extent of a Field
 
     """
-    rmin, rmax, cmin, cmax = [], [], [], []
+    rmin, rmax, cmin, cmax = sys.maxsize, 0, sys.maxsize, 0
 
     for field in fields:
         frmin, frmax, fcmin, fcmax = field.extent
-        rmin.append(frmin)
-        rmax.append(frmax)
-        cmin.append(fcmin)
-        cmax.append(fcmax)
+        rmin = frmin if frmin < rmin else rmin
+        rmax = frmax if frmax > rmax else rmax
+        cmin = fcmin if fcmin < cmin else cmin
+        cmax = fcmax if fcmax > cmax else cmax
 
-    return min(rmin), max(rmax), min(cmin), max(cmax)
+    return rmin, rmax, cmin, cmax
 
 
 def insert(field, out, intensity=False, weight=1, indexing='ij'):
@@ -376,7 +378,8 @@ def merge(a, b, check_overlap=True):
 def _merge_shape(*fields):
     # shape required to merge fields
     rmin, rmax, cmin, cmax = boundary(*fields)
-    if not np.any([rmin, rmax, cmin, cmax]):  # evaluates to True if all zeros
+    # faster than np.any([rmin, rmax, cmin, cmax])
+    if rmin == 0 and rmax == 0 and cmin == 0 and cmax == 0:
         return ()
     else:
         return rmax - rmin + 1, cmax - cmin + 1
@@ -386,7 +389,8 @@ def _merge_slices(*fields):
     # slices in the merged array where fields go
     rmin, rmax, cmin, cmax = boundary(*fields)
     out = []
-    if not np.any([rmin, rmax, cmin, cmax]):  # evaluates to True if all zeros
+    # faster than np.any([rmin, rmax, cmin, cmax])
+    if rmin == 0 and rmax == 0 and cmin == 0 and cmax == 0:
         out.append(Ellipsis)
     else:
         for field in fields:
@@ -434,82 +438,81 @@ def multiply(x1, x2):
           size when multiplied by a "real" field.
 
     """
-    a_data, b_data = x1.data, x2.data
-    a_offset, b_offset = x1.offset, x2.offset
     pixelscale = multiply_pixelscale(x1.pixelscale, x2.pixelscale)
     tilt = x1.tilt + x2.tilt
 
-    if a_data.size == 1 and b_data.size == 1:
-        data, offset = _mul_scalar(a_data, a_offset, b_data, b_offset)
+    if x1.size == 1 and x2.size == 1:
+        data, offset = _mul_scalar(x1, x2)
     else:
-        a_data, a_offset, b_data, b_offset = _broadcast_arrays(a_data, a_offset,
-                                                               b_data, b_offset)
-        data, offset = _mul_array(a_data, a_offset, b_data, b_offset)
+        # Note that _mul_array is optimized to also handle scalar * array
+        data, offset = _mul_array(x1, x2)
 
     return Field(data=data, pixelscale=pixelscale, offset=offset, tilt=tilt)
 
 
 def multiply_pixelscale(a_pixelscale, b_pixelscale):
     # pixelscale reduction for multiplication
-    if np.all(a_pixelscale == b_pixelscale):
+    if a_pixelscale is None and b_pixelscale is None:
+        out = None
+    elif a_pixelscale is None:
+        out = b_pixelscale
+    elif b_pixelscale is None:
         out = a_pixelscale
     else:
-        if a_pixelscale is None:
-            out = b_pixelscale
-        elif b_pixelscale is None:
+        if a_pixelscale[0] == b_pixelscale[0] and a_pixelscale[1] == b_pixelscale[1]:
             out = a_pixelscale
         else:
-            if not np.all(a_pixelscale == b_pixelscale):
-                raise ValueError(f"can't multiply with inconsistent pixelscales: {a_pixelscale} != {b_pixelscale}")
-            out = a_pixelscale
+            raise ValueError(f"can't multiply with inconsistent pixelscales: {a_pixelscale} != {b_pixelscale}")
 
     return out
 
 
-def _mul_scalar(a_data, a_offset, b_data, b_offset):
-    if np.array_equal(a_offset, b_offset):
-        data = a_data * b_data
-        offset = a_offset
+def _mul_scalar(a, b):
+    if np.array_equal(a.offset, b.offset):
+        data = a.data * b.data
+        offset = a.offset
     else:
         data = 0
         offset = [0, 0]
     return data, offset
 
 
-def _broadcast_arrays(a_data, a_offset, b_data, b_offset):
+def _broadcast_arrays(a, b):
     # if one array is a scalar, it is broadcast to a compatible shape
     # with the other array. as a part of this operation, the broadcasted
     # Field inherits the other Field's offset as well
-    if a_data.shape != b_data.shape:
-        if a_data.size == 1:
-            a_data = np.broadcast_to(a_data, b_data.shape)
+    a_data, a_offset = a.data, a.offset
+    b_data, b_offset = b.data, b.offset
+    if a.shape != b.shape:
+        if a.size == 1:
+            a_data = np.broadcast_to(a_data, b.shape)
             a_offset = b_offset
-        if b_data.size == 1:
-            b_data = np.broadcast_to(b_data, a_data.shape)
-            b_offset = a_offset
+        if b.size == 1:
+            b_data = np.broadcast_to(b_data, a.shape)
+            b_offset = a.offset
     return a_data, a_offset, b_data, b_offset
 
 
-def _mul_array(a_data, a_offset, b_data, b_offset):
-    a_slice, b_slice = _mul_slices(a_data.shape, a_offset,
-                                   b_data.shape, b_offset)
-    offset = _mul_offset(a_data.shape, a_offset,
-                         b_data.shape, b_offset)
+def _mul_array(a, b):
+    a_data, a_offset, b_data, b_offset = _broadcast_arrays(a, b)
+    a_extent = extent(a_data.shape, a_offset)
+    b_extent = extent(b_data.shape, b_offset)
+
+    a_slice, b_slice = _mul_slices(a_extent, b_extent)
+    offset = _mul_offset(a_extent, b_extent)
     data = a_data[a_slice] * b_data[b_slice]
 
-    # if a_data and b_data are arrays, but don't overlap, [] is returned
-    # TODO: consider returning None instead?
-    if not np.any(data):
+    if data.size == 0:
         data = np.array(0, dtype=complex)
         offset = [0, 0]
 
     return data, offset
 
 
-def _mul_boundary(a_shape, a_offset, b_shape, b_offset):
+def _mul_boundary(a_extent, b_extent):
     # bounding  array indices to be multiplied
-    armin, armax, acmin, acmax = extent(a_shape, a_offset)
-    brmin, brmax, bcmin, bcmax = extent(b_shape, b_offset)
+    armin, armax, acmin, acmax = a_extent
+    brmin, brmax, bcmin, bcmax = b_extent
 
     rmin, rmax = max(armin, brmin), min(armax, brmax)
     cmin, cmax = max(acmin, bcmin), min(acmax, bcmax)
@@ -517,12 +520,11 @@ def _mul_boundary(a_shape, a_offset, b_shape, b_offset):
     return rmin, rmax, cmin, cmax
 
 
-def _mul_slices(a_shape, a_offset, b_shape, b_offset):
-    armin, armax, acmin, acmax = extent(a_shape, a_offset)
-    brmin, brmax, bcmin, bcmax = extent(b_shape, b_offset)
+def _mul_slices(a_extent, b_extent):
+    rmin, rmax, cmin, cmax = _mul_boundary(a_extent, b_extent)
 
-    rmin, rmax = max(armin, brmin), min(armax, brmax)
-    cmin, cmax = max(acmin, bcmin), min(acmax, bcmax)
+    armin, armax, acmin, acmax = a_extent
+    brmin, brmax, bcmin, bcmax = b_extent
 
     arow = slice(rmin-armin, rmax-armin+1)
     acol = slice(cmin-acmin, cmax-acmin+1)
@@ -532,8 +534,8 @@ def _mul_slices(a_shape, a_offset, b_shape, b_offset):
     return (arow, acol), (brow, bcol)
 
 
-def _mul_offset(a_shape, a_offset, b_shape, b_offset):
-    rmin, rmax, cmin, cmax = _mul_boundary(a_shape, a_offset, b_shape, b_offset)
+def _mul_offset(a_extent, b_extent):
+    rmin, rmax, cmin, cmax = _mul_boundary(a_extent, b_extent)
     nrow = rmax - rmin + 1
     ncol = cmax - cmin + 1
     return rmin + nrow//2, cmin + ncol//2
