@@ -24,18 +24,17 @@ def gaussian2d(size, sigma):
     return G/np.sum(G)
 
 
-def sanitize_shape(shape, default=()):
-    if shape is None:
-        shape = default
+def sanitize_shape(shape):
     shape = np.asarray(shape)
-    if shape.shape == ():
-        shape = np.append(shape, shape)
-    return shape
+    if shape.size == 0:
+        shape = ()
+    else:
+        if shape.shape == ():
+            shape = np.append(shape, shape)
+    return tuple(shape)
 
 
-def sanitize_bandpass(vec, default=()):
-    if vec is None:
-        vec = default
+def sanitize_bandpass(vec):
     vec = np.asarray(vec)
     if vec.shape == ():
         vec = vec[np.newaxis, ...]
@@ -43,7 +42,8 @@ def sanitize_bandpass(vec, default=()):
 
 
 def dft_alpha(dx, du, wave, z, oversample):
-    return (dx*du)/(wave*z*oversample)
+    return ((dx[0]*du[0])/(wave*z*oversample),
+            (dx[1]*du[0])/(wave*z*oversample))
 
 
 def boundary_slice(x, threshold=0, pad=(0, 0)):

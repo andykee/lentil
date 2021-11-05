@@ -43,8 +43,8 @@ class Field:
         """
         Physical (row, col) sampling of each pixel in the Field.
 
-        If ``None``, the Field does not have a pixelscale and is assumed to be
-        broadcastable to any legal shape without interpolation.
+        If ``pixelscale = ()``, the Field does not have a pixelscale and is
+        assumed to be broadcastable to any legal shape without interpolation.
 
         Returns
         -------
@@ -57,7 +57,7 @@ class Field:
         if value is not None:
             self._pixelscale = lentil.helper.sanitize_shape(value)
         else:
-            self._pixelscale = None
+            self._pixelscale = ()
 
     @property
     def shape(self):
@@ -452,11 +452,11 @@ def multiply(x1, x2):
 
 def multiply_pixelscale(a_pixelscale, b_pixelscale):
     # pixelscale reduction for multiplication
-    if a_pixelscale is None and b_pixelscale is None:
-        out = None
-    elif a_pixelscale is None:
+    if a_pixelscale == () and b_pixelscale == ():
+        out = ()
+    elif a_pixelscale == ():
         out = b_pixelscale
-    elif b_pixelscale is None:
+    elif b_pixelscale == ():
         out = a_pixelscale
     else:
         if a_pixelscale[0] == b_pixelscale[0] and a_pixelscale[1] == b_pixelscale[1]:

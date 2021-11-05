@@ -19,11 +19,10 @@ class Plane:
     amplitude : array_like, optional
         Electric field amplitude transmission. Amplitude should be normalized
         with :func:`~lentil.normalize_power` if conservation of power
-        through a diffraction propagation is required. If not specified, a
-        default amplitude is created which has no effect on wavefront
-        propagation.
+        through diffraction propagation is required. If not specified (default),
+        amplitude is created which has no effect on wavefront propagation.
     phase : array_like, optional
-        Phase change caused by plane. If not specified, a default phase is
+        Phase change caused by plane. If not specified (default), phase is
         created which has no effect on wavefront propagation.
     mask : array_like, optional
         Binary mask. If not specified, a mask is created from the amplitude.
@@ -35,19 +34,20 @@ class Plane:
             :width: 550px
             :align: center
 
-    pixelscale : float or (2,) array_like
-        Physical sampling (in meters) of each pixel in the plane. If :attr:`pixelscale`
-        is a scalar, uniform sampling in x and y is assumed.
+    pixelscale : float or (2,) array_like, optional
+        Physical sampling of each pixel in the plane. If ``pixelscale`` is a
+        git scalar, uniform sampling in x and y is assumed. If None (default),
+        ``pixelscale`` is undefined.
     """
     def __init__(self, amplitude=1, phase=0, mask=None, pixelscale=None):
         # We directly set the local attributes here in case a subclass has redefined
         # the property (which could cause an weird behavior and will throw an
         # AttributeError if the subclass hasn't defined an accompanying getter
-        self.pixelscale = pixelscale
+        self.pixelscale = () if pixelscale is None else pixelscale
         self._amplitude = np.asarray(amplitude)
         self._phase = np.asarray(phase)
         self._mask = np.asarray(mask) if mask is not None else None
-        
+
         self._slice = _plane_slice(self._mask)
 
         self.tilt = []
@@ -56,7 +56,7 @@ class Plane:
         # we have to define default values to avoid AttributeErrors in case
         # subclasses don't call super().__init__ and don't explicitly define
         # an attribute
-        cls._pixelscale = None
+        cls._pixelscale = ()
         cls._amplitude = np.array(1)
         cls._phase = np.array(0)
         cls._mask = None
@@ -144,20 +144,18 @@ class Plane:
     @property
     def pixelscale(self):
         """
-        Physical (row, col) sampling of each pixel in the Plane.
+        Physical (row, col) sampling of each pixel in the Plane. If plane does
+        not have a pixelscale, an empty tuple is returned.
 
         Returns
         -------
-        pixelscale : ndarray
+        pixelscale : tuple
         """
         return self._pixelscale
 
     @pixelscale.setter
     def pixelscale(self, value):
-        if value is not None:
-            self._pixelscale = lentil.helper.sanitize_shape(value)
-        else:
-            self._pixelscale = None
+        self._pixelscale = lentil.helper.sanitize_shape(value)
 
     @property
     def tilt(self):
@@ -226,6 +224,9 @@ class Plane:
         if self.shape == () or self.shape is None:
             ptt_vector = None
         else:
+            if self.pixelscale == ():
+                raise ValueError("can't create ptt_vector with pixelscale = ()")
+
             # compute unmasked piston, x-tilt, y-tilt vector
             r, c = lentil.helper.mesh(self.shape)
             # note c is negative here. this is done to match Lentil's
@@ -365,7 +366,8 @@ class Plane:
             plane.mask[np.nonzero(plane.mask)] = 1
             plane.mask = plane.mask.astype(int)
 
-        plane.pixelscale = plane.pixelscale/scale
+        if plane.pixelscale:
+            plane.pixelscale = (plane.pixelscale[0]/scale, plane.pixelscale[1]/scale)
 
         return plane
 
@@ -402,11 +404,12 @@ class Plane:
         * :func:`Plane.rescale`
 
         """
-        if self.pixelscale[0] != self.pixelscale[1]:
+        if not self.pixelscale:
+            raise ValueError("can't resample Plane with pixelscale = ()")
+        elif self.pixelscale[0] != self.pixelscale[1]:
             raise NotImplementedError("Can't resample non-uniformly sampled Plane")
 
         return self.rescale(scale=self.pixelscale[0]/pixelscale, inplace=inplace)
-
 
     # TODO: add out=None to actually handle in-place multiplication
     def multiply(self, wavefront):

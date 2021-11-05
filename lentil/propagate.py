@@ -53,12 +53,12 @@ def propagate(planes, wave, weight=None, npix=None, npix_prop=None, oversample=2
 
     """
     npix = lentil.helper.sanitize_shape(npix)
-    npix_prop = lentil.helper.sanitize_shape(npix_prop, default=npix)
+    npix_prop = npix if npix_prop is None else lentil.helper.sanitize_shape(npix_prop)
     wave = lentil.helper.sanitize_bandpass(wave)
-    weight = lentil.helper.sanitize_bandpass(weight, default=np.ones_like(wave))
+    weight = np.ones_like(wave) if weight is None else lentil.helper.sanitize_bandpass(weight)
 
     # Create empty output
-    out_shape = npix * oversample
+    out_shape = (npix[0] * oversample, npix[1]*oversample)
 
     # If the final plane is a Detector, we return intensity, otherwise we return
     # the complex field

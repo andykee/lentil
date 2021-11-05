@@ -21,7 +21,7 @@ def test_default_plane():
     # perfect optical and spectral transmission).
 
     p = lentil.Plane()
-    assert p.pixelscale is None
+    assert p.pixelscale == ()
     assert np.all(p.amplitude == 1)
     assert np.all(p.phase == 0)
     assert p.mask == p.amplitude

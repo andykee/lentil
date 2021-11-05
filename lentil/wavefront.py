@@ -16,7 +16,7 @@ class Wavefront:
     wavelength : float
         Wavelength in meters
     pixelscale : float, optional
-        Wavefront array spatial sampling in meters/pixel
+        Wavefront array spatial sampling
     shape : (2,) array_like, optional
         Wavefront shape. If ``shape`` is None (default), the wavefront is
         assumed to be infinite (broadcastable to any shape).
@@ -60,7 +60,7 @@ class Wavefront:
         if value is not None:
             self._pixelscale = lentil.helper.sanitize_shape(value)
         else:
-            self._pixelscale = None
+            self._pixelscale = ()
 
     @property
     def field(self):
@@ -109,8 +109,9 @@ class Wavefront:
         if self.planetype != 'pupil':
             raise ValueError("Wavefront must have planetype 'pupil'")
 
-        npix = lentil.helper.sanitize_shape(npix)
-        npix_prop = lentil.helper.sanitize_shape(npix_prop, default=npix)
+        npix = np.asarray(lentil.helper.sanitize_shape(npix))
+        pixelscale = np.asarray(lentil.helper.sanitize_shape(pixelscale))
+        npix_prop = npix if npix_prop is None else np.asarray(lentil.helper.sanitize_shape(npix_prop))
         prop_shape = npix_prop * oversample
 
         out = Wavefront(wavelength=self.wavelength, data=[],
