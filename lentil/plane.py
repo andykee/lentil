@@ -579,36 +579,12 @@ class Image(Plane):
 
     """
 
-    def __init__(self, pixelscale=None, shape=None):
-
-        super().__init__(pixelscale=pixelscale)
-
-        # Ensure shape is a (2,) tuple or None
-        if shape:
-            shape = np.asarray(shape)
-            if shape.size == 1:
-                shape = np.append(shape, shape)
-            elif shape.size > 2:
-                raise IndexError('too many values')
-            shape = tuple(shape)
-
-        self._shape = shape
-
-    @property
-    def shape(self):
-        """Number of pixels as (rows, cols)."""
-        return self._shape
-
-    @shape.setter
-    def shape(self, value):
-        self._shape = value
-
     def fit_tilt(self, *args, **kwargs):
         return self
 
-    def slice(self, *args, **kwargs):
-        # np.s_[...] = Ellipsis -> returns the whole array
-        return [np.s_[...]]
+    # def slice(self, *args, **kwargs):
+    #     # np.s_[...] = Ellipsis -> returns the whole array
+    #     return [np.s_[...]]
 
     def multiply(self, wavefront):
         wavefront = super().multiply(wavefront)
@@ -637,8 +613,7 @@ class Detector(Image):
     Image
 
     """
-    def __init__(self, pixelscale=None, shape=None):
-        super().__init__(pixelscale=pixelscale, shape=shape)
+    pass
 
 
 class DispersivePhase(Plane):
