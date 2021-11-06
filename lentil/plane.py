@@ -443,8 +443,8 @@ class Plane:
             for n, s in enumerate(self.slice):
                 # We have to multiply amplitude[s] by mask[n][s] because the requested
                 # slice of the amplitude array may contain parts of adjaceent segments
-                # TODO: is it faster to do amplitude[s] * mask[n][s] or (amplitude * mask[n])[s]?
-                amp = self.amplitude if self.amplitude.size == 1 else self.amplitude[s]*self.mask[n][s]
+                mask = self.mask if self.depth == 1 else self.mask[n]
+                amp = self.amplitude if self.amplitude.size == 1 else self.amplitude[s] * mask[s]
                 phase = self.phase if self.phase.size == 1 else self.phase[s]
 
                 # construct complex phasor
