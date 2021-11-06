@@ -2,7 +2,6 @@ import math
 import numpy as np
 
 import lentil
-import lentil.wavefront
 
 
 size = (10, 10)
@@ -29,7 +28,7 @@ def test_default_plane():
 
 def test_wavefront_plane_multiply():
     p = RandomPlane()
-    w = lentil.wavefront.Wavefront(650e-9)
+    w = lentil.Wavefront(650e-9)
 
     w1 = p.multiply(w)
 
@@ -37,6 +36,23 @@ def test_wavefront_plane_multiply():
     phasor = p.amplitude[slc] * np.exp(-2*np.pi*1j*p.phase[slc]/w.wavelength)
 
     assert np.array_equal(w1.data[0].data, phasor)
+
+
+def test_wavefront_plane_multiply_overlapping_segment_slices():
+    seg = lentil.hexagon((64, 64), 32)
+    seg = seg[5:60, :]
+
+    segmask = np.zeros((2, 128, 128))
+    segmask[0, 0:55, 2:66] = seg
+    segmask[1, 29:84, 55:119] = seg
+    mask = np.sum(segmask, axis=0)
+
+    pupil = lentil.Pupil(amplitude=mask, mask=segmask, pixelscale=1 / 256, focal_length=10)
+
+    w = lentil.Wavefront(500e-9)
+    w *= pupil
+
+    assert np.array_equal(mask, w.intensity)
 
 
 class CircularPupil(lentil.Pupil):
