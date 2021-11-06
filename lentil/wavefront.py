@@ -34,8 +34,8 @@ class Wavefront:
                  data=None, focal_length=None):
 
         self.wavelength = wavelength
-        self.pixelscale = pixelscale
-        self.shape = shape
+        self._pixelscale = () if pixelscale is None else lentil.helper.sanitize_shape(pixelscale)
+        self.shape = () if shape is None else shape
 
         if data is None:
             self.data = [Field(data=1, pixelscale=pixelscale, offset=[0, 0], tilt=[])]
@@ -57,23 +57,18 @@ class Wavefront:
 
     @pixelscale.setter
     def pixelscale(self, value):
-        if value is not None:
-            self._pixelscale = lentil.helper.sanitize_shape(value)
-        else:
-            self._pixelscale = ()
+        self._pixelscale = lentil.helper.sanitize_shape(value)
 
     @property
     def field(self):
-        shape = self.shape if self.shape is not None else ()
-        out = np.zeros(shape, dtype=complex)
+        out = np.zeros(self.shape, dtype=complex)
         for field in self.data:
             out = lentil.field.insert(field, out)
         return out
 
     @property
     def intensity(self):
-        shape = self.shape if self.shape is not None else ()
-        out = np.zeros(shape, dtype=float)
+        out = np.zeros(self.shape, dtype=float)
         for field in lentil.field.reduce(*self.data):
             out = lentil.field.insert(field, out, intensity=True)
         return out

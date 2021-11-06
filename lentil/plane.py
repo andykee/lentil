@@ -43,7 +43,7 @@ class Plane:
         # We directly set the local attributes here in case a subclass has redefined
         # the property (which could cause an weird behavior and will throw an
         # AttributeError if the subclass hasn't defined an accompanying getter
-        self.pixelscale = () if pixelscale is None else pixelscale
+        self._pixelscale = () if pixelscale is None else lentil.helper.sanitize_shape(pixelscale)
         self._amplitude = np.asarray(amplitude)
         self._phase = np.asarray(phase)
         self._mask = np.asarray(mask) if mask is not None else None
@@ -436,11 +436,15 @@ class Plane:
                                pixelscale=pixelscale,
                                planetype=wavefront.planetype,
                                focal_length=wavefront.focal_length,
+                               shape=self.shape,
                                data=[])
 
         for field in wavefront.data:
             for n, s in enumerate(self.slice):
-                amp = self.amplitude if self.amplitude.size == 1 else self.amplitude[s]
+                # We have to multiply amplitude[s] by mask[n][s] because the requested
+                # slice of the amplitude array may contain parts of adjaceent segments
+                # TODO: is it faster to do amplitude[s] * mask[n][s] or (amplitude * mask[n])[s]?
+                amp = self.amplitude if self.amplitude.size == 1 else self.amplitude[s]*self.mask[n][s]
                 phase = self.phase if self.phase.size == 1 else self.phase[s]
 
                 # construct complex phasor
@@ -899,13 +903,26 @@ class Rotate(Plane):
             Updated wavefront
 
         """
+
+        pixelscale = lentil.field.multiply_pixelscale(self.pixelscale, wavefront.pixelscale)
+        out = lentil.Wavefront(wavelength=wavefront.wavelength,
+                               pixelscale=pixelscale,
+                               planetype=wavefront.planetype,
+                               focal_length=wavefront.focal_length,
+                               shape=wavefront.shape,
+                               data=[])
+
+        field = wavefront.field
         if self.angle % 90 == 0:
-            wavefront.data = np.rot90(wavefront.data, k=int(self.angle/90), axes=(1, 2))
+            data = np.rot90(field, k=int(self.angle/90))
         else:
-            real = ndimage.rotate(wavefront.data.real, angle=self.angle, reshape=False, order=self.order, axes=(1, 2))
-            imag = ndimage.rotate(wavefront.data.imag, angle=self.angle, reshape=False, order=self.order, axes=(1, 2))
-            wavefront.data = real + 1j*imag
-        return wavefront
+            real = ndimage.rotate(field.real, angle=self.angle, reshape=False, order=self.order)
+            imag = ndimage.rotate(field.imag, angle=self.angle, reshape=False, order=self.order)
+            data = real + 1j*imag
+
+            out.data.append(Field(data = data, pixelscale = field.pixelscale,
+                                  offset = field.offset, tilt = field.tilt))
+        return out
 
 
 class Flip(Plane):
@@ -921,17 +938,7 @@ class Flip(Plane):
     """
     def __init__(self, axis=None):
         super().__init__()
-
-        if axis is None:
-            # The first dimension of wavefront.data is depth so we actually want
-            # to flip of the next two axes
-            self.axis = (1, 2)
-        else:
-            # We convert axis to an array in case the user provides a tuple.
-            # Again, because the first dimension of wavefront.data is depth we
-            # add one to whatever axes are provided to make the flip operation
-            # behave as expected.
-            self.axis = np.asarray(axis) + 1
+        self.axis = axis
 
     def multiply(self, wavefront):
         """Multiply with a wavefront
@@ -947,8 +954,10 @@ class Flip(Plane):
             Updated wavefront
 
         """
-        wavefront.data = np.flip(wavefront.data, axis=self.axis)
-        return wavefront
+        out = wavefront.copy()
+        for field in out.data:
+            field.data = np.flip(field.data, axis=self.axis)
+        return out
 
 
 class Quadratic(Plane):
