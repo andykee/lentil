@@ -129,7 +129,7 @@ def slice_offset(slice, shape):
         else:
             raise ValueError(f"Can't compute offset from slice {slice}")
     else:
-        slice_shape = np.array((slice[0].stop-slice[0].start-1, slice[1].stop-slice[1].start-1))
+        slice_shape = np.array((slice[0].stop-slice[0].start, slice[1].stop-slice[1].start))
         slice_center = slice_shape//2
 
         shape = np.asarray(shape)

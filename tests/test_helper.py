@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 import lentil
 import lentil.util
@@ -24,11 +25,16 @@ def test_boundary_slice():
 
     assert (slice(rmin, rmax), slice(cmin, cmax)) == slc
 
-
-def test_slice_offset():
+@pytest.mark.parametrize('shape, radius', [
+    ((256, 256), 256//4),
+    ((256, 256), 256//5),
+    ((255, 255), 256//4),
+    ((255, 255), 256//5)
+])
+def test_slice_offset(shape, radius):
     shift = np.random.uniform(low=-50, high=50, size=2).astype(int)
 
-    a = lentil.circlemask((256, 256), 256//4, shift=shift)
+    a = lentil.circlemask(shape=shape, radius=radius, shift=shift)
     slc = lentil.helper.boundary_slice(a)
     offset = lentil.helper.slice_offset(slc, shape=a.shape)
 
