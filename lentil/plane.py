@@ -359,9 +359,13 @@ class Plane:
         # provided, we really only want to reinterpolate if a mask was provided (stored
         # in plane._mask) vs computed on the fly (by the plane.mask property)
         if plane._mask is not None:
-            if plane.mask.ndim > 1:
+            if plane.mask.ndim == 2:
                 plane.mask = lentil.rescale(plane.mask, scale=scale, shape=None, mask=None, order=0,
                                             mode='constant', unitary=False)
+            else:
+                plane.mask = np.asarray([lentil.rescale(mask, scale=scale, shape=None, mask=None, 
+                                                        order=0, mode=constant, unitary=False)
+                                         for mask in plane.mask])
             # mask[mask < np.finfo(mask.dtype).eps] = 0
             plane.mask[np.nonzero(plane.mask)] = 1
             plane.mask = plane.mask.astype(int)
