@@ -645,7 +645,8 @@ class DispersiveShift(Plane):
 
     def multiply(self, wavefront):
         wavefront = super().multiply(wavefront)
-        wavefront.shift.extend([self])
+        for field in wavefront.data:
+            field.tilt.append(self)
         return wavefront
 
 
