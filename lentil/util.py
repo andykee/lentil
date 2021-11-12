@@ -451,6 +451,11 @@ def pixelscale_nyquist(wave, f_number):
     return f_number * wave / 2
 
 
+def min_sampling(wave, z, du, npix, min_q):
+    num = np.min(wave) * z
+    return num/(min_q * du[0] * npix[0]), num/(min_q * du[1] * npix[1])
+
+
 def normalize_power(array, power=1):
     r"""Normalizie the power in an array.
 
@@ -487,3 +492,18 @@ def normalize_power(array, power=1):
     return array * np.sqrt(power/np.sum(np.abs(array)**2))
 
 
+def sanitize_shape(shape):
+    shape = np.asarray(shape)
+    if shape.size == 0:
+        shape = ()
+    else:
+        if shape.shape == ():
+            shape = np.append(shape, shape)
+    return tuple(shape)
+
+
+def sanitize_bandpass(vec):
+    vec = np.asarray(vec)
+    if vec.shape == ():
+        vec = vec[np.newaxis, ...]
+    return vec

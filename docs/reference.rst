@@ -38,15 +38,15 @@ Wavefront
 
     lentil.Wavefront
 
-.. _api.propagation:
+.. .. _api.propagation:
 
-Numerical diffraction propagation
-=================================
+.. Numerical diffraction propagation
+.. =================================
 
-.. autosummary::
-    :toctree: generated/
+.. .. autosummary::
+..     :toctree: generated/
 
-    lentil.propagate
+..     lentil.propagate
 
 .. _api.zernike:
 
@@ -82,10 +82,48 @@ Imaging artifacts
     lentil.jitter
     lentil.smear
 
+.. _api.util:
+
+Utilities
+=========
+
+Shapes
+------
+.. autosummary::
+    :toctree: generated/
+
+    lentil.circle
+    lentil.circlemask
+    lentil.hexagon
+    lentil.slit
+
+Array manipulation
+------------------
+.. autosummary::
+    :toctree: generated/
+
+    lentil.boundary
+    lentil.centroid
+    lentil.pad
+    lentil.window
+    lentil.rebin
+    lentil.rescale
+
+Miscellaneous
+-------------
+.. autosummary::
+    :toctree: generated/
+
+    lentil.min_sampling
+    lentil.pixelscale_nyquist
+    lentil.normalize_power
+    lentil.sanitize_shape
+    lentil.sanitize_bandpass
+
 .. _api.detector:
 
-Detector effects
-================
+Detector module
+===============
 
 Charge collection
 -----------------
@@ -130,8 +168,8 @@ Cosmic rays
 
 .. _api.radiometry:
 
-Radiometry
-==========
+Radiometry module
+=================
 
 .. autosummary::
     :toctree: generated/
@@ -145,40 +183,6 @@ Radiometry
     lentil.radiometry.path_transmission
     lentil.radiometry.path_emission
 
-.. _api.util:
-
-Utilities
-=========
-
-Shapes
-------
-.. autosummary::
-    :toctree: generated/
-
-    lentil.circle
-    lentil.circlemask
-    lentil.hexagon
-    lentil.slit
-
-Array manipulation
-------------------
-.. autosummary::
-    :toctree: generated/
-
-    lentil.boundary
-    lentil.centroid
-    lentil.pad
-    lentil.window
-    lentil.rebin
-    lentil.rescale
-
-Miscellaneous
--------------
-.. autosummary::
-    :toctree: generated/
-
-    lentil.pixelscale_nyquist
-    lentil.normalize_power
 
 .. _apt.internal:
 

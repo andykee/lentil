@@ -120,7 +120,7 @@ follows the same basic flow:
    .. note::
 
         When propagating between like planes (pupil to pupil or image to image),
-        no additional propagation step must be taken.
+        no additional propagation step is required.
 
 4. **Repeat steps 2 and 3 until the propagation is complete** - if multiple planes
    are required to model the desired optical system, steps 2 and 3 should be
@@ -149,58 +149,28 @@ different wavelengths and accumulates the resulting image plane intensity:
         w.propagate_image(pixelscale=5e-6, npix=64, oversample=5)
         img += w.intensity
 
-Note that the output ``img`` array must be sized to accommodate the oversampled
+Keep in mind the output ``img`` array must be sized to accommodate the oversampled
 wavefront intensity given by ``npix`` * ``oversample``.
 
-The ``propagate()`` method
---------------------------
-In addition to the more direct/manual propagation approach described above, Lentil
-provides a :func:`~lentil.propagate` method that will propagate a |Wavefront| (or
-number of |Wavefront| objects in the case of a broadband propagation) through a
-list of planes, selecting the appropriate propagator between planes based on
-plane type.
+.. note::
 
-.. image:: /_static/img/propagate.png
-    :width: 800px
-    :align: center
+    Each time ``wavefront.field`` or ``wavefront.intensity`` is accessed, a new Numpy
+    array of zeros with shape = ``wavefront.shape`` is allocated. It is possible to
+    avoid repeatedly allocating large arrays of zeros when accumulating the result of
+    a broadband propagation by using :func:`wavefront.insert` instead. This can result
+    in significant performance gains, particularly when ``wavefront.shape`` is large.
 
-This method may struggle to do the right thing for more complicated
-propagations, but it is very well tested and should be the default choice for
-propagations including:
+    The above example can be rewritten to use :func:`wavefront.insert` instead:
 
-* Propagating from a |Pupil| to an |Image| or |Detector| plane
-* Propagating from a |Pupil| to an |Image| or |Detector| plane including
-  additional :class:`~lentil.Tilt` planes or other
-  :ref:`user_guide.planes.transformations`
-* Propagating from a |Pupil| to an |Image| or |Detector| plane including
-  :ref:`user_guide.planes.dispersive`.
+    .. code-block:: python
 
-When using :func:`~lentil.propagate`, the propagation is defined by the following
-arguments:
+        for wl in wavelengths:
+            w = lentil.Wavefront(wl)
+            w *= pupil
+            w.propagate_image(pixelscale=5e-6, npix=64, oversample=5)
+            img = w.insert(img)
 
-* :attr:`planes` - a list of |Plane| objects representing an unfolded optical system
-* :attr:`wave` - the propagation wavelength. A single value results in a monochromatic
-  propagation. If a list of wavelengths are provided, multiple monochromatic propagations
-  will be run - once for each wavelength in ``wave``. used for the propagation.
-* :attr:`weight` - the weight associated with each wavelength in :attr:`wave`. Note that
-  weights can be either relative or absolute depending on the use case.
 
-Additional arguments provide further customization of the propagation behavior:
-
-* :attr:`npix` - the shape of the result.
-* :attr:`npix_prop` - the shape of the propagation result. Note that if
-  ``npix_prop`` is not specified, Lentil uses the value provided for ``npix``.
-* :attr:`oversample` - the number of times to oversample the output plane. See the
-  sectionon :ref:`user_guide.diffraction.sampling` for more details.
-* :attr:`rebin` - specifies whether to return the output plane to its native sampling or
-  return the oversampled result.
-* :attr:`fit_tilt` - specifies the tilt handling strategy. See
-  :ref:`user_guide.diffraction.tilt` for more details.
-* :attr:`min_q` - specifies the minimum allowable propagation sampling term :math:`q`.
-  Planes may be resampled as needed to satisfy ``min_q``. If ``min_q = 0`` (default),
-  no resampling is done. See :ref:`user_guide.diffraction.sampling` for more details.
-* :attr:`flatten` - specifies whether to collapse wavelength-specific output planes to a
-  single array or return a 3D cube of results
 
 .. _user_guide.diffraction.npix:
 

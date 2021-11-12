@@ -36,14 +36,14 @@ class Plane:
 
     pixelscale : float or (2,) array_like, optional
         Physical sampling of each pixel in the plane. If ``pixelscale`` is a
-        git scalar, uniform sampling in x and y is assumed. If None (default),
+        scalar, uniform sampling in x and y is assumed. If None (default),
         ``pixelscale`` is undefined.
     """
     def __init__(self, amplitude=1, phase=0, mask=None, pixelscale=None):
         # We directly set the local attributes here in case a subclass has redefined
         # the property (which could cause an weird behavior and will throw an
         # AttributeError if the subclass hasn't defined an accompanying getter
-        self._pixelscale = () if pixelscale is None else lentil.helper.sanitize_shape(pixelscale)
+        self._pixelscale = () if pixelscale is None else lentil.sanitize_shape(pixelscale)
         self._amplitude = np.asarray(amplitude)
         self._phase = np.asarray(phase)
         self._mask = np.asarray(mask) if mask is not None else None
@@ -155,7 +155,7 @@ class Plane:
 
     @pixelscale.setter
     def pixelscale(self, value):
-        self._pixelscale = lentil.helper.sanitize_shape(value)
+        self._pixelscale = lentil.sanitize_shape(value)
 
     @property
     def tilt(self):
@@ -432,11 +432,12 @@ class Plane:
 
         """
         pixelscale = lentil.field.multiply_pixelscale(self.pixelscale, wavefront.pixelscale)
+        shape = wavefront.shape if self.shape == () else self.shape
         out = lentil.Wavefront(wavelength=wavefront.wavelength,
                                pixelscale=pixelscale,
                                planetype=wavefront.planetype,
                                focal_length=wavefront.focal_length,
-                               shape=self.shape,
+                               shape=shape,
                                data=[])
 
         for field in wavefront.data:

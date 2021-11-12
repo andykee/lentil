@@ -2,7 +2,7 @@ import sys
 from itertools import combinations
 import numpy as np
 
-import lentil.helper
+import lentil
 
 
 class Field:
@@ -55,7 +55,7 @@ class Field:
     @pixelscale.setter
     def pixelscale(self, value):
         if value is not None:
-            self._pixelscale = lentil.helper.sanitize_shape(value)
+            self._pixelscale = lentil.sanitize_shape(value)
         else:
             self._pixelscale = ()
 
@@ -166,7 +166,7 @@ class Field:
         for tilt in self.tilt:
             x, y = tilt.shift(xs=x, ys=y, z=z, wavelength=wavelength)
 
-        pixelscale = lentil.helper.sanitize_shape(pixelscale)
+        pixelscale = lentil.sanitize_shape(pixelscale)
         out = x/pixelscale[0] * oversample, y/pixelscale[1] * oversample
 
         if indexing == 'ij':

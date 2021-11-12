@@ -16,7 +16,7 @@ class Wavefront:
     wavelength : float
         Wavelength in meters
     pixelscale : float, optional
-        Wavefront array spatial sampling
+        Physical sampling of wavefront
     shape : (2,) array_like, optional
         Wavefront shape. If ``shape`` is None (default), the wavefront is
         assumed to be infinite (broadcastable to any shape).
@@ -34,7 +34,7 @@ class Wavefront:
                  data=None, focal_length=None):
 
         self.wavelength = wavelength
-        self._pixelscale = () if pixelscale is None else lentil.helper.sanitize_shape(pixelscale)
+        self._pixelscale = () if pixelscale is None else lentil.sanitize_shape(pixelscale)
         self.shape = () if shape is None else shape
 
         if data is None:
@@ -53,14 +53,16 @@ class Wavefront:
 
     @property
     def pixelscale(self):
+        """Physical sampling of the wavefront"""
         return self._pixelscale
 
     @pixelscale.setter
     def pixelscale(self, value):
-        self._pixelscale = lentil.helper.sanitize_shape(value)
+        self._pixelscale = lentil.sanitize_shape(value)
 
     @property
     def field(self):
+        """Wavefront complex field"""
         out = np.zeros(self.shape, dtype=complex)
         for field in self.data:
             out = lentil.field.insert(field, out)
@@ -68,6 +70,7 @@ class Wavefront:
 
     @property
     def intensity(self):
+        """Wavefront intensity"""
         out = np.zeros(self.shape, dtype=float)
         for field in lentil.field.reduce(*self.data):
             out = lentil.field.insert(field, out, intensity=True)
@@ -75,6 +78,28 @@ class Wavefront:
 
     def copy(self):
         return copy.deepcopy(self)
+
+    def insert(self, out, intensity=False, weight=1):
+        """Directly insert wavefront intensity data into an output array.
+
+        This method can avoid repeatedly allocating large arrays of zeros
+        when accumulating :attr:`intensity`.
+
+        Parameters
+        ----------
+        out : ndarray
+            Array to insert wavefront data into
+        weight : float
+            Scale factor applied to wavefront data
+
+        Returns
+        -------
+        out : ndarray
+            Array with wavefront data inserted into it at the appropriate location
+        """
+        for field in lentil.field.reduce(*self.data):
+            out = lentil.field.insert(field, out, intensity=True, weight=weight)
+        return out
 
     def propagate_image(self, pixelscale, npix, npix_prop=None, oversample=2):
         """Propagate the Wavefront from a Pupil to an Image plane using
@@ -104,13 +129,13 @@ class Wavefront:
         if self.planetype != 'pupil':
             raise ValueError("Wavefront must have planetype 'pupil'")
 
-        npix = np.asarray(lentil.helper.sanitize_shape(npix))
-        pixelscale = np.asarray(lentil.helper.sanitize_shape(pixelscale))
-        npix_prop = npix if npix_prop is None else np.asarray(lentil.helper.sanitize_shape(npix_prop))
+        npix = np.asarray(lentil.sanitize_shape(npix))
+        pixelscale = np.asarray(lentil.sanitize_shape(pixelscale))
+        npix_prop = npix if npix_prop is None else np.asarray(lentil.sanitize_shape(npix_prop))
         prop_shape = npix_prop * oversample
 
         out = Wavefront(wavelength=self.wavelength, data=[],
-                        pixelscale=pixelscale*oversample, shape=npix*oversample,
+                        pixelscale=pixelscale/oversample, shape=npix*oversample,
                         planetype='image')
 
         for field in self.data:

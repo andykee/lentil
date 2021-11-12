@@ -24,8 +24,6 @@ from lentil.plane import (
 	Flip
 )
 
-from lentil.propagate import propagate
-
 from lentil import radiometry
 
 from lentil import util
@@ -41,7 +39,10 @@ from lentil.util import (
 	rebin,
 	rescale,
 	pixelscale_nyquist,
-	normalize_power
+	min_sampling,
+	normalize_power,
+	sanitize_shape,
+	sanitize_bandpass
 )
 
 from lentil.wavefront import Wavefront

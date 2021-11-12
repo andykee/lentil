@@ -19,26 +19,8 @@ def mesh(shape, shift=(0, 0)):
 def gaussian2d(size, sigma):
     """2D Gaussian kernel."""
     x, y = np.meshgrid(np.linspace(-1, 1, size), np.linspace(-1, 1, size))
-
     G = np.exp(-((x**2/(2*sigma**2)) + (y**2/(2*sigma**2))))
     return G/np.sum(G)
-
-
-def sanitize_shape(shape):
-    shape = np.asarray(shape)
-    if shape.size == 0:
-        shape = ()
-    else:
-        if shape.shape == ():
-            shape = np.append(shape, shape)
-    return tuple(shape)
-
-
-def sanitize_bandpass(vec):
-    vec = np.asarray(vec)
-    if vec.shape == ():
-        vec = vec[np.newaxis, ...]
-    return vec
 
 
 def dft_alpha(dx, du, wave, z, oversample):
