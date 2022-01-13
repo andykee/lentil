@@ -258,7 +258,7 @@ class Plane:
         """
         return copy.deepcopy(self)
 
-    def fit_tilt(self, inplace=True):
+    def fit_tilt(self, inplace=False):
         """
         Fit and remove tilt from Plane :attr:`phase` via least squares. The
         equivalent angular tilt is bookkept in Plane :attr:`tilt`.
@@ -307,7 +307,7 @@ class Plane:
 
         return plane
 
-    def rescale(self, scale, inplace=True):
+    def rescale(self, scale, inplace=False):
         """
         Rescale a plane via interpolation.
 
@@ -325,8 +325,8 @@ class Plane:
             Scale factor for interpolation. Scale factors less than 1 shrink the
             Plane while scale factors greater than 1 grow it.
         inplace : bool, optional
-            Modify the original object in place (True, default) or create a
-            copy (False).
+            Modify the original object in place (True) or create a copy (False,
+            default)
 
         Returns
         -------
@@ -363,7 +363,7 @@ class Plane:
                 plane.mask = lentil.rescale(plane.mask, scale=scale, shape=None, mask=None, order=0,
                                             mode='constant', unitary=False)
             else:
-                plane.mask = np.asarray([lentil.rescale(mask, scale=scale, shape=None, mask=None, 
+                plane.mask = np.asarray([lentil.rescale(mask, scale=scale, shape=None, mask=None,
                                                         order=0, mode=constant, unitary=False)
                                          for mask in plane.mask])
             # mask[mask < np.finfo(mask.dtype).eps] = 0
@@ -375,7 +375,7 @@ class Plane:
 
         return plane
 
-    def resample(self, pixelscale, inplace=True):
+    def resample(self, pixelscale, inplace=False):
         """Resample a plane via interpolation.
 
         The following Plane attributes are resampled:
@@ -391,8 +391,8 @@ class Plane:
         pixelscale : float
             Desired Plane pixelscale.
         inplace : bool, optional
-            Modify the original object in place (True, default) or create a
-            copy (False).
+            Modify the original object in place (True) or create a copy (False,
+            default)
 
         Returns
         -------
