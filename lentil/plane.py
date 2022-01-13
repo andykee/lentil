@@ -836,7 +836,7 @@ class Tilt(Plane):
         super().__init__()
 
         self.x = y  # y tilt is about the x-axis.
-        self.y = x  # x tilt is about the y axis.
+        self.y = x  # x tilt is about the y-axis.
 
     def multiply(self, wavefront):
         wavefront = super().multiply(wavefront)
