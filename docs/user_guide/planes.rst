@@ -1,9 +1,10 @@
-.. _user-guide.planes:
+.. _user_guide.planes:
 
 .. |Plane| replace:: :class:`~lentil.Plane`
 .. |Pupil| replace:: :class:`~lentil.Pupil`
 .. |Image| replace:: :class:`~lentil.Image`
 .. |Detector| replace:: :class:`~lentil.Detector`
+.. |Wavefront| replace:: :classL`~lentil.Wavefront`
 
 *****************
 Specifying planes
@@ -33,7 +34,7 @@ models:
   is optimized to very efficiently compute intensity from a complex field.
 
 In addition, several "utility" planes are provided. These planes do not represent
-physical components of an optical system, but are used to implement commonly seen
+physical components of an optical system, but are used to implement commonly encountered
 optical effects:
 
 * The :class:`~lentil.Tilt` is used to represent wavefront tilt in terms of radians
@@ -41,8 +42,6 @@ optical effects:
 * The :class:`~lentil.Rotate` plane rotates a wavefront by an arbitrary angle.
 * The :class:`~lentil.Flip` plane flips a wavefront about its x, y, or both x and y
   axes.
-
-Finally, some special purpose planes are described in :ref:`user_guide.planes.dispersive`.
 
 Plane
 =====
@@ -61,15 +60,14 @@ plane. A plane is defined by the following parameters:
   masks inserted along the first dimension. If mask is not provided, it is automatically
   created as needed from the nonzero values in :attr:`~lentil.Plane.amplitude`.
 
-  .. image:: /_static/img/segmask.png
-    :width: 550px
-    :align: center
+.. plot:: _img/python/segmask.py
+    :scale: 50
 
 * :attr:`~lentil.Plane.pixelscale` - Defines the physical sampling of each pixel in
   the above attributes. A simple example of how to calculate the pixelscale for a
   discretely sampled circular aperture is given below:
 
-  .. image:: /_static/img/propagate_sampling.png
+  .. image:: /_static/img/pixelscale.png
     :width: 450px
     :align: center
 
@@ -81,31 +79,50 @@ plane. A plane is defined by the following parameters:
 
 Create a new Plane with
 
-.. code-block:: pycon
+.. plot::
+    :include-source:
+    :scale: 50
 
-    >>> p = lentil.Plane(amplitude=lentil.util.circle((256,256), 128))
-    >>> plt.imshow(p.amplitude)
-
-.. image:: /_static/img/circle_amplitude.png
-    :width: 300px
+    >>> import matplotlib.pyplot as plt
+    >>> import lentil
+    >>> p = lentil.Plane(amplitude=lentil.util.circle((256,256), 120))
+    >>> plt.imshow(p.amplitude, origin='lower')
 
 Once a Plane is defined, its attributes can be modified at any time:
 
-.. code-block:: pycon
+.. plot::
+    :include-source:
+    :scale: 50
 
-    >>> p.phase = 2e-6 * lentil.zernike.zernike(aperture.mask, index=4)
-    >>> plt.imshow(p.phase)
+    >>> import matplotlib.pyplot as plt
+    >>> import lentil
+    >>> p = lentil.Plane(amplitude=lentil.util.circle((256,256), 120))
+    >>> p.phase = 2e-6 * lentil.zernike(p.mask, index=4)
+    >>> plt.imshow(p.phase, origin='lower')
 
-.. image:: /_static/img/circle_focus.png
-    :width: 300px
 
 Resampling or rescaling a Plane
 -------------------------------
+It is possible to resample a plane using either the :func:`~lentil.Plane.resample`
+or :func:`~lentil.Plane.rescale` methods. Both methods use intrepolation to
+resample the amplitude, phase, and mask attributes and readjust the pixelscale
+attribute as necessary. The default behavior is to perform this interpolation
+on a copy of the plane, but it is possible to operate in-place by setting
+``inplace=True``.
 
 .. _user_guide.planes.fit_tilt:
 
 Fitting and removing Plane tilt
 -------------------------------
+The plane's :func:`~lentil.Plane.fit_tilt` method performs a least squares fit to
+estimate and remove tilt from the phase attribute. The tilt removed from the phase
+attribute is accounted for by appending an equivalent :class:`~lentil.Tilt` object
+to the plane's :attr:`~lentil.Plane.tilt` attribute. The default behavior is to
+perform this operation on a copy of the plane, but it is possible to operate
+in-place by setting ``inplace=True``.
+
+See :ref:`user_guide.diffraction.tilt` for additional information on when to use
+this method.
 
 Pupil
 =====
@@ -209,83 +226,96 @@ pointing error).
 
 Given the following |Pupil| and |Detector| planes:
 
-.. code-block:: pycon
+.. plot::
+    :include-source:
+    :scale: 50
 
-    >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 128),
-    ...                      focal_length=10, pixelscale=1/256)
-    >>> detector = lentil.Detector(pixelscale=5e-6, shape=(1024, 1024))
-    >>> psf = lentil.propagate([pupil, detector], wave=650e-9, npix=(64, 64))
-    >>> plt.imshow(psf, origin='lower')
+    >>> import matplotlib.pyplot as plt
+    >>> import lentil
+    >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 120),
+    ...                      focal_length=10, pixelscale=1/250)
+    >>> w = lentil.Wavefront(650e-9)
+    >>> w *= pupil
+    >>> w = w.propagate_image(pixelscale=5e-6, npix=(64,64), oversample=2)
+    >>> plt.imshow(w.intensity, origin='lower')
 
-.. image:: /_static/img/psf_64.png
-    :width: 300px
+It is simple to see the effect of introducing a tilted wavefront into the system:
 
-it is simple to see the effect of introducing a tilted wavefront into the system:
+.. plot::
+    :include-source:
+    :scale: 50
 
-.. code-block:: pycon
-
+    >>> import matplotlib.pyplot as plt
+    >>> import lentil
+    >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 120),
+    ...                      focal_length=10, pixelscale=1/250)
     >>> tilt = lentil.Tilt(x=10e-6, y=-5e-6)
-    >>> psf = lentil.propagate([tilt, pupil, detector], wave=650e-9, npix=(64, 64))
-    >>> plt.imshow(psf, origin='lower')
+    >>> w = lentil.Wavefront(650e-9)
+    >>> w *= pupil
+    >>> w *= tilt
+    >>> w = w.propagate_image(pixelscale=5e-6, npix=(64,64), oversample=2)
+    >>> plt.imshow(w.intensity, origin='lower')
 
-.. image:: /_static/img/psf_64_tilt.png
-    :width: 300px
+.. .. _user_guide.planes.transformations:
 
-.. _user_guide.planes.transformations:
+.. Plane transformations
+.. =====================
+.. The plane transformation examples below are used to modify the following image:
 
-Plane transformations
-=====================
-The plane transformation examples below are used to modify the following image:
-
-.. code-block:: pycon
-
-    >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 128),
-    ...                      focal_length=10, pixelscale=1/256)
-    >>> detector = lentil.Detector(pixelscale=5e-6, shape=(1024, 1024))
-    >>> psf = lentil.propagate([pupil, detector], wave=650e-9, npix=(128, 128))
-    >>> plt.imshow(psf, origin='lower')
+.. .. code-block:: pycon
+..
+..     >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 128),
+..     ...                      focal_length=10, pixelscale=1/256)
+..     >>> detector = lentil.Detector(pixelscale=5e-6, shape=(1024, 1024))
+..     >>> psf = lentil.propagate([pupil, detector], wave=650e-9, npix=(128, 128))
+..     >>> plt.imshow(psf, origin='lower')
 
 
-.. image:: /_static/img/psf_coma.png
-    :width: 300px
+.. .. image:: /_static/img/psf_coma.png
+..     :width: 300px
 
-Rotate
-------
-:class:`~lentil.Rotate` can be used to rotate a Wavefront by an arbitrary amount:
+.. Rotate
+.. ------
+.. :class:`~lentil.Rotate` can be used to rotate a Wavefront by an arbitrary amount:
 
-.. code-block:: pycon
+.. .. code-block:: pycon
 
-    >>> rotation = lentil.Rotate(angle=30, unit='degrees')
-    >>> psf = lentil.propagate([pupil, rotation, detector], wave=650e-9, npix=(128, 128))
-    >>> plt.imshow(psf, origin='lower')
+..     >>> rotation = lentil.Rotate(angle=30, unit='degrees')
+..     >>> psf = lentil.propagate([pupil, rotation, detector], wave=650e-9, npix=(128, 128))
+..     >>> plt.imshow(psf, origin='lower')
 
-.. image:: /_static/img/psf_coma_rotate.png
-    :width: 300px
+.. .. image:: /_static/img/psf_coma_rotate.png
+..     :width: 300px
 
-Flip
-----
-:class:`~lentil.Flip` can be used to flip a Wavefront about its axes:
+.. Flip
+.. ----
+.. :class:`~lentil.Flip` can be used to flip a Wavefront about its axes:
 
-.. code-block:: pycon
+.. .. code-block:: pycon
 
-    >>> flip = lentil.Flip(axis=1)
-    >>> psf = lentil.propagate([pupil, flip, detector], wave=650e-9, npix=(128, 128))
-    >>> plt.imshow(psf, origin='lower')
+..     >>> flip = lentil.Flip(axis=1)
+..     >>> psf = lentil.propagate([pupil, flip, detector], wave=650e-9, npix=(128, 128))
+..     >>> plt.imshow(psf, origin='lower')
 
-.. image:: /_static/img/psf_coma_flip.png
-    :width: 300px
+.. .. image:: /_static/img/psf_coma_flip.png
+..     :width: 300px
 
-.. _user_guide.planes.dispersive:
+.. _user_guide.planes.special:
 
-Dispersive optics
-=================
-Dispersion is most commonly seen in an optical system as a wavelength-dependent phase
-change. In some cases, like with a grating or prism, dispersion is used to achieve some
-desired optical effect. In other cases, dispersion causes an unwanted chromatic
-aberration.
+Specialized planes
+==================
 
-Lentil provides two classes for representing the effects of dispersion:
-:class:`~lentil.DispersivePhase` and :class:`~lentil.DispersiveShift`.
+Grism
+-----
+A grism is a combination of a diffraction grating and a prism that creates a dispersed
+spectrum normal to the optical axis. This is in contrast to a single grating or prism,
+which creates a dispersed spectrum at some angle that deviates from the optical axis.
+Grisms are most commonly used to create dispersed spectra for slitless spectroscopy or
+to create interference fringes for dispersed fringe sensing.
+
+Lentil's :class:`~lentil.Grism` plane provides a straightforward mechanism for
+efficiently modeling a grism.
+
 
 Active optics and deformable mirrors
 ====================================
@@ -306,15 +336,15 @@ provided below. Additional examples can be found in Model Patterns under
     class TipTiltMirror(lentil.Plane):
 
         def __init__(self):
-            self.amplitude = lentil.util.circle((256,256),128)
+            self.amplitude = lentil.circle((256,256),120)
 
             self.x = np.zeros(2)
 
             # Note that we set normalize=False so that each mode spans [-1, 1] and then
             # multiply by 0.5 so that each mode has peak-valley = 1
-            self._infl_fn = 0.5 * lentil.zernike.zernike_basis(mask=self.amplitude,
-                                                               modes=[2,3],
-                                                               normalize=False)
+            self._infl_fn = 0.5 * lentil.zernike_basis(mask=self.amplitude,
+                                                       modes=[2,3],
+                                                       normalize=False)
 
         @property
         def phase(self):
@@ -327,14 +357,22 @@ provided below. Additional examples can be found in Model Patterns under
     >>> plt.imshow(tt.phase)
     >>> plt.colorbar()
 
-.. image:: /_static/img/circle_tilt.png
-    :width: 350px
+.. plot::
+    :scale: 50
+
+    import matplotlib.pyplot as plt
+    import lentil
+
+    mask = lentil.circlemask((256,256), 120)
+    phase = lentil.zernike_compose(mask, [0, 1e-6, 3e-6], normalize=False)
+
+    im = plt.imshow(phase, origin='lower')
+    plt.colorbar(im, fraction=0.046, pad=0.04)
 
 Customizing Plane
 =================
 The Plane class or any of the classes derived from Plane can be subclassed to modify
-any of the default Plane behavior. Reasons to do this may include but are not limited
-to:
+any of the default behavior. Reasons to do this may include but are not limited to:
 
 * Dynamically computing the :attr:`~lentil.Plane.phase` attribute
 * Changing the Plane-Wavefront interaction by redefining the `Plane.multiply()` method
@@ -404,17 +442,43 @@ provide a stateful phase attribute:
         def phase(self):
             return lentil.zernike_compose(self.mask, self.x)
 
+.. note::
 
-Customizing Plane.multiply()
-----------------------------
+    Polychromatic or broadband diffraction propagations access the phase, amplitude,
+    and mask attributes for each propagatioon wavelength. Because these attributes
+    remain fixed during a propagation, it is inefficient to repeatedly recompute
+    them. To mitigate this, it can be very useful to provide a mechanism for freezing
+    these dynamic attributes. There are many ways to do this. One approach is provided
+    below:
 
-Customizing other Plane methods
--------------------------------
-Any of the |Plane| methods with the exception of :func:`~lentil.Plane.multiply` (see
-above) can be redefined in a subclass without restriction.
+    .. code-block:: python3
+
+        import copy
+        import numpy as np
+        import lentil
+
+        class CustomPlane(lentil.Plane):
+            def __init__(self):
+                self.mask = lentil.circlemask((256,256), 128)
+                self.amplitude = lentil.circle((256,256), 128)
+
+            @property
+            def phase(self):
+                return lentil.zernike_compose(self.mask, np.random.random(10))
+
+            def freeze(self):
+                # Return a copy of CustomPlane with the phase attribute redefined
+                # to be a static copy of the phase when freeze() is called
+                out = copy.deepcopy(self)
+                out.phase = self.phase.copy()
+                return out
 
 
-
+Customizing Plane methods
+-------------------------
+Any of the |Plane| methods can be redefined in a subclass without restriction. Care
+should be taken to ensure any redefined methods return data compatible with the
+parent method's return type to preserve compatibility within Lentil.
 
 
 .. Lenslet Arrays

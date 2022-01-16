@@ -13,16 +13,13 @@ Lentil uses Fourier transform-based algorithms to numerically model the propagat
 electromagnetic field through an optical system. The electromagnetic field is represented
 by a |Wavefront| object which stores the complex amplitude of the field at a discretely
 sampled grid of points. The optical system is represented by a set of user-defined |Plane|
-objects which interact with the wavefront as it propagates through the system.
+objects which the wavefront interacts with as it propagates through the system.
 
 .. note::
 
     This section of the User Guide assumes an undergraduate-level understanding of
     physical and Fourier optics. In-depth mathematical background and an extensive
     discussion of the validity of each diffraction approximation is available in [1]_.
-
-How Wavefront works
-===================
 
 
 Numerical diffraction propagation
@@ -40,17 +37,17 @@ follows the same basic flow:
 
     .. code-block:: pycon
 
-        >>> w1 = lentil.Wavefront(wavelength=500e-9)
+        >>> w1 = lentil.Wavefront(wavelength=650e-9)
         >>> w1.field
         1+0j
         >>> w1.focal_length
         inf
 
 2. **Propagate the wavefront through the first plane in the optical system** - the
-   planes that describe an optical system typically change a propagating wavefront
+   planes that describe an optical system typically modify a propagating wavefront
    in some way. By multiplying a |Wavefront| and a |Plane| together, a new
-   |Wavefront| is returned representing the state of the complex field after
-   propagating through the plane:
+   |Wavefront| is returned representing the the complex field after propagating
+   through the plane:
 
     .. code-block:: pycon
 
@@ -63,8 +60,20 @@ follows the same basic flow:
 
     .. code-block:: pycon
 
-        >>> plt.imshow(np.abs(w2.field))
+        >>> plt.imshow(np.abs(w2.field), origin='lower')
 
+    .. plot::
+        :context: reset
+        :scale: 50
+
+        import matplotlib.pyplot as plt
+        import lentil
+
+        pupil = lentil.Pupil(amplitude=lentil.circle((256, 256), 120),
+                             pixelscale=1/240, focal_length=10)
+        w1 = lentil.Wavefront(650e-9)
+        w2 = w1 * pupil
+        plt.imshow(np.abs(w2.field), origin='lower')
 
     Additionally, because ``w2`` was propagated through a |Pupil| plane, it has inherited the
     pupil's focal length:
@@ -83,7 +92,7 @@ follows the same basic flow:
 
     .. note::
 
-        Additional details on the plane-wavefront interaction are given in
+        Additional details on the plane-wavefront interaction can be found in
         :ref:`user_guide.optical_systems.plane_wavefront`.
 
 3. **Propagate the wavefront to the next plane in the optical system** - the |Wavefront|
@@ -112,12 +121,15 @@ follows the same basic flow:
 
    For example, to propagate a |Wavefront| from a |Pupil| to an |Image| plane:
 
-   .. code-block:: pycon
+    .. plot::
+        :context: close-figs
+        :include-source:
+        :scale: 50
 
         >>> w3 = w2.propagate_image(pixelscale=5e-6, npix=64, oversample=5)
-        >>> plt.imshow(w3.intensity)
+        >>> plt.imshow(w3.intensity**0.1, origin='lower')
 
-   .. note::
+    .. note::
 
         When propagating between like planes (pupil to pupil or image to image),
         no additional propagation step is required.
@@ -126,28 +138,34 @@ follows the same basic flow:
    are required to model the desired optical system, steps 2 and 3 should be
    repeated until the |Wavefront| has been propagated through all of the planes.
 
-Polychromatic or broadband propagations
----------------------------------------
+Broadband (multi-wavelength) propagations
+-----------------------------------------
 The steps outlined above propagate a single monochromatic |Wavefront| through an
-optical system. The example below performs the same operation for a number of
+optical system. The example below performs the same operation for multiple
 different wavelengths and accumulates the resulting image plane intensity:
 
-.. code-block:: python
+.. plot::
+    :context: reset
+    :scale: 50
+    :include-source:
 
+    import matplotlib.pyplot as plt
     import numpy as np
     import lentil
 
     pupil = lentil.Pupil(amplitude=lentil.circle((256, 256), 120),
                          pixelscale=1/240, focal_length=10)
 
-    wavelengths = [450e-9, 500e-9, 550e-9, 600e-9, 650e-9]
+    wavelengths = np.arange(450, 650, 10)*1e-9
     img = np.zeros((320,320))
 
     for wl in wavelengths:
         w = lentil.Wavefront(wl)
         w *= pupil
-        w.propagate_image(pixelscale=5e-6, npix=64, oversample=5)
+        w = w.propagate_image(pixelscale=5e-6, npix=64, oversample=5)
         img += w.intensity
+
+    plt.imshow(img**0.1, origin='lower')
 
 Keep in mind the output ``img`` array must be sized to accommodate the oversampled
 wavefront intensity given by ``npix`` * ``oversample``.
@@ -186,7 +204,7 @@ appropriate location in the (potentially larger) output plane when a |Wavefront|
 :attr:`~lentil.Wavefront.field` or :attr:`~lentil.Wavefront.intensity`
 attribute is accessed.
 
-.. image:: /_static/img/propagate_npix_chip.png
+.. image:: /_static/img/propagate_npix_prop.png
     :width: 450px
     :align: center
 
@@ -194,9 +212,8 @@ It can be advantageous to specify ``npix_prop`` < ``npix`` for performance
 reasons, although care must be taken to ensure needed data is not accidentally
 left out:
 
-.. image:: /_static/img/npix_prop.png
-    :width: 500px
-    :align: center
+.. plot:: _img/python/npix_prop.py
+    :scale: 50
 
 For most pupil to image plane propagations, setting ``npix_prop`` to 128 or 256
 pixels provides an appropriate balance of performance and propagation plane size.
@@ -231,13 +248,11 @@ sampling requirements.
 Sampling considerations
 =======================
 
-.. image:: /_static/img/discrete_Q_sweep.png
-    :width: 800px
-    :align: center
+.. plot:: _img/python/dft_discrete_Q_sweep.py
+    :scale: 50
 
-.. image:: /_static/img/q_sweep.png
-    :width: 800px
-    :align: center
+.. plot:: _img/python/dft_q_sweep.py
+    :scale: 50
 
 
 .. image:: /_static/img/propagate_fourier_period.png

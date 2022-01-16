@@ -141,29 +141,29 @@ def zernike_compose(mask, coeffs, normalize=True, rho=None, theta=None):
     --------
     Compute a random OPD using the first ten Zernikes:
 
-    .. code:: pycon
+    .. plot::
+        :scale: 50
+        :include-source:
+        :context: reset
 
-        >>> import numpy as np
         >>> import matplotlib.pyplot as plt
+        >>> import numpy as np
         >>> import lentil
-        >>> mask = lentil.circlemask((256,256), 128)
+        >>> mask = lentil.circlemask((256,256), 120)
         >>> coeffs = np.random.rand(10)*1e-8
-        >>> opd = lentil.zernike.zernike_compose(mask, coeffs)
-        >>> plt.imshow(opd)
-
-    .. image:: /_static/img/api/zernike/zernike_compose_1.png
-        :width: 300px
+        >>> opd = lentil.zernike_compose(mask, coeffs)
+        >>> plt.imshow(opd, origin='lower')
 
     Using the same mask, compute an OPD representing 200 nm focus error (Z4) and -100 nm
     astigmatism error (Z6):
 
-    .. code:: pycon
+    .. plot::
+        :context: close-figs
+        :include-source:
+        :scale: 50
 
-        >>> opd = mo.zernike.zernike_compose(mask, [0, 0, 0, 200e-9, 0, -100e-9])
-        >>> plt.imshow(opd)
-
-    .. image:: /_static/img/api/zernike/zernike_compose_2.png
-        :width: 300px
+        >>> opd = lentil.zernike_compose(mask, [0, 0, 0, 200e-9, 0, -100e-9])
+        >>> plt.imshow(opd, origin='lower')
 
     References
     ----------
@@ -276,8 +276,8 @@ def zernike_fit(opd, mask, modes, normalize=True, rho=None, theta=None):
         >>> import lentil
         >>> mask = lentil.circlemask((256,256),128)
         >>> coeffs = np.random.rand(4)*100e-9
-        >>> opd = lentil.zernike.zernike_compose(mask, coeffs)
-        >>> fit_coeffs = lentil.zernike.zernike_fit(opd, mask, np.arange(2,4))
+        >>> opd = lentil.zernike_compose(mask, coeffs)
+        >>> fit_coeffs = lentil.zernike_fit(opd, mask, np.arange(2,4))
         >>> print('Tip/tilt coefficients:', coeffs[1:3])
         >>> print('Fit tip/tilt coefficients:', fit_coeffs)
 

@@ -1,6 +1,28 @@
 Release notes
 =============
 
+v0.6.0
+------
+Released Deecember, 2021
+
+* Entirely new appropach to how diffraction propagations are performed
+
+  * New ``propagate_image()`` method for propagating between Pupil and
+    Image planes
+  
+  * Deprecate ``propagate()`` method
+    
+  * Include negative sign in complex phasor complex exponential
+
+* Wavefront complex field data is now managed using a new internal Field 
+  class
+* Standardize around (row, col) aka. ij indexing
+* New methods for Plane resampling (``Plane.resample()``) and rescaling
+  (``Plane.rescale()``)
+* Relocate contents of ``zerenike``, ``wfe``, ``convolvable``, and ``util`` 
+  modules to the core ``lentil`` namespace
+* Allow floating pooint plane masks, which are cast to bool
+
 v0.5.0
 ------
 Released August 13, 2021

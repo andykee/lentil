@@ -17,17 +17,37 @@ Lentil to a Numpy array.
     For :class:`~lentil.Pupil` planes, the :attr:`~lentil.Pupil.phase` attribute represents the optical
     path difference (OPD) relative to the pupil's reference sphere.
 
+Lentil adopts the convention that a positive phase or OPD leads an ideal reference
+wavefront and a negative phase or OPD lags an ideal reference wavefront. From the
+figure below, a positive phase or OPD produces a negative aberration (focus, in the
+case of the figure) while a negative phase or OPD produces a positive aberration.
+
+.. image:: /_static/img/focus_direction.png
+    :width: 450px
+    :align: center
+
+
 Static Errors
 =============
 Lentil can use static error maps from a multitude of formats, provided you can get the
-data into Python. The simplest example is using data stored in a `.npy` file:
+data into Python. Common file formats are .npy or .fits files. Here we load an .npy file
+containing the JWST NITCam static wavefront error:
+
+.. NIRCam pixelscale is 0.031 arcsec/px = 1.5029E-7 rad/px
+.. rad = arcsec * (2*pi)/1296000
+.. IFOV = 2*arctan(d/(2*f))
+.. f = 18e-6/(2*np.tan(0.5*1.5029e-7))
 
 .. code-block:: pycon
 
     >>> import numpy as np
     >>> import lentil
-    >>> phase = np.load('/path/to/phase.npy')
-    >>> pupil = lentil.Pupil(focal_length=10, pixelscale=1/100, phase=phase)
+    >>> phase = np.load('path/to/nircam.npy')
+    >>> pupil = lentil.Pupil(focal_length=119.77, pixelscale=6.6035/1024, phase=phase)
+
+.. image:: /_static/img/nircam.png
+    :scale: 50
+    :align: center
 
 Zernike Polynomials
 ===================
@@ -42,32 +62,31 @@ Wavefront error maps are easily computed using either the :func:`~lentil.zernike
 :func:`~lentil.zernike_compose` functions. For example, we can represent 100 nm of focus over a
 circular aperture with :func:`~lentil.zernike`:
 
-.. code-block:: pycon
+.. plot::
+    :include-source:
+    :scale: 50
 
     >>> import matplotlib.pyplot as plt
     >>> import lentil
-    >>> mask = le.circlemask((256,256), 128)
+    >>> mask = lentil.circlemask((256,256), 120)
     >>> z4 = 100e-9 * lentil.zernike(mask, index=4)
-    >>> plt.imshow(z4)
+    >>> plt.imshow(z4, origin='lower')
 
-.. image:: /_static/img/circle_focus.png
-    :width: 300px
 
 Any combination of Zernike polynomials can be combined by providing a list of coefficients
 to the :func:`~lentil.zernike_compose` function. For example, we can represent 200 nm of
 focus and -100 nm of astigmatism as:
 
-.. code-block:: pycon
+.. plot::
+    :include-source:
+    :scale: 50
 
     >>> import matplotlib.pyplot as plt
     >>> import lentil
-    >>> mask = lentil.circlemask((256,256), 128)
+    >>> mask = lentil.circlemask((256,256), 120)
     >>> coefficients = [0, 0, 0, 200e-9, 0, -100e-9]
     >>> z = lentil.zernike_compose(mask, coefficients)
-    >>> plt.imshow(z)
-
-.. image:: /_static/img/api/zernike/zernike_compose_2.png
-    :width: 300px
+    >>> plt.imshow(z, origin='lower')
 
 Note that the coefficients list is ordered according to the Noll indexing scheme so the
 first entry in the list represents piston, the second represents, tilt, and so on.
@@ -82,41 +101,39 @@ Note that in this case we are only computing the Zernike modes we intend to use 
 indices 4 and 6) so now the first entry in ``coefficients`` corresponds to focus and the
 second corresponds to astigmatism.
 
-.. code-block:: pycon
+.. plot::
+    :include-source:
+    :scale: 50
 
     >>> import matplotlib.pyplot as plt
     >>> import numpy as np
     >>> import lentil
-    >>> mask = lentil.circlemask((256,256), 128)
+    >>> mask = lentil.circlemask((256,256), 120)
     >>> coefficients = [200e-9, -100e-9]
     >>> basis = lentil.zernike_basis(mask, modes=(4,6))
     >>> z = np.einsum('ijk,i->jk', basis, coefficients)
-    >>> plt.imshow(z)
-
-.. image:: /_static/img/api/zernike/zernike_compose_2.png
-    :width: 300px
+    >>> plt.imshow(z, origin='lower')
 
 If you don't love ``einsum``, it's possible to achieve the same result with Numpy's
 `tensordot <https://numpy.org/doc/stable/reference/generated/numpy.tensordot.html>`_:
 
-.. code-block:: pycon
+.. plot::
+    :include-source:
+    :scale: 50
 
     >>> import matplotlib.pyplot as plt
     >>> import numpy as np
     >>> import lentil
-    >>> mask = lentil.circlemask((256,256), 128)
+    >>> mask = lentil.circlemask((256,256), 120)
     >>> coefficients = [200e-9, -100e-9]
     >>> basis = lentil.zernike_basis(mask, modes=(4,6))
     >>> z = np.tensordot(basis, coefficients, axes=(0,0))
-    >>> plt.imshow(z)
-
-.. image:: /_static/img/api/zernike/zernike_compose_2.png
-    :width: 300px
+    >>> plt.imshow(z, origin='lower')
 
 Normalization
 -------------
 Each of Lentil's Zernike functions accepts a ``normalize`` parameter. If ``normalize``
-is flase (the default), the raw Zernike mode is returned. Each mode will approximately
+is False (the default), the raw Zernike mode is returned. Each mode will approximately
 span [-1 1] although this shouldn't be relied upon because of the discrete sampling of
 the result. If ``normalize`` is true, the Zernike mode will be normalized so that its
 standard deviation equals 1.
@@ -163,25 +180,29 @@ This is accomplished by using :func:`~lentil.zernike_coordinates` to compute ``r
 example, if we have an off-centered sub-aperture but wish to compute focus relative to
 the center of the defined array:
 
-.. code-block:: pycon
+.. plot::
+    :include-source:
+    :scale: 50
 
     >>> import matplotlib.pyplot as plt
     >>> import lentil
     >>> mask = lentil.circlemask((256,256), radius=50, shift=(0,60))
-    >>> rho, theta = lentil.zernike_coordinates(mask, shift=(0,0))
+    >>> rho, theta = lentil.zernike_coordinates(mask, shift=(0,60))
     >>> z4 = lentil.zernike(mask, 4, rho=rho, theta=theta)
-    >>> plt.imshow(z4)
+    >>> plt.imshow(z4, origin='lower')
 
 If we wish to align a tilt mode with one side of a hexagon:
 
-.. code-block:: pycon
+.. plot::
+    :include-source:
+    :scale: 50
 
     >>> import matplotlib.pyplot as plt
     >>> import lentil
-    >>> mask = lentil.hexagon((256,256), radius=128)
-    >>> rho, theta = lentil.zernike_coordinates(mask, shift=(0,0), rotate=60)
+    >>> mask = lentil.hexagon((256,256), radius=120)
+    >>> rho, theta = lentil.zernike_coordinates(mask, shift=(0,0), rotate=30)
     >>> z2 = lentil.zernike(mask, 2, rho=rho, theta=theta)
-    >>> plt.imshow(z2)
+    >>> plt.imshow(z2, origin='lower')
 
 Sensitivity Matrices
 ====================
@@ -225,17 +246,17 @@ are typically small in magnitude and are commonly expressed through their power
 spectral density (PSD). The :func:`~lentil.power_spectrum` function computes random
 wavefront error map given a PSD:
 
-.. code-block:: pycon
+.. plot::
+    :include-source:
+    :scale: 50
 
+    >>> import matplotlib.pyplot as plt
     >>> import lentil
-    >>> mask = lentil.circle((256, 256), 128)
-    >>> w = lentil.power_spectrum(mask, pixelscale=1/100, rms=25e-9, half_power_freq=8,
+    >>> mask = lentil.circle((256, 256), 120)
+    >>> w = lentil.power_spectrum(mask, pixelscale=1/120, rms=25e-9, half_power_freq=8,
     ...                           exp=3)
-    >>> plt.imshow(w)
+    >>> plt.imshow(w, origin='lower')
 
-
-.. image:: /_static/img/power_spectrum_wfe.png
-    :width: 350px
 
 .. Chromatic Aberrations
 .. =====================

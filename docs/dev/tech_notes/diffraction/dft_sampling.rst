@@ -19,7 +19,7 @@ where
 * :math:`\lambda` is the propagation wavelength
 * :math:`z` is the propagation distance
 
-The accuracy of a numerical diffraction simulation depends on adequately sampling the 
+The accuracy of a numerical diffraction simulation depends on adequately sampling the
 input and output planes. The sections below describe how to select appropriate sampling
 for these planes to avoid the introduction of numerical artifacts.
 
@@ -34,20 +34,20 @@ is Nyquist-sampled for intensity:
 
     Q = \frac{\lambda \ F/\#}{du}
 
-High-frequency ailiasing is clearly apparent in propagations where :math:`Q < 1.5` and 
+High-frequency ailiasing is clearly apparent in propagations where :math:`Q < 1.5` and
 still visibile to those with a keen eye when :math:`1.5 < Q < 2`:
 
-.. image:: /_static/img/discrete_Q_sweep.png
-    :width: 800px
-    :align: center
+.. plot:: _img/python/dft_discrete_Q_sweep.py
+    :scale: 50
+
 
 In cases where the system :math:`Q` is less than 2, the propagation fidelity should
 be increased by oversampling to avoid ailiasing. For a given imaging system, the system's
-:math:`F/\#`, focal plane sampling :math:`du`, and propagation wavelength(s) 
-:math:`\lambda` will be fixed values. As a result, :math:`Q` can only be increased in a 
-discrete propagation by introducing an ``oversample`` factor that effectively decreases 
-the output plane sampling :math:`du`. In order to view the results of a propagation at 
-native system sampling, the oversampled output plane must be resampled or rebinned. 
+:math:`F/\#`, focal plane sampling :math:`du`, and propagation wavelength(s)
+:math:`\lambda` will be fixed values. As a result, :math:`Q` can only be increased in a
+discrete propagation by introducing an ``oversample`` factor that effectively decreases
+the output plane sampling :math:`du`. In order to view the results of a propagation at
+native system sampling, the oversampled output plane must be resampled or rebinned.
 
 .. math::
 
@@ -79,7 +79,5 @@ Avoiding periodic wraparound
 
     \texttt{npix}_{\mbox{DFT}} = \frac{1}{2 \ \alpha \ \ \texttt{oversample}}
 
-
-.. image:: /_static/img/q_sweep.png
-    :width: 800px
-    :align: center
+.. plot:: _img/python/dft_q_sweep.py
+    :scale: 50

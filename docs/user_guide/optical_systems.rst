@@ -88,9 +88,8 @@ That being said, it is advantageous from a performance point of view to supply a
 attribute rather than a flattened 2-dimensional mask when working
 with a segmented aperture, as depicted below:
 
-.. image:: /_static/img/segmask.png
-    :width: 650px
-    :align: center
+.. plot:: _img/python/segmask.py
+    :scale: 50
 
 This modification is not necessary to achieve physically correct propagations, but can
 greatly improve performance. For additional details, see

@@ -1,6 +1,9 @@
 import numpy as np
 import lentil as le
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+mpl.rcParams['figure.figsize'] = (6.5, 6.5)
 
 diameter = 1
 focal_length = 10
@@ -32,22 +35,20 @@ exp = 0.15
 
 plt.subplot(1,4,1)
 plt.imshow(psf[0]**exp)
-plt.title('$q = 0.325$', fontsize=9)
+plt.title('$q = 0.325$')
 plt.axis('off')
 
 plt.subplot(1,4,2)
 plt.imshow(psf[1]**exp)
-plt.title('$q = 0.65$', fontsize=9)
+plt.title('$q = 0.65$')
 plt.axis('off')
 
 plt.subplot(1,4,3)
 plt.imshow(psf[2]**exp)
-plt.title('$q = 1.3$', fontsize=9)
+plt.title('$q = 1.3$')
 plt.axis('off')
 
 plt.subplot(1,4,4)
 plt.imshow(psf[3]**exp)
-plt.title('$q = 2.6$', fontsize=9)
+plt.title('$q = 2.6$')
 plt.axis('off')
-
-plt.savefig('q_sweep.png', transparent=True, bbox_inches='tight', dpi=300)

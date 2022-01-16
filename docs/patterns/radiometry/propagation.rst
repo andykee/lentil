@@ -3,58 +3,68 @@ Performing Radiometrically Correct Propagations
 
 We'll define a simple pupil, detector, and source object that returns at-aperture
 irradiance in terms of photons/s/m^2. Note we must normalize the amplitude array
-using :func:`~lentil.modeltools.normalize_power` to ensure the source flux is preserved
+using :func:`~lentil.normalize_power` to ensure the source flux is preserved
 through the diffraction propagation.
 
-.. code:: pycon
+.. plot::
+    :context: reset
+    :include-source:
 
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
     >>> import lentil
-    >>> amp = lentil.util.circle((256, 256), 128)
-    >>> amp = lentil.util.normalize_power(amp)
-    >>> pupil = lentil.Pupil(focal_length=10, pixelscale=1/256, amplitude=amp)
-    >>> detector = lentil.Detector(pixelscale=5e-6, shape=(1024,1024))
+    >>> amp = lentil.circle((256, 256), 120)
+    >>> amp = lentil.normalize_power(amp)
+    >>> pupil = lentil.Pupil(focal_length=10, pixelscale=1/240, amplitude=amp)
     >>> source = lentil.radiometry.Spectrum(wave=np.arange(350,701),
     ...                                     value=1e4*np.ones(351),
     ...                                     waveunit='nm', valueunit='photlam')
 
-Now we can call propagate. Note we must provide wavelength in terms of meters and
-multiply the source irradiance by the collecting area to get photons/second.
+Now we can perform the propagation. Note we must provide wavelength in terms of meters
+and multiply the source irradiance by the collecting area to get photons/second.
 
-.. code:: pycon
+.. plot::
+    :include-source:
+    :scale: 50
+    :context: close-figs
 
-    >>> psf = lentil.propagate([pupil, detector],
-    ...                        wave=source.wave*1e-9,
-    ...                        trans=source.value*(np.pi*(pupil.diameter/2)**2),
-    ...                        npix=32)
+    >>> pupil_diameter = 1
+    >>> psf = np.zeros((64, 64))
+    >>> for wl, wt in zip(source.wave, source.value):
+    ...     w = lentil.Wavefront(wl*1e-9)
+    ...     w *= pupil
+    ...     w = w.propagate_image(pixelscale=5e-6, npix=32, oversample=2)
+    ...     psf += (w.intensity * (np.pi*(pupil_diameter/2)**2))
+    >>> plt.imshow(psf, origin='lower')
+
+.. code-block:: pycon
+
     >>> print('Source flux: ', np.floor(np.sum(psf)), 'photons/second')
     Source flux: 2730045.0 photons/second
 
-    >>> plt.imshow(psf)
+We can significantly increase the performance of the propagation by pre-binning the
+source flux. This preserves the integrated power of the source, but will wash out any
+fine features present in the source's spectral response.
 
-.. image:: ../../_static/img/psf_32.png
-    :width: 300px
-
-We can increase the performance of the propagation by pre-binning the source flux. This
-preserves the integrated power of the source, but will wash out any fine features
-present in the source's spectral response.
-
-.. code:: pycon
+.. plot::
+    :context: close-figs
+    :include-source:
+    :scale: 50
 
     >>> binned_wave = np.arange(350, 701, 50)
-    >>> binned_flux = source.bin(binned_wave, valueunit=source.valueunit)
-    >>> psf = lentil.propagate([pupil, detector],
-    ...                        wave=binned_wave*1e-9,
-    ...                        trans=binned_flux*(np.pi*(pupil.diameter/2)**2),
-    ...                        npix=32)
+    >>> binned_flux = source.bin(binned_wave)
+    >>> psf = np.zeros((64, 64))
+    >>> for wl, wt in zip(binned_wave, binned_flux):
+    ...     w = lentil.Wavefront(wl*1e-9)
+    ...     w *= pupil
+    ...     w = w.propagate_image(pixelscale=5e-6, npix=32, oversample=2)
+    ...     psf += (w.intensity * (np.pi*(pupil_diameter/2)**2))
+    >>> plt.imshow(psf, origin='lower')
+
+.. code-block:: pycon
+
     >>> print('Source flux: ', np.floor(np.sum(psf)), 'photons/second')
     Source flux: 2722236.0 photons/second
-
-    >>> plt.imshow(psf)
-
-.. image:: ../../_static/img/psf_32.png
-    :width: 300px
 
 The resulting images and total flux are very nearly the same, but the binned propagation
 runs 50 times faster.
@@ -95,7 +105,6 @@ runs 50 times faster.
 
 If we would like to render an image as read out by the detector, we add light_flux and
 image methods to the Model class:
-
 
 .. code:: python3
 

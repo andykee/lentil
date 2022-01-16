@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import lentil
 
+import matplotlib as mpl
+mpl.rcParams['figure.figsize'] = (5, 5)
+
 seg = lentil.hexagon((256, 256), 128)
 segmask = [np.zeros((768, 768)) for s in np.arange(6)]
 segmask[0][0:256, 256:512] += seg
@@ -23,7 +26,7 @@ fig = plt.figure()
 
 ax1 = fig.add_subplot(131)
 ax1.imshow(mask)
-ax1.set_title('mask', fontname='monospace', fontsize=9)
+ax1.set_title('mask', fontname='monospace')
 ax1.axis('off')
 
 ax2 = fig.add_subplot(132, projection='3d', proj_type='ortho')
@@ -57,12 +60,9 @@ ax2.contourf(X, Y, segmask[5], 10, zdir='z', offset=offset[0], alpha=alpha, zord
 ax2.plot(xss, yss, offset[0], linewidth=1, color='k', zorder=100)
 
 ax2.axis('off')
-ax2.set_title('segmented_mask', fontname='monospace', fontsize=9)
+ax2.set_title('segmented_mask', fontname='monospace')
 
 ax3 = fig.add_subplot(133)
 ax3.imshow(segmask[0])
-ax3.set_title('segmented_mask[0]', fontname='monospace', fontsize=9)
+ax3.set_title('segmented_mask[0]', fontname='monospace')
 ax3.axis('off')
-
-plt.savefig('../../_static/img/segmask.png', transparent=True, bbox_inches='tight', dpi=300)
-

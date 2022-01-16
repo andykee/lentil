@@ -6,6 +6,7 @@ import scipy.ndimage
 
 import lentil
 
+
 def collect_charge(img, wave, qe, waveunit='nm'):
     """
     Convert photon count (or flux) to electron count (or flux) by
@@ -573,18 +574,17 @@ def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, alpha_flux=4e9
 
     Example
     -------
-    Simulate the cosmic ray hits for a 300 second exposure over a 256 x 256 detector
+    Simulate the cosmic ray hits for a 2000 second exposure over a 256 x 256 detector
     patch with 5 um x 5 um x 3 um pixels:
 
-    .. code:: pycon
+    .. plot::
+        :scale: 50
+        :include-source:
 
         >>> import matplotlib.pyplot as plt
         >>> import lentil
-        >>> cosmic_frame = lentil.detector.cosmic_rays((256,256), (5e-6, 5e-6, 3e-6), 300)
-        >>> plt.imshow(cosmic_frame)
-
-    .. image:: /_static/img/api/detector/cosmic_ray.png
-        :width: 300px
+        >>> cosmic_frame = lentil.detector.cosmic_rays((256,256), (5e-6, 5e-6, 3e-6), 2000)
+        >>> plt.imshow(cosmic_frame, origin='lower')
 
     References
     ----------

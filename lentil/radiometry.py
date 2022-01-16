@@ -462,7 +462,7 @@ class Spectrum:
 
         Two different first/last bin edge methods are available:
 
-        .. image:: /_static/img/api/radiometry/spectrum_bin.png
+        .. image:: /_static/img/spectrum_bin.png
 
         ========= =============================================== ==================================================================================
         ends      Left edge for ``wave[0]``                       Right edge for ``wave[-1]``
@@ -948,18 +948,18 @@ class Blackbody(Spectrum):
     Create a Blackbody object with wavelength range 400-4000 nm and a temperature of
     4000K:
 
-    .. code:: pycon
+    .. plot::
+        :include-source:
+        :scale: 50
 
-        >>> import numpy as np
         >>> import matplotlib.pyplot as plt
-        >>> import lentil as mo
+        >>> import numpy as np
+        >>> import lentil
         >>> wave = np.arange(400,4000)
         >>> temp = 5000
-        >>> src = mo.radiometry.Blackbody(wave,temp,waveunit='nm')
+        >>> src = lentil.radiometry.Blackbody(wave,temp,waveunit='nm')
         >>> plt.plot(src.wave, src.value), plt.grid()
-
-    .. image:: /_static/img/api/radiometry/blackbody.png
-        :width: 400px
+        >>> plt.xlabel('Wavelength [nm]'), plt.ylabel('Flux [photons/sec/m^2]')
 
     """
     def __init__(self, wave, temp, waveunit='nm', valueunit='photlam'):
@@ -1022,20 +1022,20 @@ class Blackbody(Spectrum):
         Create a Blackbody object with wavelength range 400-900 nm, a temperature of
         4000K, and a visible magnitude of 2:
 
-        .. code:: pycon
+        .. plot::
+            :scale: 50
+            :include-source:
 
-            >>> import numpy as np
             >>> import matplotlib.pyplot as plt
-            >>> import lentil as mo
+            >>> import numpy as np
+            >>> import lentil
             >>> wave = np.arange(400,900)
             >>> temp = 5000
             >>> mag = 2
             >>> band = 'V'  # Chosen for best overlap with wavelength range
-            >>> src = mo.radiometry.Blackbody.vegamag(wave,temp,mag,band,waveunit='nm')
+            >>> src = lentil.radiometry.Blackbody.vegamag(wave,temp,mag,band,waveunit='nm')
             >>> plt.plot(src.wave, src.value), plt.grid()
-
-        .. image:: /_static/img/api/radiometry/blackbody_vegamag.png
-            :width: 400px
+            >>> plt.xlabel('Wavelength [nm]'), plt.ylabel('Flux [photons/sec/m^2]')
 
         Notes
         -----

@@ -7,4 +7,4 @@ Getting started
 
     install
     overview
-    tutorials/index
+    quickstart

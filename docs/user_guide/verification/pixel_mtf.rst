@@ -5,18 +5,23 @@ Pixel MTF
 The following code snippet compares the results of a numerical simulation using Lentil
 with the analytic result for the same imaging system:
 
-.. code-block:: python3
+.. plot::
+    :scale: 50
+    :include-source:
 
     import numpy as np
     import matplotlib.pyplot as plt
     import lentil
 
+    import matplotlib as mpl
+    mpl.rcParams['figure.figsize'] = (6, 3)
+
     # Define some system parameters
     diameter = 1
-    focal_length = 5
+    focal_length = 10
     f_number = focal_length/diameter
     du = 5e-6
-    wave = 550e-9
+    wave = 650e-9
 
     cutoff_freq = 1/(f_number*wave)  # cycles/m
     cutoff_freq_mm = cutoff_freq/1e3  # cycles/mm
@@ -43,7 +48,7 @@ with the analytic result for the same imaging system:
 
     # Compute the analytical pixel MTF
     f_px = mtf_axis_px
-    f_px[0] = 1e-15  # We have to cheat a little to avoid a divide
+    f_px[0] = 1e-15  # We have to cheat a little to avoid a divide by zero
     mtf_px = np.abs(np.sin(np.pi*f_px)/(np.pi*f_px))
 
     # The system MTF is just the product of the optical and pixel MTFs
@@ -53,18 +58,19 @@ with the analytic result for the same imaging system:
     npix_pup_rad = npix/2
     npix_pup_diam = npix_pup_rad * 2
     dx = diameter/npix_pup_diam
-    amp = lentil.util.circle((npix,npix),npix_pup_rad)
+    amp = lentil.circle((npix, npix), npix_pup_rad)
     alpha = (dx*du)/(wave*focal_length*oversample)
 
-    # Compute the optical MTF from a Lentil-generated PSF
     psf = np.abs(lentil.fourier.dft2(amp, alpha, npix=npix)**2)
     psf = psf/np.max(psf)
+
+    # Compute the optical MTF from a Lentil-generated PSF
     mtf_optics_lentil = np.abs(np.fft.fft2(psf))
     mtf_optics_lentil = mtf_optics_lentil/np.max(mtf_optics_lentil)
     mtf_optics_lentil = mtf_optics_lentil[0,0:mtf_optics_lentil.shape[0]//2]
 
-    # Now apply Lentil's pixellation method and compute the system MTF
-    psf_px = lentil.convolvable.pixel(psf, oversample=oversample)
+    # Now apply Lentil's pixel model and compute the system MTF
+    psf_px = lentil.detector.pixel(psf, oversample=oversample)
     mtf_sys_lentil = np.abs(np.fft.fft2(psf_px))
     mtf_sys_lentil = mtf_sys_lentil/np.max(mtf_sys_lentil)
     mtf_sys_lentil = mtf_sys_lentil[0,0:mtf_sys_lentil.shape[0]//2]
@@ -72,11 +78,9 @@ with the analytic result for the same imaging system:
     plt.plot(mtf_axis_px, mtf_optics, label='optics')
     plt.plot(mtf_axis_px, mtf_px, label='pixel')
     plt.plot(mtf_axis_px, mtf_sys, label='system')
-    plt.plot(mtf_axis_px, mtf_sys_lentil, 'o', label='pixelated model')
+    plt.plot(mtf_axis_px[0::2], mtf_sys_lentil[0::2],
+             'o', color='dimgray', label='numerical model')
     plt.xlabel('cycles/px')
     plt.ylabel('MTF')
-    plt.legend(prop={'size': 12})
-
-.. image:: /_static/img/pixel_mtf.png
-    :width: 90%
-    :align: center
+    plt.legend()
+    plt.grid()

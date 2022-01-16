@@ -31,25 +31,25 @@ def jitter(img, scale, pixelscale=1, oversample=1):
 
     Examples
     --------
-    Apply 2 pixels jitter to a natively-sampled PSF:
+    Apply 2 pixels jitter to a 5x oversmapled PSF:
 
     .. code:: pycon
 
         >>> import lentil
         >>> import matplotlib.pyplot as plt
         >>> psf = ...  # PSF calculation details omitted
-        >>> psf_jitter = lentil.jitter(psf, scale=2)
+        >>> psf_jitter = lentil.jitter(psf, scale=2, oversample=5)
         >>> plt.subplot(121), plt.imshow(psf)
         >>> plt.subplot(122), plt.imshow(psf_jitter)
 
-    .. image:: /_static/img/api/convolvable/jitter_px.png
-        :width: 500px
+    ..plot:: _img/python/jitter.py
+        :scale: 50
 
-    Apply 20 um jitter to a 3x oversampled PSF. Note that because we are
+    Apply 10 um jitter to a 5x oversampled PSF. Note that because we are
     specifying jitter in terms of linear distance on the focal plane, we must
-    provide the detector pixelscale when creating the Jitter object. We also
-    provide the oversampling factor, ensuring the convolution kernel is
-    appropriately sized:
+    provide the detector pixelscale when applying the Jitter. We also provide
+    the oversampling factor, ensuring the convolution kernel is appropriately
+    sized:
 
     .. code:: pycon
 
@@ -57,14 +57,14 @@ def jitter(img, scale, pixelscale=1, oversample=1):
         >>> import matplotlib.pyplot as plt
         >>> psf = ...  # PSF calculation details omitted
         >>> psf_jitter = lentil.jitter(psf,
-        ...                            scale=20e-6,
+        ...                            scale=10e-6,
         ...                            pixelscale=5e-6,
-        ...                            oversample=3)
+        ...                            oversample=5)
         >>> plt.subplot(121), plt.imshow(psf)
         >>> plt.subplot(122), plt.imshow(psf_jitter)
 
-    .. image:: /_static/img/api/convolvable/jitter_m.png
-        :width: 500px
+    .. plot:: _img/python/jitter.py
+        :scale: 50
 
     References
     ----------
@@ -117,40 +117,37 @@ def smear(img, distance, angle=None, pixelscale=1, oversample=1):
 
     Examples
     --------
-    Apply 100 um smear at 60 degrees to a natively-sampled PSF. Note that
+    Apply 25 pixels smear at 30 degrees to a 5x oversampled PSF:
+
+    .. code:: pycon
+
+        >>> import matplotlib.pyplot as plt
+        >>> import lentil
+        >>> psf = ...  # PSF calculation details omitted
+        >>> psf_smear = lentil.smear(psf, distance=25,
+        ...                          angle=30)
+        >>> plt.subplot(121), plt.imshow(psf)
+        >>> plt.subplot(122), plt.imshow(psf_smear)
+
+    .. plot:: _img/python/smear_directional.py
+        :scale: 50
+
+    Apply 50 um smear at a random angle to a 5x oversampled PSF. Note that
     because we are specifying smear in terms of linear distance on the focal
-    plane, we must provide the detector pixelscale when creating the Smear
-    object:
+    plane, we must also provide the detector pixelscale:
 
     .. code:: pycon
 
         >>> import lentil
         >>> import matplotlib.pyplot as plt
         >>> psf = ...  # PSF calculation details omitted
-        >>> psf_smear = lentil.smear(psf,
-        ...                          distance=100e-6,
-        ...                          angle=30,
-        ...                          pixelscale=5e-6)
+        >>> psf_smear = lentil.smear(psf, distance=5e-5,
+        ...                          pixelscale=5e-6, oversample=5)
         >>> plt.subplot(121), plt.imshow(psf)
         >>> plt.subplot(122), plt.imshow(psf_smear)
 
-    .. image:: /_static/img/api/convolvable/smear_m.png
-        :width: 500px
-
-    Apply 10 pixels smear at a random angle to a 3x oversampled PSF:
-
-    .. code:: pycon
-
-        >>> import lentil
-        >>> import matplotlib.pyplot as plt
-        >>> psf = ...  # PSF calculation details omitted
-        >>> psf_smear = lentil.smear(psf, distance=10,
-        ...                          oversample=3)
-        >>> plt.subplot(121), plt.imshow(psf)
-        >>> plt.subplot(122), plt.imshow(psf_smear)
-
-    .. image:: /_static/img/api/convolvable/smear_px.png
-        :width: 500px
+    .. plot:: _img/python/smear.py
+        :scale: 50
 
     References
     ----------
@@ -168,7 +165,7 @@ def smear(img, distance, angle=None, pixelscale=1, oversample=1):
     else:
         angle = np.radians(angle)
 
-    yy_rot = -np.sin(angle) * yy + np.cos(angle) * xx
+    yy_rot = np.sin(angle) * yy + np.cos(angle) * xx
 
     kernel = np.sinc(yy_rot * (distance / pixelscale) * oversample)
 

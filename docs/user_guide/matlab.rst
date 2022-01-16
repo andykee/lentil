@@ -2,11 +2,6 @@
 Using Lentil with MATLAB
 ************************
 
-.. contents::
-    :local:
-    :depth: 1
-
-
 MATLAB Lentil Interface
 =======================
 
@@ -27,6 +22,8 @@ convert back and forth between NumPy arrays and MATLAB matrices:
 * `mat2ndarray <../_static/matlab/mat2ndarray.m>`_
 * `ndarray2mat <../_static/matlab/ndarray2mat.m>`_
 
+It's also possible to read and write `.npy` files in MATLAB with `npy-matlab
+<https://github.com/kwikteam/npy-matlab>`_
 
 Interacting directly with Lentil from MATLAB
 --------------------------------------------
