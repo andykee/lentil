@@ -317,4 +317,4 @@ Differences for segmented apertures
 
 
 
-.. [1] Goodman, *Introduction to Fourier Optics*.:w
+.. [1] Goodman, *Introduction to Fourier Optics*.

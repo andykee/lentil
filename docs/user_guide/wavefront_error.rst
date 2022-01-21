@@ -17,15 +17,39 @@ Lentil to a Numpy array.
     For :class:`~lentil.Pupil` planes, the :attr:`~lentil.Pupil.phase` attribute represents the optical
     path difference (OPD) relative to the pupil's reference sphere.
 
+Sign conventions
+================
 Lentil adopts the convention that a positive phase or OPD leads an ideal reference
 wavefront and a negative phase or OPD lags an ideal reference wavefront. From the
-figure below, a positive phase or OPD produces a negative aberration (focus, in the
-case of the figure) while a negative phase or OPD produces a positive aberration.
+figure below, a positive phase or OPD produces a negative aberration (focus, in this
+case) while a negative phase or OPD produces a positive aberration.
 
 .. image:: /_static/img/focus_direction.png
     :width: 450px
     :align: center
 
+Tip/tilt
+--------
+A positive x-tilt rotates the yz plane counter-clockwise about the x-axis resulting in
+vertical image plane motion in the negative y direction. A positive y-tilt rotates the
+xz plane counter-clockwise about the y-axis resulting in horizontal image plane motion
+in the positive x direction.
+
+.. plot:: _img/python/tilt_images.py
+    :scale: 50
+
+Focus
+-----
+A positive focus has the effect of shifting the image plane in front of focus while a
+negative focus has the effect of shifting the image plane behind focus. We can test this
+by observing +/- defocused point spread functions of an imaging system with an
+asymmetric exit pupil (for example, in the shape of the letter P). We expect the
+negative focus image to have the same orientation as the exit pupil (consistent with
+being observed before focus) and the positive focus image to be flipped about both axes
+relative to the exit pupil (consistent with being observed after passing through focus).
+
+.. plot:: _img/python/focus_images.py
+    :scale: 50
 
 Static Errors
 =============
