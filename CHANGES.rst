@@ -3,25 +3,33 @@ Release notes
 
 v0.6.0
 ------
-Released Deecember, 2021
+Released January 21, 2022
 
-* Entirely new appropach to how diffraction propagations are performed
+* Entirely new approach to how diffraction propagations are performed:
 
   * New ``propagate_image()`` method for propagating between Pupil and
     Image planes
-  
-  * Deprecate ``propagate()`` method
-    
+
+  * Deprecate core ``propagate()`` method
+
   * Include negative sign in complex phasor complex exponential
 
-* Wavefront complex field data is now managed using a new internal Field 
+* Wavefront complex field data is now managed using a new internal Field
   class
 * Standardize around (row, col) aka. ij indexing
 * New methods for Plane resampling (``Plane.resample()``) and rescaling
   (``Plane.rescale()``)
-* Relocate contents of ``zerenike``, ``wfe``, ``convolvable``, and ``util`` 
+* Collapse Plane segmask and mask functionality `#24`_
+* Allow in-place operations on Wavefront `#38`_
+* Relocate contents of ``zerenike``, ``wfe``, ``convolvable``, and ``util``
   modules to the core ``lentil`` namespace
-* Allow floating pooint plane masks, which are cast to bool
+* Allow floating point plane masks, which are automatically cast to bool
+* Documentation updates
+* Extend unit test coverage slightly
+* Switch to GitHub Actions for unit testing and code coverage
+
+.. _#24: https://github.com/andykee/lentil/issues/24
+.. _#38: https://github.com/andykee/lentil/issues/38
 
 v0.5.0
 ------
@@ -47,11 +55,11 @@ Released August 13, 2021
 * New function ``fourier.expc()`` to more quickly compute a complex exponential
 * ``fourier.dft2()`` now accepts an offset parameter
 * New function ``Plane.fit_tilt()`` to handle tilt fitting and removal of in the
-  Plane's ``phase`` attribute. This is now called once 
+  Plane's ``phase`` attribute. This is now called once
 * New function ``Plane.slice()`` for computing avaliable slices from the plane
   attributes to speed up propagation performance
 * New ``Detector()`` plane that returns intensity
-* Update ``zernike.zernike_coordinates()`` to automatically compute shift that 
+* Update ``zernike.zernike_coordinates()`` to automatically compute shift that
   locates the origin at the mask centroid if no shift is provided.
 
 v0.4.1
