@@ -46,7 +46,10 @@ class Wavefront:
         self.planetype = planetype
 
     def __mul__(self, plane):
-        return plane.multiply(self)
+        return plane.multiply(self, inplace=False)
+
+    def __imul__(self, plane):
+        return plane.multiply(self, inplace=True)
 
     def __rmul__(self, other):
         return self.__mul__(other)
@@ -101,7 +104,8 @@ class Wavefront:
             out = lentil.field.insert(field, out, intensity=True, weight=weight)
         return out
 
-    def propagate_image(self, pixelscale, npix, npix_prop=None, oversample=2):
+    def propagate_image(self, pixelscale, npix, npix_prop=None, oversample=2,
+                        inplace=True):
         """Propagate the Wavefront from a Pupil to an Image plane using
         Fraunhofer diffraction.
 
@@ -119,43 +123,58 @@ class Wavefront:
             npix_prop cannot be larger than npix.
         oversample : int, optional
             Number of times to oversample the output plane. Default is 2.
+        inplace : bool, optional
+            If True (default) the wavefront is propagated in-place, otherwise
+            a copy is created and propagated.
 
         Returns
         -------
         wavefront : :class:`~lentil.Wavefront`
-            A new Wavefront propagated to the specified image plane
+            A Wavefront propagated to the specified image plane
 
         """
         if self.planetype != 'pupil':
             raise ValueError("Wavefront must have planetype 'pupil'")
 
         npix = np.asarray(lentil.sanitize_shape(npix))
-        pixelscale = np.asarray(lentil.sanitize_shape(pixelscale))
         npix_prop = npix if npix_prop is None else np.asarray(lentil.sanitize_shape(npix_prop))
         prop_shape = npix_prop * oversample
 
-        out = Wavefront(wavelength=self.wavelength, data=[],
-                        pixelscale=pixelscale/oversample, shape=npix*oversample,
-                        planetype='image')
+        dx = self.pixelscale
+        du = np.asarray(lentil.sanitize_shape(pixelscale))
+        z = self.focal_length
+        data = self.data
 
-        for field in self.data:
+        if inplace:
+            out = self
+            out.data = []
+            out.pixelscale = du / oversample
+            out.shape = npix * oversample
+            out.focal_length = np.inf
+            out.planetype = 'image'
+        else:
+            out = Wavefront(wavelength=self.wavelength, data=[],
+                            pixelscale=du/oversample, shape=npix*oversample,
+                            planetype='image')
+
+        for field in data:
             # compute the field shift from any embedded tilts. note the return value
             # is specified in terms of (r, c)
-            shift = field.shift(z=self.focal_length, wavelength=self.wavelength,
-                                pixelscale=pixelscale, oversample=oversample,
+            shift = field.shift(z=z, wavelength=self.wavelength,
+                                pixelscale=du, oversample=oversample,
                                 indexing='ij')
 
             fix_shift = np.fix(shift)
             dft_shift = shift - fix_shift
 
             if _overlap(prop_shape, fix_shift, out.shape):
-                alpha = lentil.helper.dft_alpha(dx=self.pixelscale, du=pixelscale,
-                                                wave=self.wavelength, z=self.focal_length,
+                alpha = lentil.helper.dft_alpha(dx=dx, du=du,
+                                                wave=self.wavelength, z=z,
                                                 oversample=oversample)
                 data = lentil.fourier.dft2(f=field.data, alpha=alpha,
                                            npix=prop_shape, shift=dft_shift,
                                            offset=field.offset, unitary=True)
-                out.data.append(Field(data=data, pixelscale=pixelscale/oversample,
+                out.data.append(Field(data=data, pixelscale=du/oversample,
                                       offset=fix_shift))
         return out
 

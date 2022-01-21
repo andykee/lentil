@@ -413,14 +413,17 @@ class Plane:
 
         return self.rescale(scale=self.pixelscale[0]/pixelscale, inplace=inplace)
 
-    # TODO: add out=None to actually handle in-place multiplication
-    def multiply(self, wavefront):
+    def multiply(self, wavefront, inplace=False):
         """Multiply with a wavefront
 
         Parameters
         ----------
         wavefront : :class:`~lentil.wavefront.Wavefront` object
             Wavefront to be multiplied
+        inplace : bool, optional
+            If True, the wavefront object is multiplied in-place, otherwise a
+            copy is created before performing the multiplication. Default is
+            False.
 
         Note
         ----
@@ -435,17 +438,25 @@ class Plane:
         """
         pixelscale = lentil.field.multiply_pixelscale(self.pixelscale, wavefront.pixelscale)
         shape = wavefront.shape if self.shape == () else self.shape
-        out = lentil.Wavefront(wavelength=wavefront.wavelength,
-                               pixelscale=pixelscale,
-                               planetype=wavefront.planetype,
-                               focal_length=wavefront.focal_length,
-                               shape=shape,
-                               data=[])
+        data = wavefront.data
 
-        for field in wavefront.data:
+        if inplace:
+            out = wavefront
+            out.data = []
+            out.shape = shape
+            out.pixelscale = pixelscale
+        else:
+            out = lentil.Wavefront(wavelength=wavefront.wavelength,
+                                   pixelscale=pixelscale,
+                                   planetype=wavefront.planetype,
+                                   focal_length=wavefront.focal_length,
+                                   shape=shape,
+                                   data=[])
+
+        for field in data:
             for n, s in enumerate(self.slice):
                 # We have to multiply amplitude[s] by mask[n][s] because the requested
-                # slice of the amplitude array may contain parts of adjaceent segments
+                # slice of the amplitude array may contain parts of adjacent segments
                 mask = self.mask if self.depth == 1 else self.mask[n]
                 amp = self.amplitude if self.amplitude.size == 1 else self.amplitude[s] * mask[s]
                 phase = self.phase if self.phase.size == 1 else self.phase[s]
@@ -554,9 +565,9 @@ class Pupil(Plane):
     def focal_length(self, value):
         self._focal_length = value
 
-    def multiply(self, wavefront):
+    def multiply(self, wavefront, inplace=False):
 
-        wavefront = super().multiply(wavefront)
+        wavefront = super().multiply(wavefront, inplace)
 
         # we inherit the plane's focal length as the wavefront's focal length
         wavefront.focal_length = self.focal_length
@@ -595,8 +606,8 @@ class Image(Plane):
     #     # np.s_[...] = Ellipsis -> returns the whole array
     #     return [np.s_[...]]
 
-    def multiply(self, wavefront):
-        wavefront = super().multiply(wavefront)
+    def multiply(self, wavefront, inplace=False):
+        wavefront = super().multiply(wavefront, inplace)
         wavefront.planetype = 'image'
         return wavefront
 
@@ -627,7 +638,7 @@ class Detector(Image):
 
 class DispersivePhase(Plane):
 
-    def multiply(self, wavefront):
+    def multiply(self, wavefront, inplace=False):
         # NOTE: we can handle wavelength-dependent phase terms here (e.g. chromatic
         # aberrations). Since the phase will vary by wavelength, we can't fit out the
         # tilt pre-propagation and apply the same tilt for each wavelength like we can
@@ -640,8 +651,8 @@ class DispersiveShift(Plane):
     def shift(self, wavelength, x0, y0, **kwargs):
         raise NotImplementedError
 
-    def multiply(self, wavefront):
-        wavefront = super().multiply(wavefront)
+    def multiply(self, wavefront, inplace=False):
+        wavefront = super().multiply(wavefront, inplace=False)
         for field in wavefront.data:
             field.tilt.append(self)
         return wavefront
@@ -835,8 +846,8 @@ class Tilt(Plane):
         self.x = y  # y tilt is about the x-axis.
         self.y = x  # x tilt is about the y-axis.
 
-    def multiply(self, wavefront):
-        wavefront = super().multiply(wavefront)
+    def multiply(self, wavefront, inplace=False):
+        wavefront = super().multiply(wavefront, inplace)
         for field in wavefront.data:
             field.tilt.append(self)
         return wavefront
@@ -892,7 +903,7 @@ class Rotate(Plane):
         self.angle = -angle
         self.order = order
 
-    def multiply(self, wavefront):
+    def multiply(self, wavefront, inplace=False):
         """Multiply with a wavefront
 
         Parameters
@@ -923,8 +934,8 @@ class Rotate(Plane):
             imag = ndimage.rotate(field.imag, angle=self.angle, reshape=False, order=self.order)
             data = real + 1j*imag
 
-            out.data.append(Field(data = data, pixelscale = field.pixelscale,
-                                  offset = field.offset, tilt = field.tilt))
+            out.data.append(Field(data=data, pixelscale=field.pixelscale,
+                                  offset=field.offset, tilt=field.tilt))
         return out
 
 
@@ -943,7 +954,7 @@ class Flip(Plane):
         super().__init__()
         self.axis = axis
 
-    def multiply(self, wavefront):
+    def multiply(self, wavefront, inplace=False):
         """Multiply with a wavefront
 
         Parameters

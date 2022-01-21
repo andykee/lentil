@@ -38,6 +38,16 @@ def test_wavefront_plane_multiply():
     assert np.array_equal(w1.data[0].data, phasor)
 
 
+def test_wavefront_plane_multiply_inplace():
+    p = RandomPlane()
+    w = lentil.Wavefront(650e-9)
+
+    w_copy = p.multiply(w, inplace=False)
+    w_inplace = p.multiply(w, inplace=True)
+
+    assert w_copy is not w
+    assert w_inplace is w
+
 def test_wavefront_plane_multiply_overlapping_segment_slices():
     seg = lentil.hexagon((64, 64), 32)
     seg = seg[5:60, :]

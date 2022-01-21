@@ -124,6 +124,8 @@ in-place by setting ``inplace=True``.
 See :ref:`user_guide.diffraction.tilt` for additional information on when to use
 this method.
 
+.. _user_guide.planes.pupil:
+
 Pupil
 =====
 Lentil's |Pupil| class provides a convenient way to represent a generalized pupil

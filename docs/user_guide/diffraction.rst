@@ -126,8 +126,8 @@ follows the same basic flow:
         :include-source:
         :scale: 50
 
-        >>> w3 = w2.propagate_image(pixelscale=5e-6, npix=64, oversample=5)
-        >>> plt.imshow(w3.intensity**0.1, origin='lower')
+        >>> w2.propagate_image(pixelscale=5e-6, npix=64, oversample=5)
+        >>> plt.imshow(w2.intensity**0.1, origin='lower')
 
     .. note::
 
@@ -137,6 +137,35 @@ follows the same basic flow:
 4. **Repeat steps 2 and 3 until the propagation is complete** - if multiple planes
    are required to model the desired optical system, steps 2 and 3 should be
    repeated until the |Wavefront| has been propagated through all of the planes.
+
+Performing propagations in-place vs. on copies
+----------------------------------------------
+By default, all propagation operations operate on a |Wavefront| in-place. If desired,
+a copy can be returned instead by providing the argument ``inplace=False``:
+
+.. code-block:: python
+    :emphasize-lines: 9
+
+    import matplotlib.pyplot as plt
+    import lentil
+
+    pupil = lentil.Pupil(amplitude=lentil.circle((256, 256), 120),
+                         pixelscale=1/240, focal_length=10)
+
+    w1 = lentil.Wavefront(650e-9)
+    w2 = w1 * pupil
+    w3 = w2.propagate_image(pixelscale=5e-6, npix=64, oversample=5, inplace=False)
+
+    plt.subplot(121)
+    plt.imshow(w2.intensity, origin='lower')
+    plt.title('w2 intensity')
+
+    plt.subplot(122)
+    plt.imshow(w3.intensity**0.1, origin='lower')
+    plt.title('w3 intensity')
+
+.. plot:: _img/python/propagate_copy.py
+    :scale: 50
 
 Broadband (multi-wavelength) propagations
 -----------------------------------------
@@ -162,7 +191,7 @@ different wavelengths and accumulates the resulting image plane intensity:
     for wl in wavelengths:
         w = lentil.Wavefront(wl)
         w *= pupil
-        w = w.propagate_image(pixelscale=5e-6, npix=64, oversample=5)
+        w.propagate_image(pixelscale=5e-6, npix=64, oversample=5)
         img += w.intensity
 
     plt.imshow(img**0.1, origin='lower')
@@ -175,10 +204,10 @@ wavefront intensity given by ``npix`` * ``oversample``.
     Each time ``wavefront.field`` or ``wavefront.intensity`` is accessed, a new Numpy
     array of zeros with shape = ``wavefront.shape`` is allocated. It is possible to
     avoid repeatedly allocating large arrays of zeros when accumulating the result of
-    a broadband propagation by using :func:`wavefront.insert` instead. This can result
+    a broadband propagation by using :func:`Wavefront.insert` instead. This can result
     in significant performance gains, particularly when ``wavefront.shape`` is large.
 
-    The above example can be rewritten to use :func:`wavefront.insert` instead:
+    The above example can be rewritten to use :func:`Wavefront.insert` instead:
 
     .. code-block:: python
 
@@ -187,8 +216,6 @@ wavefront intensity given by ``npix`` * ``oversample``.
             w *= pupil
             w.propagate_image(pixelscale=5e-6, npix=64, oversample=5)
             img = w.insert(img)
-
-
 
 .. _user_guide.diffraction.npix:
 
