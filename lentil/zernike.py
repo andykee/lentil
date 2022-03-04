@@ -103,7 +103,7 @@ def R(m, n, rho):
         R = np.zeros(rho.shape)
         for k in range(int(n-m)//2 + 1):
             Rk = ((-1) ** k * factorial(n-k) /
-                  (factorial(k) * factorial((n+m)/2-k) * factorial((n-m)/2-k)))
+                  (factorial(k) * factorial((n+m)//2-k) * factorial((n-m)//2-k)))
             R += Rk * rho ** (n-2*k)
         return R
 
