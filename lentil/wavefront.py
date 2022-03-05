@@ -82,7 +82,7 @@ class Wavefront:
     def copy(self):
         return copy.deepcopy(self)
 
-    def insert(self, out, intensity=False, weight=1):
+    def insert(self, out, weight=1):
         """Directly insert wavefront intensity data into an output array.
 
         This method can avoid repeatedly allocating large arrays of zeros
