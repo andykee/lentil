@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.ndimage.interpolation import map_coordinates
+from scipy.ndimage import map_coordinates
 import lentil
 
 
