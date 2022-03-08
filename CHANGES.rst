@@ -1,6 +1,20 @@
 Release notes
 =============
 
+v0.7.0
+------
+Released March 7, 2022
+
+* Fix complex amplitude sign flip introduced in `v0.6.0`_
+* Remove unused parameter from ``Wavefront.insert()`` function
+  signature `#42`_
+* Scipy compatibility - Fix Scipy map_coordinates import `#40`_
+* Python 3.9 compatibility - Ensure ``math.factorial()`` always
+  receives an int
+
+.. _#40: https://github.com/andykee/lentil/issues/40
+.. _#42: https://github.com/andykee/lentil/issues/42
+
 v0.6.0
 ------
 Released January 21, 2022

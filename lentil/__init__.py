@@ -3,7 +3,7 @@
 #
 # Copyright (c) 2021, California Institute of Technology ("Caltech"). U.S.
 # Government sponsorship acknowledged.
-__version__ = '0.6.0'
+__version__ = '0.7.0'
 
 from lentil.convolvable import jitter, smear
 
