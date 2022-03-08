@@ -3,7 +3,13 @@ import numpy as np
 
 
 def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=None):
-    """Compute the 2-dimensional discrete Fourier Transform.
+    r"""Compute the 2-dimensional discrete Fourier Transform.
+
+    The DFT is defined in one dimension as
+
+    .. math::
+
+        A_k = \sum_{m=0}^{n-1} a_n \exp \left(-2\pi i\frac{mk}{n}\right) \hspace{3em} k=0, \dots, n-1
 
     This function allows independent control over input shape, output shape,
     and output sampling by implementing the matrix triple product algorithm
@@ -119,7 +125,13 @@ def _dft2_coords(m, n, M, N):
 
 
 def idft2(F, alpha, npix=None, shift=(0,0), unitary=True, out=None):
-    """Compute the 2-dimensional inverse discrete Fourier Transform.
+    r"""Compute the 2-dimensional inverse discrete Fourier Transform.
+
+    The IDFT is defined in one dimension as
+
+    .. math::
+
+        a_m = \frac{1}{n}\sum_{k=0}^{n-1} A_k \exp \left(2\pi i\frac{mk}{n}\right) \hspace{3em} m=0, \dots, n-1
 
     This function allows independent control over input shape, output shape,
     and output sampling by implementing the matrix triple product algorithm

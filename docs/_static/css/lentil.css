@@ -43,6 +43,10 @@ img {
     margin-bottom: 1.125rem;
 }
 
+img.logo {
+    margin-bottom: 0;
+}
+
 :target:before{
     content:"";
     display:block;

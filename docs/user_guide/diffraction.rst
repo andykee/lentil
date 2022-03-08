@@ -270,49 +270,65 @@ The chirp Z-transform provides additional efficiency when transforming large arr
 Lentil selects the most appropriate DFT method automatically based on the plane size and
 sampling requirements.
 
-.. _user_guide.diffraction.sampling:
+.. _user_guide.diffraction.sign:
 
-Sampling considerations
-=======================
+Sign of the DFT complex exponential
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Lentil adopts the convention that phasors rotate in the counter-clockwise
+direction, meaning their time dependence has the form :math:`\exp(-i\omega t)`.
+While this is an arbitrary choice, it matches the choice made in most classic
+optics texts. The implications of this choice are as follows:
 
-.. plot:: _img/python/dft_discrete_Q_sweep.py
-    :scale: 50
-
-.. plot:: _img/python/dft_q_sweep.py
-    :scale: 50
-
-
-.. image:: /_static/img/propagate_fourier_period.png
-    :width: 550px
-    :align: center
-
-.. _user_guide.diffraction.tilt:
-
-Working with large tilts
-========================
-.. image:: /_static/img/propagate_tilt_phase.png
-    :width: 450px
-    :align: center
+* Forward propagations use :func:`lentil.fourier.dft2`, `Numpy's fft2 <https://numpy.org/doc/stable/reference/routines.fft.html#implementation-details>`_,
+  or `FFTW's FFTW_FORWARD <http://fftw.org/fftw3_doc/The-1d-Discrete-Fourier-Transform-_0028DFT_0029.html>`_
+* Backward propagations use :func:`lentil.fourier.idft2`, `Numpy's ifft2 <https://numpy.org/doc/stable/reference/routines.fft.html#implementation-details>`_,
+  or `FFTW's FFTW_BACKWARD <http://fftw.org/fftw3_doc/The-1d-Discrete-Fourier-Transform-_0028DFT_0029.html>`_
+* A converging spherical wave is represented by the expression
+  :math:`\exp\left[-i\frac{k}{2z} (x^2 + y^2)\right]`
+* A diverging spherical wave is represented by the expression
+  :math:`\exp\left[i\frac{k}{2z} (x^2 + y^2)\right]`
 
 
-.. image:: /_static/img/propagate_tilt_phase_wrap.png
-    :width: 650px
-    :align: center
+.. .. _user_guide.diffraction.sampling:
+
+.. Sampling considerations
+.. =======================
+
+.. .. plot:: _img/python/dft_discrete_Q_sweep.py
+..     :scale: 50
+
+.. .. plot:: _img/python/dft_q_sweep.py
+..     :scale: 50
 
 
-.. image:: /_static/img/propagate_tilt_angle.png
-    :width: 600px
-    :align: center
+.. .. image:: /_static/img/propagate_fourier_period.png
+..     :width: 550px
+..     :align: center
 
+.. .. _user_guide.diffraction.tilt:
 
-.. image:: /_static/img/propagate_tilt_angle_steps.png
-    :width: 600px
-    :align: center
+.. Working with large tilts
+.. ========================
+.. .. image:: /_static/img/propagate_tilt_phase.png
+..     :width: 450px
+..     :align: center
 
-.. _user_guide.diffraction.segmented:
+.. .. image:: /_static/img/propagate_tilt_phase_wrap.png
+..     :width: 650px
+..     :align: center
 
-Differences for segmented apertures
-===================================
+.. .. image:: /_static/img/propagate_tilt_angle.png
+..     :width: 600px
+..     :align: center
+
+.. .. image:: /_static/img/propagate_tilt_angle_steps.png
+..     :width: 600px
+..     :align: center
+
+.. .. _user_guide.diffraction.segmented:
+
+.. Differences for segmented apertures
+.. ===================================
 
 
 

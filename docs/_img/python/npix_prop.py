@@ -14,7 +14,7 @@ w1 = w1.propagate_image(pixelscale=5e-6, npix=128, npix_prop=128, oversample=5)
 
 w2 = lentil.Wavefront(wavelength=500e-9)
 w2 *= pupil
-w2 = w2.propagate_image(pixelscale=5e-6, npix=128, npix_prop=48, oversample=5)
+w2 = w2.propagate_image(pixelscale=5e-6, npix=128, npix_prop=40, oversample=5)
 
 plt.subplot(1, 2, 1)
 plt.imshow(w1.intensity, origin='lower')

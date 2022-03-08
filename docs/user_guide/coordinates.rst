@@ -8,26 +8,25 @@ Coordinate system
 .. |Image| replace:: :class:`~lentil.Image`
 
 Lentil adopts the widely used convention of aligning the z-axis along the direction
-of light propagation through an optical system. By the right hand rule, it follows that
-the remaining axes are oriented as shown in the figure below:
+of light propagation through an optical system. For a right-handed coordinate system,
+it follows that the remaining axes are oriented as shown in the figure below:
 
-
-.. image:: /_static/img/coordinate_system.png
+.. image:: /_static/img/coordinate_system_3d.png
     :width: 500px
     :align: center
 
 When viewing a plane in 2D, the z-axis comes out of the screen with the
 positive x-axis pointing to the right and the positive y-axis pointing up.
 
-Lentil also adopts the right hand rule convention for rotations about the coordinate
-system defined above:
+.. image:: /_static/img/coordinate_system_2d.png
+    :width: 225px
+    :align: center
 
-* Rotations in +x rotate the yz plane counter-clockwise about the x-axis
-* Rotations in +y rotate the xz plane counter-clockwise about the y-axis
-* Rotations in +z rotate the xy plane counter-clockwise about the z-axis
+Additional details on the sign conventions for representing wavefront error and
+of the complex exponential in the Fourier kernel are provided below:
 
-.. plot:: _img/python/tilt_images.py
-    :scale: 50
+* :ref:`user_guide.wavefront_error.sign`
+* :ref:`user_guide.diffraction.sign`
 
 .. note::
 

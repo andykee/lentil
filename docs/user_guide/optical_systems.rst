@@ -56,7 +56,7 @@ the wavefront's complex data array:
 
 .. math::
 
-    \mathbf{W_1} = \mathbf{A} \exp(\frac{-2\pi j}{\lambda} \mathbf{\theta}) \circ \mathbf{W_0}
+    \mathbf{W_1} = \mathbf{A} \exp\left(\frac{2\pi j}{\lambda} \mathbf{\theta}\right) \circ \mathbf{W_0}
 
 The plane's :func:`~lentil.Plane.multiply` method also accepts an ``inplace`` argument
 that governs whether the multiplication operation is performed on the wavefront in-place
@@ -112,7 +112,7 @@ with a segmented aperture, as depicted below:
 .. plot:: _img/python/segmask.py
     :scale: 50
 
-This modification is not necessary to achieve physically correct propagations, but can
+This modification is not necessary to achieve accurate propagations, but can
 greatly improve performance. For additional details, see
 :ref:`user_guide.diffraction.segmented`.
 

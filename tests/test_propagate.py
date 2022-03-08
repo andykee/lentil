@@ -230,7 +230,7 @@ def test_propagate_tilt_phase_analytic():
     analytic_shift = ((pupil_tilt/pupil.diameter)*pupil.focal_length/pixelscale) * oversample * 4
 
     # Analytic shift is in terms of (x, y) but we really want (r, c) to match the centroid
-    analytic_shift = -analytic_shift[1], analytic_shift[0]
+    analytic_shift = analytic_shift[1], -analytic_shift[0]
 
     assert np.all((np.abs(shift - analytic_shift)/oversample) < 0.2)
 
@@ -260,7 +260,7 @@ def test_propagate_tilt_angle_analytic():
     analytic_shift = ((pupil_tilt/pupil.diameter)*pupil.focal_length/pixelscale) * oversample * 4
 
     # Analytic shift is in terms of (x, y) but we really want (r, c) to match the centroid
-    analytic_shift = -analytic_shift[1], analytic_shift[0]
+    analytic_shift = analytic_shift[1], -analytic_shift[0]
 
     assert np.all((np.abs(shift - analytic_shift)/oversample) < 0.2)
 

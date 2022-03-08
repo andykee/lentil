@@ -7,7 +7,7 @@ API reference
 *************
 
 This page gives an overview of all public functions, modules, and objects included
-in Lentil. All classes and functions exposed in the ``lentil.*`` namespace are public.
+in Lentil. All classes and functions exposed in the ``lentil`` namespace are public.
 
 Some subpackages are public including ``lentil.radiometry`` and
 ``lentil.detector``.

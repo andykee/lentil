@@ -17,36 +17,41 @@ Lentil to a Numpy array.
     For :class:`~lentil.Pupil` planes, the :attr:`~lentil.Pupil.phase` attribute represents the optical
     path difference (OPD) relative to the pupil's reference sphere.
 
-Sign conventions
-================
-Lentil adopts the convention that a positive phase or OPD leads an ideal reference
-wavefront and a negative phase or OPD lags an ideal reference wavefront. From the
-figure below, a positive phase or OPD produces a negative aberration (focus, in this
-case) while a negative phase or OPD produces a positive aberration.
+.. _user_guide.wavefront_error.sign:
 
-.. image:: /_static/img/focus_direction.png
-    :width: 450px
-    :align: center
+Wavefront error sign convention
+===============================
+For the purposes of representing wavefront errors, Lentil assumes that a
+positive OPD is indicative of a ray traveling farther than the chief ray,
+while a negative ray travels a shorter distance than the chief ray.
 
 Tip/tilt
 --------
-A positive x-tilt rotates the yz plane counter-clockwise about the x-axis resulting in
-vertical image plane motion in the negative y direction. A positive y-tilt rotates the
-xz plane counter-clockwise about the y-axis resulting in horizontal image plane motion
-in the positive x direction.
+A positive x-tilt rotates the yz plane clockwise about the x-axis resulting
+in a shift in the image plane in the positive y direction. A positive y-tilt
+rotates the xz plane clockwise about the y-axis resulting in a shift in the
+image plane in the negative x direction.
 
 .. plot:: _img/python/tilt_images.py
     :scale: 50
 
 Focus
 -----
-A positive focus has the effect of shifting the image plane in front of focus while a
-negative focus has the effect of shifting the image plane behind focus. We can test this
-by observing +/- defocused point spread functions of an imaging system with an
-asymmetric exit pupil (for example, in the shape of the letter P). We expect the
-negative focus image to have the same orientation as the exit pupil (consistent with
-being observed before focus) and the positive focus image to be flipped about both axes
-relative to the exit pupil (consistent with being observed after passing through focus).
+A positive focus has the effect of shifting the focus point beyond the image plane (+z)
+while a negative focus has the effect of shifting the focus point in front of the image
+plane (-z).
+
+.. image:: /_static/img/focus_direction.png
+    :width: 450px
+    :align: center
+
+We can test this by observing +/- defocused point spread functions of an
+imaging system with an asymmetric aperture (for example, in the shape of the letter
+P). We expect the positive focus image to have the same orientation as the aperture
+(consistent with observing the image before coming to focus) and the negative focus
+image to be flipped about both axes relative to the aperture (consistent with
+observing the image after passing through focus). The results of this exercise are
+presented below:
 
 .. plot:: _img/python/focus_images.py
     :scale: 50
@@ -66,7 +71,7 @@ containing the JWST NITCam static wavefront error:
 
     >>> import numpy as np
     >>> import lentil
-    >>> phase = np.load('path/to/nircam.npy')
+    >>> phase = np.load('path/to/nircam_wfe.npy')
     >>> pupil = lentil.Pupil(focal_length=119.77, pixelscale=6.6035/1024, phase=phase)
 
 .. image:: /_static/img/nircam.png
@@ -193,8 +198,8 @@ the discretely sampled mode spans [-0.5 0.5] before multiplying by the error mag
 
     1e-07
 
-Defining custom coordinates
----------------------------
+Defining custom Zernike coordinates
+-----------------------------------
 By default, all of Lentil's Zernike functions place the center of the coordinate system
 at the centroid of the supplied mask with its axes aligned with Lentil's
 :ref:`user_guide.coordinate_system`. This works as expected for the vast majority of
@@ -228,12 +233,14 @@ If we wish to align a tilt mode with one side of a hexagon:
     >>> z2 = lentil.zernike(mask, 2, rho=rho, theta=theta)
     >>> plt.imshow(z2, origin='lower')
 
-Sensitivity Matrices
-====================
-The effects of optical element rigid body perturbations and surface figure errors in the
-exit pupil of an optical system are commonly captured using linear sensitivity matrices.
-These linearized models can be used in place of a full ray-tracing model for representing
-small perturbations and errors. In general, a linear wavefront error model has the form:
+Wavefront Influence Functions
+=============================
+The effects of optical element rigid body perturbations as represented in the
+exit pupil of an optical system are commonly captured using linearized wavefront
+influence functions (also called wavefront sensitivity matrices). These
+linearized models can be used in place of a full ray-tracing model for
+representing small perturbations and errors. In general, a linear wavefront error
+model has the form:
 
 .. math::
 

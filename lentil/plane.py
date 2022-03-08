@@ -362,7 +362,7 @@ class Plane:
                                             mode='constant', unitary=False)
             else:
                 plane.mask = np.asarray([lentil.rescale(mask, scale=scale, shape=None, mask=None,
-                                                        order=0, mode=constant, unitary=False)
+                                                        order=0, mode='constant', unitary=False)
                                          for mask in plane.mask])
             # mask[mask < np.finfo(mask.dtype).eps] = 0
             plane.mask[np.nonzero(plane.mask)] = 1
@@ -462,7 +462,7 @@ class Plane:
                 phase = self.phase if self.phase.size == 1 else self.phase[s]
 
                 # construct complex phasor
-                phasor = Field(data=amp*np.exp(-2*np.pi*1j*phase/wavefront.wavelength),
+                phasor = Field(data=amp*np.exp(2*np.pi*1j*phase/wavefront.wavelength),
                                pixelscale=self.pixelscale,
                                offset=lentil.helper.slice_offset(s, self.shape),
                                tilt=[self.tilt[n]] if self.tilt else [])
@@ -870,8 +870,8 @@ class Tilt(Plane):
             Updated x and y shift terms
 
         """
-        x = xs + (z * self.x)
-        y = ys + (z * self.y)
+        x = xs - (z * self.x)
+        y = ys - (z * self.y)
         return x, y
 
 
