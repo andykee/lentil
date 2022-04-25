@@ -27,20 +27,34 @@ w_pos = lentil.Wavefront(650e-9)
 w_pos *= pupil_pos
 w_pos = w_pos.propagate_image(pixelscale=5e-6, npix=200, oversample=2)
 
-fig, axs = plt.subplots(1, 2)
+plt.subplot(1, 2, 1)
+plt.imshow(w_pos.intensity, origin='lower')
+plt.title('Image plane (+focus)')
+plt.xticks(np.linspace(0, 400, 5), labels=np.linspace(-1, 1, 5))
+plt.yticks(np.linspace(0, 400, 5), labels=np.linspace(-1, 1, 5))
+plt.xlabel('[m]')
 
-ax1 = axs[0]
-ax1.imshow(w_pos.intensity, origin='lower')
-ax1.set_title('Image plane (+focus)')
-ax1.set_xticks(np.linspace(0, 400, 5), labels=np.linspace(-1, 1, 5))
-ax1.set_yticks(np.linspace(0, 400, 5), labels=np.linspace(-1, 1, 5))
-ax1.set_xlabel('[mm]')
+plt.subplot(1, 2, 2)
+plt.imshow(w_neg.intensity, origin='lower')
+plt.title('Image plane (-focus)')
+plt.xticks(np.linspace(0, 400, 5), labels=np.linspace(-1, 1, 5))
+plt.yticks(np.linspace(0, 400, 5), labels=np.linspace(-1, 1, 5))
+plt.xlabel('[m]')
 
-ax2 = axs[1]
-ax2.imshow(w_neg.intensity, origin='lower')
-ax2.set_title('Image plane (-focus)')
-ax2.set_xticks(np.linspace(0, 400, 5), labels=np.linspace(-1, 1, 5))
-ax2.set_yticks(np.linspace(0, 400, 5), labels=np.linspace(-1, 1, 5))
-ax2.set_xlabel('[mm]')
+#fig, axs = plt.subplots(1, 2)
+#
+#ax1 = axs[0]
+#ax1.imshow(w_pos.intensity, origin='lower')
+#ax1.set_title('Image plane (+focus)')
+#ax1.set_xticks(np.linspace(0, 400, 5), labels=np.linspace(-1, 1, 5))
+#ax1.set_yticks(np.linspace(0, 400, 5), labels=np.linspace(-1, 1, 5))
+#ax1.set_xlabel('[mm]')
+#
+#ax2 = axs[1]
+#ax2.imshow(w_neg.intensity, origin='lower')
+##ax2.set_title('Image plane (-focus)')
+#ax2.set_xticks(np.linspace(0, 400, 5), labels=np.linspace(-1, 1, 5))
+#ax2.set_yticks(np.linspace(0, 400, 5), labels=np.linspace(-1, 1, 5))
+#ax2.set_xlabel('[mm]')
 
 plt.tight_layout()
