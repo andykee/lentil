@@ -1,3 +1,8 @@
+Using ImageMagick:
+    pdflatex <file>.tex
+    convert -density 300 <file>.pdf <file>.tex
+
+
 For Photoshop 2021 or older:
     Use pdflatex to generate a PDF of the image
 For Photoshop 2022 or later:

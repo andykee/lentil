@@ -4,7 +4,7 @@
 .. |Pupil| replace:: :class:`~lentil.Pupil`
 .. |Image| replace:: :class:`~lentil.Image`
 .. |Detector| replace:: :class:`~lentil.Detector`
-.. |Wavefront| replace:: :classL`~lentil.Wavefront`
+.. |Wavefront| replace:: :class:`~lentil.Wavefront`
 
 *****************
 Specifying planes
