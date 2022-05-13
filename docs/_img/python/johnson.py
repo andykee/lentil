@@ -2,7 +2,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from astropy.io import fits
 
-NIRCAM_FITS = '/Users/akee/Downloads/webbpsf-data/NIRCam/OPD/OPD_RevW_ote_for_NIRCam_predicted.fits'
+# https://github.com/spacetelescope/pysynphot/blob/master/pysynphot/data/generic/johnson_*.fits
 
 dpi = 144
 mpl.rcParams['figure.figsize'] = (2.5, 2.5)
@@ -21,10 +21,16 @@ mpl.rcParams['grid.linewidth'] = 0.5
 mpl.rcParams['xtick.labelsize'] = 12*72/dpi  # 12 pt
 mpl.rcParams['ytick.labelsize'] = 12*72/dpi  # 12 pt
 mpl.rcParams['legend.fontsize'] = 12*72/dpi  # 12 pt
+mpl.rcParams['lines.linewidth'] = 1
 
-if NIRCAM_FITS:
-    hdul = fits.open(NIRCAM_FITS)
-    fig, ax = plt.subplots()
-    ax.imshow(hdul[0].data[0], origin='lower')
+fig, ax = plt.subplots()
 
-    fig.savefig('../../../_static/img/nircam.png', dpi=dpi*2)
+for f in ('U','B','V','R','I'):
+    hdul = fits.open(f'johnson_{f.lower()}.fits')
+    ax.plot(hdul[1].data['WAVELENGTH']/10, hdul[1].data['THROUGHPUT'], label=f)
+    ax.grid()
+    ax.legend()
+    ax.set_xlabel('Wavelength [nm]')
+    ax.set_ylabel('Transmission [A.U.]')
+
+    fig.savefig('../../_static/img/johnson.png', dpi=dpi*2)

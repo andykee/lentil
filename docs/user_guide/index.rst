@@ -28,7 +28,7 @@ Detailed information on any specific class or method can be found in the :ref:`a
     wavefront_error
     optical_systems
     diffraction
-    sources
+    radiometry
     image_sensors
     ../patterns/index
     performance
