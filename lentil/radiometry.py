@@ -959,7 +959,7 @@ class Blackbody(Spectrum):
         >>> temp = 5000
         >>> src = lentil.radiometry.Blackbody(wave,temp,waveunit='nm')
         >>> plt.plot(src.wave, src.value), plt.grid()
-        >>> plt.xlabel('Wavelength [nm]'), plt.ylabel('Flux [photons/sec/m^2]')
+        >>> plt.xlabel('Wavelength [nm]'), plt.ylabel('Flux [photons/sec/m^2/sr]')
 
     """
     def __init__(self, wave, temp, waveunit='nm', valueunit='photlam'):

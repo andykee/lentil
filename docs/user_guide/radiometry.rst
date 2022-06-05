@@ -260,7 +260,7 @@ Create a :class:`radiometry.Blackbody` object with:
     >>> temp = 5000
     >>> src = lentil.radiometry.Blackbody(wave,temp,waveunit='nm')
     >>> plt.plot(src.wave, src.value), plt.grid()
-    >>> plt.xlabel('Wavelength [nm]'), plt.ylabel('Flux [photons/sec/m^2]')
+    >>> plt.xlabel('Wavelength [nm]'), plt.ylabel('Flux [photons/sec/m^2/sr]')
 
 Because Blackbody subclasses Spectrum, all of the Spectrum methods are available:
 
@@ -272,7 +272,7 @@ Because Blackbody subclasses Spectrum, all of the Spectrum methods are available
 
     >>> src.to('wlam')
     >>> plt.plot(src.wave, src.value), plt.grid()
-    >>> plt.xlabel('Wavelength [nm]'), plt.ylabel('Flux [W/m^2]')
+    >>> plt.xlabel('Wavelength [nm]'), plt.ylabel('Flux [W/m^2/sr]')
 
 
 Path transmission and emission
