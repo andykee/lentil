@@ -104,11 +104,6 @@ def test_pixelscle_nyquist():
     assert lentil.util.pixelscale_nyquist(wave, f_number) == wave * f_number / 2
 
 
-def test_slit():
-    slit = lentil.util.slit((5, 5), 1)
-    assert np.array_equal(slit[:, 0], np.array([0,0,1,0,0]))
-
-
 amp = lentil.circle((512, 512), 256)
 
 

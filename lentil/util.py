@@ -94,16 +94,18 @@ def hexagon(shape, radius, rotate=False):
         return mask
 
 
-def slit(shape, width):
+def slit(shape, width, length=None):
     """Compute a slit mask.
 
     Parameters
     ----------
     shape : array_like
         Size of output in pixels (nrows, ncols)
-
-    width : int
+    width : float
         Slit width in pixels
+    length : float, optional
+        Slit length in pixels. If not specified, the slit spans
+        the entire column shape (default).
 
     Returns
     -------
@@ -112,11 +114,15 @@ def slit(shape, width):
     """
 
     rr, cc = lentil.helper.mesh(shape)
+    slit = np.ones(shape)
 
-    mask = np.zeros(shape)
-    mask[np.abs(rr) <= width/2] = 1
+    length = shape[1] if length is None else length
+    width_clip = np.clip(0.5 + (width/2) - np.abs(rr), 0, 1)
+    length_clip = np.clip(0.5 + (length/2) - np.abs(cc), 0, 1)
 
-    return mask
+    slit = np.minimum(np.minimum(slit, width_clip), length_clip)
+
+    return slit
 
 
 def centroid(img):
