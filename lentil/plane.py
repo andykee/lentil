@@ -38,11 +38,9 @@ class Plane:
         scalar, uniform sampling in x and y is assumed. If None (default),
         ``pixelscale`` is undefined.
     """
-    def __init__(self, amplitude=1, phase=0, mask=None, pixelscale=None):
-        # We directly set the local attributes here in case a subclass has redefined
-        # the property (which could cause an weird behavior and will throw an
-        # AttributeError if the subclass hasn't defined an accompanying getter
-        self._pixelscale = () if pixelscale is None else lentil.sanitize_shape(pixelscale)
+    def __init__(self, amplitude=1, phase=0, mask=None, pixelscale=None, diameter=None):
+        self._pixelscale = () if pixelscale is None else np.broadcast_to(pixelscale, (2,))
+        self._diameter = diameter
         self._amplitude = np.asarray(amplitude)
         self._phase = np.asarray(phase)
         self._mask = np.asarray(mask) if mask is not None else None
@@ -50,16 +48,6 @@ class Plane:
         self._slice = _plane_slice(self._mask)
 
         self.tilt = []
-
-    def __init_subclass__(cls):
-        # we have to define default values to avoid AttributeErrors in case
-        # subclasses don't call super().__init__ and don't explicitly define
-        # an attribute
-        cls._pixelscale = ()
-        cls._amplitude = np.array(1)
-        cls._phase = np.array(0)
-        cls._mask = None
-        cls._tilt = []
 
     def __repr__(self):
         return f'{self.__class__.__name__}()'
@@ -153,8 +141,18 @@ class Plane:
 
     @pixelscale.setter
     def pixelscale(self, value):
-        self._pixelscale = lentil.sanitize_shape(value)
+        self._pixelscale = np.broadcast_to(value, (2,))
 
+    @property
+    def diameter(self):
+        if self._diameter is None:
+            [rmin, rmax, cmin, cmax] = lentil.boundary(self.global_mask)
+            # since pixelscale has shape=(2,), we need to return the overall
+            # max here to get the single largest outer dimension
+            return np.max(np.max((rmax-rmin, cmax-cmin)) * self.pixelscale)
+        else:
+            return self._diameter
+        
     @property
     def tilt(self):
         """
@@ -368,7 +366,7 @@ class Plane:
             plane.mask[np.nonzero(plane.mask)] = 1
             plane.mask = plane.mask.astype(int)
 
-        if plane.pixelscale:
+        if plane.pixelscale is not None:
             plane.pixelscale = (plane.pixelscale[0]/scale, plane.pixelscale[1]/scale)
 
         return plane
