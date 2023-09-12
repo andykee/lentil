@@ -34,7 +34,7 @@ class Wavefront:
                  data=None, focal_length=None):
 
         self.wavelength = wavelength
-        self._pixelscale = () if pixelscale is None else lentil.sanitize_shape(pixelscale)
+        self.pixelscale = pixelscale
         self.shape = () if shape is None else shape
 
         if data is None:
@@ -61,7 +61,10 @@ class Wavefront:
 
     @pixelscale.setter
     def pixelscale(self, value):
-        self._pixelscale = lentil.sanitize_shape(value)
+        if value is not None:
+            self._pixelscale = np.broadcast_to(value, (2,))
+        else:
+            self._pixelscale = None
 
     @property
     def field(self):

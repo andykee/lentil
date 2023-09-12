@@ -55,9 +55,9 @@ class Field:
     @pixelscale.setter
     def pixelscale(self, value):
         if value is not None:
-            self._pixelscale = lentil.sanitize_shape(value)
+            self._pixelscale = np.broadcast_to(value, (2,))
         else:
-            self._pixelscale = ()
+            self._pixelscale = None
 
     @property
     def shape(self):
@@ -166,7 +166,7 @@ class Field:
         for tilt in self.tilt:
             x, y = tilt.shift(xs=x, ys=y, z=z, wavelength=wavelength)
 
-        pixelscale = lentil.sanitize_shape(pixelscale)
+        pixelscale = np.broadcast_to(pixelscale, (2,))
         out = x/pixelscale[0] * oversample, y/pixelscale[1] * oversample
 
         if indexing == 'ij':
@@ -452,11 +452,11 @@ def multiply(x1, x2):
 
 def multiply_pixelscale(a_pixelscale, b_pixelscale):
     # pixelscale reduction for multiplication
-    if a_pixelscale == () and b_pixelscale == ():
-        out = ()
-    elif a_pixelscale == ():
+    if a_pixelscale is None and b_pixelscale is None:
+        out = None
+    elif a_pixelscale is None:
         out = b_pixelscale
-    elif b_pixelscale == ():
+    elif b_pixelscale is None:
         out = a_pixelscale
     else:
         if a_pixelscale[0] == b_pixelscale[0] and a_pixelscale[1] == b_pixelscale[1]:
