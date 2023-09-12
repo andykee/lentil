@@ -42,7 +42,6 @@ class Plane:
     ----------
     tilt : list
         List of :class:`~lentil.Tilt` terms associated wirth this Plane
-    slice :
 
     """
     def __init__(self, amplitude=1, phase=0, mask=None, pixelscale=None, diameter=None):
@@ -114,10 +113,6 @@ class Plane:
     @diameter.setter
     def diameter(self, value):
         self._diameter = value
-
-    @property
-    def slice(self):
-        return self._slice
 
     @property
     def shape(self):
@@ -394,7 +389,7 @@ class Plane:
                                    data=[])
 
         for field in data:
-            for n, s in enumerate(self.slice):
+            for n, s in enumerate(self._slice):
                 # We have to multiply amplitude[s] by mask[n][s] because the requested
                 # slice of the amplitude array may contain parts of adjacent segments
                 mask = self.mask if self.depth == 1 else self.mask[n]
