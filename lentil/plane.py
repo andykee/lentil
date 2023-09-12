@@ -36,13 +36,22 @@ class Plane:
     pixelscale : float or (2,) array_like, optional
         Physical sampling of each pixel in the plane. If ``pixelscale`` is a
         scalar, uniform sampling in x and y is assumed. If None (default),
-        ``pixelscale`` is undefined.
+        ``pixelscale`` is left undefined.
+
+    Attributes
+    ----------
+    tilt : list
+        List of :class:`~lentil.Tilt` terms associated wirth this Plane
+    slice :
+
     """
     def __init__(self, amplitude=1, phase=0, mask=None, pixelscale=None, diameter=None):
-        self._pixelscale = () if pixelscale is None else np.broadcast_to(pixelscale, (2,))
-        self._diameter = diameter
-        self._amplitude = np.asarray(amplitude)
-        self._phase = np.asarray(phase)
+        self.amplitude = np.asarray(amplitude)
+        self.phase = np.asarray(phase)
+        self.mask = mask
+        self.pixelscale = pixelscale
+        self.diameter = diameter
+        
         self._mask = np.asarray(mask) if mask is not None else None
 
         self._slice = _plane_slice(self._mask)
@@ -53,50 +62,7 @@ class Plane:
         return f'{self.__class__.__name__}()'
 
     @property
-    def amplitude(self):
-        """
-        Electric field amplitude transmission
-
-        Returns
-        -------
-        amplitude : ndarray
-        """
-        return self._amplitude
-
-    @amplitude.setter
-    def amplitude(self, value):
-        self._amplitude = np.asarray(value)
-
-    @property
-    def phase(self):
-        """
-        Electric field phase shift
-
-        Returns
-        -------
-        phase : ndarray
-        """
-        return self._phase
-
-    @phase.setter
-    def phase(self, value):
-        self._phase = np.asarray(value)
-
-    @property
     def mask(self):
-        """Binary mask
-
-        If ``mask`` has 2 dimensions, the plane is assumed to be monolithic. If
-        ``mask`` has 3 dimensions, the plane is assumed to be segmented with the
-        individual segment masks inserted along the first dimension.
-
-        .. plot:: _img/python/segmask.py
-            :scale: 50
-
-        Returns
-        -------
-        mask : ndarray
-        """
         if self._mask is not None:
             return self._mask
         else:
@@ -129,19 +95,11 @@ class Plane:
 
     @property
     def pixelscale(self):
-        """
-        Physical (row, col) sampling of each pixel in the Plane. If plane does
-        not have a pixelscale, an empty tuple is returned.
-
-        Returns
-        -------
-        pixelscale : tuple
-        """
         return self._pixelscale
 
     @pixelscale.setter
     def pixelscale(self, value):
-        self._pixelscale = np.broadcast_to(value, (2,))
+        self._pixelscale = None if value is None else np.broadcast_to(value, (2,))
 
     @property
     def diameter(self):
@@ -153,25 +111,9 @@ class Plane:
         else:
             return self._diameter
         
-    @property
-    def tilt(self):
-        """
-        List of additional :class:`~lentil.Tilt` terms associated wirth this Plane
-
-        Returns
-        -------
-        tilt : list
-
-        See Also
-        --------
-        Tilt : Tilt object
-        Plane.fit_tilt : Method for fitting and removing tilt
-        """
-        return self._tilt
-
-    @tilt.setter
-    def tilt(self, value):
-        self._tilt = value
+    @diameter.setter
+    def diameter(self, value):
+        self._diameter = value
 
     @property
     def slice(self):
@@ -546,22 +488,10 @@ class Pupil(Plane):
         super().__init__(pixelscale=pixelscale, amplitude=amplitude, phase=phase,
                          mask=mask)
 
-        # We directly set the local attributes here in case a subclass has redefined
-        # the property (which could cause an weird behavior and will throw an
-        # AttributeError if the subclass hasn't defined an accompanying getter
-        self._focal_length = focal_length
+        self.focal_length = focal_length
 
     def __init_subclass__(cls):
         cls._focal_length = None
-
-    @property
-    def focal_length(self):
-        """Pupil focal length"""
-        return self._focal_length
-
-    @focal_length.setter
-    def focal_length(self, value):
-        self._focal_length = value
 
     def multiply(self, wavefront, inplace=False):
 
