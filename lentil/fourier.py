@@ -76,17 +76,17 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=Non
     [1] Soummer, et. al. Fast computation of Lyot-style coronagraph propagation (2007)
 
     """
-    alpha_row, alpha_col = _sanitize_alpha(alpha)
+    alpha_row, alpha_col = np.broadcast_to(alpha, (2,))
 
     f = np.asarray(f)
     m, n = f.shape
 
     if npix is None:
         npix = [m, n]
-    M, N = _sanitize_npix(npix)
+    M, N = np.broadcast_to(npix, (2,))
 
-    shift_row, shift_col = _sanitize_shift(shift)
-    offset_row, offset_col = _sanitize_npix(offset)
+    shift_row, shift_col = np.broadcast_to(shift, (2,))
+    offset_row, offset_col = np.broadcast_to(offset, (2,))
 
     if out is not None:
         if not np.can_cast(complex, out.dtype):
@@ -199,32 +199,3 @@ def idft2(F, alpha, npix=None, shift=(0,0), unitary=True, out=None):
     F = dft2(np.conj(F), alpha, npix, shift, unitary=unitary, out=out)
     np.conj(F, out=F)
     return np.divide(F, N, out=F)
-
-
-def _sanitize_alpha(x):
-    """Return consistent representation of alpha as ar, ac"""
-    x = np.asarray(x)
-    if x.size == 1:
-        ar, ac = float(x), float(x)
-    else:
-        ar, ac = float(x[0]), float(x[1])
-    return ar, ac
-
-
-def _sanitize_npix(x):
-    """Return consistent representation of npix as M, N"""
-    x = np.asarray(x)
-    if x.size == 1:
-        M, N = int(x), int(x)
-    else:
-        M, N = int(x[0]), int(x[1])
-    return M, N
-
-
-def _sanitize_shift(x):
-    """Return consistent representation of shift as sr, sc"""
-    if isinstance(x, np.ndarray):
-        sr, sc = float(x[0]), float(x[1])
-    else:
-        sr, sc = x
-    return sr, sc
