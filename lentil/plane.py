@@ -48,7 +48,7 @@ class Plane:
         self.amplitude = np.asarray(amplitude)
         self.phase = np.asarray(phase)
         self.mask = mask
-        self.pixelscale = pixelscale
+        self.pixelscale = None if pixelscale is None else np.broadcast_to(pixelscale, (2,))
         self.diameter = diameter
         
         self._mask = np.asarray(mask) if mask is not None else None
@@ -91,14 +91,6 @@ class Plane:
             return self.mask
         else:
             return np.sum(self.mask, axis=0)
-
-    @property
-    def pixelscale(self):
-        return self._pixelscale
-
-    @pixelscale.setter
-    def pixelscale(self, value):
-        self._pixelscale = None if value is None else np.broadcast_to(value, (2,))
 
     @property
     def diameter(self):
