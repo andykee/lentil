@@ -2,9 +2,6 @@ import sys
 from itertools import combinations
 import numpy as np
 
-import lentil
-
-
 class Field:
     """
     Two-dimensional discretely sampled complex field.
@@ -28,36 +25,19 @@ class Field:
 
         and return an updated x and y shift. If None (default), tilt = [].
 
+    Attributes
+    ----------
+    extent : tuple
+        Array indices defining the extent of the offset Field.
     """
-    __slots__ = ('data', 'offset', 'tilt', '_pixelscale', '_extent')
+    __slots__ = ('data', 'offset', 'tilt', 'pixelscale', 'extent')
 
     def __init__(self, data, pixelscale=None, offset=None, tilt=None):
         self.data = np.asarray(data, dtype=complex)
         self.pixelscale = pixelscale
         self.offset = offset if offset is not None else [0, 0]
         self.tilt = tilt if tilt else []
-        self._extent = extent(self.shape, self.offset)
-
-    @property
-    def pixelscale(self):
-        """
-        Physical (row, col) sampling of each pixel in the Field.
-
-        If ``pixelscale = ()``, the Field does not have a pixelscale and is
-        assumed to be broadcastable to any legal shape without interpolation.
-
-        Returns
-        -------
-        pixelscale : ndarray or None
-        """
-        return self._pixelscale
-
-    @pixelscale.setter
-    def pixelscale(self, value):
-        if value is not None:
-            self._pixelscale = np.broadcast_to(value, (2,))
-        else:
-            self._pixelscale = None
+        self.extent = _extent(self.shape, self.offset)
 
     @property
     def shape(self):
@@ -71,17 +51,6 @@ class Field:
         return self.data.shape
 
     @property
-    def ndim(self):
-        """
-        Number of Field dimensions
-
-        Returns
-        -------
-        ndim : int
-        """
-        return self.data.ndim
-
-    @property
     def size(self):
         """
         Number of elements in the Field
@@ -92,40 +61,74 @@ class Field:
         """
         return self.data.size
 
-    @property
-    def extent(self):
-        """
-        The array indices defining the extent of the shifted Field.
-
-        Returns
-        -------
-        rmin, rmax, cmin, cmax : int
-
-        Notes
-        -----
-        To use the values returned by ``extent()`` in a slice, ``rmax`` and ``cmax``
-        should be increased by 1.
-        """
-        return self._extent
-        #return extent(self.shape, self.offset)
-
     def __mul__(self, other):
-        return multiply(self, other)
-
-    def overlap(self, other):
         """
-        Returns True if two fields overlap
+        Multiply fields element-wise.
 
         Parameters
         ----------
-        other : `~lentil.Field`
-            Other Field to check for overlap.
+        x1, x2 : :class:`~lentil.field.Field`
+            Fields to be multiplied. If ``x1.shape != x2.shape``, they must
+            be broadcastable to a common shape (which becomes the shape of the
+            output).
 
         Returns
         -------
-        overlap : bool
+        y : :class:`~lentil.field.Field`
+            The product of ``x1`` and ``x2``, appropriately sized and offset.
+
+        Notes
+        -----
+        The output Field data and offset are computed according to the following
+        rules:
+
+            * If both operands are scalars, the result is 0 unless the operands
+            share the same offset.
+            * A single scalar operand is broadcast to the larger operand's shape and
+            inherits the larger operand's offset. This enables default planar
+            fields (``data = 1+0j``, offset = [0, 0]) to automatically grow in
+            size when multiplied by a "real" field.
         """
-        return overlap(self, other)
+        tilt = self.tilt + other.tilt
+
+        if self.size == 1 and other.size == 1:
+            data, offset = self._mul_scalar(other)
+        else:
+            # Note that _mul_array is optimized to also handle scalar * array
+            data, offset = self._mul_array(other)
+
+        return Field(data=data, offset=offset, tilt=tilt)
+    
+    def _mul_scalar(self, other):
+        """
+        Multiply two Fields when both are scalars
+        """
+        if np.array_equal(self.offset, other.offset):
+            data = self.data * other.data
+            offset = self.offset
+        else:
+            data = 0
+            offset = [0, 0]
+        return data, offset
+    
+    def _mul_array(self, other):
+        """
+        Multiply two fields when at least one is an array
+        """
+        self_data, self_offset, other_data, other_offset = _mul_broadcast(
+            self.data, self.offset, other.data, other.offset
+        )
+        self_extent = _extent(self_data.shape, self_offset)
+        other_extent = _extent(other_data.shape, other_offset)
+
+        self_slice, other_slice = _mul_slices(self_extent, other_extent)
+        offset = _mul_offset(self_extent, other_extent)
+        data = self_data[self_slice] * other_data[other_slice]
+
+        if data.size == 0:
+            data = np.array(0, dtype=complex)
+            offset = [0, 0]
+        return data, offset
 
     def shift(self, z, wavelength, pixelscale, oversample, indexing='ij'):
         """
@@ -174,63 +177,7 @@ class Field:
 
         return out
 
-
-def extent(shape, offset):
-    """
-    Compute shifted array extent
-
-    Parameters
-    ----------
-    shape : array_like
-        Array shape
-    offset : array_like
-        Array offset
-
-    Returns
-    -------
-    rmin, rmax, cmin, cmax : int
-        Indices that define the span of the shifted array.
-
-    Notes
-    -----
-    To use the values returned by ``extent()`` in a slice, ``rmax`` and ``cmax``
-    should be increased by 1.
-
-    See Also
-    --------
-    lentil.field.boundary : compute the extent around a number of Fields
-
-    """
-    if len(shape) < 2:
-        shape = (1, 1)
-
-    rmin = int(-(shape[0]//2) + offset[0])
-    cmin = int(-(shape[1]//2) + offset[1])
-    rmax = int(rmin + shape[0] - 1)
-    cmax = int(cmin + shape[1] - 1)
-
-    return rmin, rmax, cmin, cmax
-
-
-def overlap(a, b):
-    """
-    True if two Fields overlap, otherwise False
-
-    Parameters
-    ----------
-    a, b : `~lentil.Field`
-        Input fields.
-
-    Returns
-    -------
-    overlap : bool
-    """
-    armin, armax, acmin, acmax = a.extent
-    brmin, brmax, bcmin, bcmax = b.extent
-    return armin <= brmax and armax >= brmin and acmin <= bcmax and acmax >= bcmin
-
-
-def boundary(*fields):
+def boundary(fields):
     """
     Compute the bounding extents around a number of Field objects.
 
@@ -266,9 +213,8 @@ def boundary(*fields):
     return rmin, rmax, cmin, cmax
 
 
-def insert(field, out, intensity=False, weight=1, indexing='ij'):
+def insert(field, out, intensity=False, weight=1):
     """
-
     Parameters
     ----------
     field : :class:`~lentil.field.Field`
@@ -280,16 +226,14 @@ def insert(field, out, intensity=False, weight=1, indexing='ij'):
         False.
     weight : float, optional
         Weight to apply to ``field`` before it is inserted into ``out``
-    indexing : 'ij', 'xy', optional
-        Cartesian ('xy') or matrix ('ij', default) indexing of output
-
+    
     Returns
     -------
     out : ndarray
 
     """
-    if indexing not in ('xy', 'ij'):
-        raise ValueError("Valid values for `indexing` are 'xy' and 'ij'")
+    #if indexing not in ('xy', 'ij'):
+    #    raise ValueError("Valid values for `indexing` are 'xy' and 'ij'")
 
     if field.shape == out.shape and np.array_equal(field.offset, [0, 0]):
         field_slice = Ellipsis
@@ -300,8 +244,8 @@ def insert(field, out, intensity=False, weight=1, indexing='ij'):
         field_shape = np.asarray(field.shape)
         field_offset = np.asarray(field.offset)
 
-        if indexing == 'xy':
-            field_offset = -field_offset[1], field_offset[0]
+        #if indexing == 'xy':
+        #    field_offset = -field_offset[1], field_offset[0]
 
         # Output coordinates of the upper left corner of the shifted data array
         field_shifted_ul = (out_shape // 2) - (field_shape // 2) + field_offset
@@ -345,7 +289,7 @@ def insert(field, out, intensity=False, weight=1, indexing='ij'):
     return out
 
 
-def merge(a, b, check_overlap=True):
+def merge(a, b, enforce_overlap=True):
     """
     Merge two Fields
 
@@ -353,7 +297,7 @@ def merge(a, b, check_overlap=True):
     ----------
     a, b : :class:`~lentil.field.Field` objects
         Fields to merge
-    check_overlap : bool, optional
+    enforce_overlap : bool, optional
         If True (default), a ``ValueError`` is raised if ``a`` and ``b`` do not overlap
 
     Returns
@@ -361,23 +305,36 @@ def merge(a, b, check_overlap=True):
     out : :class:`~lentil.field.Field`
         New ``Field`` that represents the union of ``a`` and ``b``
     """
-    if not np.all(a.pixelscale == b.pixelscale):
-        raise ValueError(f'pixelscales {a.pixelscale} and '
-                         f'{b.pixelscale} are not equal')
-    if check_overlap and not overlap(a, b):
-        raise ValueError("can't merge non-overlapping fields")
+    if enforce_overlap and not overlap((a, b)):
+        raise ValueError("Can't merge non-overlapping fields")
 
-    out = np.zeros(_merge_shape(a, b), dtype=complex)
-    a_slc, b_slc = _merge_slices(a, b)
-    out[a_slc] = a.data
-    out[b_slc] += b.data
-    return Field(data=out, pixelscale=a.pixelscale,
-                 offset=_merge_offset(a, b))
+    return _merge((a, b))
+# TODO: throw an error if either field has tilts
 
 
-def _merge_shape(*fields):
-    # shape required to merge fields
-    rmin, rmax, cmin, cmax = boundary(*fields)
+def _merge(fields):
+    """
+    Merge fields into a new Field regardless of whether the supplied fields 
+    overlap in space
+    """
+    if not np.all([f.pixelscale == fields[0].pixelscale for f in fields]):
+        raise ValueError("Can't merge: pixelscales must be equal")
+
+    out = np.zeros(_merge_shape(fields), dtype=complex)
+    slices = _merge_slices(fields)
+    for field, slc in zip(fields, slices):
+        out[slc] += field.data
+
+    return Field(data=out,
+                 pixelscale=fields[0].pixelscale,
+                 offset=_merge_offset(fields))
+
+
+def _merge_shape(fields):
+    """
+    Return the shape required to hold merged fields
+    """
+    rmin, rmax, cmin, cmax = boundary(fields)
     # faster than np.any([rmin, rmax, cmin, cmax])
     if rmin == 0 and rmax == 0 and cmin == 0 and cmax == 0:
         return ()
@@ -385,9 +342,11 @@ def _merge_shape(*fields):
         return rmax - rmin + 1, cmax - cmin + 1
 
 
-def _merge_slices(*fields):
-    # slices in the merged array where fields go
-    rmin, rmax, cmin, cmax = boundary(*fields)
+def _merge_slices(fields):
+    """
+    Return the slices in a merged array for field insertion
+    """
+    rmin, rmax, cmin, cmax = boundary(fields)
     out = []
     # faster than np.any([rmin, rmax, cmin, cmax])
     if rmin == 0 and rmax == 0 and cmin == 0 and cmax == 0:
@@ -401,56 +360,121 @@ def _merge_slices(*fields):
     return out
 
 
-def _merge_offset(*fields):
-    # common offset of the resulting merged array
-    rmin, rmax, cmin, cmax = boundary(*fields)
+def _merge_offset(fields):
+    """
+    Return the new offset of a merged field
+    """
+    rmin, rmax, cmin, cmax = boundary(fields)
     nrow = rmax - rmin + 1
     ncol = cmax - cmin + 1
     return rmin + nrow//2, cmin + ncol//2
 
 
-def multiply(x1, x2):
+def overlap(fields):
     """
-    Multiply fields element-wise.
+    True if two Fields overlap, otherwise False
 
     Parameters
     ----------
-    x1, x2 : :class:`~lentil.field.Field`
-        Fields to be multiplied. If ``x1.shape != x2.shape``, they must
-        be broadcastable to a common shape (which becomes the shape of the
-        output).
+    a, b : `~lentil.Field`
+        Input fields.
 
     Returns
     -------
-    y : :class:`~lentil.field.Field`
-        The product of ``x1`` and ``x2``, appropriately sized and offset.
-
-    Notes
-    -----
-    The output Field data and offset are computed according to the following
-    rules:
-
-        * If both operands are scalars, the result is 0 unless the operands
-          share the same offset.
-        * A single scalar operand is broadcast to the other operand's shape and
-          inherits the other operand's offset. This enables default planar
-          fields (``data = 1+0j``, offset = [0, 0]) to automatically grow in
-          size when multiplied by a "real" field.
-
+    overlap : bool
+    
     """
-    pixelscale = multiply_pixelscale(x1.pixelscale, x2.pixelscale)
-    tilt = x1.tilt + x2.tilt
+    #return _overlap(a.extent, b.extent)
 
-    if x1.size == 1 and x2.size == 1:
-        data, offset = _mul_scalar(x1, x2)
+    if len(fields) == 2:
+        return _overlap(fields[0].extent, fields[1].extent)
     else:
-        # Note that _mul_array is optimized to also handle scalar * array
-        data, offset = _mul_array(x1, x2)
+        fields = _reduce(fields)
+        if len(fields) > 1:
+            return False
+        else:
+            return True
 
-    return Field(data=data, pixelscale=pixelscale, offset=offset, tilt=tilt)
+    
+def reduce(fields):
+    """
+    Reduce a number of Fields into a potentially smaller disjoint set where 
+    overlapping Fields are merged.
+
+    Parameters
+    ----------
+    fields :class:`~lentil.field.Field` objects
+        Fields to reduce
+
+    Returns
+    -------
+    fields : list
+        List of :class:`~lentil.field.Field` objects
+    
+    """
+    fields = _reduce(fields)
+
+    out = []
+
+    for f in fields:
+        if len(f['field']) > 1:
+            out.append(_merge(f['field']))
+        else:
+            out.append(f['field'][0])
+
+    return out
 
 
-def multiply_pixelscale(a_pixelscale, b_pixelscale):
+def _reduce(fields):
+    """
+    Function to identify overlapping fields and reorganize them into
+    a dict for easier merging.
+    """
+    fields = [{'field': [f], 'extent': f.extent} for f in fields]
+    return _disjoint(fields)
+
+
+def _disjoint(fields):
+    """
+    Return fields as a disjoint set.
+    """
+    for m, n in combinations(range(len(fields)), 2):
+        if _overlap(fields[m]['extent'], fields[n]['extent']):
+            fields[m]['field'].extend(fields[n]['field'])
+            fields[m]['extent'] = boundary(fields[m]['field'])
+            fields.pop(n)
+            return _disjoint(fields)
+    return fields
+
+
+def _overlap(a_extent, b_extent):
+    """
+    Return True if two extents overlap, otherwise False
+    """
+    armin, armax, acmin, acmax = a_extent
+    brmin, brmax, bcmin, bcmax = b_extent
+    return armin <= brmax and armax >= brmin and acmin <= bcmax and acmax >= bcmin
+
+
+def _extent(shape, offset):
+    """
+    Compute the extent of a shifted array.
+
+    Note: To use the values returned by ``extent()`` in a slice, 
+    ``rmax`` and ``cmax`` should be increased by 1.
+    """
+    if len(shape) < 2:
+        shape = (1, 1)
+
+    rmin = int(-(shape[0]//2) + offset[0])
+    cmin = int(-(shape[1]//2) + offset[1])
+    rmax = int(rmin + shape[0] - 1)
+    cmax = int(cmin + shape[1] - 1)
+
+    return rmin, rmax, cmin, cmax
+
+
+def _mul_pixelscale(a_pixelscale, b_pixelscale):
     # pixelscale reduction for multiplication
     if a_pixelscale is None and b_pixelscale is None:
         out = None
@@ -467,46 +491,27 @@ def multiply_pixelscale(a_pixelscale, b_pixelscale):
     return out
 
 
-def _mul_scalar(a, b):
-    if np.array_equal(a.offset, b.offset):
-        data = a.data * b.data
-        offset = a.offset
-    else:
-        data = 0
-        offset = [0, 0]
-    return data, offset
+def _mul_broadcast(a_data, a_offset, b_data, b_offset):
+    """
+    Broadcast for multiplication. 
 
-
-def _broadcast_arrays(a, b):
+    If one array is a scalar, it is broadcast to a compatible shape with the
+    other array. As a part of this operation, the broadcasted field inherits
+    the larger array's offset
+    """
     # if one array is a scalar, it is broadcast to a compatible shape
     # with the other array. as a part of this operation, the broadcasted
     # Field inherits the other Field's offset as well
-    a_data, a_offset = a.data, a.offset
-    b_data, b_offset = b.data, b.offset
-    if a.shape != b.shape:
-        if a.size == 1:
-            a_data = np.broadcast_to(a_data, b.shape)
+    #a_data, a_offset = a.data, a.offset
+    #b_data, b_offset = b.data, b.offset
+    if a_data.shape != b_data.shape:
+        if a_data.size == 1:
+            a_data = np.broadcast_to(a_data, b_data.shape)
             a_offset = b_offset
-        if b.size == 1:
-            b_data = np.broadcast_to(b_data, a.shape)
-            b_offset = a.offset
+        if b_data.size == 1:
+            b_data = np.broadcast_to(b_data, a_data.shape)
+            b_offset = a_offset
     return a_data, a_offset, b_data, b_offset
-
-
-def _mul_array(a, b):
-    a_data, a_offset, b_data, b_offset = _broadcast_arrays(a, b)
-    a_extent = extent(a_data.shape, a_offset)
-    b_extent = extent(b_data.shape, b_offset)
-
-    a_slice, b_slice = _mul_slices(a_extent, b_extent)
-    offset = _mul_offset(a_extent, b_extent)
-    data = a_data[a_slice] * b_data[b_slice]
-
-    if data.size == 0:
-        data = np.array(0, dtype=complex)
-        offset = [0, 0]
-
-    return data, offset
 
 
 def _mul_boundary(a_extent, b_extent):
@@ -539,65 +544,3 @@ def _mul_offset(a_extent, b_extent):
     nrow = rmax - rmin + 1
     ncol = cmax - cmin + 1
     return rmin + nrow//2, cmin + ncol//2
-
-
-class NDField:
-    __slots__ = 'fields'
-
-    # NDField looks like a standard field but may actually contain multiple
-    # possibly overlapping fields that aren't combined until the data attribute
-    # is accessed
-    def __init__(self, field):
-        self.fields = [field]
-
-    @property
-    def data(self):
-        # can use _merge shape and merge slices
-        out = np.zeros(self.shape, dtype=complex)
-        slices = _merge_slices(*self.fields)
-        for field, slc in zip(self.fields, slices):
-            out[slc] += field.data
-        return out
-
-    @property
-    def offset(self):
-        return _merge_offset(*self.fields)
-
-    @property
-    def extent(self):
-        return boundary(*self.fields)
-
-    @property
-    def shape(self):
-        return _merge_shape(*self.fields)
-
-    def append(self, field):
-        self.fields.append(field)
-
-    def overlap(self, other):
-        return overlap(self, other)
-
-
-def reduce(*fields):
-    """
-    Reduce a number of disjoint Fields into a potentially smaller set where overlapping
-    Fields are merged.
-
-    Parameters
-    ----------
-    fields :class:`~lentil.field.Field` or :class:`~lentil.field.NDField` objects
-        Fields to reduce
-
-    Returns
-    -------
-    fields : list
-        List of :class:`~lentil.field.NDField` objects
-    """
-    fields = [NDField(field) if not isinstance(field, NDField) else field for field in fields]
-    for m, n in combinations(range(len(fields)), 2):
-        if overlap(fields[m], fields[n]):
-            fields[m].append(fields[n])
-            fields.pop(n)
-            return reduce(*fields)
-
-    return fields
