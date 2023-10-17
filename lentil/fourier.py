@@ -103,7 +103,6 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=Non
     return F
 
 
-@functools.lru_cache(maxsize=32)
 def _dft2_matrices(m, n, M, N, alphar, alphac, shiftr, shiftc, offsetr, offsetc):
     R, S, U, V = _dft2_coords(m, n, M, N)
     E1 = np.exp(-2.0 * 1j * np.pi * alphar * np.outer(R-shiftr+offsetr, U-shiftr)).T
