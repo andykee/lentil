@@ -37,7 +37,7 @@ class Field:
         self.pixelscale = pixelscale
         self.offset = offset if offset is not None else [0, 0]
         self.tilt = tilt if tilt else []
-        self.extent = _extent(self.shape, self.offset)
+        self.extent = extent(self.shape, self.offset)
 
     @property
     def shape(self):
@@ -118,8 +118,8 @@ class Field:
         self_data, self_offset, other_data, other_offset = _mul_broadcast(
             self.data, self.offset, other.data, other.offset
         )
-        self_extent = _extent(self_data.shape, self_offset)
-        other_extent = _extent(other_data.shape, other_offset)
+        self_extent = extent(self_data.shape, self_offset)
+        other_extent = extent(other_data.shape, other_offset)
 
         self_slice, other_slice = _mul_slices(self_extent, other_extent)
         offset = _mul_offset(self_extent, other_extent)
@@ -209,6 +209,24 @@ def boundary(fields):
         rmax = frmax if frmax > rmax else rmax
         cmin = fcmin if fcmin < cmin else cmin
         cmax = fcmax if fcmax > cmax else cmax
+
+    return rmin, rmax, cmin, cmax
+
+
+def extent(shape, offset):
+    """
+    Compute the extent of a shifted array.
+
+    Note: To use the values returned by ``extent()`` in a slice, 
+    ``rmax`` and ``cmax`` should be increased by 1.
+    """
+    if len(shape) < 2:
+        shape = (1, 1)
+
+    rmin = int(-(shape[0]//2) + offset[0])
+    cmin = int(-(shape[1]//2) + offset[1])
+    rmax = int(rmin + shape[0] - 1)
+    cmax = int(cmin + shape[1] - 1)
 
     return rmin, rmax, cmin, cmax
 
@@ -454,24 +472,6 @@ def _overlap(a_extent, b_extent):
     armin, armax, acmin, acmax = a_extent
     brmin, brmax, bcmin, bcmax = b_extent
     return armin <= brmax and armax >= brmin and acmin <= bcmax and acmax >= bcmin
-
-
-def _extent(shape, offset):
-    """
-    Compute the extent of a shifted array.
-
-    Note: To use the values returned by ``extent()`` in a slice, 
-    ``rmax`` and ``cmax`` should be increased by 1.
-    """
-    if len(shape) < 2:
-        shape = (1, 1)
-
-    rmin = int(-(shape[0]//2) + offset[0])
-    cmin = int(-(shape[1]//2) + offset[1])
-    rmax = int(rmin + shape[0] - 1)
-    cmax = int(cmin + shape[1] - 1)
-
-    return rmin, rmax, cmin, cmax
 
 
 def _mul_pixelscale(a_pixelscale, b_pixelscale):
