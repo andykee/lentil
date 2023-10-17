@@ -371,7 +371,7 @@ class Plane:
             Updated wavefront
 
         """
-        pixelscale = lentil.field.multiply_pixelscale(self.pixelscale, wavefront.pixelscale)
+        pixelscale = _multiply_pixelscale(self.pixelscale, wavefront.pixelscale)
         shape = wavefront.shape if self.shape == () else self.shape
         data = wavefront.data
 
@@ -381,12 +381,11 @@ class Plane:
             out.shape = shape
             out.pixelscale = pixelscale
         else:
-            out = lentil.Wavefront(wavelength=wavefront.wavelength,
-                                   pixelscale=pixelscale,
-                                   planetype=wavefront.planetype,
-                                   focal_length=wavefront.focal_length,
-                                   shape=shape,
-                                   data=[])
+            out = lentil.Wavefront.empty(wavelength=wavefront.wavelength,
+                                         pixelscale=pixelscale,
+                                         focal_length=wavefront.focal_length,
+                                         shape=shape)
+
 
         for field in data:
             for n, s in enumerate(self._slice):
@@ -405,6 +404,23 @@ class Plane:
                 out.data.append(field * phasor)
 
         return out
+
+
+def _multiply_pixelscale(a_pixelscale, b_pixelscale):
+    # pixelscale reduction for multiplication
+    if a_pixelscale is None and b_pixelscale is None:
+        out = None
+    elif a_pixelscale is None:
+        out = b_pixelscale
+    elif b_pixelscale is None:
+        out = a_pixelscale
+    else:
+        if a_pixelscale[0] == b_pixelscale[0] and a_pixelscale[1] == b_pixelscale[1]:
+            out = a_pixelscale
+        else:
+            raise ValueError(f"can't multiply with inconsistent pixelscales: {a_pixelscale} != {b_pixelscale}")
+
+    return out
 
 
 def _plane_slice(mask):
@@ -494,7 +510,7 @@ class Pupil(Plane):
 
         # we inherit the plane's focal length as the wavefront's focal length
         wavefront.focal_length = self.focal_length
-        wavefront.planetype = 'pupil'
+        wavefront.ptype = lentil.pupil
 
         return wavefront
 
@@ -531,7 +547,7 @@ class Image(Plane):
 
     def multiply(self, wavefront, inplace=False):
         wavefront = super().multiply(wavefront, inplace)
-        wavefront.planetype = 'image'
+        wavefront.ptype = lentil.image
         return wavefront
 
 

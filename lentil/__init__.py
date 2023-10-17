@@ -24,6 +24,13 @@ from lentil.plane import (
 	Flip
 )
 
+from lentil.ptype import ptype
+
+none = ptype('none')
+pupil = ptype('pupil')
+image = ptype('image')
+transform = ptype('transform')
+
 from lentil import radiometry
 
 from lentil import util

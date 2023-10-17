@@ -2,11 +2,12 @@ import copy
 
 import numpy as np
 
+import lentil
+from lentil import Tilt
 import lentil.field
 from lentil.field import Field
 import lentil.fourier
 import lentil.helper
-
 
 class Wavefront:
     """A class representing a monochromatic wavefront.
@@ -17,33 +18,46 @@ class Wavefront:
         Wavelength in meters
     pixelscale : float, optional
         Physical sampling of wavefront
-    shape : (2,) array_like, optional
-        Wavefront shape. If ``shape`` is None (default), the wavefront is
-        assumed to be infinite (broadcastable to any shape).
-    data : list_like, optional
-        Wavefront data. Default is [1+0j] (a plane wave).
-    focal_length : float or np.inf
+    diameter: float, optional
+        Wavefront diameter. Default is None
+    focal_length : float or np.inf, optional
         Wavefront focal length. A plane wave (default) has an infinite focal
         length (``np.inf``).
+    tilt: list_like, optional
 
+    shape : (2,) array_like
+        Wavefront shape. If ``shape`` is None (default), the wavefront is
+        assumed to be infinite (broadcastable to any shape).
+    ptype : lentil.ptype
+        Plane type.
+
+    Attributes
+    ----------
+    data : list_like
+        Wavefront data. Default is [1+0j] (a plane wave).
+    
     """
-    __slots__ = ('wavelength', '_pixelscale', 'focal_length',
-                 'data', 'shape', 'planetype')
+    __slots__ = ('wavelength', 'pixelscale', 'focal_length', 'diameter',
+                 'focal_length', 'ptype', 'shape', 'data')
 
-    def __init__(self, wavelength, pixelscale=None, shape=None, planetype=None,
-                 data=None, focal_length=None):
+    def __init__(self, wavelength, pixelscale=None, diameter=None, focal_length=None,
+                 tilt=None, ptype=None):
 
         self.wavelength = wavelength
-        self.pixelscale = pixelscale
-        self.shape = () if shape is None else shape
-
-        if data is None:
-            self.data = [Field(data=1, pixelscale=pixelscale, offset=[0, 0], tilt=[])]
-        else:
-            self.data = [*data]
-
+        self.pixelscale = None if pixelscale is None else np.broadcast_to(pixelscale, (2,))
         self.focal_length = focal_length if focal_length else np.inf
-        self.planetype = planetype
+        self.diameter = diameter
+        self.ptype = lentil.ptype(ptype)
+        self.shape = ()
+
+        if tilt is not None:
+            if len(tilt) != 2:
+                raise ValueError('tilt must be specified as [rx, ry]')
+            tilt = [Tilt(x=tilt[0], y=tilt[1])]
+
+        self.data = [Field(data=np.array(1, dtype=complex),
+                           offset=None,
+                           tilt=tilt)]
 
     def __mul__(self, plane):
         return plane.multiply(self, inplace=False)
@@ -53,18 +67,6 @@ class Wavefront:
 
     def __rmul__(self, other):
         return self.__mul__(other)
-
-    @property
-    def pixelscale(self):
-        """Physical sampling of the wavefront"""
-        return self._pixelscale
-
-    @pixelscale.setter
-    def pixelscale(self, value):
-        if value is not None:
-            self._pixelscale = np.broadcast_to(value, (2,))
-        else:
-            self._pixelscale = None
 
     @property
     def field(self):
@@ -78,10 +80,19 @@ class Wavefront:
     def intensity(self):
         """Wavefront intensity"""
         out = np.zeros(self.shape, dtype=float)
-        for field in lentil.field.reduce(*self.data):
+        for field in lentil.field.reduce(self.data):
             out = lentil.field.insert(field, out, intensity=True)
         return out
 
+    @classmethod
+    def empty(cls, wavelength, pixelscale=None, diameter=None, focal_length=None,
+              tilt=None, shape=None, ptype=None):
+        w = cls(wavelength=wavelength, pixelscale=pixelscale, diameter=diameter,
+                focal_length=focal_length, tilt=tilt, ptype=ptype)
+        w.data = []
+        w.shape = () if shape is None else shape
+        return w
+        
     def copy(self):
         return copy.deepcopy(self)
 
@@ -136,7 +147,7 @@ class Wavefront:
             A Wavefront propagated to the specified image plane
 
         """
-        if self.planetype != 'pupil':
+        if self.ptype != lentil.pupil:
             raise ValueError("Wavefront must have planetype 'pupil'")
 
         npix = np.asarray(lentil.sanitize_shape(npix))
@@ -154,11 +165,12 @@ class Wavefront:
             out.pixelscale = du / oversample
             out.shape = npix * oversample
             out.focal_length = np.inf
-            out.planetype = 'image'
+            out.ptype = lentil.image
         else:
-            out = Wavefront(wavelength=self.wavelength, data=[],
-                            pixelscale=du/oversample, shape=npix*oversample,
-                            planetype='image')
+            out = Wavefront.empty(wavelength=self.wavelength,
+                                  pixelscale=du/oversample,
+                                  shape=npix*oversample,
+                                  ptype=lentil.image)
 
         for field in data:
             # compute the field shift from any embedded tilts. note the return value

@@ -474,23 +474,6 @@ def _overlap(a_extent, b_extent):
     return armin <= brmax and armax >= brmin and acmin <= bcmax and acmax >= bcmin
 
 
-def _mul_pixelscale(a_pixelscale, b_pixelscale):
-    # pixelscale reduction for multiplication
-    if a_pixelscale is None and b_pixelscale is None:
-        out = None
-    elif a_pixelscale is None:
-        out = b_pixelscale
-    elif b_pixelscale is None:
-        out = a_pixelscale
-    else:
-        if a_pixelscale[0] == b_pixelscale[0] and a_pixelscale[1] == b_pixelscale[1]:
-            out = a_pixelscale
-        else:
-            raise ValueError(f"can't multiply with inconsistent pixelscales: {a_pixelscale} != {b_pixelscale}")
-
-    return out
-
-
 def _mul_broadcast(a_data, a_offset, b_data, b_offset):
     """
     Broadcast for multiplication. 
