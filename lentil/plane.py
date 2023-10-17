@@ -149,7 +149,7 @@ class Plane:
         if self.shape == () or self.shape is None:
             ptt_vector = None
         else:
-            if self.pixelscale == ():
+            if self.pixelscale is None:
                 raise ValueError("can't create ptt_vector with pixelscale = ()")
 
             # compute unmasked piston, x-tilt, y-tilt vector
