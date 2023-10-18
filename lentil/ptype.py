@@ -23,17 +23,20 @@ class PType:
     def __init__(self, ptype):
         if ptype not in PTYPES:
             raise TypeError(f"plane type '{ptype}' not understood")
-        self._type = ptype
+        self._key = ptype
 
     def __eq__(self, other):
-        if self._type == other._type:
+        if self._key == other._key:
             return True
         else:
             return False
         
+    def __hash__(self):
+        return hash(self._key)
+    
     def __repr__(self):
-        return f"ptype('{self._type}')"
+        return f"ptype('{self._key}')"
 
     def __str__(self):
-        return self._type
+        return self._key
     

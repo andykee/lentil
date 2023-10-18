@@ -38,7 +38,7 @@ class Wavefront:
     
     """
     __slots__ = ('wavelength', 'pixelscale', 'focal_length', 'diameter',
-                 'focal_length', 'ptype', 'shape', 'data')
+                 'focal_length', '_ptype', 'shape', 'data')
 
     def __init__(self, wavelength, pixelscale=None, diameter=None, focal_length=None,
                  tilt=None, ptype=None):
@@ -67,6 +67,17 @@ class Wavefront:
 
     def __rmul__(self, other):
         return self.__mul__(other)
+
+    @property
+    def ptype(self):
+        return self._ptype
+    
+    @ptype.setter
+    def ptype(self, value):
+        if lentil.ptype(value) == lentil.transform:
+            raise TypeError("invalid type ptype('transform') for Wavefront")
+        else:
+            self._ptype = lentil.ptype(value)
 
     @property
     def field(self):

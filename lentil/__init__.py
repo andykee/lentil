@@ -5,6 +5,13 @@
 # Government sponsorship acknowledged.
 __version__ = '0.7.0'
 
+from lentil.ptype import ptype
+
+none = ptype('none')
+pupil = ptype('pupil')
+image = ptype('image')
+transform = ptype('transform')
+
 from lentil.convolvable import jitter, smear
 
 from lentil import detector
@@ -25,13 +32,6 @@ from lentil.plane import (
 )
 
 from lentil.propagate import propagate_dft
-
-from lentil.ptype import ptype
-
-none = ptype('none')
-pupil = ptype('pupil')
-image = ptype('image')
-transform = ptype('transform')
 
 from lentil import radiometry
 

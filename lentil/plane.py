@@ -44,13 +44,15 @@ class Plane:
         List of :class:`~lentil.Tilt` terms associated wirth this Plane
 
     """
-    def __init__(self, amplitude=1, phase=0, mask=None, pixelscale=None, diameter=None):
+    def __init__(self, amplitude=1, phase=0, mask=None, pixelscale=None, diameter=None,
+                 ptype=None):
         self.amplitude = np.asarray(amplitude)
         self.phase = np.asarray(phase)
         self.mask = mask
         self.pixelscale = None if pixelscale is None else np.broadcast_to(pixelscale, (2,))
         self.diameter = diameter
-        
+        self.ptype = lentil.ptype(ptype)
+
         self._mask = np.asarray(mask) if mask is not None else None
 
         self._slice = _plane_slice(self._mask)
@@ -415,6 +417,28 @@ def _multiply_pixelscale(a_pixelscale, b_pixelscale):
     return out
 
 
+def _can_multiply_ptype(plane_ptype, wavefront_ptype):
+    """Return True if multiplication between ptypes is permitted."""
+    return _MULTIPLY_PTYPE[plane_ptype][wavefront_ptype]
+
+# Mapping between Plane ptype (outer keys) and Wavefront ptype
+# (inner keys)
+_MULTIPLY_PTYPE = {
+    lentil.none: {
+        lentil.none: True, lentil.pupil: False, lentil.image: False
+    },
+    lentil.pupil: {
+        lentil.none: True, lentil.pupil: True, lentil.image: False
+    },
+    lentil.image: {
+        lentil.none: True, lentil.pupil: False, lentil.image: True
+    },
+    lentil.transform: {
+        lentil.none: True, lentil.pupil: True, lentil.image: True
+    }
+}
+
+
 def _plane_slice(mask):
     """Compute slices defined by the data extent in ``mask``.
 
@@ -485,11 +509,12 @@ class Pupil(Plane):
     sphere. The primary use of :class:`Pupil` is to represent these aberrations
 
     """
+
     def __init__(self, focal_length=None, pixelscale=None, amplitude=1,
                  phase=0, mask=None):
 
         super().__init__(pixelscale=pixelscale, amplitude=amplitude, phase=phase,
-                         mask=mask)
+                         mask=mask, ptype=lentil.pupil)
 
         self.focal_length = focal_length
 
@@ -530,6 +555,23 @@ class Image(Plane):
 
     """
 
+    def __init__(self, shape=None, pixelscale=None, amplitude=1, phase=0, 
+                 mask=None):
+        super().__init__(amplitude=amplitude, phase=phase, mask=mask, 
+                         pixelscale=pixelscale, ptype=lentil.image)
+        self.shape = shape
+
+    @property
+    def shape(self):
+        return self._shape
+    
+    @shape.setter
+    def shape(self, value):
+        if value is None:
+            self._shape = ()
+        else:
+            self._shape = tuple(np.broadcast_to(value, (2,)))
+        
     def fit_tilt(self, *args, **kwargs):
         return self
 
