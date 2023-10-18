@@ -72,7 +72,7 @@ def propagate_dft(wavefront, shape, pixelscale, prop_shape=None,
                                             wave=wavefront.wavelength,
                                             oversample=oversample)
             data = lentil.fourier.dft2(f=field.data, alpha=alpha,
-                                       npix=prop_shape_out,
+                                       shape=prop_shape_out,
                                        shift=subpx_shift,
                                        offset=field.offset, unitary=True)
             out.data.append(Field(data=data, pixelscale=du/oversample,
