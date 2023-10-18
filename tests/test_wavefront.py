@@ -15,8 +15,8 @@ def test_wavefront_rmul():
 
 def test_wavefront_propagate_image_non_pupil():
     w = lentil.Wavefront(wavelength=500e-9)
-    with pytest.raises(ValueError):
-        w.propagate_image(pixelscale=5e-6, npix=64)
+    with pytest.raises(TypeError):
+        lentil.propagate_dft(w, shape=(64,64), pixelscale=5e-6)
 
 
 @pytest.mark.parametrize('field_shape, field_shift, output_shape', [

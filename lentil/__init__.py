@@ -24,6 +24,8 @@ from lentil.plane import (
 	Flip
 )
 
+from lentil.propagate import propagate_dft
+
 from lentil.ptype import ptype
 
 none = ptype('none')
