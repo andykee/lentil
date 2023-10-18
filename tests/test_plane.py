@@ -26,6 +26,15 @@ def test_default_plane():
     assert p.mask == p.amplitude
 
 
+def test_plane_fit_tilt_inplace():
+    p = RandomPlane()
+    p_copy = p.fit_tilt(inplace=False)
+    p_inplace = p.fit_tilt(inplace=True)
+
+    assert p_copy is not p
+    assert p_inplace is p
+
+
 def test_wavefront_plane_multiply():
     p = RandomPlane()
     w = lentil.Wavefront(650e-9)
