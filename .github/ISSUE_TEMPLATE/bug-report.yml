@@ -1,0 +1,38 @@
+name: Bug report
+description: Report a bug. 
+title: "BUG: <Please write a title after the 'BUG: ' prefix>"
+labels: [bug]
+
+body:
+- type: textarea
+  attributes: 
+    label: "Describe the issue:"
+  validations:
+    required: true
+
+- type: textarea
+  attributes:
+    label: "Reproduce the code example:"
+    description: >
+      A short code example that reproduces the problem/missing feature. It
+      should be self-contained, i.e., can be copy-pasted into the Python
+      interpreter or run as-is via `python myproblem.py`.
+    render: python
+  validations:
+    required: true
+  
+- type: textarea
+  attributes:
+    label: "Error message:"
+    description: >
+      Please include full error message, if any.
+    render: shell
+
+- type: textarea
+  attributes:
+    label: "Runtime information:"
+    description: >
+      Output from `import sys, lentil, numpy, scipy; print(lentil.__version__); print(numpy.__version__); print(scipy.__version__); print(sys.version)`
+    render: shell
+  validations:
+    required: true

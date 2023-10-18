@@ -1,0 +1,11 @@
+name: Feature request
+description: Suggest an idea.
+title: "ENH: <Please write a title after the 'ENH: ' prefix>"
+labels: [enh]
+
+body:
+- type: textarea
+  attributes:
+    label: "Proposed new feature or change:"
+  validations:
+    required: true

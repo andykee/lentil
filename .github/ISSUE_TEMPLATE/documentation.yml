@@ -1,0 +1,20 @@
+name: Documentation
+description: Report an issue related to the documentation.
+title: "DOC: <Please write a title after the 'DOC: ' prefix>"
+labels: [doc]
+
+body:
+- type: textarea
+  attributes: 
+    label: "Issue with current documentation:"
+    description: >
+      Please make sure to leave a reference to the document/code you're
+      referring to.
+
+- type: textarea
+  attributes:
+    label: "Idea or request for content:"
+    description: >
+      Please describe as clearly as possible a suggested fix, better 
+      phrasing or topics you think are missing from the current 
+      documentation.
