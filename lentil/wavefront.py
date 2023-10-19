@@ -75,7 +75,7 @@ class Wavefront:
     @ptype.setter
     def ptype(self, value):
         if lentil.ptype(value) == lentil.transform:
-            raise TypeError("invalid type ptype('transform') for Wavefront")
+            raise TypeError("invalid ptype 'transform' for Wavefront")
         else:
             self._ptype = lentil.ptype(value)
 

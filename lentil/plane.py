@@ -365,6 +365,11 @@ class Plane:
             Updated wavefront
 
         """
+        if not _can_multiply_ptype(self.ptype, wavefront.ptype):
+            raise TypeError(f"can't multiply Wavefront with ptype " \
+                            f"'{wavefront.ptype}' by Plane with ptype " \
+                            f"'{self.ptype}'")
+
         pixelscale = _multiply_pixelscale(self.pixelscale, wavefront.pixelscale)
         shape = wavefront.shape if self.shape == () else self.shape
         data = wavefront.data
