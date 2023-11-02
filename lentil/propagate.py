@@ -5,7 +5,7 @@ from lentil.field import Field
 from lentil.wavefront import Wavefront
 
 def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None, 
-                  oversample=2, inplace=True):
+                  oversample=2):
     """Propagate a Wavefront using Fraunhofer diffraction.
 
     Parameters
@@ -25,9 +25,6 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
         ``prop_shape`` should not be larger than ``prop``.
     oversample : int, optional
         Number of times to oversample the output plane. Default is 2.
-    inplace : bool, optional
-        If True (default) the Wavefront is propagated in-place, otherwise
-        a copy is created and propagated.
 
     Returns
     -------
@@ -48,17 +45,10 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
 
     data = wavefront.data
 
-    if inplace:
-        out = wavefront
-        out.data = []
-        out.pixelscale = du/oversample
-        out.shape = shape_out
-        out.ptype = ptype_out
-    else:
-        out = Wavefront.empty(wavelength=wavefront.wavelength,
-                              pixelscale = du/oversample,
-                              shape = shape_out,
-                              ptype = ptype_out)
+    out = Wavefront.empty(wavelength=wavefront.wavelength,
+                          pixelscale = du/oversample,
+                          shape = shape_out,
+                          ptype = ptype_out)
         
     for field in data:
         # compute the field shift from any embedded tilts. note the return value

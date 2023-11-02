@@ -58,21 +58,6 @@ the wavefront's complex data array:
 
     \mathbf{W_1} = \mathbf{A} \exp\left(\frac{2\pi j}{\lambda} \mathbf{\theta}\right) \circ \mathbf{W_0}
 
-The plane's :func:`~lentil.Plane.multiply` method also accepts an ``inplace`` argument
-that governs whether the multiplication operation is performed on the wavefront in-place
-or using a copy:
-
-.. code:: pycon
-
-    >>> w1 = plane.multiply(w0, inplace=True)
-    >>> w1 is w0
-    True
-
-The in-place multiplication operator can also be used:
-
-.. code:: pycon
-
-    >>> w *= plane
 
 .. If the |Plane| :attr:`~lentil.Plane.tilt` attribute is not empty, its contents are appended
 .. to the |Wavefront|. See :ref:`user_guide.planes.fit_tilt` and :ref:`user_guide.diffraction.tilt`

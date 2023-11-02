@@ -60,10 +60,7 @@ class Wavefront:
                            tilt=tilt)]
 
     def __mul__(self, plane):
-        return plane.multiply(self, inplace=False)
-
-    def __imul__(self, plane):
-        return plane.multiply(self, inplace=True)
+        return plane.multiply(self)
 
     def __rmul__(self, other):
         return self.__mul__(other)

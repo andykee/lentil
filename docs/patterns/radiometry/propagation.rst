@@ -32,7 +32,7 @@ and multiply the source irradiance by the collecting area to get photons/second.
     >>> psf = np.zeros((64, 64))
     >>> for wl, wt in zip(source.wave, source.value):
     ...     w = lentil.Wavefront(wl*1e-9)
-    ...     w *= pupil
+    ...     w = w * pupil
     ...     w = w.propagate_image(pixelscale=5e-6, npix=32, oversample=2)
     ...     psf += (w.intensity * (np.pi*(pupil_diameter/2)**2))
     >>> plt.imshow(psf, origin='lower')
@@ -56,7 +56,7 @@ fine features present in the source's spectral response.
     >>> psf = np.zeros((64, 64))
     >>> for wl, wt in zip(binned_wave, binned_flux):
     ...     w = lentil.Wavefront(wl*1e-9)
-    ...     w *= pupil
+    ...     w = w * pupil
     ...     w = w.propagate_image(pixelscale=5e-6, npix=32, oversample=2)
     ...     psf += (w.intensity * (np.pi*(pupil_diameter/2)**2))
     >>> plt.imshow(psf, origin='lower')

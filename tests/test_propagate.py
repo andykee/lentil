@@ -272,7 +272,7 @@ def test_propagate_resample():
     w *= p
     wi = lentil.propagate_dft(w, shape=(64,64), pixelscale=5e-6, oversample=10)
 
-    p2 = p.rescale(scale=3, inplace=False)
+    p2 = p.rescale(scale=3)
     w2 = lentil.Wavefront(650e-9)
     w2 *= p2
     w2i = lentil.propagate_dft(w2, shape=(64,64), pixelscale=5e-6, oversample=10)
@@ -283,15 +283,3 @@ def test_propagate_resample():
 
     assert np.allclose(cent, [320, 320])
     assert math.isclose(np.sum(wi.intensity), np.sum(w2i.intensity), rel_tol=1e-2)
-
-
-def test_propagate_image_inplace():
-    p = lentil.Pupil(focal_length=10, pixelscale=1 / 240,
-                     amplitude=lentil.circle((256, 256), 120))
-    w = lentil.Wavefront(650e-9)
-    w *= p
-    w_copy = lentil.propagate_dft(w, shape=(64,64), pixelscale=5e-6, oversample=2, inplace=False)
-    w_inplace = lentil.propagate_dft(w, shape=(64,64), pixelscale=5e-6, oversample=2, inplace=True)
-
-    assert w_copy is not w
-    assert w_inplace is w

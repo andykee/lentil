@@ -234,7 +234,7 @@ class Plane:
 
         return plane
 
-    def rescale(self, scale, inplace=False):
+    def rescale(self, scale):
         """
         Rescale a plane via interpolation.
 
@@ -251,9 +251,6 @@ class Plane:
         scale : float
             Scale factor for interpolation. Scale factors less than 1 shrink the
             Plane while scale factors greater than 1 grow it.
-        inplace : bool, optional
-            Modify the original object in place (True) or create a copy (False,
-            default)
 
         Returns
         -------
@@ -268,10 +265,7 @@ class Plane:
         Plane.resample
 
         """
-        if inplace:
-            plane = self
-        else:
-            plane = self.copy()
+        plane = self.copy()
 
         if plane.amplitude.ndim > 1:
             plane.amplitude = lentil.rescale(plane.amplitude, scale=scale, shape=None,
@@ -302,7 +296,7 @@ class Plane:
 
         return plane
 
-    def resample(self, pixelscale, inplace=False):
+    def resample(self, pixelscale):
         """Resample a plane via interpolation.
 
         The following Plane attributes are resampled:
@@ -317,9 +311,6 @@ class Plane:
         ----------
         pixelscale : float
             Desired Plane pixelscale.
-        inplace : bool, optional
-            Modify the original object in place (True) or create a copy (False,
-            default)
 
         Returns
         -------
@@ -340,19 +331,15 @@ class Plane:
         elif self.pixelscale[0] != self.pixelscale[1]:
             raise NotImplementedError("Can't resample non-uniformly sampled Plane")
 
-        return self.rescale(scale=self.pixelscale[0]/pixelscale, inplace=inplace)
+        return self.rescale(scale=self.pixelscale[0]/pixelscale)
 
-    def multiply(self, wavefront, inplace=False):
+    def multiply(self, wavefront):
         """Multiply with a wavefront
 
         Parameters
         ----------
         wavefront : :class:`~lentil.wavefront.Wavefront` object
             Wavefront to be multiplied
-        inplace : bool, optional
-            If True, the wavefront object is multiplied in-place, otherwise a
-            copy is created before performing the multiplication. Default is
-            False.
 
         Note
         ----
@@ -374,16 +361,10 @@ class Plane:
         shape = wavefront.shape if self.shape == () else self.shape
         data = wavefront.data
 
-        if inplace:
-            out = wavefront
-            out.data = []
-            out.shape = shape
-            out.pixelscale = pixelscale
-        else:
-            out = lentil.Wavefront.empty(wavelength=wavefront.wavelength,
-                                         pixelscale=pixelscale,
-                                         focal_length=wavefront.focal_length,
-                                         shape=shape)
+        out = lentil.Wavefront.empty(wavelength=wavefront.wavelength,
+                                     pixelscale=pixelscale,
+                                     focal_length=wavefront.focal_length,
+                                     shape=shape)
 
 
         for field in data:
@@ -526,9 +507,9 @@ class Pupil(Plane):
     def __init_subclass__(cls):
         cls._focal_length = None
 
-    def multiply(self, wavefront, inplace=False):
+    def multiply(self, wavefront):
 
-        wavefront = super().multiply(wavefront, inplace)
+        wavefront = super().multiply(wavefront)
 
         # we inherit the plane's focal length as the wavefront's focal length
         wavefront.focal_length = self.focal_length
@@ -584,8 +565,8 @@ class Image(Plane):
     #     # np.s_[...] = Ellipsis -> returns the whole array
     #     return [np.s_[...]]
 
-    def multiply(self, wavefront, inplace=False):
-        wavefront = super().multiply(wavefront, inplace)
+    def multiply(self, wavefront):
+        wavefront = super().multiply(wavefront)
         wavefront.ptype = lentil.image
         return wavefront
 
@@ -616,7 +597,7 @@ class Detector(Image):
 
 class DispersivePhase(Plane):
 
-    def multiply(self, wavefront, inplace=False):
+    def multiply(self, wavefront):
         # NOTE: we can handle wavelength-dependent phase terms here (e.g. chromatic
         # aberrations). Since the phase will vary by wavelength, we can't fit out the
         # tilt pre-propagation and apply the same tilt for each wavelength like we can
@@ -629,8 +610,8 @@ class DispersiveShift(Plane):
     def shift(self, wavelength, x0, y0, **kwargs):
         raise NotImplementedError
 
-    def multiply(self, wavefront, inplace=False):
-        wavefront = super().multiply(wavefront, inplace=False)
+    def multiply(self, wavefront):
+        wavefront = super().multiply(wavefront)
         for field in wavefront.data:
             field.tilt.append(self)
         return wavefront
@@ -824,8 +805,8 @@ class Tilt(Plane):
         self.x = y  # y tilt is about the x-axis.
         self.y = x  # x tilt is about the y-axis.
 
-    def multiply(self, wavefront, inplace=False):
-        wavefront = super().multiply(wavefront, inplace)
+    def multiply(self, wavefront):
+        wavefront = super().multiply(wavefront)
         for field in wavefront.data:
             field.tilt.append(self)
         return wavefront
@@ -881,7 +862,7 @@ class Rotate(Plane):
         self.angle = -angle
         self.order = order
 
-    def multiply(self, wavefront, inplace=False):
+    def multiply(self, wavefront):
         """Multiply with a wavefront
 
         Parameters
@@ -932,7 +913,7 @@ class Flip(Plane):
         super().__init__()
         self.axis = axis
 
-    def multiply(self, wavefront, inplace=False):
+    def multiply(self, wavefront):
         """Multiply with a wavefront
 
         Parameters
