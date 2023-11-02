@@ -4,17 +4,20 @@ import lentil
 from lentil.field import Field
 from lentil.wavefront import Wavefront
 
-def propagate_dft(wavefront, shape, pixelscale, prop_shape=None, 
+def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None, 
                   oversample=2, inplace=True):
     """Propagate a Wavefront using Fraunhofer diffraction.
 
     Parameters
     ----------
-    shape : int or (2,) tuple of ints
-        Shape of output Wavefront.
+    wavefront : :class:`~lentil.Wavefront`
+        Wavefront to propagate
     pixelscale : float or (2,) float
         Physical sampling of output Wavefront. If a single value is supplied,
         the output is assumed to be uniformly sampled in both x and y.
+    shape : int or (2,) tuple of ints or None
+        Shape of output Wavefront. If None (default), the wavefront shape is
+        used.
     prop_shape : int or (2,) tuple of ints, optional
         Shape of propagation output. If None (default),
         ``prop_shape = prop``. If ``prop_shape != prop``, the propagation
@@ -29,12 +32,12 @@ def propagate_dft(wavefront, shape, pixelscale, prop_shape=None,
     Returns
     -------
     wavefront : :class:`~lentil.Wavefront`
-        A Wavefront propagated to the specified image plane
+        The orioagated Wavefront
     """
     
     ptype_out = _propagate_ptype(wavefront.ptype, method='fraunhofer')
     
-    shape = np.broadcast_to(shape, (2,))
+    shape = wavefront.shape if shape is None else np.broadcast_to(shape, (2,))
     prop_shape = shape if prop_shape is None else np.broadcast_to(prop_shape, (2,))
     shape_out = shape * oversample
     prop_shape_out = prop_shape * oversample
