@@ -4,6 +4,62 @@ import lentil
 from lentil.field import Field
 from lentil.wavefront import Wavefront
 
+
+def propagate_fft(wavefront, pixelscale, shape=None, oversample=2, 
+                  scratch=None):
+
+    alpha = (wavefront.pixelscale * pixelscale)/(wavefront.wavelength * wavefront.focal_length)
+    pad_shape = np.round(oversample * np.reciprocal(alpha)).astype(int)
+
+    # since we can only pad to integer precision, the actual wavelength 
+    # represented by the propagation may be slightly different
+    wavelength_prop = (pad_shape/oversample * wavefront.pixelscale * pixelscale)/wavefront.focal_length
+
+    if shape is None:
+        shape_out = pad_shape
+    else:
+        shape = np.broadcast_to(shape, (2,))
+        shape_out = (np.array(shape) * oversample).astype(int)
+
+    ptype_out = _propagate_ptype(wavefront.ptype, method='fraunhofer')
+
+    out = Wavefront.empty(wavelength=wavelength_prop,
+                          pixelscale = pixelscale/oversample,
+                          shape = shape_out,
+                          ptype = ptype_out)
+
+    # if scratch is not None:
+    #     if scratch.dtype != complex:
+    #         raise TypeError('scratch must be complex')
+        
+    #     if not all(np.asarray(scratch.shape) > pad_shape):
+    #         raise ValueError(f'scratch must have shape >= {pad_shape}')
+
+    #     field = scratch  # field is just a reference to scratch
+    #     field[:] = 0
+
+    
+    # else:
+    #     field = wavefront.field
+
+    # if wavefront.tilt:
+    #     raise ValueError
+
+    field = lentil.pad(wavefront.field, pad_shape)
+    field = np.fft.ifftshift(np.fft.fft2(np.fft.fftshift(field), norm='ortho'))
+
+    if not (field.shape == shape_out).all():
+        field = lentil.pad(field, shape_out)
+    
+    out.data.append(Field(data=field, pixelscale=pixelscale/oversample))
+
+    return out
+
+
+
+    
+
+
 def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None, 
                   oversample=2):
     """Propagate a Wavefront using Fraunhofer diffraction.
