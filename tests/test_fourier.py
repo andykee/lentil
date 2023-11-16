@@ -89,7 +89,7 @@ def test_dft2_offset():
     offset = lentil.helper.slice_offset(slc, f.shape)
 
     F = lentil.fourier.dft2(f, alpha=1/m, shape=10)
-    FF = lentil.fourier.dft2(f[slc], alpha=1/m, shape=10, offset=offset)
+    FF = lentil.fourier.dft2(f[slc], alpha=1/m, shape=10, cin=offset)
 
     assert np.allclose(F, FF)
 

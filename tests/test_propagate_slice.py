@@ -35,7 +35,7 @@ def test_propagate_slice_one():
     ofst = lentil.helper.slice_offset(slc, shape=amp.shape)
 
     phasor = amp[slc]*np.exp(-2*1j*np.pi*phase[slc]/wavelength)
-    F_slc = lentil.fourier.dft2(phasor, alpha=alpha/oversample, shape=shape*oversample, offset=ofst)
+    F_slc = lentil.fourier.dft2(phasor, alpha=alpha/oversample, shape=shape*oversample, cin=ofst)
 
     assert np.allclose(F, F_slc)
 
@@ -80,10 +80,10 @@ def test_propagate_slice_multi():
     F = lentil.fourier.dft2(phasor, alpha=alpha/oversample, shape=shape*oversample)
 
     phasor1 = amp1[slc1]*np.exp(-2*1j*np.pi*phase1[slc1]/wavelength)
-    F1 = lentil.fourier.dft2(phasor1, alpha=alpha/oversample, shape=shape*oversample, offset=ofst1)
+    F1 = lentil.fourier.dft2(phasor1, alpha=alpha/oversample, shape=shape*oversample, cin=ofst1)
 
     phasor2 = amp2[slc2]*np.exp(-2*1j*np.pi*phase2[slc2]/wavelength)
-    F2 = lentil.fourier.dft2(phasor2, alpha=alpha/oversample, shape=shape*oversample, offset=ofst2)
+    F2 = lentil.fourier.dft2(phasor2, alpha=alpha/oversample, shape=shape*oversample, cin=ofst2)
 
     F_slc = F1 + F2
 

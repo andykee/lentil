@@ -2,7 +2,8 @@ import functools
 import numpy as np
 
 
-def dft2(f, alpha, shape=None, shift=(0, 0), offset=(0, 0), unitary=True, out=None):
+def dft2(f, alpha, shape=None, shift=(0,0), cin=(0,0), cout=(0,0),
+         unitary=True, out=None):
     r"""Compute the 2-dimensional discrete Fourier Transform.
 
     The DFT is defined in one dimension as
@@ -32,9 +33,12 @@ def dft2(f, alpha, shape=None, shift=(0, 0), offset=(0, 0), unitary=True, out=No
     shift : array_like, optional
         Number of pixels in (r,c) to shift the DC pixel in the output plane
         with the origin centrally located in the plane. Default is ``(0,0)``.
-    offset : array_like, optional
-        Number of pixels in (r,c) that the input plane is shifted relative to
-        the origin. Default is ``(0,0)``.
+    cin : (2,) array_like, optional
+        Center location in (r,c) of input plane relative to the origin. 
+        Default is (0,0).
+    cout : (2,) array_like, optional
+        Center location in (r,c) of output plane relative to the origin. 
+        Default is (0,0).
     unitary : bool, optional
         Normalization flag. If ``True``, a normalization is performed on the
         output such that the DFT operation is unitary and energy is conserved
@@ -86,14 +90,15 @@ def dft2(f, alpha, shape=None, shift=(0, 0), offset=(0, 0), unitary=True, out=No
     M, N = np.broadcast_to(shape, (2,))
 
     shift_row, shift_col = np.broadcast_to(shift, (2,))
-    offset_row, offset_col = np.broadcast_to(offset, (2,))
+    cinr, cinc = np.broadcast_to(np.asarray(cin, dtype=int), (2,))
+    coutr, coutc = np.broadcast_to(np.asarray(cout, dtype=int), (2,))
 
     if out is not None:
         if not np.can_cast(complex, out.dtype):
             raise TypeError(f"Cannot cast complex output to dtype('{out.dtype}')")
 
     E1, E2 = _dft2_matrices(m, n, M, N, alpha_row, alpha_col, shift_row, shift_col,
-                            offset_row, offset_col)
+                            cinr, cinc, coutr, coutc)
     F = np.dot(E1.dot(f), E2, out=out)
 
     # now calculate the answer, without reallocating memory
@@ -103,10 +108,10 @@ def dft2(f, alpha, shape=None, shift=(0, 0), offset=(0, 0), unitary=True, out=No
     return F
 
 
-def _dft2_matrices(m, n, M, N, alphar, alphac, shiftr, shiftc, offsetr, offsetc):
+def _dft2_matrices(m, n, M, N, alphar, alphac, shiftr, shiftc, cinr, cinc, coutr, coutc):
     R, S, U, V = _dft2_coords(m, n, M, N)
-    E1 = np.exp(-2.0 * 1j * np.pi * alphar * np.outer(R-shiftr+offsetr, U-shiftr)).T
-    E2 = np.exp(-2.0 * 1j * np.pi * alphac * np.outer(S-shiftc+offsetc, V-shiftc))
+    E1 = np.exp(-2.0 * 1j * np.pi * alphar * np.outer(R-shiftr+cinr, U-shiftr+coutr)).T
+    E2 = np.exp(-2.0 * 1j * np.pi * alphac * np.outer(S-shiftc+cinc, V-shiftc+coutc))
     return E1, E2
 
 
