@@ -457,9 +457,9 @@ def pixelscale_nyquist(wave, f_number):
     return f_number * wave / 2
 
 
-def min_sampling(wave, z, du, npix, min_q):
+def min_sampling(wave, z, du, shape, min_q):
     num = np.min(wave) * z
-    return num/(min_q * du[0] * npix[0]), num/(min_q * du[1] * npix[1])
+    return num/(min_q * du[0] * shape[0]), num/(min_q * du[1] * shape[1])
 
 
 def normalize_power(array, power=1):

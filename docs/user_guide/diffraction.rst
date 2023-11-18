@@ -83,13 +83,6 @@ follows the same basic flow:
         >>> w2.focal_length
         10
 
-    It is also possible to perform the multiplication in-place, reducing the memory footprint
-    of the propagation:
-
-    .. code-block:: pycon
-
-        >>> w1 *= pupil
-
     .. note::
 
         Additional details on the plane-wavefront interaction can be found in
@@ -138,35 +131,6 @@ follows the same basic flow:
    are required to model the desired optical system, steps 2 and 3 should be
    repeated until the |Wavefront| has been propagated through all of the planes.
 
-Performing propagations in-place vs. on copies
-----------------------------------------------
-By default, all propagation operations operate on a |Wavefront| in-place. If desired,
-a copy can be returned instead by providing the argument ``inplace=False``:
-
-.. code-block:: python
-    :emphasize-lines: 9
-
-    import matplotlib.pyplot as plt
-    import lentil
-
-    pupil = lentil.Pupil(amplitude=lentil.circle((256, 256), 120),
-                         pixelscale=1/240, focal_length=10)
-
-    w1 = lentil.Wavefront(650e-9)
-    w2 = w1 * pupil
-    w3 = w2.propagate_image(pixelscale=5e-6, npix=64, oversample=5, inplace=False)
-
-    plt.subplot(121)
-    plt.imshow(w2.intensity, origin='lower')
-    plt.title('w2 intensity')
-
-    plt.subplot(122)
-    plt.imshow(w3.intensity**0.1, origin='lower')
-    plt.title('w3 intensity')
-
-.. plot:: _img/python/propagate_copy.py
-    :scale: 50
-
 Broadband (multi-wavelength) propagations
 -----------------------------------------
 The steps outlined above propagate a single monochromatic |Wavefront| through an
@@ -190,7 +154,7 @@ different wavelengths and accumulates the resulting image plane intensity:
 
     for wl in wavelengths:
         w = lentil.Wavefront(wl)
-        w *= pupil
+        w = w * pupil
         w.propagate_image(pixelscale=5e-6, npix=64, oversample=5)
         img += w.intensity
 
@@ -213,7 +177,7 @@ wavefront intensity given by ``npix`` * ``oversample``.
 
         for wl in wavelengths:
             w = lentil.Wavefront(wl)
-            w *= pupil
+            w = w * pupil
             w.propagate_image(pixelscale=5e-6, npix=64, oversample=5)
             img = w.insert(img)
 

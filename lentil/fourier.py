@@ -2,7 +2,7 @@ import functools
 import numpy as np
 
 
-def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=None):
+def dft2(f, alpha, shape=None, shift=(0, 0), offset=(0, 0), unitary=True, out=None):
     r"""Compute the 2-dimensional discrete Fourier Transform.
 
     The DFT is defined in one dimension as
@@ -25,10 +25,10 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=Non
         represents column-wise sampling. If :attr:`alpha` is a scalar,
         ``alpha[1] = alpha[2] = alpha`` gives uniform sampling across the rows
         and columns of the output plane.
-    npix : int or array_like, optional
-        Size of the output array :attr:`F`. If :attr:`npix` is an array,
-        ``F.shape = (npix[1], npix[2])``. If :attr:`npi`` is a scalar,
-        ``F.shape = (npix, npix)``. Default is ``f.shape``.
+    shape : int or array_like, optional
+        Size of the output array :attr:`F`. If :attr:`shape` is an array,
+        ``F.shape = (shape[0], shape[1])``. If :attr:`shape`` is a scalar,
+        ``F.shape = (shape, shape)``. Default is ``f.shape``.
     shift : array_like, optional
         Number of pixels in (r,c) to shift the DC pixel in the output plane
         with the origin centrally located in the plane. Default is ``(0,0)``.
@@ -42,8 +42,8 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=Non
         way, the energy in in a limited-area DFT is a fraction of the total
         energy corresponding to the limited area. Default is ``True``.
     out : ndarray or None
-        A location into which the result is stored. If provided, it must have
-        shape = npix and dtype = np.complex. If not provided or None, a
+        A location into which the result is stored. If provided, out.shape ==
+        shape and out.dtype == np.complex. If not provided or None, a
         freshly-allocated array is returned.
 
     Returns
@@ -52,7 +52,7 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=Non
 
     Notes
     -----
-    * Setting ``alpha = 1/f.shape`` and ``npix = f.shape`` is equivalent to
+    * Setting ``alpha = 1/f.shape`` and ``shape = f.shape`` is equivalent to
 
       ::
 
@@ -60,7 +60,7 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=Non
 
     * ``dft2()`` is designed to place the DC pixel in the same location as a
       well formed call to any standard FFT for both even and odd sized input
-      arrays. The DC pixel is located at ``np.floor(npix/2) + 1``, which is
+      arrays. The DC pixel is located at ``np.floor(shape/2) + 1``, which is
       consistent with calls to Numpy's FFT method where the input and output
       are correctly shifted:
       ``np.fft.ifftshift(np.fft.fft2(np.fft.fftshift(f)))``.
@@ -76,17 +76,17 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=Non
     [1] Soummer, et. al. Fast computation of Lyot-style coronagraph propagation (2007)
 
     """
-    alpha_row, alpha_col = _sanitize_alpha(alpha)
+    alpha_row, alpha_col = np.broadcast_to(alpha, (2,))
 
     f = np.asarray(f)
     m, n = f.shape
 
-    if npix is None:
-        npix = [m, n]
-    M, N = _sanitize_npix(npix)
+    if shape is None:
+        shape = [m, n]
+    M, N = np.broadcast_to(shape, (2,))
 
-    shift_row, shift_col = _sanitize_shift(shift)
-    offset_row, offset_col = _sanitize_npix(offset)
+    shift_row, shift_col = np.broadcast_to(shift, (2,))
+    offset_row, offset_col = np.broadcast_to(offset, (2,))
 
     if out is not None:
         if not np.can_cast(complex, out.dtype):
@@ -103,7 +103,6 @@ def dft2(f, alpha, npix=None, shift=(0, 0), offset=(0, 0), unitary=True, out=Non
     return F
 
 
-@functools.lru_cache(maxsize=32)
 def _dft2_matrices(m, n, M, N, alphar, alphac, shiftr, shiftc, offsetr, offsetc):
     R, S, U, V = _dft2_coords(m, n, M, N)
     E1 = np.exp(-2.0 * 1j * np.pi * alphar * np.outer(R-shiftr+offsetr, U-shiftr)).T
@@ -124,7 +123,7 @@ def _dft2_coords(m, n, M, N):
     return R, S, U, V
 
 
-def idft2(F, alpha, npix=None, shift=(0,0), unitary=True, out=None):
+def idft2(F, alpha, shape=None, shift=(0,0), unitary=True, out=None):
     r"""Compute the 2-dimensional inverse discrete Fourier Transform.
 
     The IDFT is defined in one dimension as
@@ -147,10 +146,10 @@ def idft2(F, alpha, npix=None, shift=(0,0), unitary=True, out=None):
         column-wise sampling. If :attr:`alpha` is a scalar,
         ``alpha[1] = alpha[2] = alpha`` represents uniform sampling across the
         rows and columns of the input plane.
-    npix : int or array_like, optional
-        Size of the output array :attr:`F`. If :attr:`npix` is an array,
-        ``F.shape = (npix[1], npix[2])``. If :attr:`npix` is a scalar,
-        ``F.shape = (npix, npix)``. Default is ``F.shape``
+    shape : int or array_like, optional
+        Size of the output array :attr:`F`. If :attr:`npshapeix` is an array,
+        ``F.shape = (shape[0], shape[1])``. If :attr:`shape` is a scalar,
+        ``F.shape = (shape, shape)``. Default is ``F.shape``
     shift : array_like, optional
         Number of pixels in (x,y) to shift the DC pixel in the output plane with
         the origin centrally located in the plane. Default is `[0,0]`.
@@ -167,7 +166,7 @@ def idft2(F, alpha, npix=None, shift=(0,0), unitary=True, out=None):
 
     Notes
     -----
-    * Setting ``alpha = 1/F.shape`` and ``npix = F.shape`` is equivalent to
+    * Setting ``alpha = 1/F.shape`` and ``shape = F.shape`` is equivalent to
 
       ::
 
@@ -175,7 +174,7 @@ def idft2(F, alpha, npix=None, shift=(0,0), unitary=True, out=None):
 
     * ``idft2()`` is designed to place the DC pixel in the same location as a
       well formed call to any standard FFT for both even and odd sized input
-      arrays. The DC pixel is located at ``np.floor(npix/2) + 1``, which is
+      arrays. The DC pixel is located at ``np.floor(shape/2) + 1``, which is
       consistent with calls to Numpy's IFFT method where the input and output
       are correctly shifted:
       ``np.fft.ifftshift(np.fft.ifft2(np.fft.fftshift(f)))``.
@@ -196,35 +195,6 @@ def idft2(F, alpha, npix=None, shift=(0,0), unitary=True, out=None):
     F = np.asarray(F)
     N = F.size
     # will allocate memory for F if out == None
-    F = dft2(np.conj(F), alpha, npix, shift, unitary=unitary, out=out)
+    F = dft2(np.conj(F), alpha, shape, shift, unitary=unitary, out=out)
     np.conj(F, out=F)
     return np.divide(F, N, out=F)
-
-
-def _sanitize_alpha(x):
-    """Return consistent representation of alpha as ar, ac"""
-    x = np.asarray(x)
-    if x.size == 1:
-        ar, ac = float(x), float(x)
-    else:
-        ar, ac = float(x[0]), float(x[1])
-    return ar, ac
-
-
-def _sanitize_npix(x):
-    """Return consistent representation of npix as M, N"""
-    x = np.asarray(x)
-    if x.size == 1:
-        M, N = int(x), int(x)
-    else:
-        M, N = int(x[0]), int(x[1])
-    return M, N
-
-
-def _sanitize_shift(x):
-    """Return consistent representation of shift as sr, sc"""
-    if isinstance(x, np.ndarray):
-        sr, sc = float(x[0]), float(x[1])
-    else:
-        sr, sc = x
-    return sr, sc

@@ -20,10 +20,19 @@ def test_default_plane():
     # perfect optical and spectral transmission).
 
     p = lentil.Plane()
-    assert p.pixelscale == ()
+    assert p.pixelscale == None
     assert np.all(p.amplitude == 1)
     assert np.all(p.phase == 0)
     assert p.mask == p.amplitude
+
+
+def test_plane_fit_tilt_inplace():
+    p = RandomPlane()
+    p_copy = p.fit_tilt(inplace=False)
+    p_inplace = p.fit_tilt(inplace=True)
+
+    assert p_copy is not p
+    assert p_inplace is p
 
 
 def test_wavefront_plane_multiply():
@@ -37,16 +46,6 @@ def test_wavefront_plane_multiply():
 
     assert np.array_equal(w1.data[0].data, phasor)
 
-
-def test_wavefront_plane_multiply_inplace():
-    p = RandomPlane()
-    w = lentil.Wavefront(650e-9)
-
-    w_copy = p.multiply(w, inplace=False)
-    w_inplace = p.multiply(w, inplace=True)
-
-    assert w_copy is not w
-    assert w_inplace is w
 
 def test_wavefront_plane_multiply_overlapping_segment_slices():
     seg = lentil.hexagon((64, 64), 32)
@@ -85,7 +84,7 @@ def test_wavefront_pupil_multiply():
 
 def test_pupil_rescale_power():
     p = CircularPupil()
-    pr = p.rescale(3, inplace=False)
+    pr = p.rescale(3)
 
     amp_power = np.sum(np.abs(p.amplitude)**2)
     ampr_power = np.sum(np.abs(pr.amplitude)**2)

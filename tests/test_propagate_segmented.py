@@ -30,13 +30,13 @@ def test_propagate_tilt_angle_mono():
 
     w1 = lentil.Wavefront(wavelength=650e-9)
     w1 *= p
-    w1 = w1.propagate_image(pixelscale=5e-6, npix=128)
+    w1 = lentil.propagate_dft(w1, shape=(128,128), pixelscale=5e-6)
     psf_phase = w1.intensity
 
-    p.fit_tilt()
+    p.fit_tilt(inplace=True)
     w2 = lentil.Wavefront(wavelength=650e-9)
     w2 *= p
-    w2 = w2.propagate_image(pixelscale=5e-6, npix=128)
+    w2 = lentil.propagate_dft(w2, shape=(128,128), pixelscale=5e-6)
     psf_angle = w2.intensity
 
     # Normalize and threshold the PSFs so that the centroiding is consistent

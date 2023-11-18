@@ -36,79 +36,34 @@ class Plane:
     pixelscale : float or (2,) array_like, optional
         Physical sampling of each pixel in the plane. If ``pixelscale`` is a
         scalar, uniform sampling in x and y is assumed. If None (default),
-        ``pixelscale`` is undefined.
+        ``pixelscale`` is left undefined.
+
+    Attributes
+    ----------
+    tilt : list
+        List of :class:`~lentil.Tilt` terms associated wirth this Plane
+
     """
-    def __init__(self, amplitude=1, phase=0, mask=None, pixelscale=None):
-        # We directly set the local attributes here in case a subclass has redefined
-        # the property (which could cause an weird behavior and will throw an
-        # AttributeError if the subclass hasn't defined an accompanying getter
-        self._pixelscale = () if pixelscale is None else lentil.sanitize_shape(pixelscale)
-        self._amplitude = np.asarray(amplitude)
-        self._phase = np.asarray(phase)
+    def __init__(self, amplitude=1, phase=0, mask=None, pixelscale=None, diameter=None,
+                 ptype=None):
+        self.amplitude = np.asarray(amplitude)
+        self.phase = np.asarray(phase)
+        self.mask = mask
+        self.pixelscale = None if pixelscale is None else np.broadcast_to(pixelscale, (2,))
+        self.diameter = diameter
+        self.ptype = lentil.ptype(ptype)
+
         self._mask = np.asarray(mask) if mask is not None else None
 
         self._slice = _plane_slice(self._mask)
 
         self.tilt = []
 
-    def __init_subclass__(cls):
-        # we have to define default values to avoid AttributeErrors in case
-        # subclasses don't call super().__init__ and don't explicitly define
-        # an attribute
-        cls._pixelscale = ()
-        cls._amplitude = np.array(1)
-        cls._phase = np.array(0)
-        cls._mask = None
-        cls._tilt = []
-
     def __repr__(self):
         return f'{self.__class__.__name__}()'
 
     @property
-    def amplitude(self):
-        """
-        Electric field amplitude transmission
-
-        Returns
-        -------
-        amplitude : ndarray
-        """
-        return self._amplitude
-
-    @amplitude.setter
-    def amplitude(self, value):
-        self._amplitude = np.asarray(value)
-
-    @property
-    def phase(self):
-        """
-        Electric field phase shift
-
-        Returns
-        -------
-        phase : ndarray
-        """
-        return self._phase
-
-    @phase.setter
-    def phase(self, value):
-        self._phase = np.asarray(value)
-
-    @property
     def mask(self):
-        """Binary mask
-
-        If ``mask`` has 2 dimensions, the plane is assumed to be monolithic. If
-        ``mask`` has 3 dimensions, the plane is assumed to be segmented with the
-        individual segment masks inserted along the first dimension.
-
-        .. plot:: _img/python/segmask.py
-            :scale: 50
-
-        Returns
-        -------
-        mask : ndarray
-        """
         if self._mask is not None:
             return self._mask
         else:
@@ -140,44 +95,18 @@ class Plane:
             return np.sum(self.mask, axis=0)
 
     @property
-    def pixelscale(self):
-        """
-        Physical (row, col) sampling of each pixel in the Plane. If plane does
-        not have a pixelscale, an empty tuple is returned.
-
-        Returns
-        -------
-        pixelscale : tuple
-        """
-        return self._pixelscale
-
-    @pixelscale.setter
-    def pixelscale(self, value):
-        self._pixelscale = lentil.sanitize_shape(value)
-
-    @property
-    def tilt(self):
-        """
-        List of additional :class:`~lentil.Tilt` terms associated wirth this Plane
-
-        Returns
-        -------
-        tilt : list
-
-        See Also
-        --------
-        Tilt : Tilt object
-        Plane.fit_tilt : Method for fitting and removing tilt
-        """
-        return self._tilt
-
-    @tilt.setter
-    def tilt(self, value):
-        self._tilt = value
-
-    @property
-    def slice(self):
-        return self._slice
+    def diameter(self):
+        if self._diameter is None:
+            [rmin, rmax, cmin, cmax] = lentil.boundary(self.global_mask)
+            # since pixelscale has shape=(2,), we need to return the overall
+            # max here to get the single largest outer dimension
+            return np.max(np.max((rmax-rmin, cmax-cmin)) * self.pixelscale)
+        else:
+            return self._diameter
+        
+    @diameter.setter
+    def diameter(self, value):
+        self._diameter = value
 
     @property
     def shape(self):
@@ -222,7 +151,7 @@ class Plane:
         if self.shape == () or self.shape is None:
             ptt_vector = None
         else:
-            if self.pixelscale == ():
+            if self.pixelscale is None:
                 raise ValueError("can't create ptt_vector with pixelscale = ()")
 
             # compute unmasked piston, x-tilt, y-tilt vector
@@ -305,7 +234,7 @@ class Plane:
 
         return plane
 
-    def rescale(self, scale, inplace=False):
+    def rescale(self, scale):
         """
         Rescale a plane via interpolation.
 
@@ -322,9 +251,6 @@ class Plane:
         scale : float
             Scale factor for interpolation. Scale factors less than 1 shrink the
             Plane while scale factors greater than 1 grow it.
-        inplace : bool, optional
-            Modify the original object in place (True) or create a copy (False,
-            default)
 
         Returns
         -------
@@ -339,10 +265,7 @@ class Plane:
         Plane.resample
 
         """
-        if inplace:
-            plane = self
-        else:
-            plane = self.copy()
+        plane = self.copy()
 
         if plane.amplitude.ndim > 1:
             plane.amplitude = lentil.rescale(plane.amplitude, scale=scale, shape=None,
@@ -368,12 +291,12 @@ class Plane:
             plane.mask[np.nonzero(plane.mask)] = 1
             plane.mask = plane.mask.astype(int)
 
-        if plane.pixelscale:
+        if plane.pixelscale is not None:
             plane.pixelscale = (plane.pixelscale[0]/scale, plane.pixelscale[1]/scale)
 
         return plane
 
-    def resample(self, pixelscale, inplace=False):
+    def resample(self, pixelscale):
         """Resample a plane via interpolation.
 
         The following Plane attributes are resampled:
@@ -388,9 +311,6 @@ class Plane:
         ----------
         pixelscale : float
             Desired Plane pixelscale.
-        inplace : bool, optional
-            Modify the original object in place (True) or create a copy (False,
-            default)
 
         Returns
         -------
@@ -411,19 +331,15 @@ class Plane:
         elif self.pixelscale[0] != self.pixelscale[1]:
             raise NotImplementedError("Can't resample non-uniformly sampled Plane")
 
-        return self.rescale(scale=self.pixelscale[0]/pixelscale, inplace=inplace)
+        return self.rescale(scale=self.pixelscale[0]/pixelscale)
 
-    def multiply(self, wavefront, inplace=False):
+    def multiply(self, wavefront):
         """Multiply with a wavefront
 
         Parameters
         ----------
         wavefront : :class:`~lentil.wavefront.Wavefront` object
             Wavefront to be multiplied
-        inplace : bool, optional
-            If True, the wavefront object is multiplied in-place, otherwise a
-            copy is created before performing the multiplication. Default is
-            False.
 
         Note
         ----
@@ -436,25 +352,23 @@ class Plane:
             Updated wavefront
 
         """
-        pixelscale = lentil.field.multiply_pixelscale(self.pixelscale, wavefront.pixelscale)
+        if not _can_multiply_ptype(self.ptype, wavefront.ptype):
+            raise TypeError(f"can't multiply Wavefront with ptype " \
+                            f"'{wavefront.ptype}' by Plane with ptype " \
+                            f"'{self.ptype}'")
+
+        pixelscale = _multiply_pixelscale(self.pixelscale, wavefront.pixelscale)
         shape = wavefront.shape if self.shape == () else self.shape
         data = wavefront.data
 
-        if inplace:
-            out = wavefront
-            out.data = []
-            out.shape = shape
-            out.pixelscale = pixelscale
-        else:
-            out = lentil.Wavefront(wavelength=wavefront.wavelength,
-                                   pixelscale=pixelscale,
-                                   planetype=wavefront.planetype,
-                                   focal_length=wavefront.focal_length,
-                                   shape=shape,
-                                   data=[])
+        out = lentil.Wavefront.empty(wavelength=wavefront.wavelength,
+                                     pixelscale=pixelscale,
+                                     focal_length=wavefront.focal_length,
+                                     shape=shape)
+
 
         for field in data:
-            for n, s in enumerate(self.slice):
+            for n, s in enumerate(self._slice):
                 # We have to multiply amplitude[s] by mask[n][s] because the requested
                 # slice of the amplitude array may contain parts of adjacent segments
                 mask = self.mask if self.depth == 1 else self.mask[n]
@@ -470,6 +384,45 @@ class Plane:
                 out.data.append(field * phasor)
 
         return out
+
+
+def _multiply_pixelscale(a_pixelscale, b_pixelscale):
+    # pixelscale reduction for multiplication
+    if a_pixelscale is None and b_pixelscale is None:
+        out = None
+    elif a_pixelscale is None:
+        out = b_pixelscale
+    elif b_pixelscale is None:
+        out = a_pixelscale
+    else:
+        if a_pixelscale[0] == b_pixelscale[0] and a_pixelscale[1] == b_pixelscale[1]:
+            out = a_pixelscale
+        else:
+            raise ValueError(f"can't multiply with inconsistent pixelscales: {a_pixelscale} != {b_pixelscale}")
+
+    return out
+
+
+def _can_multiply_ptype(plane_ptype, wavefront_ptype):
+    """Return True if multiplication between ptypes is permitted."""
+    return _MULTIPLY_PTYPE[plane_ptype][wavefront_ptype]
+
+# Mapping between Plane ptype (outer keys) and Wavefront ptype
+# (inner keys)
+_MULTIPLY_PTYPE = {
+    lentil.none: {
+        lentil.none: True, lentil.pupil: False, lentil.image: False
+    },
+    lentil.pupil: {
+        lentil.none: True, lentil.pupil: True, lentil.image: False
+    },
+    lentil.image: {
+        lentil.none: True, lentil.pupil: False, lentil.image: True
+    },
+    lentil.transform: {
+        lentil.none: True, lentil.pupil: True, lentil.image: True
+    }
+}
 
 
 def _plane_slice(mask):
@@ -542,36 +495,25 @@ class Pupil(Plane):
     sphere. The primary use of :class:`Pupil` is to represent these aberrations
 
     """
+
     def __init__(self, focal_length=None, pixelscale=None, amplitude=1,
                  phase=0, mask=None):
 
         super().__init__(pixelscale=pixelscale, amplitude=amplitude, phase=phase,
-                         mask=mask)
+                         mask=mask, ptype=lentil.pupil)
 
-        # We directly set the local attributes here in case a subclass has redefined
-        # the property (which could cause an weird behavior and will throw an
-        # AttributeError if the subclass hasn't defined an accompanying getter
-        self._focal_length = focal_length
+        self.focal_length = focal_length
 
     def __init_subclass__(cls):
         cls._focal_length = None
 
-    @property
-    def focal_length(self):
-        """Pupil focal length"""
-        return self._focal_length
+    def multiply(self, wavefront):
 
-    @focal_length.setter
-    def focal_length(self, value):
-        self._focal_length = value
-
-    def multiply(self, wavefront, inplace=False):
-
-        wavefront = super().multiply(wavefront, inplace)
+        wavefront = super().multiply(wavefront)
 
         # we inherit the plane's focal length as the wavefront's focal length
         wavefront.focal_length = self.focal_length
-        wavefront.planetype = 'pupil'
+        wavefront.ptype = lentil.pupil
 
         return wavefront
 
@@ -599,6 +541,23 @@ class Image(Plane):
 
     """
 
+    def __init__(self, shape=None, pixelscale=None, amplitude=1, phase=0, 
+                 mask=None):
+        super().__init__(amplitude=amplitude, phase=phase, mask=mask, 
+                         pixelscale=pixelscale, ptype=lentil.image)
+        self.shape = shape
+
+    @property
+    def shape(self):
+        return self._shape
+    
+    @shape.setter
+    def shape(self, value):
+        if value is None:
+            self._shape = ()
+        else:
+            self._shape = tuple(np.broadcast_to(value, (2,)))
+        
     def fit_tilt(self, *args, **kwargs):
         return self
 
@@ -606,9 +565,9 @@ class Image(Plane):
     #     # np.s_[...] = Ellipsis -> returns the whole array
     #     return [np.s_[...]]
 
-    def multiply(self, wavefront, inplace=False):
-        wavefront = super().multiply(wavefront, inplace)
-        wavefront.planetype = 'image'
+    def multiply(self, wavefront):
+        wavefront = super().multiply(wavefront)
+        wavefront.ptype = lentil.image
         return wavefront
 
 
@@ -638,7 +597,7 @@ class Detector(Image):
 
 class DispersivePhase(Plane):
 
-    def multiply(self, wavefront, inplace=False):
+    def multiply(self, wavefront):
         # NOTE: we can handle wavelength-dependent phase terms here (e.g. chromatic
         # aberrations). Since the phase will vary by wavelength, we can't fit out the
         # tilt pre-propagation and apply the same tilt for each wavelength like we can
@@ -651,8 +610,8 @@ class DispersiveShift(Plane):
     def shift(self, wavelength, x0, y0, **kwargs):
         raise NotImplementedError
 
-    def multiply(self, wavefront, inplace=False):
-        wavefront = super().multiply(wavefront, inplace=False)
+    def multiply(self, wavefront):
+        wavefront = super().multiply(wavefront)
         for field in wavefront.data:
             field.tilt.append(self)
         return wavefront
@@ -846,8 +805,8 @@ class Tilt(Plane):
         self.x = y  # y tilt is about the x-axis.
         self.y = x  # x tilt is about the y-axis.
 
-    def multiply(self, wavefront, inplace=False):
-        wavefront = super().multiply(wavefront, inplace)
+    def multiply(self, wavefront):
+        wavefront = super().multiply(wavefront)
         for field in wavefront.data:
             field.tilt.append(self)
         return wavefront
@@ -903,7 +862,7 @@ class Rotate(Plane):
         self.angle = -angle
         self.order = order
 
-    def multiply(self, wavefront, inplace=False):
+    def multiply(self, wavefront):
         """Multiply with a wavefront
 
         Parameters
@@ -954,7 +913,7 @@ class Flip(Plane):
         super().__init__()
         self.axis = axis
 
-    def multiply(self, wavefront, inplace=False):
+    def multiply(self, wavefront):
         """Multiply with a wavefront
 
         Parameters

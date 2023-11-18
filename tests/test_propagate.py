@@ -146,7 +146,7 @@ def test_amplitude_normalize_power():
     p = TiltPupil(npix=256)
     w = lentil.Wavefront(wavelength=650e-9)
     w *= p
-    w = w.propagate_image(pixelscale=5e-6, npix=(64,64), oversample=1)
+    w = lentil.propagate_dft(w, shape=(64,64), pixelscale=5e-6, oversample=1)
     psf = w.intensity
     assert (np.sum(psf) <= 1) and (np.sum(psf) >= 0.95)
 
@@ -155,11 +155,8 @@ def test_amplitude_normalize_power_oversample():
     p = TiltPupil(npix=256)
     w = lentil.Wavefront(wavelength=650e-9)
     w *= p
-    w = w.propagate_image(pixelscale=5e-6, npix=(64,64), oversample=2)
+    w = lentil.propagate_dft(w, shape=(64,64), pixelscale=5e-6, oversample=2)
     psf = w.intensity
-
-    #planes = [TiltPupil(npix=256), BasicDetector()]
-    #psf = lentil.propagate(planes, 650e-9, npix=(64, 64), oversample=2, rebin=True)
     assert (np.sum(psf) <= 1) and (np.sum(psf) >= 0.95)
 
 
@@ -176,26 +173,25 @@ def test_propagate_airy():
 
     w = lentil.Wavefront(wavelength=650e-9)
     w *= p
-    w = w.propagate_image(pixelscale=5e-6, npix=511, oversample=1)
+    w = lentil.propagate_dft(w, shape=511, pixelscale=5e-6, oversample=1)
     psf = w.intensity
     psf = psf/np.max(psf)
     assert np.all(np.isclose(psf, psf_airy, atol=1e-3))
 
 
 def test_propagate_tilt_angle():
-    #planes = [TiltPupil(npix=256), BasicDetector()]
 
     p = TiltPupil(npix=256)
 
     w_phase = lentil.Wavefront(650e-9)
     w_phase = p.multiply(w_phase)
-    w_phase = w_phase.propagate_image(pixelscale=5e-6, npix=128, oversample=2)
+    w_phase = lentil.propagate_dft(w_phase, shape=128, pixelscale=5e-6, oversample=2)
     psf_phase = w_phase.intensity
 
-    p.fit_tilt()
+    p.fit_tilt(inplace=True)
     w_angle = lentil.Wavefront(650e-9)
     w_angle = w_angle * p
-    w_angle = w_angle.propagate_image(pixelscale=5e-6, npix=128, oversample=2)
+    w_angle = lentil.propagate_dft(w_angle, shape=128, pixelscale=5e-6, oversample=2)
     psf_angle = w_angle.intensity
 
     # threshold the PSFs so that the centroiding is consistent
@@ -214,7 +210,7 @@ def test_propagate_tilt_phase_analytic():
 
     w = lentil.Wavefront(650e-9)
     w = pupil.multiply(w)
-    w = w.propagate_image(pixelscale=pixelscale, npix=npix, oversample=oversample)
+    w = lentil.propagate_dft(w, shape=npix, pixelscale=pixelscale, oversample=oversample)
     psf = w.intensity
 
     psf = psf/np.max(psf)
@@ -244,7 +240,7 @@ def test_propagate_tilt_angle_analytic():
     pupil.fit_tilt()
     w = lentil.Wavefront(650e-9)
     w = w * pupil
-    w = w.propagate_image(pixelscale=pixelscale, npix=npix, oversample=oversample)
+    w = lentil.propagate_dft(w, shape=npix, pixelscale=pixelscale, oversample=oversample)
     psf = w.intensity
 
     psf = psf/np.max(psf)
@@ -274,12 +270,12 @@ def test_propagate_resample():
     p = lentil.Pupil(focal_length=10, pixelscale=1 / 240, amplitude=amp, phase=opd)
     w = lentil.Wavefront(650e-9)
     w *= p
-    wi = w.propagate_image(pixelscale=5e-6, npix=64, oversample=10)
+    wi = lentil.propagate_dft(w, shape=(64,64), pixelscale=5e-6, oversample=10)
 
-    p2 = p.rescale(scale=3, inplace=False)
+    p2 = p.rescale(scale=3)
     w2 = lentil.Wavefront(650e-9)
     w2 *= p2
-    w2i = w2.propagate_image(pixelscale=5e-6, npix=64, oversample=10)
+    w2i = lentil.propagate_dft(w2, shape=(64,64), pixelscale=5e-6, oversample=10)
 
     # compute cross correlation between wi and w2i
     xc = np.fft.ifftshift(np.conj(np.fft.fft2(wi.intensity)) * np.fft.fft2(w2i.intensity))
@@ -287,15 +283,3 @@ def test_propagate_resample():
 
     assert np.allclose(cent, [320, 320])
     assert math.isclose(np.sum(wi.intensity), np.sum(w2i.intensity), rel_tol=1e-2)
-
-
-def test_propagate_image_inplace():
-    p = lentil.Pupil(focal_length=10, pixelscale=1 / 240,
-                     amplitude=lentil.circle((256, 256), 120))
-    w = lentil.Wavefront(650e-9)
-    w *= p
-    w_copy = w.propagate_image(pixelscale=5e-6, npix=64, oversample=2, inplace=False)
-    w_inplace = w.propagate_image(pixelscale=5e-6, npix=64, oversample=2, inplace=True)
-
-    assert w_copy is not w
-    assert w_inplace is w
