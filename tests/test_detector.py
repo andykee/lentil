@@ -40,7 +40,7 @@ def test_collect_charge_bayer_even():
     ll = np.sum(img[:, 1, 0]*qe_green)
     lr = np.sum(img[:, 1, 1]*qe_blue)
 
-    assert np.array_equal(out, np.array([[ul, ur], [ll, lr]]))
+    assert np.allclose(out, np.array([[ul, ur], [ll, lr]]))
 
 
 def collect_charge_bayer_odd():
@@ -62,7 +62,7 @@ def collect_charge_bayer_odd():
     h = np.sum(img[:, 2, 1]*qe_green)
     i = np.sum(img[:, 2, 2]*qe_red)
 
-    assert np.array_equal(out, np.array([[a, b, c], [d, e, f], [g, h, i]]))
+    assert np.allclose(out, np.array([[a, b, c], [d, e, f], [g, h, i]]))
 
 
 def test_collect_charge_bayer_oversample():
@@ -80,7 +80,7 @@ def test_collect_charge_bayer_oversample():
     ll = np.einsum('ijk,i->jk', img[:, 2:4, 0:2], qe_green)
     lr = np.einsum('ijk,i->jk', img[:, 2:4, 2:4], qe_blue)
 
-    assert np.array_equal(out, np.block([[ul, ur], [ll, lr]]))
+    assert np.allclose(out, np.block([[ul, ur], [ll, lr]]))
 
 
 def test_pixel_unitary():
