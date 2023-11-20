@@ -12,12 +12,12 @@ y_tilt = 8e-6 * lentil.zernike(amp, 2)  # +y tilt
 py = lentil.Pupil(focal_length=10, pixelscale=1 / 240, amplitude=amp, phase=y_tilt)
 wy = lentil.Wavefront(650e-9)
 wy *= py
-wy = wy.propagate_image(pixelscale=5e-6, npix=200, oversample=5)
+wy = lentil.propagate_dft(wy, pixelscale=5e-6, shape=200, oversample=5)
 
 px = lentil.Pupil(focal_length=10, pixelscale=1 / 240, amplitude=amp, phase=x_tilt)
 wx = lentil.Wavefront(650e-9)
 wx *= px
-wx = wx.propagate_image(pixelscale=5e-6, npix=200, oversample=5)
+wx = lentil.propagate_dft(wx, pixelscale=5e-6, shape=200, oversample=5)
 
 plt.subplot(2, 2, 1)
 plt.imshow(x_tilt, origin='lower')

@@ -1,4 +1,6 @@
 sphinx>=3.0
 pydata-sphinx-theme
-sphinx_remove_toctrees
+sphinx-remove-toctrees
+sphinx-coppybutton
+sphinx-design
 matplotlib
