@@ -1,5 +1,5 @@
-Copyright (c) 2020, California Institute of Technology ("Caltech"). U.S.
-Government sponsorship acknowledged.
+Copyright (c) 2020-2023, California Institute of Technology ("Caltech"). 
+U.S. Government sponsorship acknowledged.
 
 All rights reserved.
 
