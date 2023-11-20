@@ -71,8 +71,8 @@ class Wavefront:
     
     @ptype.setter
     def ptype(self, value):
-        if lentil.ptype(value) == lentil.transform:
-            raise TypeError("invalid ptype 'transform' for Wavefront")
+        if lentil.ptype(value) not in (lentil.none, lentil.pupil, lentil.image):
+            raise TypeError(f"invalid ptype '{value}' for Wavefront")
         else:
             self._ptype = lentil.ptype(value)
 

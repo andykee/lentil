@@ -352,19 +352,21 @@ class Plane:
             Updated wavefront
 
         """
-        if not _can_multiply_ptype(self.ptype, wavefront.ptype):
+        if not _can_mul_ptype(wavefront.ptype, self.ptype):
             raise TypeError(f"can't multiply Wavefront with ptype " \
                             f"'{wavefront.ptype}' by Plane with ptype " \
                             f"'{self.ptype}'")
 
-        pixelscale = _multiply_pixelscale(self.pixelscale, wavefront.pixelscale)
+        pixelscale = _mul_pixelscale(self.pixelscale, wavefront.pixelscale)
         shape = wavefront.shape if self.shape == () else self.shape
         data = wavefront.data
+        ptype = _mul_result_ptype(wavefront.ptype, self.ptype)
 
         out = lentil.Wavefront.empty(wavelength=wavefront.wavelength,
                                      pixelscale=pixelscale,
                                      focal_length=wavefront.focal_length,
-                                     shape=shape)
+                                     shape=shape,
+                                     ptype=ptype)
 
 
         for field in data:
@@ -386,7 +388,7 @@ class Plane:
         return out
 
 
-def _multiply_pixelscale(a_pixelscale, b_pixelscale):
+def _mul_pixelscale(a_pixelscale, b_pixelscale):
     # pixelscale reduction for multiplication
     if a_pixelscale is None and b_pixelscale is None:
         out = None
@@ -399,30 +401,46 @@ def _multiply_pixelscale(a_pixelscale, b_pixelscale):
             out = a_pixelscale
         else:
             raise ValueError(f"can't multiply with inconsistent pixelscales: {a_pixelscale} != {b_pixelscale}")
-
     return out
 
 
-def _can_multiply_ptype(plane_ptype, wavefront_ptype):
-    """Return True if multiplication between ptypes is permitted."""
-    return _MULTIPLY_PTYPE[plane_ptype][wavefront_ptype]
-
-# Mapping between Plane ptype (outer keys) and Wavefront ptype
-# (inner keys)
-_MULTIPLY_PTYPE = {
+# Mapping between Wavefront ptype(outer keys) and Plane ptypes (inner keys).
+# The absence of a Plane ptype indicates that multiplication is not allowed.
+_mul_ptype_table = {
     lentil.none: {
-        lentil.none: True, lentil.pupil: False, lentil.image: False
+        lentil.none: lentil.none, 
+        lentil.pupil: lentil.pupil,
+        lentil.image: lentil.image,
+        lentil.tilt: lentil.none,
+        lentil.transform: lentil.none
     },
     lentil.pupil: {
-        lentil.none: True, lentil.pupil: True, lentil.image: False
+        lentil.pupil: lentil.pupil,
+        lentil.tilt: lentil.pupil,
+        lentil.transform: lentil.pupil
     },
     lentil.image: {
-        lentil.none: True, lentil.pupil: False, lentil.image: True
-    },
-    lentil.transform: {
-        lentil.none: True, lentil.pupil: True, lentil.image: True
+        lentil.pupil: lentil.pupil,
+        lentil.tilt: lentil.pupil,
+        lentil.transform: lentil.pupil
     }
 }
+
+
+def _can_mul_ptype(wavefront_ptype, plane_ptype):
+    """Return True if multiplication between ptypes is permitted."""
+    if plane_ptype in _mul_ptype_table[wavefront_ptype].keys():
+        return True
+    else:
+        return False
+
+
+def _mul_result_ptype(wavefront_ptype, plane_ptype):
+    """Return the type that results from multiplication"""
+    if _can_mul_ptype:
+        return _mul_ptype_table[wavefront_ptype][plane_ptype]
+    raise TypeError(f"{wavefront_ptype} and {plane_ptype} cannot be type \
+                    multiplied together")
 
 
 def _plane_slice(mask):
@@ -513,7 +531,6 @@ class Pupil(Plane):
 
         # we inherit the plane's focal length as the wavefront's focal length
         wavefront.focal_length = self.focal_length
-        wavefront.ptype = lentil.pupil
 
         return wavefront
 
@@ -800,7 +817,7 @@ class Tilt(Plane):
 
     """
     def __init__(self, x, y):
-        super().__init__()
+        super().__init__(ptype=lentil.tilt)
 
         self.x = y  # y tilt is about the x-axis.
         self.y = x  # x tilt is about the y-axis.

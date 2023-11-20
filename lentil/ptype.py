@@ -1,5 +1,5 @@
 
-PTYPES = ('none', 'pupil', 'image', 'transform')
+PTYPES = ('none', 'pupil', 'image', 'tilt', 'transform')
 
 
 def ptype(ptype):

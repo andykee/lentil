@@ -10,6 +10,7 @@ from lentil.ptype import ptype
 none = ptype('none')
 pupil = ptype('pupil')
 image = ptype('image')
+tilt = ptype('tilt')
 transform = ptype('transform')
 
 from lentil.convolvable import jitter, smear
