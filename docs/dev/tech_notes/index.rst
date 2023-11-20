@@ -5,6 +5,8 @@ Technical Notes
 ***************
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
-    diffraction/index
+    dft_sampling
+    dft_caching
+    prop_algorithm

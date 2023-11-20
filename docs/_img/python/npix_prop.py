@@ -10,11 +10,11 @@ pupil = lentil.Pupil(amplitude=amp, phase=opd, pixelscale=1 / 240, focal_length=
 
 w1 = lentil.Wavefront(wavelength=500e-9)
 w1 *= pupil
-w1 = w1.propagate_image(pixelscale=5e-6, npix=128, npix_prop=128, oversample=5)
+w1 = lentil.propagate_dft(w1, pixelscale=5e-6, shape=128, prop_shape=128, oversample=5)
 
 w2 = lentil.Wavefront(wavelength=500e-9)
 w2 *= pupil
-w2 = w2.propagate_image(pixelscale=5e-6, npix=128, npix_prop=40, oversample=5)
+w2 = lentil.propagate_dft(w2, pixelscale=5e-6, shape=128, prop_shape=40, oversample=5)
 
 plt.subplot(1, 2, 1)
 plt.imshow(w1.intensity, origin='lower')
