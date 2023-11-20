@@ -38,15 +38,15 @@ Wavefront
 
     lentil.Wavefront
 
-.. .. _api.propagation:
+.. _api.propagation:
 
-.. Numerical diffraction propagation
-.. =================================
+Numerical diffraction propagation
+=================================
 
-.. .. autosummary::
-..     :toctree: generated/
+.. autosummary::
+    :toctree: generated/
 
-..     lentil.propagate
+    lentil.propagate_dft
 
 .. _api.zernike:
 
@@ -201,13 +201,11 @@ Field
     :toctree: generated/
 
     lentil.field.Field
-    lentil.field.NDField
-    lentil.field.extent
-    lentil.field.overlap
     lentil.field.boundary
+    lentil.field.extent
     lentil.field.insert
     lentil.field.merge
-    lentil.field.multiply
+    lentil.field.overlap
     lentil.field.reduce
 
 Fourier transforms

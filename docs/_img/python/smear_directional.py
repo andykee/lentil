@@ -9,7 +9,7 @@ phase = lentil.zernike_compose(mask, [0, 0, 0, -300e-9, 50e-9, -100e-9, 50e-9])
 pupil = lentil.Pupil(amplitude=mask, phase=phase, focal_length=10, pixelscale=1 / 240)
 w = lentil.Wavefront(650e-9)
 w *= pupil
-w = w.propagate_image(pixelscale=5e-6, npix=64, oversample=5)
+w = lentil.propagate_dft(w, pixelscale=5e-6, shape=64, oversample=5)
 psf = w.intensity
 
 psf_smear = lentil.smear(psf, distance=25, angle=30,

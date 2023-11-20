@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   width="208.00002pt"
+   height="208.00002pt"
+   viewBox="0 0 277.33336 277.33336"
+   sodipodi:docname="userguide.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     showguides="true"
+     inkscape:zoom="11.313709"
+     inkscape:cx="138.8139"
+     inkscape:cy="238.9137"
+     inkscape:window-width="2560"
+     inkscape:window-height="1403"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="pt" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="userguide"
+     style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1"
+     transform="translate(4,4)">
+    <path
+       id="border"
+       style="opacity:1;fill-opacity:0.9;stroke-width:5.33333;stroke-linecap:round;fill:#ffffff"
+       d="M 50.609378 -4.0019531 C 35.16431 -4.0019531 22.519533 8.6428239 22.519533 24.087892 L 22.519533 213.42189 C 22.519533 230.36388 36.441611 244.08986 53.333988 244.08986 A 6.7570571 6.7570571 0 0 0 53.335941 244.08986 L 141.88673 244.05861 L 141.88673 262.40041 A 7.4480986 7.4480986 0 0 0 152.60548 269.09181 L 173.33399 258.95509 L 194.06251 269.09181 A 7.4480986 7.4480986 0 0 0 204.78126 262.40041 L 204.78126 244.03517 L 234.81642 244.02541 A 6.7570571 6.7570571 0 0 0 239.69337 232.59572 C 235.95496 228.69399 235.78069 228.36039 233.26759 222.584 C 231.3858 216.39252 231.24276 210.44655 233.10548 204.49025 C 234.86037 198.87875 238.10981 196.19962 242.12306 192.209 A 6.7570571 6.7570571 0 0 0 244.11525 187.41798 L 244.11525 2.7539067 A 6.7570571 6.7570571 0 0 0 237.35939 -4.0019531 L 50.609378 -4.0019531 z " />
+    <path
+       style="display:inline;opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#2E3440;stroke-width:5.33333;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none"
+       d="M 237.35875,187.41768 V 2.75424 H 50.608967 c -11.818667,0 -21.333334,9.514667 -21.333334,21.333334 V 213.42091 c 0,13.296 10.7617,23.91242 24.0577,23.91242 l 181.481947,-0.0644 c -4.05717,-4.23441 -5.08637,-5.84492 -7.92458,-12.37066 -2.32223,-7.42568 -2.55625,-15.00058 -0.23402,-22.42624 2.32223,-7.42565 6.994,-11.36718 10.70207,-15.05435 z"
+       id="book" />
+    <path
+       style="display:inline;opacity:1;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#2E3440;stroke-width:5.33333;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 29.33333,213.33333 c 0,-13.25483 10.745167,-24 24.017596,-23.99859 l 181.564264,10e-4"
+       id="bottom-edge-overlay" />
+    <path
+       id="spine"
+       style="display:inline;opacity:1;fill:#D8DEE9;fill-opacity:1;stroke:#2E3440;stroke-width:5.33333;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 53.36852,2.75424 h -2.759553 c -11.818667,2e-7 -21.333334,9.514667 -21.333334,21.333334 l 0.02885,189.289546 c 0.02885,-13.29862 10.774015,-24.04379 24.046444,-24.04238 z"
+       sodipodi:nodetypes="cssccc" />
+    <path
+       id="edges"
+       style="display:inline;opacity:1;fill:none;fill-opacity:1;stroke:#2E3440;stroke-width:5.33333;stroke-linecap:round;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="M 146.65888,226.66195 H 93.26352 m 26.7393,-13.32431 H 66.663849" />
+    <path
+       id="bookmark"
+       style="opacity:1;fill:#D8DEE9;stroke:#2E3440;stroke-width:5.33333;stroke-linecap:round;stroke-linejoin:miter"
+       d="m 149.33333,202.66667 48,3.6e-4 v 59.73333 l -24,-11.73369 -24,11.73333 z"
+       sodipodi:nodetypes="cccccc" />
+  </g>
+</svg>

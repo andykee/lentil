@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&&family=Open+Sans:ital,wght@0,400;0,600;1,400;1,600&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap');
 
+:root {
+    --pst-color-secondary: #5E81AC; /* nord blue */
+    --sd-color-secondary: #e83e8c;
+}
+
 body {
     font-family: 'Open Sans', sans-serif;
 }
@@ -8,6 +13,14 @@ pre, code {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 90%;
     line-height: 150%;
+    --pst-color-inline-code: #e83e8c;
+}
+
+code.literal {
+    background-color: transparent;
+    border: 0px;
+    font-size: 95%;
+    font-weight: bold;
 }
 
 pre {
@@ -21,21 +34,17 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Lato', sans-serif;
 }
 h1 {
-    color: #013243; /* warm black */
-    font-weight: 500;
-    letter-spacing: -.04em;
-    margin-bottom: 2rem;
-    /*font-size: 3rem;*/
+    color: #2E3440; /* nord black */
 }
   
   
 h2 {
-    color: #4d77cf; /* han blue */
+    color: #5E81AC; /* nord blue */
     letter-spacing: -.03em;
 }
   
 h3 {
-    color: #013243; /* warm black */
+    color: #2E3440; /* nord black */
     letter-spacing: -.03em;
 }
  
@@ -43,8 +52,29 @@ img {
     margin-bottom: 1.125rem;
 }
 
-img.logo {
+.navbar-brand img {
     margin-bottom: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+}
+
+a.hederlink {
+    color: #5E81AC
+}
+
+a.hederlink {
+    color: #5E81AC
+}
+
+a.hederlink:hover {
+    color: #ee9040
 }
 
 :target:before{
@@ -55,3 +85,52 @@ img.logo {
     height:80px; 
     margin:-80px 0 0; 
 } 
+
+.bd-header {
+    --pst-color-primary: #5E81AC;
+    --pst-color-link-hover: #5E81AC;
+}
+
+.bd-header .navbar-nav li a.nav-link:hover {
+    text-decoration: none;
+}
+
+.bd-header .navbar-nav>.current>.nav-link {
+    border-bottom: 0px;
+}
+
+.bd-sidebar {
+    --pst-color-primary: #5E81AC;
+    --pst-color-link-hover: #5E81AC;
+}
+
+/*.bd-sidebar a:hover {
+    text-decoration: none;
+}*/
+
+nav.bd-links li>a:hover {
+    text-decoration: none;
+}
+
+/* remove left vertical bar on active link on left sidebar */
+nav.bd-links .current>a {
+    box-shadow: none;
+}
+
+.bd-content {
+    --pst-color-link: #5E81AC;
+    --pst-color-link-hover: #ee9040;
+}
+
+.toc-entry a.nav-link:hover {
+    text-decoration: none;
+    color: #5E81AC;
+}
+
+#pst-back-to-top {
+    background-color: #2E3440;
+}
+
+.form-control:focus {
+    outline: 2px solid var(--bs-border-color);
+}
