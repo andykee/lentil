@@ -1,4 +1,5 @@
 import copy
+from warnings import warn
 
 import numpy as np
 from scipy import ndimage
@@ -612,38 +613,89 @@ class Detector(Image):
     pass
 
 
-class DispersivePhase(Plane):
+class TiltInterfcace(Plane):
+    # Utility class for holding some common logic shared by 
+    # classes that implement the Tilt interface
 
-    def multiply(self, wavefront):
-        # NOTE: we can handle wavelength-dependent phase terms here (e.g. chromatic
-        # aberrations). Since the phase will vary by wavelength, we can't fit out the
-        # tilt pre-propagation and apply the same tilt for each wavelength like we can
-        # with run of the mill tilt
-        raise NotImplementedError
-
-
-class DispersiveShift(Plane):
-
-    def shift(self, wavelength, x0, y0, **kwargs):
-        raise NotImplementedError
+    def __init__(self, **kwargs):
+        # if ptype is provided as a kwarg use that, otherwise default
+        # to lentil.tilt
+        ptype = kwargs.pop('ptype', None)
+        if not ptype:
+            ptype = lentil.tilt
+        super().__init__(ptype=ptype, **kwargs)
 
     def multiply(self, wavefront):
         wavefront = super().multiply(wavefront)
         for field in wavefront.data:
             field.tilt.append(self)
         return wavefront
+    
+    def shift(self, wavelength, x0, y0, **kwargs):
+        raise NotImplementedError
 
 
-class Grism(DispersiveShift):
-    r"""Class for representing a grism.
+class Tilt(TiltInterfcace):
+    """Object for representing tilt in terms of angle
 
-    A grism is an optical element that can be inserted into a collimated beam
-    to disperse incoming light according to its wavelength.
+    Parameters
+    ----------
+    x : float
+        Radians of tilt about the x-axis
+    y : float
+        Radians of tilt about the y-axis
+
+    """
+    def __init__(self, x, y, **kwargs):
+        super().__init__(**kwargs)
+        self.x = y  # y tilt is about the x-axis.
+        self.y = x  # x tilt is about the y-axis.
+
+    def shift(self, xs=0, ys=0, z=0, **kwargs):
+        """Compute image plane shift due to this angular tilt
+
+        Parameters
+        ----------
+        xs : float
+            Incoming x shift distance. Default is 0.
+        ys : float
+            Incoming y shift distance. Default is 0.
+        z : float
+            Propagation distance
+
+        Returns
+        -------
+        shift : tuple
+            Updated x and y shift terms
+
+        """
+        x = xs - (z * self.x)
+        y = ys - (z * self.y)
+        return x, y
+
+
+class DispersiveTilt(TiltInterfcace):
+    r"""Class for representing spectral dispersion that appears as a tilt.
 
     Light is dispersed along a line called the the spectral trace. The position
-    along the trace is determined by the dispersion function of the grism. The
-    local origin of the spectral trace is anchored relative to the undispersed
-    position of the source. This basic geometry is illustrated in the figure
+    along the trace is determined by the dispersion function. The local origin
+    of the spectral trace is anchored relative to the undispersed position of
+    the source. 
+
+    Parameters
+    ----------
+    trace : array_like
+        Polynomial coefficients describing the spectral trace in decreasing 
+        powers (i.e. trace[0] represents the highest order coefficient and 
+        trace[-1] represents the lowest).
+    dispersion : array_like
+        Polynomial coefficients describing the dispersion in decreasing powers
+        (i.e. dispersion[0] represents the highest order coefficient and 
+        dispersion[-1] represents the lowest.)
+
+    Notes
+    -----
+    The basic geometry of spectral dispersion is illustrated in the figure 
     below:
 
     .. image:: /_static/img/grism_geometry.png
@@ -669,8 +721,6 @@ class Grism(DispersiveShift):
     and should return units of meters of wavelength provided an input distance
     along the spectral trace.
 
-    Note
-    ----
     Lentil supports trace and dispersion functions with any arbitrary polynomial
     order. While a simple analytic solution exists for modeling first-order trace
     and/or dispersion, there is no general solution for higher order functions.
@@ -681,23 +731,10 @@ class Grism(DispersiveShift):
     dispersion functions. In cases where speed or accuracy are extremely important,
     a custom solution may be required.
 
-    Parameters
-    ----------
-    trace : array_like
-        Polynomial coefficients describing the spectral trace produced by the
-        grism in decreasing powers (i.e. trace[0] represents the highest order
-        coefficient and trace[-1] represents the lowest).
-    dispersion : array_like
-        Polynomial coefficients describing the dispersion produced by the grism
-        in decreasing powers (i.e. dispersion[0] represents the highest order
-        coefficient and dispersion[-1] represents the lowest.)
-
     """
-    def __init__(self, trace, dispersion, pixelscale=None, amplitude=1,
-                 phase=0, mask=None):
-        super().__init__(pixelscale=pixelscale, amplitude=amplitude, phase=phase,
-                         mask=mask)
-
+    def __init__(self, trace, dispersion, **kwargs):
+        super().__init__(**kwargs)
+        
         self.trace = np.asarray(trace)
         self._trace_order = self.trace.size - 1
         assert self._trace_order >= 1
@@ -799,56 +836,91 @@ class Grism(DispersiveShift):
 
         """
         return scipy.integrate.quad(dist_func, a, b)[0]
+        
+
+class DispersivePhase(Plane):
+
+    def multiply(self, wavefront):
+        # NOTE: we can handle wavelength-dependent phase terms here (e.g. chromatic
+        # aberrations). Since the phase will vary by wavelength, we can't fit out the
+        # tilt pre-propagation and apply the same tilt for each wavelength like we can
+        # with run of the mill tilt
+        raise NotImplementedError
+
+
+class Grism(DispersiveTilt):
+    r"""Class for representing a grism.
+
+    A grism is an optical element that can be inserted into a collimated beam
+    to disperse incoming light according to its wavelength.
+
+    Light is dispersed along a line called the the spectral trace. The position
+    along the trace is determined by the dispersion function of the grism. The
+    local origin of the spectral trace is anchored relative to the undispersed
+    position of the source. This basic geometry is illustrated in the figure
+    below:
+
+    .. image:: /_static/img/grism_geometry.png
+        :align: center
+        :width: 400px
+
+    The spectral trace is parameterized by a polynomial of the form
+
+    .. math::
+
+        y = a_n x^n + \cdots + a_2 x^2 + a_1 x + a_0
+
+    and should return units of meters on the focal plane provided an input
+    in meters on the focal plane.
+
+    Similarly, the wavelength along the trace is parameterized by a
+    polynomial of the form
+
+    .. math::
+
+        \lambda = a_n d^n + \cdots + a_2 d^2 + a_1 d + a_0
+
+    and should return units of meters of wavelength provided an input distance
+    along the spectral trace.
+
+    Note
+    ----
+    Lentil supports trace and dispersion functions with any arbitrary polynomial
+    order. While a simple analytic solution exists for modeling first-order trace
+    and/or dispersion, there is no general solution for higher order functions.
+
+    As a result, trace and/or dispersion polynomials with order > 1 are evaluated
+    numerically. Although the effects are small, this approach impacts both the
+    speed and precision of modeling grisms with higher order trace and/or
+    dispersion functions. In cases where speed or accuracy are extremely important,
+    a custom solution may be required.
+
+    Parameters
+    ----------
+    trace : array_like
+        Polynomial coefficients describing the spectral trace produced by the
+        grism in decreasing powers (i.e. trace[0] represents the highest order
+        coefficient and trace[-1] represents the lowest).
+    dispersion : array_like
+        Polynomial coefficients describing the dispersion produced by the grism
+        in decreasing powers (i.e. dispersion[0] represents the highest order
+        coefficient and dispersion[-1] represents the lowest.)
+
+    .. deprecated:: 1.0.0
+        `Grism` will be removed in Lentil v1.0.0, it is replaced by 
+        `DispersiveTilt`.
+
+    """
+    def __init__(self, trace, dispersion, **kwargs):
+        warn('lentil.Grism will be deprecated in v1.0.0, it is '
+             'replaced by lentil.DispersiveTilt.', 
+             DeprecationWarning, 
+             stacklevel=2)
+        super().__init__(trace=trace, dispersion=dispersion, **kwargs)
 
 
 class LensletArray(Plane):
     pass
-
-
-class Tilt(Plane):
-    """Object for representing tilt in terms of an angle
-
-    Parameters
-    ----------
-    x : float
-        Radians of tilt about the x-axis
-    y : float
-        Radians of tilt about the y-axis
-
-    """
-    def __init__(self, x, y):
-        super().__init__(ptype=lentil.tilt)
-
-        self.x = y  # y tilt is about the x-axis.
-        self.y = x  # x tilt is about the y-axis.
-
-    def multiply(self, wavefront):
-        wavefront = super().multiply(wavefront)
-        for field in wavefront.data:
-            field.tilt.append(self)
-        return wavefront
-
-    def shift(self, xs=0, ys=0, z=0, **kwargs):
-        """Compute image plane shift due to this angular tilt
-
-        Parameters
-        ----------
-        xs : float
-            Incoming x shift distance. Default is 0.
-        ys : float
-            Incoming y shift distance. Default is 0.
-        z : float
-            Propagation distance
-
-        Returns
-        -------
-        shift : tuple
-            Updated x and y shift terms
-
-        """
-        x = xs - (z * self.x)
-        y = ys - (z * self.y)
-        return x, y
 
 
 class Rotate(Plane):

@@ -24,10 +24,10 @@ from lentil.plane import (
 	Pupil,
 	Image,
 	Detector,
-	DispersiveShift,
+    Tilt,
+	DispersiveTilt,
 	Grism,
 	LensletArray,
-	Tilt,
 	Rotate,
 	Flip
 )

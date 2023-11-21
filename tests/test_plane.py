@@ -91,22 +91,22 @@ def test_pupil_rescale_power():
     assert math.isclose(amp_power, ampr_power, rel_tol=1e-3)
 
 
-def test_grism_center():
+def test_dispersive_tilt_center():
     dispersion = [1, 650e-9]
     trace = [2, 0]
-    grism = lentil.Grism(dispersion=dispersion, trace=trace)
+    dt = lentil.DispersiveTilt(dispersion=dispersion, trace=trace)
 
     x0 = np.random.uniform(low=-5, high=5)
     y0 = np.random.uniform(low=-5, high=5)
-    x, y = grism.shift(wavelength=650e-9, xs=x0, ys=y0)
+    x, y = dt.shift(wavelength=650e-9, xs=x0, ys=y0)
     assert np.all((x == x0, y == y0))
 
 
-def test_grism_shift():
-    grism = lentil.Grism(trace=[1,1], dispersion=[1,650e-9])
+def test_dispersive_tilt_shift():
+    dt = lentil.DispersiveTilt(trace=[1,1], dispersion=[1,650e-9])
     wave = 900e-9
-    x, y = grism.shift(wavelength=wave)
+    x, y = dt.shift(wavelength=wave)
 
-    assert x == (wave - grism.dispersion[1])/np.sqrt(2)
+    assert x == (wave - dt.dispersion[1])/np.sqrt(2)
     assert y == 1+x
 
