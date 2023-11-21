@@ -2,6 +2,7 @@
 
 :root {
     --pst-color-secondary: #5E81AC; /* nord blue */
+    
     --sd-color-secondary: #e83e8c;
 }
 
@@ -10,17 +11,28 @@ body {
 }
 
 pre, code {
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'SFMono-Regular', 'Menlo', 'IBM Plex Mono', monospace;
     font-size: 90%;
     line-height: 150%;
+    --pst-color-inline-code-links: #5E81AC; /* nord blue */
     --pst-color-inline-code: #e83e8c;
 }
 
 code.literal {
     background-color: transparent;
     border: 0px;
-    font-size: 95%;
-    font-weight: bold;
+    padding: 0;
+    font-size: 94%;
+}
+
+a:hover code{
+    color: #ee9040;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+}
+
+.sig-name {
+    --pst-color-inline-code: #5E81AC;
 }
 
 pre {

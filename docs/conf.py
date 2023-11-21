@@ -32,7 +32,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx_remove_toctrees',
               'sphinx_copybutton',
               'sphinx_design',
-              'matplotlib.sphinxext.plot_directive']
+              'matplotlib.sphinxext.plot_directive',
+              'numpydoc']
 templates_path = ['_templates']
 source_suffix = '.rst'
 master_doc = 'docs'
@@ -99,8 +100,9 @@ pygments_style = 'default'
 add_module_names = True
 
 autodoc_default_options = {
-    'member-order': 'alphabetical',
-    'exclude-members': '__init__, __weakref__, __dict__, __module__'
+    'member-order': 'bysource',
+    'undoc-members': None
+#    'exclude-members': '__init__, __weakref__, __dict__, __module__'
 }
 
 autosummary_generate = True
@@ -139,3 +141,13 @@ plot_pre_code = """
 import numpy as np
 np.random.seed(12345)
 """
+
+
+
+
+#def fix_attributes(app, pagename, templatename, context, doctree):
+#   if 'generated' in pagename:
+#      context['body'] = context['body'].replace('Variables', 'Attributes')
+
+#def setup(app):
+#     app.connect("html-page-context", fix_attributes)
