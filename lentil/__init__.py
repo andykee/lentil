@@ -32,7 +32,11 @@ from lentil.plane import (
 	Flip
 )
 
-from lentil.propagate import propagate_dft
+from lentil.propagate import (
+    propagate_dft, 
+    propagate_fft,
+    scratch_shape
+)
 
 from lentil import radiometry
 

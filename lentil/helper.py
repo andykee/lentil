@@ -23,11 +23,6 @@ def gaussian2d(size, sigma):
     return G/np.sum(G)
 
 
-def dft_alpha(dx, du, wave, z, oversample):
-    return ((dx[0]*du[0])/(wave*z*oversample),
-            (dx[1]*du[0])/(wave*z*oversample))
-
-
 def boundary_slice(x, threshold=0, pad=(0, 0)):
     """Find bounding row and column indices of data within an array and
     return the results as slice objects.
