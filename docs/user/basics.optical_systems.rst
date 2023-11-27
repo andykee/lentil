@@ -74,8 +74,6 @@ represented by a single |Pupil| plane:
     :scale: 50
     :include-source:
 
-    >>> import matplotlib.pyplot as plt
-    >>> import lentil
     >>> amplitude = lentil.circle(shape=(256, 256), radius=120)
     >>> opd = lentil.zernike_compose(mask=amplitude,
     ...                              coeffs=[0, 0, 0, 100e-9, 300e-9, 0, -100e-9])

@@ -8,5 +8,4 @@ Technical Notes
     :maxdepth: 1
 
     dft_sampling
-    dft_caching
     prop_algorithm

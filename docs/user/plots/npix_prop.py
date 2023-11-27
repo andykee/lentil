@@ -16,12 +16,13 @@ w2 = lentil.Wavefront(wavelength=500e-9)
 w2 *= pupil
 w2 = lentil.propagate_dft(w2, pixelscale=5e-6, shape=128, prop_shape=40, oversample=5)
 
-plt.subplot(1, 2, 1)
-plt.imshow(w1.intensity, origin='lower')
-plt.title('npix_prop ok')
-plt.axis('off')
 
-plt.subplot(1, 2, 2)
-plt.imshow(w2.intensity, origin='lower')
-plt.title('npix_prop too small')
-plt.axis('off')
+fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(4, 4))
+
+ax1.imshow(w1.intensity, origin='lower')
+ax1.set_title('npix_prop ok')
+ax1.axis('off')
+
+ax2.imshow(w2.intensity, origin='lower')
+ax2.set_title('npix_prop too small')
+ax2.axis('off')

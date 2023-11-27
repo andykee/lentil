@@ -32,7 +32,7 @@ in a shift in the image plane in the positive y direction. A positive y-tilt
 rotates the xz plane clockwise about the y-axis resulting in a shift in the
 image plane in the negative x direction.
 
-.. plot:: _img/python/tilt_images.py
+.. plot:: user/plots/tilt_images.py
     :scale: 50
 
 Focus
@@ -53,7 +53,7 @@ image to be flipped about both axes relative to the aperture (consistent with
 observing the image after passing through focus). The results of this exercise are
 presented below:
 
-.. plot:: _img/python/focus_images.py
+.. plot:: user/plots/focus_images.py
     :scale: 50
 
 Static Errors
@@ -88,36 +88,32 @@ polynomials <https://en.wikipedia.org/wiki/Zernike_polynomials>`_.
     Lentil uses the Noll indexing scheme for defining Zernike polynomials [1]_.
 
 Wavefront error maps are easily computed using either the :func:`~lentil.zernike` or
-:func:`~lentil.zernike_compose` functions. For example, we can represent 100 nm of focus over a
-circular aperture with :func:`~lentil.zernike`:
+:func:`~lentil.zernike_compose` functions. For example, we can represent 100 nm of 
+astigmatism over a circular aperture with :func:`~lentil.zernike`:
 
 .. plot::
     :include-source:
     :scale: 50
 
-    >>> import matplotlib.pyplot as plt
-    >>> import lentil
     >>> mask = lentil.circlemask((256,256), 120)
-    >>> z4 = 100e-9 * lentil.zernike(mask, index=4)
-    >>> plt.imshow(z4, origin='lower')
+    >>> astig = 100e-9 * lentil.zernike(mask, index=6)
+    >>> plt.imshow(astig, origin='lower')
 
 
-Any combination of Zernike polynomials can be combined by providing a list of coefficients
-to the :func:`~lentil.zernike_compose` function. For example, we can represent 200 nm of
-focus and -100 nm of astigmatism as:
+Any arbitrary combination of Zernike polynomials can be represented by providing a 
+list of coefficients to the :func:`~lentil.zernike_compose` function:
 
 .. plot::
     :include-source:
     :scale: 50
 
-    >>> import matplotlib.pyplot as plt
-    >>> import lentil
     >>> mask = lentil.circlemask((256,256), 120)
-    >>> coefficients = [0, 0, 0, 200e-9, 0, -100e-9]
-    >>> z = lentil.zernike_compose(mask, coefficients)
+    >>> coeff = np.random.uniform(low=-200e-9, high=200e-9, size=10)
+    >>> z = lentil.zernike_compose(mask, coeff)
     >>> plt.imshow(z, origin='lower')
 
-Note that the coefficients list is ordered according to the Noll indexing scheme so the
+Note that the coefficients list is ordered according to the `Noll indexing scheme
+<https://en.wikipedia.org/wiki/Zernike_polynomials#Zernike_polynomials>`_ so the
 first entry in the list represents piston, the second represents, tilt, and so on.
 
 For models requiring many random trials, it may make more sense to pre-compute the
@@ -127,36 +123,30 @@ each independent term using Numpy's `einsum
 <https://numpy.org/doc/stable/reference/generated/numpy.einsum.html>`_ function.
 
 Note that in this case we are only computing the Zernike modes we intend to use (Noll
-indices 4 and 6) so now the first entry in ``coefficients`` corresponds to focus and the
+indices 4 and 6) so now the first entry in ``coeff`` corresponds to focus and the
 second corresponds to astigmatism.
 
 .. plot::
     :include-source:
     :scale: 50
 
-    >>> import matplotlib.pyplot as plt
-    >>> import numpy as np
-    >>> import lentil
     >>> mask = lentil.circlemask((256,256), 120)
-    >>> coefficients = [200e-9, -100e-9]
+    >>> coeff = [200e-9, -100e-9]
     >>> basis = lentil.zernike_basis(mask, modes=(4,6))
-    >>> z = np.einsum('ijk,i->jk', basis, coefficients)
+    >>> z = np.einsum('ijk,i->jk', basis, coeff)
     >>> plt.imshow(z, origin='lower')
 
-If you don't love ``einsum``, it's possible to achieve the same result with Numpy's
+It's also possible to achieve the same result using Numpy's
 `tensordot <https://numpy.org/doc/stable/reference/generated/numpy.tensordot.html>`_:
 
 .. plot::
     :include-source:
     :scale: 50
 
-    >>> import matplotlib.pyplot as plt
-    >>> import numpy as np
-    >>> import lentil
     >>> mask = lentil.circlemask((256,256), 120)
-    >>> coefficients = [200e-9, -100e-9]
+    >>> coeff = [200e-9, -100e-9]
     >>> basis = lentil.zernike_basis(mask, modes=(4,6))
-    >>> z = np.tensordot(basis, coefficients, axes=(0,0))
+    >>> z = np.tensordot(basis, coeff, axes=(0,0))
     >>> plt.imshow(z, origin='lower')
 
 Normalization
@@ -174,8 +164,6 @@ the error magnitude:
 
 .. code-block:: pycon
 
-    >>> import numpy as np
-    >>> import lentil
     >>> mask = lentil.circlemask((256,256), 128)
     >>> z4 = 100e-9 * lentil.zernike(mask, mode=4, normalize=True)
     >>> np.std(z4[np.nonzero(z4)])
@@ -188,8 +176,6 @@ the discretely sampled mode spans [-0.5 0.5] before multiplying by the error mag
 
 .. code-block:: pycon
 
-    >>> import numpy as np
-    >>> import lentil
     >>> mask = lentil.circlemask((256,256), 128)
     >>> z4 = lentil.zernike(mask, mode=4)
     >>> z4 /= np.max(z4) - np.min(z4)
@@ -213,8 +199,6 @@ the center of the defined array:
     :include-source:
     :scale: 50
 
-    >>> import matplotlib.pyplot as plt
-    >>> import lentil
     >>> mask = lentil.circlemask((256,256), radius=50, shift=(0,60))
     >>> rho, theta = lentil.zernike_coordinates(mask, shift=(0,60))
     >>> z4 = lentil.zernike(mask, 4, rho=rho, theta=theta)
@@ -226,8 +210,6 @@ If we wish to align a tilt mode with one side of a hexagon:
     :include-source:
     :scale: 50
 
-    >>> import matplotlib.pyplot as plt
-    >>> import lentil
     >>> mask = lentil.hexagon((256,256), radius=120)
     >>> rho, theta = lentil.zernike_coordinates(mask, shift=(0,0), rotate=30)
     >>> z2 = lentil.zernike(mask, 2, rho=rho, theta=theta)
@@ -281,11 +263,9 @@ wavefront error map given a PSD:
     :include-source:
     :scale: 50
 
-    >>> import matplotlib.pyplot as plt
-    >>> import lentil
     >>> mask = lentil.circle((256, 256), 120)
-    >>> w = lentil.power_spectrum(mask, pixelscale=1/120, rms=25e-9, half_power_freq=8,
-    ...                           exp=3)
+    >>> w = lentil.power_spectrum(mask, pixelscale=1/120, rms=25e-9, 
+    ...                           half_power_freq=8, exp=3)
     >>> plt.imshow(w, origin='lower')
 
 

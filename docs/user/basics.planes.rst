@@ -15,8 +15,8 @@ Lentil plane types
 All Lentil planes are derived from the |Plane| class. This base class defines the
 interface to represent any discretely sampled plane in an optical model. It can also
 be used directly in a model. Planes typically have some influence on the propagation
-of a wavefront though this is not strictly required and some models may use *dummy*
-or *reference* planes as needed.
+of a wavefront though this is not strictly required and models may use *dummy* or
+*reference* planes as needed.
 
 Lentil provides several general planes that are the building blocks for most optical
 models:
@@ -74,7 +74,7 @@ plane. A plane is defined by the following parameters:
 .. note::
 
     All Plane attributes have sensible default values that have no effect on
-    propagations when not defined.
+    propagations when not specified.
 
 
 Create a new Plane with
@@ -83,8 +83,6 @@ Create a new Plane with
     :include-source:
     :scale: 50
 
-    >>> import matplotlib.pyplot as plt
-    >>> import lentil
     >>> p = lentil.Plane(amplitude=lentil.util.circle((256,256), 120))
     >>> plt.imshow(p.amplitude, origin='lower')
 
@@ -94,8 +92,6 @@ Once a Plane is defined, its attributes can be modified at any time:
     :include-source:
     :scale: 50
 
-    >>> import matplotlib.pyplot as plt
-    >>> import lentil
     >>> p = lentil.Plane(amplitude=lentil.util.circle((256,256), 120))
     >>> p.phase = 2e-6 * lentil.zernike(p.mask, index=4)
     >>> plt.imshow(p.phase, origin='lower')
@@ -232,14 +228,12 @@ Given the following |Pupil| and |Detector| planes:
     :include-source:
     :scale: 50
 
-    >>> import matplotlib.pyplot as plt
-    >>> import lentil
     >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 120),
     ...                      focal_length=10, pixelscale=1/250)
     >>> w = lentil.Wavefront(650e-9)
     >>> w *= pupil
     >>> w = lentil.propagate_dft(w, pixelscale=5e-6, shape=(64,64), oversample=2)
-    >>> plt.imshow(w.intensity, origin='lower')
+    >>> plt.imshow(w.intensity)
 
 It is simple to see the effect of introducing a tilted wavefront into the system:
 
@@ -247,8 +241,6 @@ It is simple to see the effect of introducing a tilted wavefront into the system
     :include-source:
     :scale: 50
 
-    >>> import matplotlib.pyplot as plt
-    >>> import lentil
     >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 120),
     ...                      focal_length=10, pixelscale=1/250)
     >>> tilt = lentil.Tilt(x=10e-6, y=-5e-6)
@@ -257,6 +249,11 @@ It is simple to see the effect of introducing a tilted wavefront into the system
     >>> w *= tilt
     >>> w = lentil.propagate_dft(w, pixelscale=5e-6, shape=(64,64), oversample=2)
     >>> plt.imshow(w.intensity, origin='lower')
+
+.. note::
+
+  Notice the use of ``origin='lower'`` in the plot above. For an explanation, see
+  the note :ref:`here <user.coordinate_system.origin>`.
 
 .. .. _user_guide.planes.transformations:
 
