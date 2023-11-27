@@ -21,6 +21,7 @@ copyright = f'2017-{datetime.now().year} California Institute of Technology'
 with open(os.path.normpath(os.path.join(path, '..', 'lentil', '__init__.py'))) as f:
     version = release = re.search("__version__ = '(.*?)'", f.read()).group(1)
 
+today_fmt = '%B %d, %Y'
 
 # -- General configuration ---------------------------------------------------
 
@@ -32,8 +33,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx_remove_toctrees',
               'sphinx_copybutton',
               'sphinx_design',
-              'matplotlib.sphinxext.plot_directive',
-              'numpydoc']
+              'matplotlib.sphinxext.plot_directive']#,
+              #'numpydoc']
 templates_path = ['_templates']
 source_suffix = '.rst'
 master_doc = 'docs'
@@ -53,6 +54,8 @@ html_theme_options = {
    },
    "collapse_navigation": True,
    "navbar_persistent": ["search-button"],
+   "pygment_light_style": "tango",
+   "pygment_dark_style": "nord",
    "favicons": [
       {
          "rel": "icon",
@@ -93,19 +96,19 @@ html_scaled_image_link = False
 
 html_css_files = ['css/lentil.css']
 
-pygments_style = 'default'
-
 # if true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
 add_module_names = True
 
+add_function_parentheses = True
+
 autodoc_default_options = {
-    'member-order': 'bysource',
-    'undoc-members': None
-#    'exclude-members': '__init__, __weakref__, __dict__, __module__'
+    'member-order': 'alphabetical',
+    'exclude-members': '__init__, __weakref__, __dict__, __module__',
 }
 
 autosummary_generate = True
+
 
 #remove_from_toctrees = ["generated/*"]
 
@@ -138,16 +141,9 @@ plot_html_show_source_link = False
 plot_html_show_formats = False
 plot_formats = [('png', dpi*2)]
 plot_pre_code = """
+import lentil
+import matplotlib.pyplot as plt
 import numpy as np
 np.random.seed(12345)
 """
 
-
-
-
-#def fix_attributes(app, pagename, templatename, context, doctree):
-#   if 'generated' in pagename:
-#      context['body'] = context['body'].replace('Variables', 'Attributes')
-
-#def setup(app):
-#     app.connect("html-page-context", fix_attributes)
