@@ -60,20 +60,17 @@ follows the same basic flow:
 
     .. code-block:: pycon
 
-        >>> plt.imshow(np.abs(w2.field), origin='lower')
+        >>> plt.imshow(np.abs(w2.field))
 
     .. plot::
         :context: reset
         :scale: 50
 
-        import matplotlib.pyplot as plt
-        import lentil
-
         pupil = lentil.Pupil(amplitude=lentil.circle((256, 256), 120),
                              pixelscale=1/240, focal_length=10)
         w1 = lentil.Wavefront(650e-9)
         w2 = w1 * pupil
-        plt.imshow(np.abs(w2.field), origin='lower')
+        plt.imshow(np.abs(w2.field))
 
     Additionally, because ``w2`` was propagated through a |Pupil| plane, it has inherited the
     pupil's focal length:
@@ -120,7 +117,7 @@ follows the same basic flow:
         :scale: 50
 
         >>> w2 = lentil.propagate_dft(w2, pixelscale=5e-6, shape=(64,64), oversample=5)
-        >>> plt.imshow(w2.intensity**0.1, origin='lower')
+        >>> plt.imshow(w2.intensity, norm='log')
 
     .. note::
 
@@ -142,10 +139,6 @@ different wavelengths and accumulates the resulting image plane intensity:
     :scale: 50
     :include-source:
 
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import lentil
-
     pupil = lentil.Pupil(amplitude=lentil.circle((256, 256), 120),
                          pixelscale=1/240, focal_length=10)
 
@@ -158,7 +151,7 @@ different wavelengths and accumulates the resulting image plane intensity:
         w = lentil.propagate_dft(w, pixelscale=5e-6, shape=(64,64), oversample=5)
         img += w.intensity
 
-    plt.imshow(img**0.1, origin='lower')
+    plt.imshow(img, norm='log')
 
 Keep in mind the output ``img`` array must be sized to accommodate the oversampled
 wavefront intensity given by ``npix`` * ``oversample``.
@@ -195,7 +188,7 @@ appropriate location in the (potentially larger) output plane when a |Wavefront|
 :attr:`~lentil.Wavefront.field` or :attr:`~lentil.Wavefront.intensity`
 attribute is accessed.
 
-.. image:: /_static/img/propagate_npix_prop.png
+.. image:: images/propagate_npix_prop.png
     :width: 450px
     :align: center
 
@@ -203,7 +196,7 @@ It can be advantageous to specify ``npix_prop`` < ``npix`` for performance
 reasons, although care must be taken to ensure needed data is not accidentally
 left out:
 
-.. plot:: _img/python/npix_prop.py
+.. plot:: user/plots/npix_prop.py
     :scale: 50
 
 For most pupil to image plane propagations, setting ``npix_prop`` to 128 or 256
@@ -253,10 +246,10 @@ optics texts. The implications of this choice are as follows:
   :math:`\exp\left[i\frac{k}{2z} (x^2 + y^2)\right]`
 
 
-.. .. _user_guide.diffraction.sampling:
+.. _user.diffraction.sampling:
 
-.. Sampling considerations
-.. =======================
+Sampling considerations
+=======================
 
 .. .. plot:: _img/python/dft_discrete_Q_sweep.py
 ..     :scale: 50
@@ -269,10 +262,10 @@ optics texts. The implications of this choice are as follows:
 ..     :width: 550px
 ..     :align: center
 
-.. .. _user_guide.diffraction.tilt:
+.. _user.diffraction.tilt:
 
-.. Working with large tilts
-.. ========================
+Working with large tilts
+========================
 .. .. image:: /_static/img/propagate_tilt_phase.png
 ..     :width: 450px
 ..     :align: center
@@ -289,10 +282,10 @@ optics texts. The implications of this choice are as follows:
 ..     :width: 600px
 ..     :align: center
 
-.. .. _user_guide.diffraction.segmented:
+.. _user.diffraction.segmented:
 
-.. Differences for segmented apertures
-.. ===================================
+Differences for segmented apertures
+===================================
 
 
 

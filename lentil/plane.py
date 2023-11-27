@@ -38,24 +38,21 @@ class Plane:
         Physical sampling of each pixel in the plane. If ``pixelscale`` is a
         scalar, uniform sampling in x and y is assumed. If None (default),
         ``pixelscale`` is left undefined.
-
-    Attributes
-    ----------
-    tilt : list
-        List of :class:`~lentil.Tilt` terms associated wirth this Plane
-
+    diameter : float, optional
+        Outscribing diameter around mask. If not provided (default), it is computed
+        from the boundary of :attr:`mask`.
+    ptype : ptype object
+        Plane type
+    
     """
     def __init__(self, amplitude=1, phase=0, mask=None, pixelscale=None, diameter=None,
                  ptype=None):
         self.amplitude = np.asarray(amplitude)
         self.phase = np.asarray(phase)
         self.mask = mask
-        self.pixelscale = None if pixelscale is None else np.broadcast_to(pixelscale, (2,))
+        self.pixelscale = pixelscale
         self.diameter = diameter
         self.ptype = lentil.ptype(ptype)
-
-        self._mask = np.asarray(mask) if mask is not None else None
-
         self._slice = _plane_slice(self._mask)
 
         self.tilt = []
@@ -64,7 +61,43 @@ class Plane:
         return f'{self.__class__.__name__}()'
 
     @property
+    def amplitude(self):
+        """Electric field amplitude transmission
+
+        Returns
+        -------
+        ndarray
+
+        """
+        return self._amplitude
+    
+    @amplitude.setter
+    def amplitude(self, value):
+        self._amplitude = np.asarray(value)
+    
+    @property
+    def phase(self):
+        """Electric field phase
+
+        Returns
+        -------
+        ndarray
+
+        """
+        return self._phase
+    
+    @phase.setter
+    def phase(self, value):
+        self._phase = np.asarray(value)
+
+    @property
     def mask(self):
+        """Binary transmission mask
+        
+        Returns
+        -------
+        ndarray
+        """
         if self._mask is not None:
             return self._mask
         else:
@@ -84,19 +117,47 @@ class Plane:
     @property
     def global_mask(self):
         """
-        Flattened view of :attr:`mask`
+        Flattened view of :attr:`~mask`
 
         Returns
         -------
-        mask : ndarray
+        ndarray
+
         """
-        if self.depth < 2:
+        if self.size < 2:
             return self.mask
         else:
             return np.sum(self.mask, axis=0)
 
     @property
+    def pixelscale(self):
+        """Physical sampling of each pixel in the plane
+        
+        Returns
+        -------
+        tuple of ints or None
+        
+        """
+        return self._pixelscale
+    
+    @pixelscale.setter
+    def pixelscale(self, value):
+        self._pixelscale = None if value is None else np.broadcast_to(value, (2,))
+
+    @property
     def diameter(self):
+        """Plane diameter
+        
+        Notes
+        -----
+        If :attr:`diameter` was no provided during Plane creation, it is 
+        autocomputed if possible. If it is not possible, None is returned.
+
+        Returns
+        -------
+        float or None
+
+        """
         if self._diameter is None:
             [rmin, rmax, cmin, cmax] = lentil.boundary(self.global_mask)
             # since pixelscale has shape=(2,), we need to return the overall
@@ -114,22 +175,27 @@ class Plane:
         """
         Plane dimensions computed from :attr:`mask`.
 
-        Returns (mask.shape[1], mask.shape[2]) if mask has ``ndim == 3``. Returns
+        Returns (mask.shape[1], mask.shape[2]) if :attr:`size: > 1. Returns
         None if :attr:`mask` is None.
+
+        Returns
+        -------
+        tuple of ints
         """
-        if self.depth == 1:
+        if self.size == 1:
             return self.mask.shape
         else:
             return self.mask.shape[1], self.mask.shape[2]
 
     @property
-    def depth(self):
+    def size(self):
         """
         Number of independent masks (segments) in :attr:`mask`
 
         Returns
         -------
-        depth : int
+        int
+
         """
         if self.mask.ndim in (0, 1, 2):
             return 1
@@ -141,11 +207,11 @@ class Plane:
         """
         2D vector representing piston and tilt in x and y.
 
-        Planes with no mask have ``ptt_vector = None``.
+        Planes with no mask have :attr:`ptt_vector` = None.
 
         Returns
         -------
-        ptt_vector : ndarray or None
+        ndarray or None
         """
 
         # if there's no mask, we just set ptt_vector to None and move on
@@ -164,14 +230,14 @@ class Plane:
             unmasked_ptt_vector = np.einsum('ij,i->ij', [np.ones(r.size), r.ravel(), -c.ravel()],
                                             [1, self.pixelscale[0], self.pixelscale[1]])
 
-            if self.depth == 1:
+            if self.size == 1:
                 ptt_vector = np.einsum('ij,j->ij', unmasked_ptt_vector, self.mask.ravel())
             else:
                 # prepare empty ptt_vector
-                ptt_vector = np.empty((self.depth * 3, np.prod(self.shape)))
+                ptt_vector = np.empty((self.size * 3, np.prod(self.shape)))
 
                 # loop over the masks and fill in the masked ptt_vectors
-                for mask in np.arange(self.depth):
+                for mask in np.arange(self.size):
                     ptt_vector[3*mask:3*mask+3] = unmasked_ptt_vector * self.mask[mask].ravel()
 
         return ptt_vector
@@ -182,7 +248,7 @@ class Plane:
 
         Returns
         -------
-        copy : :class:`~lentil.Plane`
+        :class:`~lentil.Plane`
         """
         return copy.deepcopy(self)
 
@@ -199,7 +265,7 @@ class Plane:
 
         Returns
         -------
-        plane : :class:`~lentil.Plane`
+        :class:`~lentil.Plane`
         """
         if inplace:
             plane = self
@@ -213,31 +279,30 @@ class Plane:
         if ptt_vector is None or plane.phase.size == 1:
             return plane
 
-        if self.depth == 1:
+        if self.size == 1:
             t = np.linalg.lstsq(ptt_vector.T, plane.phase.ravel(), rcond=None)[0]
             phase_tilt = np.einsum('ij,i->j', ptt_vector[1:3], t[1:3])
             plane.phase -= phase_tilt.reshape(plane.phase.shape)
             plane.tilt.append(Tilt(x=t[1], y=t[2]))
 
         else:
-            t = np.empty((self.depth, 3))
-            phase_no_tilt = np.empty((self.depth, plane.phase.shape[0], plane.phase.shape[1]))
+            t = np.empty((self.size, 3))
+            phase_no_tilt = np.empty((self.size, plane.phase.shape[0], plane.phase.shape[1]))
 
             # iterate over the segments and compute the tilt term
-            for seg in np.arange(self.depth):
+            for seg in np.arange(self.size):
                 t[seg] = np.linalg.lstsq(ptt_vector[3 * seg:3 * seg + 3].T, plane.phase.ravel(),
                                          rcond=None)[0]
                 seg_tilt = np.einsum('ij,i->j', ptt_vector[3 * seg + 1:3 * seg + 3], t[seg, 1:3])
                 phase_no_tilt[seg] = (plane.phase - seg_tilt.reshape(plane.phase.shape)) * self.mask[seg]
 
             plane.phase = np.sum(phase_no_tilt, axis=0)
-            plane.tilt.extend([Tilt(x=t[seg, 1], y=t[seg, 2]) for seg in range(self.depth)])
+            plane.tilt.extend([Tilt(x=t[seg, 1], y=t[seg, 2]) for seg in range(self.size)])
 
         return plane
 
     def rescale(self, scale):
-        """
-        Rescale a plane via interpolation.
+        """Rescale a plane via interpolation.
 
         The following Plane attributes are resampled:
 
@@ -257,8 +322,8 @@ class Plane:
         -------
         plane : :class:`Plane`
 
-        Note
-        ----
+        Notes
+        -----
         All interpolation is performed via `scipy.ndimage.map_coordinates`
 
         See Also
@@ -318,13 +383,13 @@ class Plane:
         plane : :class:`Plane`
             Resampled Plane.
 
-        Note
-        ----
+        Notes
+        -----
         All interpolation is performed via `scipy.ndimage.map_coordinates`
 
         See Also
         --------
-        * :func:`Plane.rescale`
+        Plane.rescale
 
         """
         if not self.pixelscale:
@@ -342,8 +407,8 @@ class Plane:
         wavefront : :class:`~lentil.wavefront.Wavefront` object
             Wavefront to be multiplied
 
-        Note
-        ----
+        Notes
+        -----
         It is possible to customize the way multiplication is performed by
         creating a subclass and overloading its ``multiply`` method.
 
@@ -374,7 +439,7 @@ class Plane:
             for n, s in enumerate(self._slice):
                 # We have to multiply amplitude[s] by mask[n][s] because the requested
                 # slice of the amplitude array may contain parts of adjacent segments
-                mask = self.mask if self.depth == 1 else self.mask[n]
+                mask = self.mask if self.size == 1 else self.mask[n]
                 amp = self.amplitude if self.amplitude.size == 1 else self.amplitude[s] * mask[s]
                 phase = self.phase if self.phase.size == 1 else self.phase[s]
 
@@ -459,11 +524,12 @@ def _plane_slice(mask):
     slices : list
         List of slices corresponding to the data extent defined by ``mask``.
 
-    See also
+    See Also
     --------
-    * :func:`~lentil.helper.boundary_slice`
-    * :func:`~lentil.Plane.slice_offset`
-     """
+    helper.boundary_slice
+    Plane.slice_offset
+    
+    """
 
     # self.mask may still return None so we catch that here
     if mask is None:
@@ -507,8 +573,8 @@ class Pupil(Plane):
         .. plot:: _img/python/segmask.py
             :scale: 50
 
-    Note
-    ----
+    Notes
+    -----
     By definition, a pupil is represented by a spherical wavefront. Any
     aberrations in the optical system appear as deviations from this perfect
     sphere. The primary use of :class:`Pupil` is to represent these aberrations
@@ -548,8 +614,8 @@ class Image(Plane):
         :class:`Image` is assumed to be square with nrows = ncols = shape.
         Default is None.
 
-    Note
-    ----
+    Notes
+    -----
     If image plane intensity is desired, significant performance improvements
     can be realized by using a :class:`Detector` plane instead.
 
@@ -600,7 +666,7 @@ class Detector(Image):
     ----------
     pixelscale : float, optional
         Pixel size in meters. Pixels are assumed to be square. Default is None.
-    shape : {int, (2,) array_like}, optional
+    shape : tuple of ints, optional
         Number of pixels as (rows, cols). If a single value is provided,
         :class:`Image` is assumed to be square with nrows = ncols = shape.
         Default is None.
@@ -613,10 +679,25 @@ class Detector(Image):
     pass
 
 
-class TiltInterfcace(Plane):
-    # Utility class for holding some common logic shared by 
-    # classes that implement the Tilt interface
+class TiltInterface(Plane):
+    """Utility class for holding common lofic shared by classes that need to
+    implement the tilt interface.
 
+    Other Parameters
+    ----------------
+    **kwargs : :class:`~lentil.Plane` parameters
+        Keyword arguments passed to :class:`~lentil.Plane` constructor
+
+    Notes
+    -----
+    If :attr:`ptype` is not provided, it defaults to `lentil.tilt`.
+
+    See Also
+    --------
+    Tilt
+    DispersiveTilt
+
+    """
     def __init__(self, **kwargs):
         # if ptype is provided as a kwarg use that, otherwise default
         # to lentil.tilt
@@ -626,16 +707,37 @@ class TiltInterfcace(Plane):
         super().__init__(ptype=ptype, **kwargs)
 
     def multiply(self, wavefront):
+        """Multiply with a wavefront. This is a custom implementation 
+        supporting the tilt interface.
+
+        Notes
+        -----
+        This method performs the following actions:
+
+        .. code:: python
+
+            wavefront = super().multiply(wavefront)
+            for field in wavefront.data:
+                field.tilt.append(self)
+            return wavefront
+        
+        Returns
+        -------
+        :class:`~lentil.Wavefront`
+
+        """
         wavefront = super().multiply(wavefront)
         for field in wavefront.data:
             field.tilt.append(self)
         return wavefront
     
     def shift(self, wavelength, x0, y0, **kwargs):
+        """TODO
+        """
         raise NotImplementedError
 
 
-class Tilt(TiltInterfcace):
+class Tilt(TiltInterface):
     """Object for representing tilt in terms of angle
 
     Parameters
@@ -674,7 +776,7 @@ class Tilt(TiltInterfcace):
         return x, y
 
 
-class DispersiveTilt(TiltInterfcace):
+class DispersiveTilt(TiltInterface):
     r"""Class for representing spectral dispersion that appears as a tilt.
 
     Light is dispersed along a line called the the spectral trace. The position
@@ -883,8 +985,8 @@ class Grism(DispersiveTilt):
     and should return units of meters of wavelength provided an input distance
     along the spectral trace.
 
-    Note
-    ----
+    Notes
+    -----
     Lentil supports trace and dispersion functions with any arbitrary polynomial
     order. While a simple analytic solution exists for modeling first-order trace
     and/or dispersion, there is no general solution for higher order functions.
@@ -936,8 +1038,8 @@ class Rotate(Plane):
         The order of the spline interpolation (if needed), default is 3. The
         order has to be in the range 0-5.
 
-    Note
-    ----
+    Notes
+    -----
     If the angle is an even multiple of 90 degrees, ``numpy.rot90`` is used to
     perform the rotation rather than ``scipy.ndimage.rotate``. In this case,
     the order parameter is irrelevant because no interpolation occurs.

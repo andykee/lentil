@@ -25,18 +25,32 @@ class Field:
 
         and return an updated x and y shift. If None (default), tilt = [].
 
-    Attributes
-    ----------
-    extent : tuple
-        Array indices defining the extent of the offset Field.
     """
     __slots__ = ('data', 'offset', 'tilt', 'pixelscale', 'extent')
 
     def __init__(self, data, pixelscale=None, offset=None, tilt=None):
-        self.data = np.asarray(data, dtype=complex)
+        #: ndarray : Complex field data
+        self.data = np.asarray(data, dtype=complex) 
+        
         self.pixelscale = pixelscale
+        """Spatial sampling of data
+        
+        If None (default), the Field is assumed to be broadcastable to any
+        legal shape without interpolation.
+
+        Returns
+        -------
+        tuple of ints or None
+        """
+        
+        #: tuple of ints : Field offset from (0, 0).
         self.offset = offset if offset is not None else [0, 0]
+        
+        #: list : List of objects that implement the tilt interface defined
+        # in :class:`~lentil.plane.TiltInterface`
         self.tilt = tilt if tilt else []
+
+        #: tuple of ints : Extent of ``data``
         self.extent = extent(self.shape, self.offset)
 
     @property
@@ -46,7 +60,7 @@ class Field:
 
         Returns
         -------
-        shape : tuple
+        tuple of ints
         """
         return self.data.shape
 
@@ -57,7 +71,7 @@ class Field:
 
         Returns
         -------
-        size : int
+        int
         """
         return self.data.size
 
@@ -232,7 +246,8 @@ def extent(shape, offset):
 
 
 def insert(field, out, intensity=False, weight=1):
-    """
+    """Insert a field into an array.
+
     Parameters
     ----------
     field : :class:`~lentil.field.Field`
@@ -247,7 +262,7 @@ def insert(field, out, intensity=False, weight=1):
     
     Returns
     -------
-    out : ndarray
+    ndarray
 
     """
     #if indexing not in ('xy', 'ij'):

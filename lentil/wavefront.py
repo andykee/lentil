@@ -23,32 +23,31 @@ class Wavefront:
     focal_length : float or np.inf, optional
         Wavefront focal length. A plane wave (default) has an infinite focal
         length (``np.inf``).
-    tilt: list_like, optional
-
-    shape : (2,) array_like
+    tilt: (2,) array_like, optional
+        Radians of wavefront tilt about the x and y axes provided as 
+        ``[rx, ry]``. Default is ``[0, 0]`` (no tilt).
+    shape : (2,) array_like, optional
         Wavefront shape. If ``shape`` is None (default), the wavefront is
         assumed to be infinite (broadcastable to any shape).
-    ptype : lentil.ptype
-        Plane type.
-
-    Attributes
-    ----------
-    data : list_like
-        Wavefront data. Default is [1+0j] (a plane wave).
+    ptype : lentil.ptype, optional
+        Plane type. Default is ``lentil.none``.
     
     """
-    __slots__ = ('wavelength', 'pixelscale', 'focal_length', 'diameter',
-                 'focal_length', '_ptype', 'shape', 'data')
-
     def __init__(self, wavelength, pixelscale=None, diameter=None, focal_length=None,
                  tilt=None, ptype=None):
-
-        self.wavelength = wavelength
-        self.pixelscale = None if pixelscale is None else np.broadcast_to(pixelscale, (2,))
+        
+        #: float: Wavefront focal length
         self.focal_length = focal_length if focal_length else np.inf
+
+        #: float: Wavefront diameter
         self.diameter = diameter
-        self.ptype = lentil.ptype(ptype)
+
+        #: tuple of ints: Wavefront shape
         self.shape = ()
+
+        self._wavelength = wavelength
+        self._pixelscale = None if pixelscale is None else np.broadcast_to(pixelscale, (2,))
+        self.ptype = lentil.ptype(ptype)
 
         if tilt is not None:
             if len(tilt) != 2:
@@ -66,7 +65,33 @@ class Wavefront:
         return self.__mul__(other)
 
     @property
+    def wavelength(self):
+        """Wavefront wavelength
+        
+        Returns
+        -------
+        float
+        """
+        return self._wavelength
+
+    @property
+    def pixelscale(self):
+        """Physical sampling of wavefront
+        
+        Returns
+        -------
+        tuple of floats
+        """
+        return self._pixelscale
+
+    @property
     def ptype(self):
+        """Wavefront plane type
+        
+        Returns
+        -------
+        ptype object
+        """
         return self._ptype
     
     @ptype.setter
@@ -78,7 +103,12 @@ class Wavefront:
 
     @property
     def field(self):
-        """Wavefront complex field"""
+        """Wavefront complex field
+        
+        Returns
+        -------
+        ndarray
+        """
         out = np.zeros(self.shape, dtype=complex)
         for field in self.data:
             out = lentil.field.insert(field, out)
@@ -86,7 +116,12 @@ class Wavefront:
 
     @property
     def intensity(self):
-        """Wavefront intensity"""
+        """Wavefront intensity
+        
+        Returns
+        -------
+        ndarray
+        """
         out = np.zeros(self.shape, dtype=float)
         for field in lentil.field.reduce(self.data):
             out = lentil.field.insert(field, out, intensity=True)
@@ -95,14 +130,20 @@ class Wavefront:
     @classmethod
     def empty(cls, wavelength, pixelscale=None, diameter=None, focal_length=None,
               tilt=None, shape=None, ptype=None):
+        """Create an empty Wavefront
+
+        The resulting wavefront will have an empty :attr:`data` attribute.
+
+        Parameters
+        ----------
+        
+        """
         w = cls(wavelength=wavelength, pixelscale=pixelscale, diameter=diameter,
                 focal_length=focal_length, tilt=tilt, ptype=ptype)
         w.data = []
         w.shape = () if shape is None else shape
         return w
-        
-    def copy(self):
-        return copy.deepcopy(self)
+    
 
     def insert(self, out, weight=1):
         """Directly insert wavefront intensity data into an output array.

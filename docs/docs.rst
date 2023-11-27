@@ -3,10 +3,10 @@
 .. toctree::
     :hidden:
 
-    user/index
-    examples/index
-    reference
-    dev/index
+    User Guide <user/index>
+    Examples <examples/index>
+    API Reference <ref/index>
+    Development <dev/index>
 
 ********************
 Lentil Documentation
@@ -45,7 +45,7 @@ functions of segmented aperture telescopes.
 
         .. button-ref:: user/index
             :expand:
-            :color: muted
+            :color: info
             :click-parent:
 
             To the user guide
@@ -59,7 +59,7 @@ functions of segmented aperture telescopes.
 
         .. button-ref:: examples/index
             :expand:
-            :color: light
+            :color: info
             :click-parent:
 
             To the examples
@@ -73,9 +73,9 @@ functions of segmented aperture telescopes.
 
         +++
 
-        .. button-ref:: reference
+        .. button-ref:: ref/index
             :expand:
-            :color: dark
+            :color: info
             :click-parent:
 
             To the reference guide

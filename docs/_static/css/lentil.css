@@ -31,15 +31,12 @@ a:hover code{
     text-decoration-thickness: 1px;
 }
 
-.sig-name {
-    --pst-color-inline-code: #5E81AC;
+a.headerlink {
+    color: #ee9040;
 }
 
-pre {
-    background-color: #f8f8f8;
-    border: 0px;
-    box-shadow: none;
-    padding: 20px;
+.sig-name {
+    --pst-color-inline-code: #5E81AC;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -87,6 +84,11 @@ a.hederlink {
 
 a.hederlink:hover {
     color: #ee9040
+}
+
+/* Disable API reference name highlighting */
+dt:target, span.highlighted {
+    background-color: transparent;
 }
 
 :target:before{

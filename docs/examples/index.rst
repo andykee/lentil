@@ -9,7 +9,6 @@ General
 .. toctree::
     :maxdepth: 1
 
-    tutorial
     general/simple
     general/large
     general/attributes
