@@ -4,13 +4,12 @@
 
 .. autoclass:: {{ objname }}
 
-
 {% if attributes %}
-**Attributes**
+.. rubric:: {{ _('Attributes') }}
 
 .. autosummary::
     :toctree:
-    {% for item in all_attributes %}
+    {% for item in attributes %}
     {%- if not item.startswith('_') %}
     ~{{ name }}.{{ item }}
     {%- endif -%}
@@ -19,11 +18,11 @@
 {% endif %}
 
 {% if methods %}
-**Methods**
+.. rubric:: {{ _('Methods') }}
 
 .. autosummary::
     :toctree:
-    {% for item in all_methods %}
+    {% for item in methods %}
     {%- if not item.startswith('_') or item in ['__call__'] %}
     ~{{ name }}.{{ item }}
     {%- endif -%}

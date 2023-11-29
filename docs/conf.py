@@ -16,11 +16,12 @@ path = os.path.abspath(os.path.dirname(__file__))
 
 project = 'Lentil'
 author = 'Andy Kee'
-copyright = f'{datetime.now().year} California Institute of Technology'
+copyright = f'2017-{datetime.now().year} California Institute of Technology'
 
 with open(os.path.normpath(os.path.join(path, '..', 'lentil', '__init__.py'))) as f:
     version = release = re.search("__version__ = '(.*?)'", f.read()).group(1)
 
+today_fmt = '%B %d, %Y'
 
 # -- General configuration ---------------------------------------------------
 
@@ -30,10 +31,13 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.napoleon',
               'sphinx.ext.viewcode',
               'sphinx_remove_toctrees',
-              'matplotlib.sphinxext.plot_directive']
+              'sphinx_copybutton',
+              'sphinx_design',
+              'matplotlib.sphinxext.plot_directive']#,
+              #'numpydoc']
 templates_path = ['_templates']
 source_suffix = '.rst'
-master_doc = 'index'
+master_doc = 'docs'
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 
@@ -42,13 +46,47 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 html_theme = 'pydata_sphinx_theme'
 html_theme_options = {
     'show_prev_next': False,
-    'google_analytics_id': 'UA-180546240-1',
-    'github_url': 'https://github.com/andykee/lentil'
+    'github_url': 'https://github.com/andykee/lentil',
+    "logo": {
+        "link": "docs",
+        "image_light": "_static/logo-light.svg",
+        "image_dark": "_static/logo-dark.svg",
+   },
+   "collapse_navigation": True,
+   "navbar_persistent": ["search-button"],
+   "pygment_light_style": "tango",
+   "pygment_dark_style": "nord",
+   "favicons": [
+      {
+         "rel": "icon",
+         "sizes": "16x16",
+         "href": "favicon/favicon-16x16.png",
+      },
+      {
+         "rel": "icon",
+         "sizes": "32x32",
+         "href": "favicon/favicon-32x32.png",
+      },
+      {
+         "rel": "icon",
+         "sizes": "48x48",
+         "href": "favicon/favicon-48x48.png",
+      },
+      {
+         "rel": "apple-touch-icon",
+         "sizes": "180x180",
+         "href": "favicon/apple-touch-icon-180x180.png",
+         "color": "#000000",
+      },
+   ]
 }
-html_logo = '_static/img/lentil.png'
 
 html_additional_pages = {
-    'index': 'indexcontent.html'
+    'index': 'index.html'
+}
+
+html_sidebars = {
+    'index': []
 }
 
 html_static_path = ['_static']
@@ -56,21 +94,21 @@ html_show_sphinx = False
 html_show_sourcelink = False
 html_scaled_image_link = False
 
-html_js_files = ['js/copybutton.js']
-html_css_files = ['css/lentil.css', 'css/syntax-highlighting.css']
-
-pygments_style = 'default'
+html_css_files = ['css/lentil.css']
 
 # if true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
 add_module_names = True
 
+add_function_parentheses = True
+
 autodoc_default_options = {
     'member-order': 'alphabetical',
-    'exclude-members': '__init__, __weakref__, __dict__, __module__'
+    'exclude-members': '__init__, __weakref__, __dict__, __module__',
 }
 
 autosummary_generate = True
+
 
 #remove_from_toctrees = ["generated/*"]
 
@@ -103,6 +141,9 @@ plot_html_show_source_link = False
 plot_html_show_formats = False
 plot_formats = [('png', dpi*2)]
 plot_pre_code = """
+import lentil
+import matplotlib.pyplot as plt
 import numpy as np
 np.random.seed(12345)
 """
+

@@ -4,17 +4,23 @@
 Development
 ***********
 
-.. toctree::
-    :maxdepth: 3
+This page provides resources for Lentil developers
 
-    contributing
+
 
 .. toctree::
-    :maxdepth: 3
+    :maxdepth: 2
 
     tech_notes/index
 
 .. toctree::
+    :maxdepth: 3
+
+    verification/index
+
+.. toctree::
     :maxdepth: 1
 
+    install
+    publishing
     changes

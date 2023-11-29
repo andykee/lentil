@@ -1,0 +1,121 @@
+{#
+    Loosely inspired by the deprecated sphinx/themes/basic/defindex.html
+  #}
+  {%- extends "layout.html" %}
+
+  {% block css %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="_static/css/lentil_index.css">
+  {% endblock %}
+
+  {% set title = _('Overview') %}
+  {% block body %}
+
+  <div class="container overflow-hidden">
+    <div class="row">
+      <div class="col-6">
+        <div class="p-1">
+        <h1>Lentil: Fast optical propagation</h1>
+
+        <p>
+            Lentil is an Python package for developing high-performance diffraction simulations. 
+            Lentil provides an easy to use framework for modeling optical systems and simulating 
+            the wave propagation of light through them. Lentil was originally developed at NASA's 
+            Jet Propulsion Library and is now available as open-source software.
+
+            <!--Lentil has the following features:
+                * Generalized propagation routines (near field/far field)
+
+            -->
+         </p>
+        </div>
+
+      </div>
+      <div class="col-6">
+        <!--<div class="px-5 pt-4 w-75 mx-auto">-->
+        <div class="pt-4 w-50 mx-auto">
+        <img src="_static/img/psf.png" class="img-fluid">
+        </div>
+      </div>
+    </div>
+
+    <div class="biglinks container py-5 text-center w-75">
+        <div class="row gx-5">
+            <div class="col-3">
+                <a href="{{ pathto("user/install") }}">
+                    <img src="_static/installation.svg"><br/>
+                    Installation
+                </a>
+            </div>
+            
+            <div class="col-3">
+                <a href="{{ pathto("user/index") }}">
+                    <img src="_static/documentation.svg"><br/>
+                    Documentation
+                </a>
+            </div>
+            
+            <div class="col-3">
+                <a href="{{ pathto("examples/index") }}">
+                    <img src="_static/examples.svg"><br/>
+                    Examples
+                </a>
+            </div>
+            
+            <div class="col-3">
+                <a href="{{ pathto("ref/index") }}">
+                    <img src="_static/reference.svg"><br/>
+                    Reference
+                </a>
+            </div>
+        </div>
+    </div>
+
+  </div>
+
+{% endblock %}
+
+{% block footer %}
+
+<div class="bd-footer bd-page-width">
+    
+    <div class="container px-5 pt-4 pb-3">
+        <div class="row">
+          <div class="col-sm-6 text-start">
+            <h2>Lentil</h2>
+          </div>
+          <div class="col-sm-3 text-end">
+            <ul>
+              <li><a href="{{ pathto("dev/index") }}">Contribute</a></li>
+              <li><a href="{{ pathto("cite") }}">Citing Lentil</a></li>
+              <li><a href="{{ pathto("license") }}">License</a></li>
+            </ul>
+          </div>
+          <div class="col-sm-3 text-end">
+            <dl class="release">
+              <dt>Latest Stable Release</dt>
+              <dd>
+                  <a href="">docs</a>
+                   |
+                  <a href="{{ pathto("release") }}">changelog</a>
+              </dd>
+          </dl>
+          <dl class="release">
+              <dt>Development version</dt>
+              <dd>
+                  <a href="">docs</a>
+              </dd>
+          </dl>
+          </div>
+        </div>
+        <div class="row">
+          <span>© {{ copyright }}</span>
+        </div>
+      </div>
+
+</div>
+
+{% endblock %}
+
+
+  
