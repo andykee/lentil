@@ -34,7 +34,7 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install -e .
-          pip install docs/requirements.txt
+          pip install -r docs/requirements.txt
       - name: Build
         run: |
           cd docs
