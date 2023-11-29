@@ -30,11 +30,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.mathjax',
               'sphinx.ext.napoleon',
               'sphinx.ext.viewcode',
-              'sphinx_remove_toctrees',
-              'sphinx_copybutton',
               'sphinx_design',
-              'matplotlib.sphinxext.plot_directive']#,
-              #'numpydoc']
+              'matplotlib.sphinxext.plot_directive']
 templates_path = ['_templates']
 source_suffix = '.rst'
 master_doc = 'docs'
@@ -108,9 +105,6 @@ autodoc_default_options = {
 }
 
 autosummary_generate = True
-
-
-#remove_from_toctrees = ["generated/*"]
 
 # -- Plot config -------------------------------------------------------------
 dpi = 144
