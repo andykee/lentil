@@ -8,3 +8,4 @@ Propagation
     :toctree: generated/
 
     lentil.propagate_dft
+    lentil.propagate_fft
