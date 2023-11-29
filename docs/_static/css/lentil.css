@@ -148,3 +148,13 @@ nav.bd-links .current>a {
 .form-control:focus {
     outline: 2px solid var(--bs-border-color);
 }
+
+
+/* sphinx-design button colors */
+.sd-btn {
+    --sd-color-info: #4C566A;
+}
+
+.sd-btn:hover {
+    --sd-color-info-highlight: #3B4252;
+}

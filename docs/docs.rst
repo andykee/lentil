@@ -25,9 +25,9 @@ It was originally developed at NASA's Jet Propulsion Lab by the Wavefront Sensin
 Control group (383E) to provide an easy to use framework for simulating point spread
 functions of segmented aperture telescopes.
 
-.. note::
+.. card:: :octicon:`info;1em;` Note
 
-    Lentil is still under active development and new features continue to be added.
+    Lentil is under active development and new features continue to be added. 
     Until Lentil reaches version 1.0, the API is not guaranteed to be stable, but
     changes breaking backwards compatibility will be noted in the 
     :doc:`release notes <release>`.
@@ -50,7 +50,7 @@ functions of segmented aperture telescopes.
 
             To the user guide
 
-    .. grid-item-card:: :octicon:`code-square;1em;` Examples
+    .. grid-item-card:: :octicon:`file-code;1em;` Examples
 
         New to NumPy? Check out the Absolute Beginner's Guide. It contains an
         introduction to NumPy's main concepts and links to additional tutorials.

@@ -3,7 +3,7 @@
 #
 # Copyright (c) 2021, California Institute of Technology ("Caltech"). U.S.
 # Government sponsorship acknowledged.
-__version__ = '0.8.0-alpha'
+__version__ = '0.8.0-dev'
 
 from lentil.ptype import ptype
 
