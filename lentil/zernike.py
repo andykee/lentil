@@ -36,8 +36,8 @@ def zernike(mask, index, normalize=True, rho=None, theta=None):
     out
         Circular Zernike polynomial computed over the given mask.
 
-    Warning
-    -------
+    Warnings
+    --------
     Zernike polynomials are defined to be orthogonal on the unit circle. If
     the supplied mask is non-circular, the Zernike polynomial is computed on an
     outscribing circle and then cropped by the mask. Note that this operation
@@ -268,8 +268,8 @@ def zernike_fit(opd, mask, modes, normalize=True, rho=None, theta=None):
         List of coefficients fit to the supplied OPD over the specified number
         of Zernike modes.
 
-    Example
-    -------
+    Examples
+    --------
     .. code:: pycon
 
         >>> import numpy as np
@@ -286,7 +286,7 @@ def zernike_fit(opd, mask, modes, normalize=True, rho=None, theta=None):
 
     See Also
     --------
-    :func:`zernike_remove` Fit and remove a Zernike basis set from an OPD.
+    zernike_remove : Fit and remove a Zernike basis set from an OPD.
 
     References
     ----------
@@ -333,7 +333,7 @@ def zernike_remove(opd, mask, modes, rho=None, theta=None):
 
     See Also
     --------
-    :func:`zernike_fit`
+    zernike_fit
 
     References
     ----------

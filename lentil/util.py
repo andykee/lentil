@@ -385,8 +385,8 @@ def rescale(img, scale, shape=None, mask=None, order=3, mode='nearest',
     img : ndarray
         Rescaled image.
 
-    Note
-    ----
+    Notes
+    -----
     The post-rescale masking operation should have no real effect on the
     resulting image but is included to eliminate interpolation artifacts that
     sometimes appear in large clusters of zeros in rescaled images.

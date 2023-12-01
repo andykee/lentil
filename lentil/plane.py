@@ -125,7 +125,7 @@ class Plane:
     @property
     def global_mask(self):
         """
-        Flattened view of :attr:`~mask`
+        Flattened view of :attr:`mask`
 
         Returns
         -------

@@ -641,8 +641,8 @@ class Spectrum:
         tol : float, optional
             Relative tolerance used to find ends. Default is 1e-4
 
-        Note
-        ----
+        Notes
+        -----
         If :attr:`~radiometry.Spectrum.value` is all zeros, no trim operation is
         performed and the Spectrum remains unchanged.
 
@@ -1102,16 +1102,16 @@ class Material:
         :attr:`~lentil.radiometry.Material.emission` are multiplied by contam
         before being returned.
 
-    Note
-    ----
+    Notes
+    -----
     There is no explicit reflection attribute. Reflective optics should use the
     :attr:`~lentil.radiometry.Material.transmission` attribute to represent
     reflectivity.
 
     See Also
     --------
-    * :func:`lentil.radiometry.path_transmission`
-    * :func:`lentil.radiometry.path_emission`
+    radiometry.path_transmission
+    radiometry.path_emission
 
     """
     def __init__(self, transmission=1, emission=0, contam=1):

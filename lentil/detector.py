@@ -153,8 +153,8 @@ def pixel(img, oversample=1):
     out : ndarray
         Image with pixel sampling effects applied.
 
-    Example
-    -------
+    Examples
+    --------
     Apply pixel MTF to a 3x oversampled PSF:
 
     .. code:: pycon
@@ -209,8 +209,8 @@ def pixelate(img, oversample):
     img : ndarray
         Rescaled image with pixel MTF applied
 
-    Note
-    ----
+    Notes
+    -----
     ``pixelate`` should only be used if ``oversample`` > 2
 
     See Also
@@ -258,8 +258,8 @@ def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
     img : ndarray
         Array of DN
 
-    Note
-    ----
+    Notes
+    -----
     The saturation capacity should not be confused with the full-well capacity.
     Saturation capacity is typically smaller than the full well capacity because
     the signal is clipped before the physical saturation of the pixel is
@@ -572,8 +572,8 @@ def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, alpha_flux=4e9
         Array representing the number of electrons in a detector image due
         to cosmic ray hits
 
-    Example
-    -------
+    Examples
+    --------
     Simulate the cosmic ray hits for a 2000 second exposure over a 256 x 256 detector
     patch with 5 um x 5 um x 3 um pixels:
 

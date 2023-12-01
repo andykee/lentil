@@ -90,8 +90,8 @@ def translation_defocus(mask, f_number, translation):
     wfe : ndarray
         Focus error due to axial translation
 
-    Warning
-    -------
+    Warnings
+    --------
     Defocus is computed over a circular pupal defined by the maximum
     horizontal or vertical extent of the supplied mask before applying the
     mask. As a result, the RMS and peak-to-valley wavefront measurements
