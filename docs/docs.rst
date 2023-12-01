@@ -37,9 +37,9 @@ functions of segmented aperture telescopes.
 
     .. grid-item-card:: :octicon:`file;1em;` User guide
 
-        The user guide provides in-depth information on the
-        key concepts of NumPy with useful background information 
-        and explanation.
+        The user guide provides in-depth information on the key
+        concepts of Lentil with useful background information and
+        explanation.
 
         +++
 
@@ -52,8 +52,9 @@ functions of segmented aperture telescopes.
 
     .. grid-item-card:: :octicon:`file-code;1em;` Examples
 
-        New to NumPy? Check out the Absolute Beginner's Guide. It contains an
-        introduction to NumPy's main concepts and links to additional tutorials.
+        A number of end-to-end examples and large collection of common
+        model patterns are provided to simplify the development of new
+        models.
 
         +++
 
@@ -66,10 +67,8 @@ functions of segmented aperture telescopes.
 
     .. grid-item-card:: :octicon:`repo;1em;` API reference
         
-        The reference guide contains a detailed description of the functions,
-        modules, and objects included in NumPy. The reference describes how the
-        methods work and which parameters can be used. It assumes that you have an
-        understanding of the key concepts.
+        The reference guide contains a detailed description of the Lentil API. 
+        It assumes that you have an understanding of the key concepts.
 
         +++
 
@@ -82,9 +81,8 @@ functions of segmented aperture telescopes.
 
     .. grid-item-card:: :octicon:`terminal;1em;` Development guide
 
-        Want to add to the codebase? Can help add translation or a flowchart to the
-        documentation? The contributing guidelines will guide you through the
-        process of improving NumPy.
+        The development guide provides key information for library developers
+        and maintainers. It also describes algorithm verification efforts.
 
         +++
 
