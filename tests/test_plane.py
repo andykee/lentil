@@ -1,6 +1,7 @@
 import math
 import numpy as np
 
+import pytest
 import lentil
 
 
@@ -25,6 +26,15 @@ def test_default_plane():
     assert np.all(p.phase == 0)
     assert p.mask == p.amplitude
 
+
+def test_amp_alias():
+    p = lentil.Plane(amp=10)
+    assert p.amplitude == 10
+
+
+def test_amp_alias_error():
+    with pytest.raises(TypeError):
+        lentil.Plane(amplitude=10, amp=10)
 
 def test_plane_fit_tilt_inplace():
     p = RandomPlane()
