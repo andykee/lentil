@@ -3,7 +3,7 @@ import lentil
 
 mask = lentil.util.circle((256, 256), 128)
 opd = lentil.zernike.zernike(mask, 8) * 500e-9  # 500 nm of coma
-pupil = lentil.Pupil(amplitude=mask, phase=opd,
+pupil = lentil.Pupil(amplitude=mask, opd=opd,
                      focal_length=10, pixelscale=1/256)
 rotation = lentil.Rotate(angle=30, unit='degrees')
 flip = lentil.Flip(1)

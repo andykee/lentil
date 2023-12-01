@@ -50,7 +50,7 @@ multiplied in two ways:
         >>> w1 = plane * w0
 
 The :func:`~Plane.multiply` method constructs a complex phasor from the plane's
-:attr:`~lentil.Plane.amplitude` and :attr:`~lentil.Plane.phase` attributes and the
+:attr:`~lentil.Plane.amplitude` and :attr:`~lentil.Plane.opd` attributes and the
 |Wavefront| wavelength. The plane complex phasor is then multiplied element-wise with
 the wavefront's complex data array:
 
@@ -77,15 +77,15 @@ represented by a single |Pupil| plane:
     >>> amplitude = lentil.circle(shape=(256, 256), radius=120)
     >>> opd = lentil.zernike_compose(mask=amplitude,
     ...                              coeffs=[0, 0, 0, 100e-9, 300e-9, 0, -100e-9])
-    >>> pupil = lentil.Pupil(amplitude=amplitude, phase=opd, focal_length=10,
+    >>> pupil = lentil.Pupil(amplitude=amplitude, opd=opd, focal_length=10,
     ...                      pixelscale=1/240)
-    >>> plt.imshow(pupil.phase, origin='lower')
+    >>> plt.imshow(pupil.opd, origin='lower')
 
 Segmented optical systems
 =========================
 Creating a model of a segmented aperture optical system in Lentil doesn't require any
 special treatment. The |Plane| and |Pupil| objects work the same with sparse or
-segmented amplitude, phase, and mask attributes as with monolithic ones.
+segmented amplitude, opd, and mask attributes as with monolithic ones.
 
 That being said, it is advantageous from a performance point of view to supply a
 3-dimensional `segment mask` when specifying a Plane's :attr:`~lentil.Plane.mask`

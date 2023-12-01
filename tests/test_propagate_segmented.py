@@ -20,7 +20,7 @@ class SimpleSegmentedPupil(lentil.Pupil):
         opd = opdp + opd1 + opd2 + opd3
 
         super().__init__(focal_length=10, pixelscale=1/npix,
-                         amplitude=lentil.normalize_power(global_mask), phase=opd,
+                         amplitude=lentil.normalize_power(global_mask), opd=opd,
                          mask=mask)
 
 
@@ -31,20 +31,20 @@ def test_propagate_tilt_angle_mono():
     w1 = lentil.Wavefront(wavelength=650e-9)
     w1 *= p
     w1 = lentil.propagate_dft(w1, shape=(128,128), pixelscale=5e-6)
-    psf_phase = w1.intensity
+    psf = w1.intensity
 
     p.fit_tilt(inplace=True)
     w2 = lentil.Wavefront(wavelength=650e-9)
     w2 *= p
     w2 = lentil.propagate_dft(w2, shape=(128,128), pixelscale=5e-6)
-    psf_angle = w2.intensity
+    psf_fit_tilt = w2.intensity
 
     # Normalize and threshold the PSFs so that the centroiding is consistent
-    psf_phase /= np.max(psf_phase)
-    psf_phase[psf_phase < 0.2] = 0
+    psf /= np.max(psf)
+    psf[psf < 0.2] = 0
 
-    psf_angle /= np.max(psf_angle)
-    psf_angle[psf_angle < 0.2] = 0
+    psf_fit_tilt /= np.max(psf_fit_tilt)
+    psf_fit_tilt[psf_fit_tilt < 0.2] = 0
 
-    delta = np.abs(np.asarray(lentil.util.centroid(psf_phase)) - np.asarray(lentil.util.centroid(psf_angle)))
+    delta = np.abs(np.asarray(lentil.util.centroid(psf)) - np.asarray(lentil.util.centroid(psf_fit_tilt)))
     assert np.all(delta <= 0.2)

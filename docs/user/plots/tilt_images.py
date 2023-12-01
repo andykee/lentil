@@ -6,12 +6,12 @@ amp = lentil.circle((256, 256), 120)
 x_tilt = 8e-6 * lentil.zernike(amp, 3)  # +x tilt
 y_tilt = 8e-6 * lentil.zernike(amp, 2)  # +y tilt
 
-py = lentil.Pupil(focal_length=10, pixelscale=1 / 240, amplitude=amp, phase=y_tilt)
+py = lentil.Pupil(focal_length=10, pixelscale=1 / 240, amplitude=amp, opd=y_tilt)
 wy = lentil.Wavefront(650e-9)
 wy *= py
 wy = lentil.propagate_dft(wy, pixelscale=5e-6, shape=200, oversample=5)
 
-px = lentil.Pupil(focal_length=10, pixelscale=1 /240, amplitude=amp, phase=x_tilt)
+px = lentil.Pupil(focal_length=10, pixelscale=1 /240, amplitude=amp, opd=x_tilt)
 wx = lentil.Wavefront(650e-9)
 wx *= px
 wx = lentil.propagate_dft(wx, pixelscale=5e-6, shape=200, oversample=5)

@@ -21,16 +21,16 @@ def test_zernike_basis_vectorize():
 def test_zernike_fit():
     mask = lentil.util.circlemask((256, 256), 128)
     coeffs = np.random.rand(4)*100e-9
-    phase = lentil.zernike_compose(mask, coeffs)
-    fit_coeffs = lentil.zernike_fit(phase, mask, np.arange(1, 5))
+    opd = lentil.zernike_compose(mask, coeffs)
+    fit_coeffs = lentil.zernike_fit(opd, mask, np.arange(1, 5))
     assert np.all(np.isclose(coeffs, fit_coeffs))
 
 
 def test_zernike_remove():
     mask = lentil.util.circlemask((256, 256), 128)
     coeffs = np.random.rand(4)*100e-9
-    phase = lentil.zernike_compose(mask, coeffs)
-    residual = lentil.zernike_remove(phase, mask, np.arange(1, 5))
+    opd = lentil.zernike_compose(mask, coeffs)
+    residual = lentil.zernike_remove(opd, mask, np.arange(1, 5))
     assert np.all(np.isclose(residual, np.zeros_like(residual)))
 
 def test_zernike_random_mask():

@@ -13,13 +13,13 @@ amp[201:225, 128-16:144-8] = 1
 focus = lentil.zernike(mask=np.ones((256, 256)), index=4)
 
 pupil_neg = lentil.Pupil(amplitude=amp, pixelscale=1/240, focal_length=10)
-pupil_neg.phase = -6e-6 * focus
+pupil_neg.opd = -6e-6 * focus
 w_neg = lentil.Wavefront(650e-9)
 w_neg *= pupil_neg
 w_neg = lentil.propagate_dft(w_neg, pixelscale=5e-6, shape=200, oversample=2)
 
 pupil_pos = lentil.Pupil(amplitude=amp, pixelscale=1/240, focal_length=10)
-pupil_pos.phase = 6e-6 * focus
+pupil_pos.opd = 6e-6 * focus
 w_pos = lentil.Wavefront(650e-9)
 w_pos *= pupil_pos
 w_pos = lentil.propagate_dft(w_pos, pixelscale=5e-6, shape=200, oversample=2)

@@ -6,7 +6,7 @@ mpl.rcParams['figure.figsize'] = (4.5, 4.5)
 
 amp = lentil.circle((256, 256), 120)
 opd = lentil.zernike(amp, 4) * 1e-6
-pupil = lentil.Pupil(amplitude=amp, phase=opd, pixelscale=1 / 240, focal_length=10)
+pupil = lentil.Pupil(amplitude=amp, opd=opd, pixelscale=1 / 240, focal_length=10)
 
 w1 = lentil.Wavefront(wavelength=500e-9)
 w1 *= pupil

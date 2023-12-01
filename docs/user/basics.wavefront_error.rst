@@ -5,7 +5,7 @@ Representing wavefront error
 ****************************
 
 Wavefront error is represented in a :class:`~lentil.Plane` by specifying its
-:attr:`~lentil.Plane.phase` attribute. For static errors, a simple wavefront error map is
+:attr:`~lentil.Plane.opd` attribute. For static errors, a simple wavefront error map is
 sufficient. For more complicated errors that are random or time-varying in nature, a
 more dynamic and/or state-based approach is required.
 
@@ -14,7 +14,7 @@ Lentil to a Numpy array.
 
 .. note::
 
-    For :class:`~lentil.Pupil` planes, the :attr:`~lentil.Pupil.phase` attribute represents the optical
+    For :class:`~lentil.Pupil` planes, the :attr:`~lentil.Pupil.opd` attribute represents the optical
     path difference (OPD) relative to the pupil's reference sphere.
 
 .. _user.wavefront_error.sign:
@@ -71,8 +71,8 @@ containing the JWST NITCam static wavefront error:
 
     >>> import numpy as np
     >>> import lentil
-    >>> phase = np.load('path/to/nircam_wfe.npy')
-    >>> pupil = lentil.Pupil(focal_length=119.77, pixelscale=6.6035/1024, phase=phase)
+    >>> opd = np.load('path/to/nircam_wfe.npy')
+    >>> pupil = lentil.Pupil(focal_length=119.77, pixelscale=6.6035/1024, opd=opd)
 
 .. image:: /_static/img/nircam.png
     :scale: 50

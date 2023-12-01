@@ -52,7 +52,7 @@ plane. A plane is defined by the following parameters:
 
 * :attr:`~lentil.Plane.amplitude` - Defines the relative electric field amplitude
   transmission through the plane
-* :attr:`~lentil.Plane.phase` - Defines the electric field phase shift that a wavefront
+* :attr:`~lentil.Plane.opd` - Defines the optical path difference that a wavefront
   experiences when propagating through the plane
 * :attr:`~lentil.Plane.mask` - Defines the binary mask over which the plane data is
   valid. If `mask` is 2-dimensional, the plane is assumed to be monolithic. If `mask`
@@ -93,15 +93,15 @@ Once a Plane is defined, its attributes can be modified at any time:
     :scale: 50
 
     >>> p = lentil.Plane(amplitude=lentil.util.circle((256,256), 120))
-    >>> p.phase = 2e-6 * lentil.zernike(p.mask, index=4)
-    >>> plt.imshow(p.phase, origin='lower')
+    >>> p.opd = 2e-6 * lentil.zernike(p.mask, index=4)
+    >>> plt.imshow(p.opd, origin='lower')
 
 
 Resampling or rescaling a Plane
 -------------------------------
 It is possible to resample a plane using either the :func:`~lentil.Plane.resample`
 or :func:`~lentil.Plane.rescale` methods. Both methods use intrepolation to
-resample the amplitude, phase, and mask attributes and readjust the pixelscale
+resample the amplitude, opd, and mask attributes and readjust the pixelscale
 attribute as necessary. The default behavior is to perform this interpolation
 on a copy of the plane, but it is possible to operate in-place by setting
 ``inplace=True``.
@@ -111,7 +111,7 @@ on a copy of the plane, but it is possible to operate in-place by setting
 Fitting and removing Plane tilt
 -------------------------------
 The plane's :func:`~lentil.Plane.fit_tilt` method performs a least squares fit to
-estimate and remove tilt from the phase attribute. The tilt removed from the phase
+estimate and remove tilt from the opd attribute. The tilt removed from the opd
 attribute is accounted for by appending an equivalent :class:`~lentil.Tilt` object
 to the plane's :attr:`~lentil.Plane.tilt` attribute. The default behavior is to
 perform this operation on a copy of the plane, but it is possible to operate
@@ -147,9 +147,8 @@ Discretely sampled pupil attributes can also be specified:
 
 * :attr:`~lentil.Pupil.amplitude` - Defines the relative electric field amplitude
   transmission through the pupil
-* :attr:`~lentil.Pupil.phase` - Defines the electric field phase shift that a wavefront
-  experiences when propagating through the pupil. This term is commonly known as the
-  optical path difference (OPD).
+* :attr:`~lentil.Pupil.opd` - Defines the optical path difference that a wavefront
+  experiences when propagating through the pupil.
 * :attr:`~lentil.Pupil.mask` - Defines the binary mask over which the pupil data is
   valid. If `mask` is 2-dimensional, the pupil is assumed to be monolithic. If `mask`
   is 3-dimensional, the pupil is assumed to be segmented with the segment masks
@@ -165,7 +164,7 @@ Create a pupil with:
 
 .. code-block:: pycon
 
-    >>> p = lentil.Pupil(focal_length=10, pixelscale=1/100, amplitude=1, phase=0)
+    >>> p = lentil.Pupil(focal_length=10, pixelscale=1/100, amplitude=1, opd=0)
 
 Image
 =====
@@ -180,7 +179,7 @@ of the following can be specified:
   the image plane will grow as necessary to capture all data.
 * :attr:`~lentil.Image.amplitude` - Definers the relative electric field amplitude
   transmission through the image plane.
-* :attr:`~lentil.Image.phase` - Defines the electric field phase shift that a wavefront
+* :attr:`~lentil.Image.opd` - Defines the optical path difference that a wavefront
   experiences when propagating through the image plane.
 
 Detector
@@ -318,12 +317,12 @@ efficiently modeling a grism.
 
 Active optics and deformable mirrors
 ====================================
-Active optics and deformable mirrors are easily represented by defining a phase that
+Active optics and deformable mirrors are easily represented by defining an OPD that
 depends on some parameterized state. Because there is no standard architecture for these
 types of optical elements, Lentil does not provide a concrete implementation. Instead,
 a custom subclass of either |Plane| or |Pupil| should be defined. The exact
 implementation details will vary by application, but a simple example of a tip-tilt
-mirror where the plane's phase is computed dynamically based on the state `x` is
+mirror where the plane's OPD is computed dynamically based on the state `x` is
 provided below. Additional examples can be found in Model Patterns under
 :ref:`patterns.planes`.
 
@@ -346,14 +345,14 @@ provided below. Additional examples can be found in Model Patterns under
                                                        normalize=False)
 
         @property
-        def phase(self):
+        def opd(self):
             return np.einsum('ijk,i->jk', self._infl_fn, self.x)
 
 .. code-block:: pycon
 
     >>> tt = TipTiltMirror()
     >>> tt.x = [1e-6, 3e-6]
-    >>> plt.imshow(tt.phase)
+    >>> plt.imshow(tt.opd)
     >>> plt.colorbar()
 
 .. plot::
@@ -363,9 +362,9 @@ provided below. Additional examples can be found in Model Patterns under
     import lentil
 
     mask = lentil.circlemask((256,256), 120)
-    phase = lentil.zernike_compose(mask, [0, 1e-6, 3e-6], normalize=False)
+    opd = lentil.zernike_compose(mask, [0, 1e-6, 3e-6], normalize=False)
 
-    im = plt.imshow(phase, origin='lower')
+    im = plt.imshow(opd, origin='lower')
     plt.colorbar(im, fraction=0.046, pad=0.04)
 
 Customizing Plane
@@ -373,7 +372,7 @@ Customizing Plane
 The Plane class or any of the classes derived from Plane can be subclassed to modify
 any of the default behavior. Reasons to do this may include but are not limited to:
 
-* Dynamically computing the :attr:`~lentil.Plane.phase` attribute
+* Dynamically computing the :attr:`~lentil.Plane.opd` attribute
 * Changing the Plane-Wavefront interaction by redefining the `Plane.multiply()` method
 * Modifying the way a Plane is resampled or rescaled
 
@@ -390,9 +389,9 @@ Some general guidance for how to safely subclass Plane is provided below.
     passing these attributes along to the ``super().__init__()`` call to ensure they are
     properly set.
 
-Redefining the amplitude, phase, or mask attributes
+Redefining the amplitude, OPD, or mask attributes
 ---------------------------------------------------
-Plane :attr:`~lentil.Plane.amplitude`, :attr:`~lentil.Plane.phase`, and
+Plane :attr:`~lentil.Plane.amplitude`, :attr:`~lentil.Plane.opd`, and
 :attr:`~lentil.Plane.mask` are all defined as properties, but Python allows you to
 redefine them as class attributes without issue:
 
@@ -403,10 +402,10 @@ redefine them as class attributes without issue:
     class CustomPlane(le.Plane):
         def __init__(self):
             self.amplitude = lentil.circle((256,256), 128)
-            self.phase = lentil.zernike(lentil.circlemask((256,256),128), 4)
+            self.opd = lentil.zernike(lentil.circlemask((256,256),128), 4)
 
 If more dynamic behavior is required, the property can be redefined. For example, to
-return a new random phase each time the :attr:`~lentil.Plane.phase` attribute is
+return a new random OPD each time the :attr:`~lentil.Plane.opd` attribute is
 accessed:
 
 .. code-block:: python3
@@ -420,11 +419,11 @@ accessed:
             self.amplitude = lentil.circle((256,256), 128)
 
         @property
-        def phase(self):
+        def phaopdse(self):
             return lentil.zernike_compose(self.mask, np.random.random(10))
 
-It is also straightforward to implement a custom :attr:`~lentil.Plane.phase` property to
-provide a stateful phase attribute:
+It is also straightforward to implement a custom :attr:`~lentil.Plane.opd` property to
+provide a stateful OPD attribute:
 
 .. code-block:: python3
 
@@ -438,12 +437,12 @@ provide a stateful phase attribute:
             self.x = x
 
         @property
-        def phase(self):
+        def opd(self):
             return lentil.zernike_compose(self.mask, self.x)
 
 .. note::
 
-    Polychromatic or broadband diffraction propagations access the phase, amplitude,
+    Polychromatic or broadband diffraction propagations access the OPD, amplitude,
     and mask attributes for each propagatioon wavelength. Because these attributes
     remain fixed during a propagation, it is inefficient to repeatedly recompute
     them. To mitigate this, it can be very useful to provide a mechanism for freezing
@@ -462,14 +461,14 @@ provide a stateful phase attribute:
                 self.amplitude = lentil.circle((256,256), 128)
 
             @property
-            def phase(self):
+            def opd(self):
                 return lentil.zernike_compose(self.mask, np.random.random(10))
 
             def freeze(self):
-                # Return a copy of CustomPlane with the phase attribute redefined
-                # to be a static copy of the phase when freeze() is called
+                # Return a copy of CustomPlane with the OPD attribute redefined
+                # to be a static copy of the OPD when freeze() is called
                 out = copy.deepcopy(self)
-                out.phase = self.phase.copy()
+                out.opd = self.opd.copy()
                 return out
 
 

@@ -9,9 +9,9 @@ The general propagation algorithm implemented by :class:`prop.Propagate` is as f
 .. code::
 
     for each plane in planes
-        cache plane amplitude, phase, ptt_vector
+        cache plane amplitude, opd, ptt_vector
 
 
 
     for each plane in planes
-        clear plane amplitude, phase, ptt_vector cache
+        clear plane amplitude, opd, ptt_vector cache
