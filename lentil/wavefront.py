@@ -163,7 +163,7 @@ class Wavefront:
         out : ndarray
             Array with wavefront data inserted into it at the appropriate location
         """
-        for field in lentil.field.reduce(*self.data):
+        for field in lentil.field.reduce(self.data):
             out = lentil.field.insert(field, out, intensity=True, weight=weight)
         return out
 
