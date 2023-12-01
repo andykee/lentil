@@ -109,8 +109,8 @@ to clear any cached values.
 
 The cached attributes are defined in a list in each Plane's
 :attr:`~lentil.Plane.cache_attrs` attribute. This list is user-settable but the only
-valid values are `'amplitude'` and `'phase'`. The default behavior is to cache both
-amplitude and phase attributes.
+valid values are `'amplitude'` and `'opd'`. The default behavior is to cache both
+amplitude and OPD attributes.
 
 DFT matrices
 ------------

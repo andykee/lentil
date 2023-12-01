@@ -52,7 +52,7 @@ a focal length of 20 meters and a diameter of 1 meter:
     :context: close-figs
     :include-source:
 
-    >>> pupil = lentil.Pupil(amplitude=amp, phase=opd, pixelscale=1/240, 
+    >>> pupil = lentil.Pupil(amplitude=amp, opd=opd, pixelscale=1/240, 
     ...                      focal_length=20)
 
 Note the diameter is implicitly defined via the 

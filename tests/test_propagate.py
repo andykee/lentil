@@ -135,7 +135,7 @@ class TiltPupil(lentil.Pupil):
         super().__init__(focal_length=10,
                          pixelscale=1/npix,
                          amplitude=amplitude,
-                         phase=opd,
+                         opd=opd,
                          mask=mask)
 
         self.diameter = diameter
@@ -179,30 +179,30 @@ def test_propagate_airy():
     assert np.all(np.isclose(psf, psf_airy, atol=1e-3))
 
 
-def test_propagate_tilt_angle():
+def test_propagate_fit_tilt():
 
     p = TiltPupil(npix=256)
 
-    w_phase = lentil.Wavefront(650e-9)
-    w_phase = p.multiply(w_phase)
-    w_phase = lentil.propagate_dft(w_phase, shape=128, pixelscale=5e-6, oversample=2)
-    psf_phase = w_phase.intensity
+    w = lentil.Wavefront(650e-9)
+    w = p.multiply(w)
+    w = lentil.propagate_dft(w, shape=128, pixelscale=5e-6, oversample=2)
+    psf = w.intensity
 
     p.fit_tilt(inplace=True)
-    w_angle = lentil.Wavefront(650e-9)
-    w_angle = w_angle * p
-    w_angle = lentil.propagate_dft(w_angle, shape=128, pixelscale=5e-6, oversample=2)
-    psf_angle = w_angle.intensity
+    w_fit_tilt = lentil.Wavefront(650e-9)
+    w_fit_tilt = w_fit_tilt * p
+    w_fit_tilt = lentil.propagate_dft(w_fit_tilt, shape=128, pixelscale=5e-6, oversample=2)
+    psf_fit_tilt = w_fit_tilt.intensity
 
     # threshold the PSFs so that the centroiding is consistent
-    psf_phase[psf_phase < 1e-5] = 0
-    psf_angle[psf_angle < 1e-5] = 0
+    psf[psf < 1e-5] = 0
+    psf_fit_tilt[psf_fit_tilt < 1e-5] = 0
 
-    delta = np.abs(np.asarray(lentil.util.centroid(psf_phase)) - np.asarray(lentil.util.centroid(psf_angle)))
+    delta = np.abs(np.asarray(lentil.util.centroid(psf)) - np.asarray(lentil.util.centroid(psf_fit_tilt)))
     assert np.all(delta <= 1e-10)
 
 
-def test_propagate_tilt_phase_analytic():
+def test_propagate_tilt_analytic():
     oversample = 10
     pixelscale = 5e-6
     npix = np.array([64, 64])
@@ -231,7 +231,7 @@ def test_propagate_tilt_phase_analytic():
     assert np.all((np.abs(shift - analytic_shift)/oversample) < 0.2)
 
 
-def test_propagate_tilt_angle_analytic():
+def test_propagate_tilt_fit_tilt_analytic():
     oversample = 10
     pixelscale = 5e-6
     npix = np.array([64, 64])
@@ -267,7 +267,7 @@ def test_propagate_resample():
     coeffs = np.random.uniform(low=-200e-9, high=200e-9, size=6)
     opd = lentil.zernike_compose(amp, coeffs)
 
-    p = lentil.Pupil(focal_length=10, pixelscale=1 / 240, amplitude=amp, phase=opd)
+    p = lentil.Pupil(focal_length=10, pixelscale=1 / 240, amplitude=amp, opd=opd)
     w = lentil.Wavefront(650e-9)
     w *= p
     wi = lentil.propagate_dft(w, shape=(64,64), pixelscale=5e-6, oversample=10)

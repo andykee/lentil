@@ -23,9 +23,9 @@ class Plane:
         through diffraction propagation is required. If not specified (default),
         amplitude is created which has no effect on wavefront propagation. Can
         also be specified using the ``amp`` keyword.
-    phase : array_like, optional
-        Phase change caused by plane. If not specified (default), phase is
-        created which has no effect on wavefront propagation.
+    opd : array_like, optional
+        Optical path difference (OPD) induced by plane. If not specified (default), 
+        zero OPD is created which has no effect on wavefront propagation.
     mask : array_like, optional
         Binary mask. If not specified, a mask is created from the amplitude.
         If ``mask`` has 2 dimensions, the plane is assumed to be monolithic. If
@@ -46,7 +46,7 @@ class Plane:
         Plane type
     """
 
-    def __init__(self, amplitude=1, phase=0, mask=None, pixelscale=None, diameter=None,
+    def __init__(self, amplitude=1, opd=0, mask=None, pixelscale=None, diameter=None,
                  ptype=None, **kwargs):
         
         if 'amp' in kwargs.keys():
@@ -56,7 +56,7 @@ class Plane:
             amplitude = kwargs['amp']
 
         self.amplitude = np.asarray(amplitude)
-        self.phase = np.asarray(phase)
+        self.opd = np.asarray(opd)
         self.mask = mask
         self.pixelscale = pixelscale
         self.diameter = diameter
@@ -84,19 +84,19 @@ class Plane:
         self._amplitude = np.asarray(value)
     
     @property
-    def phase(self):
-        """Electric field phase
+    def opd(self):
+        """Optical path difference
 
         Returns
         -------
         ndarray
 
         """
-        return self._phase
+        return self._opd
     
-    @phase.setter
-    def phase(self, value):
-        self._phase = np.asarray(value)
+    @opd.setter
+    def opd(self, value):
+        self._opd = np.asarray(value)
 
     @property
     def mask(self):
@@ -262,7 +262,7 @@ class Plane:
 
     def fit_tilt(self, inplace=False):
         """
-        Fit and remove tilt from Plane :attr:`phase` via least squares. The
+        Fit and remove tilt from Plane :attr:`opd` via least squares. The
         equivalent angular tilt is bookkept in Plane :attr:`tilt`.
 
         Parameters
@@ -284,27 +284,27 @@ class Plane:
 
         # There are a couple of cases where we don't have enough information to remove the
         # tilt, so we just return the Plane as-is
-        if ptt_vector is None or plane.phase.size == 1:
+        if ptt_vector is None or plane.opd.size == 1:
             return plane
 
         if self.size == 1:
-            t = np.linalg.lstsq(ptt_vector.T, plane.phase.ravel(), rcond=None)[0]
-            phase_tilt = np.einsum('ij,i->j', ptt_vector[1:3], t[1:3])
-            plane.phase -= phase_tilt.reshape(plane.phase.shape)
+            t = np.linalg.lstsq(ptt_vector.T, plane.opd.ravel(), rcond=None)[0]
+            opd_tilt = np.einsum('ij,i->j', ptt_vector[1:3], t[1:3])
+            plane.opd -= opd_tilt.reshape(plane.opd.shape)
             plane.tilt.append(Tilt(x=t[1], y=t[2]))
 
         else:
             t = np.empty((self.size, 3))
-            phase_no_tilt = np.empty((self.size, plane.phase.shape[0], plane.phase.shape[1]))
+            opd_no_tilt = np.empty((self.size, plane.opd.shape[0], plane.opd.shape[1]))
 
             # iterate over the segments and compute the tilt term
             for seg in np.arange(self.size):
-                t[seg] = np.linalg.lstsq(ptt_vector[3 * seg:3 * seg + 3].T, plane.phase.ravel(),
+                t[seg] = np.linalg.lstsq(ptt_vector[3 * seg:3 * seg + 3].T, plane.opd.ravel(),
                                          rcond=None)[0]
                 seg_tilt = np.einsum('ij,i->j', ptt_vector[3 * seg + 1:3 * seg + 3], t[seg, 1:3])
-                phase_no_tilt[seg] = (plane.phase - seg_tilt.reshape(plane.phase.shape)) * self.mask[seg]
+                opd_no_tilt[seg] = (plane.opd - seg_tilt.reshape(plane.opd.shape)) * self.mask[seg]
 
-            plane.phase = np.sum(phase_no_tilt, axis=0)
+            plane.opd = np.sum(opd_no_tilt, axis=0)
             plane.tilt.extend([Tilt(x=t[seg, 1], y=t[seg, 2]) for seg in range(self.size)])
 
         return plane
@@ -316,7 +316,7 @@ class Plane:
 
         * `Plane.amplitude` is rescaled via 3rd order spline interpolation. The
             result is scaled to preserve total power.
-        * `Plane.phase` is rescaled via 3rd order spline interpolation.
+        * `Plane.opd` is rescaled via 3rd order spline interpolation.
         * `Plane.mask` is rescaled via 0-order nearest neighbor interpolation.
         * `Plane.pixelscale` is adjusted appropriately.
 
@@ -346,9 +346,9 @@ class Plane:
                                                 mask=None, order=3, mode='nearest',
                                                 unitary=False)/scale
 
-        if plane.phase.ndim > 1:
-            plane.phase = lentil.rescale(plane.phase, scale=scale, shape=None, mask=None,
-                                         order=3, mode='nearest', unitary=False)
+        if plane.opd.ndim > 1:
+            plane.opd = lentil.rescale(plane.opd, scale=scale, shape=None, mask=None,
+                                       order=3, mode='nearest', unitary=False)
 
         # because plane.mask is automatically computed from amplitude if it is not
         # provided, we really only want to reinterpolate if a mask was provided (stored
@@ -377,7 +377,7 @@ class Plane:
 
         * `Plane.amplitude` is resampled via 3rd order spline interpolation. The
           result is scaled to preserve total power.
-        * `Plane.phase` is resampled via 3rd order spline interpolation.
+        * `Plane.opd` is resampled via 3rd order spline interpolation.
         * `Plane.mask` is resampled via 0-order nearest neighbor interpolation.
         * `Plane.pixelscale` is adjusted appropriately.
 
@@ -449,10 +449,10 @@ class Plane:
                 # slice of the amplitude array may contain parts of adjacent segments
                 mask = self.mask if self.size == 1 else self.mask[n]
                 amp = self.amplitude if self.amplitude.size == 1 else self.amplitude[s] * mask[s]
-                phase = self.phase if self.phase.size == 1 else self.phase[s]
+                opd = self.opd if self.opd.size == 1 else self.opd[s]
 
                 # construct complex phasor
-                phasor = Field(data=amp*np.exp(2*np.pi*1j*phase/wavefront.wavelength),
+                phasor = Field(data=amp*np.exp(2*np.pi*1j*opd/wavefront.wavelength),
                                pixelscale=self.pixelscale,
                                offset=lentil.helper.slice_offset(s, self.shape),
                                tilt=[self.tilt[n]] if self.tilt else [])
@@ -569,9 +569,9 @@ class Pupil(Plane):
         through a diffraction propagation is required. If not specified, a
         default amplitude is created which has no effect on wavefront
         propagation. Can also be specified using the ``amp`` keyword.
-    phase : array_like, optional
-        Phase change caused by plane. If not specified, a default phase is
-        created which has no effect on wavefront propagation.
+    opd : array_like, optional
+        Optical path difference (OPD) induced by plane. If not specified (default), 
+        zero OPD is created which has no effect on wavefront propagation.
     mask : array_like, optional
         Binary mask. If not specified, a mask is created from the amplitude.
         If ``mask`` has 2 dimensions, the plane is assumed to be monolithic. If
@@ -590,9 +590,9 @@ class Pupil(Plane):
     """
 
     def __init__(self, focal_length=None, pixelscale=None, amplitude=1,
-                 phase=0, mask=None, **kwargs):
+                 opd=0, mask=None, **kwargs):
 
-        super().__init__(pixelscale=pixelscale, amplitude=amplitude, phase=phase,
+        super().__init__(pixelscale=pixelscale, amplitude=amplitude, opd=opd,
                          mask=mask, ptype=lentil.pupil, **kwargs)
 
         self.focal_length = focal_length
@@ -645,12 +645,13 @@ class Image(Plane):
     Detector
 
     """
-
-    def __init__(self, shape=None, pixelscale=None, amplitude=1, mask=None,
-                 **kwargs):
-        super().__init__(amplitude=amplitude, mask=mask,
+    def __init__(self, shape=None, pixelscale=None, amplitude=1, opd=0, 
+                 mask=None, **kwargs):
+        
+        super().__init__(amplitude=amplitude, opd=opd, mask=mask, 
                          pixelscale=pixelscale, ptype=lentil.image,
                          **kwargs)
+
         self.shape = shape
 
     @property
@@ -962,13 +963,13 @@ class DispersiveTilt(TiltInterface):
         return scipy.integrate.quad(dist_func, a, b)[0]
         
 
-class DispersivePhase(Plane):
+class DispersiveAberration(Plane):
 
     def multiply(self, wavefront):
-        # NOTE: we can handle wavelength-dependent phase terms here (e.g. chromatic
-        # aberrations). Since the phase will vary by wavelength, we can't fit out the
+        # NOTE: we can handle wavelength-dependent OPD terms here (e.g. chromatic
+        # aberrations). Since the OPD will vary by wavelength, we can't fit out the
         # tilt pre-propagation and apply the same tilt for each wavelength like we can
-        # with run of the mill tilt
+        # with run-of-the-mill tilt
         raise NotImplementedError
 
 

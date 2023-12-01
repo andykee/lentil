@@ -12,18 +12,18 @@ class RandomPlane(lentil.Plane):
     def __init__(self):
         super().__init__(pixelscale=1,
                          amplitude=np.random.uniform(size=size),
-                         phase=np.random.uniform(size=size))
+                         opd=np.random.uniform(size=size))
 
 
 def test_default_plane():
     # Ensure that a default Plane creates an object that won't have any
-    # impact on an optical system (a perfect optic with no phase change and
-    # perfect optical and spectral transmission).
+    # impact on an optical system (a perfect optic with no wavefront error 
+    # and perfect optical and spectral transmission).
 
     p = lentil.Plane()
     assert p.pixelscale == None
     assert np.all(p.amplitude == 1)
-    assert np.all(p.phase == 0)
+    assert np.all(p.opd == 0)
     assert p.mask == p.amplitude
 
 
@@ -52,7 +52,7 @@ def test_wavefront_plane_multiply():
     w1 = p.multiply(w)
 
     slc = lentil.helper.boundary_slice(p.mask)
-    phasor = p.amplitude[slc] * np.exp(2*np.pi*1j*p.phase[slc]/w.wavelength)
+    phasor = p.amplitude[slc] * np.exp(2*np.pi*1j*p.opd[slc]/w.wavelength)
 
     assert np.array_equal(w1.data[0].data, phasor)
 
@@ -79,14 +79,14 @@ class CircularPupil(lentil.Pupil):
         super().__init__(focal_length=10,
                          pixelscale=2/256,
                          amplitude=lentil.util.circle((256, 256), 128),
-                         phase=np.zeros((256, 256)))
+                         opd=np.zeros((256, 256)))
 
 
 def test_wavefront_pupil_multiply():
     p = CircularPupil()
     w = lentil.wavefront.Wavefront(650e-9)
     w = p.multiply(w)
-    phasor = p.amplitude * np.exp(1j*p.phase * 2 * np.pi / w.wavelength)
+    phasor = p.amplitude * np.exp(1j*p.opd * 2 * np.pi / w.wavelength)
 
     assert np.array_equal(w.data[0].data, phasor)
     assert w.focal_length == p.focal_length

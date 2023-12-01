@@ -16,7 +16,7 @@ def pupil():
             opd = 0
 
         p = lentil.Pupil(amplitude=amplitude,
-                         phase=opd,
+                         opd=opd,
                          pixelscale=pixelscale,
                          focal_length=focal_length)
         

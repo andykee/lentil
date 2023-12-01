@@ -63,12 +63,12 @@ def power_spectrum(mask, pixelscale, rms, half_power_freq, exp, seed=None):
     # Generate noise, filter it to realize the requested PSD, and enforce
     # the pupil mask
     noise = rng.normal(size=[n, m])
-    phase = np.real(np.fft.ifft2(np.fft.fft2(noise) * H)) * np.sqrt(m * n)
+    opd = np.real(np.fft.ifft2(np.fft.fft2(noise) * H)) * np.sqrt(m * n)
 
-    phase *= mask
-    phase = phase * np.sqrt(np.count_nonzero(phase)/np.sum(np.abs(phase)**2)) * rms
+    opd *= mask
+    opd = opd * np.sqrt(np.count_nonzero(opd)/np.sum(np.abs(opd)**2)) * rms
 
-    return phase
+    return opd
 
 
 def translation_defocus(mask, f_number, translation):

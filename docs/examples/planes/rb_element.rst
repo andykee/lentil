@@ -16,7 +16,7 @@ The example below assumes a ``dwdx`` influence function matrix is available.
             self._x = np.zeros(6)
 
         @property
-        def phase(self):
+        def opd(self):
             return np.einsum('ijk,i->jk',DWDX, self.x)
 
         @property
@@ -62,7 +62,7 @@ influence function matrix.
             self._uerror = 1e-6
 
         @property
-        def phase(self):
+        def opd(self):
             return np.einsum('ijk,i->jk',DWDX, self.x)
 
         @property

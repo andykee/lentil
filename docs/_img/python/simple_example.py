@@ -4,7 +4,7 @@ import lentil
 mask = lentil.util.circle((256, 256), 128) - lentil.util.circle((256, 256), 128/3)
 opd = lentil.zernike.zernike_compose(mask, coeffs=[0, 0, 0, 300e-9, 50e-9, -100e-9, 50e-9])
 
-pupil = lentil.Pupil(amplitude=mask, phase=opd, focal_length=10,
+pupil = lentil.Pupil(amplitude=mask, opd=opd, focal_length=10,
                      pixelscale=1/256)
 detector = lentil.Image(pixelscale=5e-6)
 
