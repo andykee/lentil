@@ -47,7 +47,8 @@ def collect_charge(img, wave, qe, waveunit='nm'):
     return np.einsum('ijk,i->jk', img, qe)
 
 
-def collect_charge_bayer(img, wave, qe_red, qe_green, qe_blue, bayer_pattern, oversample=1, waveunit='nm'):
+def collect_charge_bayer(img, wave, qe_red, qe_green, qe_blue, bayer_pattern, 
+                         oversample=1, waveunit='nm', flatten=True):
     """
     Convert photon count (or flux) to electron count (or flux) by
     applying the detector's wavelength-dependent quantum efficiency.
@@ -68,13 +69,16 @@ def collect_charge_bayer(img, wave, qe_red, qe_green, qe_blue, bayer_pattern, ov
         Green channel quantum efficiency
     qe_blue : {:class:`lentil.radiometry.Spectrum`, array_like, scalar}
         Blue channel quantum efficiency
-    bayer_pattern : array_like
-        Layout of the detector's Bayer pattern. For example, [['B','G'],['G','R']]
-        describes a BGGR pattern.
+    bayer_pattern : string
+        Layout of the detector's Bayer pattern. 
     oversample : int, optional
         Oversampling factor present in ``count``. Default is 1.
     waveunit : str, optional
         Units of ``wave``. Defaults is ``nm``
+    flatten : bool, optional
+        If True (default), the Bayer channels are flattened into a flat
+        image, otherwise each color channel is returned separately ordered
+        as (R, G, B)
 
     Returns
     -------
@@ -87,6 +91,8 @@ def collect_charge_bayer(img, wave, qe_red, qe_green, qe_blue, bayer_pattern, ov
     that this method converts photons per whatever to electrons per
     whatever. Whatever is nothing for counts and seconds for flux.
 
+    This function does not rebin data to native sampling!
+
     """
     img = np.asarray(img)
     if img.ndim == 2:
@@ -96,7 +102,7 @@ def collect_charge_bayer(img, wave, qe_red, qe_green, qe_blue, bayer_pattern, ov
     qe_green = qe_asarray(qe_green, wave, waveunit)
     qe_blue = qe_asarray(qe_blue, wave, waveunit)
 
-    bayer_pattern = np.char.upper(bayer_pattern)
+    bayer_pattern = format_bayer_string(bayer_pattern)
     red_kernel = np.where(bayer_pattern == 'R', 1, 0)
     green_kernel = np.where(bayer_pattern == 'G', 1, 0)
     blue_kernel = np.where(bayer_pattern == 'B', 1, 0)
@@ -118,7 +124,12 @@ def collect_charge_bayer(img, wave, qe_red, qe_green, qe_blue, bayer_pattern, ov
     blue_mosaic = scipy.ndimage.zoom(blue_mosaic, oversample, order=0, mode='wrap')
     blue_e = np.einsum('ijk,i->jk', img, qe_blue) * blue_mosaic
 
-    return red_e + green_e + blue_e
+    if flatten:
+        out = red_e + green_e + blue_e
+    else:
+        out = (red_e, green_e, blue_e)
+
+    return out
 
 
 def qe_asarray(qe, wave, waveunit):
@@ -134,6 +145,22 @@ def qe_asarray(qe, wave, waveunit):
         qe = qe.sample(wave, waveunit=waveunit)
 
     return qe
+
+
+def format_bayer_string(bayer_string):
+    # convert a string describing Bayer pattern to a
+    # square ndarray
+    bayer_string = bayer_string.upper()
+    if len(bayer_string.strip('RGB')) != 0:
+        raise ValueError()
+
+    bayer_array = np.array([ch for ch in bayer_string])
+    dim = np.sqrt(bayer_array.size).astype(int)
+    if bayer_array.size == dim**2:
+        bayer_array = bayer_array.reshape((dim, dim))
+    else:
+        raise ValueError()
+    return bayer_array
 
 
 def pixel(img, oversample=1):
