@@ -31,7 +31,7 @@ def test_collect_charge_bayer_even():
     qe_red = np.random.uniform(size=5)
     qe_green = np.random.uniform(size=5)
     qe_blue = np.random.uniform(size=5)
-    bayer_pattern = [['R', 'G'], ['G', 'B']]
+    bayer_pattern = 'RGGB'
     out = lentil.detector.collect_charge_bayer(img, np.ones(5), qe_red,
                                                qe_green, qe_blue, bayer_pattern)
 
@@ -48,7 +48,7 @@ def collect_charge_bayer_odd():
     qe_red = np.random.uniform(size=5)
     qe_green = np.random.uniform(size=5)
     qe_blue = np.random.uniform(size=5)
-    bayer_pattern = [['R', 'G'], ['G', 'B']]
+    bayer_pattern = 'RGGB'
     out = lentil.detector.collect_charge_bayer(img, np.ones(5), qe_red,
                                                qe_green, qe_blue, bayer_pattern)
 
@@ -70,7 +70,7 @@ def test_collect_charge_bayer_oversample():
     qe_red = np.random.uniform(size=5)
     qe_green = np.random.uniform(size=5)
     qe_blue = np.random.uniform(size=5)
-    bayer_pattern = [['R', 'G'], ['G', 'B']]
+    bayer_pattern = 'RGGB'
     out = lentil.detector.collect_charge_bayer(img, np.ones(5), qe_red,
                                                qe_green, qe_blue, bayer_pattern,
                                                oversample=2)
