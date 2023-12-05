@@ -10,7 +10,7 @@ Charge collection
     :toctree: generated/
 
     lentil.detector.collect_charge
-    lentil.detector.collect_charge
+    lentil.detector.collect_charge_bayer
 
 Pixel effects
 -------------

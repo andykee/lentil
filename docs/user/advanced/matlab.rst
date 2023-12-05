@@ -1,4 +1,4 @@
-.. _user.matlab:
+.. _user.advanced.matlab:
 
 ************************
 Using Lentil with MATLAB

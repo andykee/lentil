@@ -1,17 +1,18 @@
-.. _user.quickstart:
+.. _user.getting_started.example:
 
 .. |Plane| replace:: :class:`~lentil.Plane`
 .. |Pupil| replace:: :class:`~lentil.Pupil`
 .. |Image| replace:: :class:`~lentil.Image`
 .. |Wavefront| replace:: :class:`~lentil.Wavefront`
 
-**********
-Quickstart
-**********
-This is a short introduction to Lentil, mainly written for new users. More
-detailed examples are available :ref:`here<examples>`.
+****************
+A simple example
+****************
+This is an example that demonstrates the core functionality of Lentil. It
+is mainly written for new users. More detailed examples and specific design 
+patterns are available :ref:`here<examples>`.
 
-First, we import Lentil:
+First, we'll import Lentil:
 
 .. code-block:: pycon
 

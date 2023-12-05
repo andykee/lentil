@@ -16,7 +16,7 @@ Lentil Documentation
 **Version**: |version|
 
 **Useful links**:
-:doc:`Installation <user/install>` |
+:ref:`user.introduction.install` |
 `Source Repository <https://github.com/andykee/lentil>`_ |
 `Issue Tracker <https://github.com/andykee/lentil/issues>`_ |
 
@@ -30,7 +30,7 @@ functions of segmented aperture telescopes.
     Lentil is under active development and new features continue to be added. 
     Until Lentil reaches version 1.0, the API is not guaranteed to be stable, but
     changes breaking backwards compatibility will be noted in the 
-    :doc:`release notes <release>`.
+    :ref:`release notes <release>`.
 
 .. grid:: 2
     :gutter: 5
@@ -52,7 +52,7 @@ functions of segmented aperture telescopes.
 
     .. grid-item-card:: :octicon:`file-code;1em;` Examples
 
-        A number of end-to-end examples and large collection of common
+        End-to-end examples and larger collection of common
         model patterns are provided to simplify the development of new
         models.
 

@@ -1,14 +1,17 @@
-.. _user.planes:
+.. _user.fundamentals.planes:
 
-.. |Plane| replace:: :class:`~lentil.Plane`
-.. |Pupil| replace:: :class:`~lentil.Pupil`
-.. |Image| replace:: :class:`~lentil.Image`
-.. |Detector| replace:: :class:`~lentil.Detector`
-.. |Wavefront| replace:: :class:`~lentil.Wavefront`
+.. currentmodule:: lentil
 
-*****************
-Specifying planes
-*****************
+.. |Pupil| replace:: :class:`Pupil`
+.. |Image| replace:: :class:`Image`
+.. |Detector| replace:: :class:`Detector`
+.. |Plane| replace:: :class:`Plane`
+.. |Wavefront| replace:: :class:`Wavefront`
+.. |Tilt| replace:: :class:`Tilt`
+
+******
+Planes
+******
 
 Lentil plane types
 ==================
@@ -119,6 +122,24 @@ in-place by setting ``inplace=True``.
 
 See :ref:`user.diffraction.tilt` for additional information on when to use
 this method.
+
+Segmented optical systems
+=========================
+Creating a model of a segmented aperture optical system in Lentil doesn't require any
+special treatment. The |Plane| object works the same with sparse or
+segmented amplitude, opd, and mask attributes as with monolithic ones.
+
+That being said, it is advantageous from a performance point of view to supply a
+3-dimensional `segment mask` when specifying a Plane's :attr:`~lentil.Plane.mask`
+attribute rather than a flattened 2-dimensional `global mask` when working
+with a segmented aperture, as depicted below:
+
+.. plot:: _img/python/segmask.py
+    :scale: 50
+
+This modification is not necessary to achieve accurate propagations, but can
+greatly improve performance. For additional details, see
+:ref:`user.diffraction.segmented`.
 
 .. _user.planes.pupil:
 

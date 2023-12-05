@@ -1,4 +1,4 @@
-.. _user.diffraction:
+.. _user.fundamentals.diffraction:
 
 .. |Wavefront| replace:: :class:`~lentil.Wavefront`
 .. |Plane| replace:: :class:`~lentil.Plane`
@@ -6,9 +6,10 @@
 .. |Image| replace:: :class:`~lentil.Image`
 .. |Detector| replace:: :class:`~lentil.Detector`
 
-********************
-Modeling diffraction
-********************
+*********************************
+Numerical diffraction propagation
+*********************************
+
 Lentil uses Fourier transform-based algorithms to numerically model the propagation of an
 electromagnetic field through an optical system. The electromagnetic field is represented
 by a |Wavefront| object which stores the complex amplitude of the field at a discretely
@@ -196,7 +197,7 @@ It can be advantageous to specify ``npix_prop`` < ``npix`` for performance
 reasons, although care must be taken to ensure needed data is not accidentally
 left out:
 
-.. plot:: user/plots/npix_prop.py
+.. plot:: user/fundamentals/plots/npix_prop.py
     :scale: 50
 
 For most pupil to image plane propagations, setting ``npix_prop`` to 128 or 256

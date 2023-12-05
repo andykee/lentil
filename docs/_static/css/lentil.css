@@ -100,6 +100,26 @@ dt:target, span.highlighted {
     margin:-80px 0 0; 
 } 
 
+/* Adjust admonition colors */
+.admonition {
+    --pst-color-info: #5E81AC;
+    --pst-color-info-bg: #E5E9F0;
+    --pst-color-warning: #ee9040;
+    --pst-color-warning-bg: #fcf4ee;
+}
+
+/* Style See Also admonition like Info admonition */
+.admonition.seealso, div.admonition.seealso {
+    border-color: #5E81AC;
+}
+.admonition.seealso>.admonition-title::before, div.admonition.seealso>.admonition-title::before {
+    background-color: #E5E9F0;
+}
+.admonition.seealso>.admonition-title::after, div.admonition.seealso>.admonition-title::after {
+    content: var(--pst-icon-admonition-note);
+    color: #5E81AC;
+}
+
 .bd-header {
     --pst-color-primary: #5E81AC;
     --pst-color-link-hover: #5E81AC;

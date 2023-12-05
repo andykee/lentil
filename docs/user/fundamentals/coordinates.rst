@@ -1,4 +1,4 @@
-.. _user.coordinate_system:
+.. _user.fundamentals.coordinates:
 
 *****************
 Coordinate system

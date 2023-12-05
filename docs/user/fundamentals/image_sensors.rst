@@ -1,4 +1,4 @@
-.. _user.image_sensors:
+.. _user.fundamentals.image_sensors:
 
 *************
 Image sensors

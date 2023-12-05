@@ -1,4 +1,4 @@
-.. _user.radiometry:
+.. _user.fundamentals.radiometry:
 
 .. currentmodule:: lentil
 

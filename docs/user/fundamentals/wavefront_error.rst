@@ -1,4 +1,4 @@
-.. _user.wavefront_error:
+.. _user.fundamentals.wavefront_error:
 
 ****************************
 Representing wavefront error
@@ -32,7 +32,7 @@ in a shift in the image plane in the positive y direction. A positive y-tilt
 rotates the xz plane clockwise about the y-axis resulting in a shift in the
 image plane in the negative x direction.
 
-.. plot:: user/plots/tilt_images.py
+.. plot:: user/fundamentals/plots/tilt_images.py
     :scale: 50
 
 Focus
@@ -53,7 +53,7 @@ image to be flipped about both axes relative to the aperture (consistent with
 observing the image after passing through focus). The results of this exercise are
 presented below:
 
-.. plot:: user/plots/focus_images.py
+.. plot:: user/fundamentals/plots/focus_images.py
     :scale: 50
 
 Static Errors
@@ -188,7 +188,7 @@ Defining custom Zernike coordinates
 -----------------------------------
 By default, all of Lentil's Zernike functions place the center of the coordinate system
 at the centroid of the supplied mask with its axes aligned with Lentil's
-:ref:`user.coordinate_system`. This works as expected for the vast majority of
+:ref:`user.fundamentals.coordinates`. This works as expected for the vast majority of
 needs, but in some cases it may be desirable to manually define the coordinate system.
 This is accomplished by using :func:`~lentil.zernike_coordinates` to compute ``rho`` and
 ``theta``, and providing these definitions to the appropriate Zernike function. For
