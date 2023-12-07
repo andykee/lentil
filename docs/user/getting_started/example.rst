@@ -1,10 +1,5 @@
 .. _user.getting_started.example:
 
-.. |Plane| replace:: :class:`~lentil.Plane`
-.. |Pupil| replace:: :class:`~lentil.Pupil`
-.. |Image| replace:: :class:`~lentil.Image`
-.. |Wavefront| replace:: :class:`~lentil.Wavefront`
-
 ****************
 A simple example
 ****************

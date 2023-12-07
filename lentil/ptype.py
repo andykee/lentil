@@ -8,7 +8,8 @@ def ptype(ptype):
     Parameters
     ----------
     ptype
-        Object to be converted to a plane type object.
+        Object to be converted to a plane type object. Can be
+        a string, a ptype, or None.
     """
     if ptype is None:
         ptype = 'none'

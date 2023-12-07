@@ -14,8 +14,8 @@ Lentil to a Numpy array.
 
 .. note::
 
-    For :class:`~lentil.Pupil` planes, the :attr:`~lentil.Pupil.opd` attribute represents the optical
-    path difference (OPD) relative to the pupil's reference sphere.
+    For :class:`~lentil.Pupil` planes, the :attr:`~lentil.Pupil.opd` attribute represents 
+    the optical path difference (OPD) relative to the pupil's reference sphere.
 
 .. _user.wavefront_error.sign:
 

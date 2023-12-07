@@ -4,9 +4,6 @@
 Coordinate system
 *****************
 
-.. |Pupil| replace:: :class:`~lentil.Pupil`
-.. |Image| replace:: :class:`~lentil.Image`
-
 Lentil adopts the widely used convention of aligning the z-axis along the direction
 of light propagation through an optical system. For a right-handed coordinate system,
 it follows that the remaining axes are oriented as shown in the figure below:

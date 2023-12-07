@@ -1,11 +1,5 @@
 .. _user.fundamentals.diffraction:
 
-.. |Wavefront| replace:: :class:`~lentil.Wavefront`
-.. |Plane| replace:: :class:`~lentil.Plane`
-.. |Pupil| replace:: :class:`~lentil.Pupil`
-.. |Image| replace:: :class:`~lentil.Image`
-.. |Detector| replace:: :class:`~lentil.Detector`
-
 *********************************
 Numerical diffraction propagation
 *********************************
@@ -84,7 +78,7 @@ follows the same basic flow:
     .. note::
 
         Additional details on the plane-wavefront interaction can be found in
-        :ref:`user.optical_systems.plane_wavefront`.
+        :ref:`user.fundamentals.plane_wavefront`.
 
 3. **Propagate the wavefront to the next plane in the optical system** - the |Wavefront|
    object provides a number of methods to propagate between planes. The appropriate method
@@ -267,21 +261,21 @@ Sampling considerations
 
 Working with large tilts
 ========================
-.. .. image:: /_static/img/propagate_tilt_phase.png
-..     :width: 450px
-..     :align: center
+.. image:: /_static/img/propagate_tilt_phase.png
+    :width: 450px
+    :align: center
 
-.. .. image:: /_static/img/propagate_tilt_phase_wrap.png
-..     :width: 650px
-..     :align: center
+.. image:: /_static/img/propagate_tilt_phase_wrap.png
+    :width: 650px
+    :align: center
 
-.. .. image:: /_static/img/propagate_tilt_angle.png
-..     :width: 600px
-..     :align: center
+.. image:: /_static/img/propagate_tilt_angle.png
+    :width: 600px
+    :align: center
 
-.. .. image:: /_static/img/propagate_tilt_angle_steps.png
-..     :width: 600px
-..     :align: center
+.. image:: /_static/img/propagate_tilt_angle_steps.png
+    :width: 600px
+    :align: center
 
 .. _user.diffraction.segmented:
 

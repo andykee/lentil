@@ -4,6 +4,13 @@
 Internals
 *********
 
+Plane type
+----------
+.. autosummary::
+    :toctree: generated/
+
+    lentil.ptype.ptype
+
 Field
 -----
 .. autosummary::
