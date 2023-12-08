@@ -9,7 +9,7 @@ setup(
     name='Lentil',
     version=version,
     install_requires=[
-        'numpy',
+        'numpy<2.0',
         'scipy'
     ]
 )
