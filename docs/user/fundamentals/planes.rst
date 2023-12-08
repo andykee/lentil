@@ -115,40 +115,7 @@ Resampling or rescaling a Plane
 It is possible to resample a plane using either the :func:`~lentil.Plane.resample`
 or :func:`~lentil.Plane.rescale` methods. Both methods use intrepolation to
 resample the amplitude, opd, and mask attributes and readjust the pixelscale
-attribute as necessary. The default behavior is to perform this interpolation
-on a copy of the plane, but it is possible to operate in-place by setting
-``inplace=True``.
-
-.. _user_guide.planes.fit_tilt:
-
-Fitting and removing Plane tilt
--------------------------------
-The plane's :func:`~lentil.Plane.fit_tilt` method performs a least squares fit to
-estimate and remove tilt from the :attr:`~lentil.Plane.opd` attribute. The removed
-tilt is accounted for by appending an equivalent :class:`~lentil.Tilt` object to the 
-plane's :attr:`~lentil.Plane.tilt` attribute. The optical effect of the tilt is 
-automatically applied during a propagation step.
-
-See :ref:`user.diffraction.tilt` for additional information on when to use
-this method.
-
-Segmented optical systems
-=========================
-Creating a model of a segmented aperture optical system in Lentil doesn't require any
-special treatment. The |Plane| object works the same with sparse or
-segmented amplitude, opd, and mask attributes as with monolithic ones.
-
-That being said, it is advantageous from a performance point of view to supply a
-3-dimensional `segment mask` when specifying a Plane's :attr:`~lentil.Plane.mask`
-attribute rather than a flattened 2-dimensional `global mask` when working
-with a segmented aperture, as depicted below:
-
-.. plot:: _img/python/segmask.py
-    :scale: 50
-
-This modification is not necessary to achieve accurate propagations, but can
-greatly improve performance. For additional details, see
-:ref:`user.diffraction.segmented`.
+attribute as necessary.
 
 .. _user.planes.pupil:
 
@@ -173,7 +140,7 @@ A pupil is defined by the following required parameters:
 * :attr:`~lentil.Pupil.pixelscale` - Defines the physical sampling of each pixel in
   the discretely sampled attributes described below
 
-Discretely sampled pupil attributes can also be specified:
+Discreetly sampled pupil attributes can also be specified:
 
 * :attr:`~lentil.Pupil.amplitude` - Defines the relative electric field amplitude
   transmission through the pupil

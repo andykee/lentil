@@ -24,6 +24,8 @@ The User Guide provides documentation for all of Lentil's features and capabilit
     fundamentals/wavefront_error
     fundamentals/wavefront
     fundamentals/diffraction
+    fundamentals/tilt
+    fundamentals/segmented
     fundamentals/artifacts
     fundamentals/image_sensors
     fundamentals/radiometry
