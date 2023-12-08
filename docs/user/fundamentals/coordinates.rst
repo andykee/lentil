@@ -13,7 +13,7 @@ it follows that the remaining axes are oriented as shown in the figure below:
     :align: center
 
 When viewing a plane in 2D, the z-axis comes out of the screen with the
-positive x-axis pointing to the right and the positive y-axis pointing up.
+positive x-axis pointing to the right and the positive y-axis pointing up:
 
 .. image:: /_static/img/coordinate_system_2d.png
     :width: 225px

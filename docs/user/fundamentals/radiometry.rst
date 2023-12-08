@@ -9,10 +9,8 @@ Computational radiometry
 Computational radiometry is used to model the propagation of radiant energy through an
 optical system. It uses geometry and known optical and imaging properties to compute the
 irradiance from an observed scene at a detector. Lentil's
-:ref:`radiometry<api.radiometry>` module provides a few helpful objects and functions
-for working with ratiometric data. The ``radiometry`` module is automatically imported 
-with Lentil.
-
+:ref:`radiometry<api.radiometry>` submodule provides a few helpful objects and functions
+for working with ratiometric data. 
 
 End to end radiometric modeling is part science and part art and this user guide 
 provides limited insight. For a more in-depth treatment of the subject see:

@@ -93,7 +93,7 @@ Lentil uses multiplication represent the interaction between a |Plane| and
 
     >>> w1 = w0 * pupil
 
-Finally, we'll propagate the wavefront to a discreetely sampled image plane
+Finally, we'll propagate the wavefront to a discreetly sampled image plane
 using :func:`~lentil.propagate_dft`. In this case, we'll sample
 the result on a grid with spacing of 5e-6 meters and perform the propagation 
 2 times oversampled:
@@ -114,7 +114,7 @@ The resulting intensity (point spread function) can now be observed:
     >>> plt.imshow(w2.intensity)
 
 Finally, we will rescale the oversampled image to native sampling and include the
-blurring effects due to the pixel MTF:
+blurring effects due to the discrete pixel sampling of the image plane:
 
 .. plot::
     :context: close-figs

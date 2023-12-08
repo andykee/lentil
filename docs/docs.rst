@@ -16,7 +16,7 @@ Lentil Documentation
 **Version**: |version|
 
 **Useful links**:
-:ref:`user.introduction.install` |
+:ref:`user.install` |
 `Source Repository <https://github.com/andykee/lentil>`_ |
 `Issue Tracker <https://github.com/andykee/lentil/issues>`_ |
 

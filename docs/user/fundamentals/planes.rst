@@ -5,10 +5,14 @@ Planes
 ******
 
 All Lentil planes are derived from the |Plane| class. This base class defines the
-interface to represent any discretely sampled plane in an optical model. It can also
-be used directly in a model. Planes typically have some influence on the propagation
-of a wavefront though this is not strictly required and models may use *dummy* or
-*reference* planes as needed.
+interface to represent any discretely sampled plane in an optical model. Planes 
+typically have some influence on the propagation of a wavefront though this is 
+not strictly required and models may use *dummy* or *reference* planes as needed.
+
+.. note::
+
+    All Plane attributes have sensible default values that have no effect on
+    propagations when not specified.
 
 Lentil provides several general planes that are the building blocks for most optical
 models:
@@ -85,12 +89,6 @@ plane. A plane is defined by the following parameters:
   .. image:: /_static/img/pixelscale.png
     :width: 450px
     :align: center
-
-.. note::
-
-    All Plane attributes have sensible default values that have no effect on
-    propagations when not specified.
-
 
 Create a new Plane with
 
