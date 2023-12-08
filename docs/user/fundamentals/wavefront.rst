@@ -2,9 +2,27 @@
 
 .. currentmodule:: lentil
 
-*********************
-Wavefronts and Fields
-*********************
+*******************
+Wavefront and Field
+*******************
+
+ptype
+=====
+A wavefront's type (:attr:`~lentil.Wavefront.ptype`) defines how it interacts 
+with a |Plane|. When a wavefront interacts with a plane, it inherits the plane's
+``ptype``. Plane type is set automatically and unexpected behavior may
+occur if it is changed.
+
+|Wavefront| support the following ptypes:
+
+==================  ===========================================================
+:class:`none`       Wavefront has no specific type
+:class:`pupil`      Wavefront is at a pupil plane and has a finite focal length
+:class:`image`      Wavefront is at an image plane
+==================  ===========================================================
+
+The rules defining when a wavefront is allowed to interact with a plane based
+on ``ptype`` are described :ref:`here <user.fundamentals.wavefront.ptype_rules>`.
 
 .. _user.fundamentals.plane_wavefront:
 
@@ -44,6 +62,25 @@ the wavefront's complex data array:
 
 Multiplication rules
 ====================
+The table below outlines when a wavefront can interact with a plane based on their
+``ptype`` and what the wavefront's pytpe is after interaction:
+
++-----------------+------------+-------------+-------------+
+|                 | .. centered:: Wavefront ``ptype``      |
++ Plane ``ptype`` +------------+-------------+-------------+
+|                 | ``none``   | ``pupil``   | ``image``   |
++=================+============+=============+=============+
+| ``none``        | ``none``   | Not allowed | Not allowed |
++-----------------+------------+-------------+-------------+
+| ``pupil``       | ``pupil``  | ``pupil``   | Not allowed |
++-----------------+------------+-------------+-------------+
+| ``image``       | ``image``  | Not allowed | ``image``   |
++-----------------+------------+-------------+-------------+ 
+| ``tilt``        | ``none``   | ``pupil``   | ``image``   |
++-----------------+------------+-------------+-------------+
+| ``transform``   | ``none``   | ``pupil``   | ``image``   |
++-----------------+------------+-------------+-------------+
+
 
 Broadcasting
 ============

@@ -35,14 +35,14 @@ optical effects:
 * The :class:`~lentil.Flip` plane flips a wavefront about its x, y, or both x and y
   axes.
 
-ptypes
-======
+ptype
+=====
 A plane's type (:attr:`~lentil.Plane.ptype`) defines how it interacts with a 
 |Wavefront|. When a wavefront interacts with a plane, it inherits the plane's
 ``ptype``. Plane type is set automatically and unexpected behavior may
 occur if it is changed.
 
-Lentil supports the following ptypes:
+Lentil planes support the following ptypes:
 
 ================== ======================================================
 ptype              Planes with this type
