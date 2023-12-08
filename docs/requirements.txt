@@ -1,4 +1,5 @@
+python>=3.8
 sphinx>=3.0
 pydata-sphinx-theme
 sphinx-design
-matplotlib
+matplotlib>=3.6
