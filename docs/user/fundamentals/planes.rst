@@ -1,22 +1,18 @@
-.. _user.planes:
+.. _user.fundamentals.planes:
 
-.. |Plane| replace:: :class:`~lentil.Plane`
-.. |Pupil| replace:: :class:`~lentil.Pupil`
-.. |Image| replace:: :class:`~lentil.Image`
-.. |Detector| replace:: :class:`~lentil.Detector`
-.. |Wavefront| replace:: :class:`~lentil.Wavefront`
+******
+Planes
+******
 
-*****************
-Specifying planes
-*****************
-
-Lentil plane types
-==================
 All Lentil planes are derived from the |Plane| class. This base class defines the
-interface to represent any discretely sampled plane in an optical model. It can also
-be used directly in a model. Planes typically have some influence on the propagation
-of a wavefront though this is not strictly required and models may use *dummy* or
-*reference* planes as needed.
+interface to represent any discretely sampled plane in an optical model. Planes 
+typically have some influence on the propagation of a wavefront though this is 
+not strictly required and models may use *dummy* or *reference* planes as needed.
+
+.. note::
+
+    All Plane attributes have sensible default values that have no effect on
+    propagations when not specified.
 
 Lentil provides several general planes that are the building blocks for most optical
 models:
@@ -37,11 +33,34 @@ In addition, several "utility" planes are provided. These planes do not represen
 physical components of an optical system, but are used to implement commonly encountered
 optical effects:
 
-* The :class:`~lentil.Tilt` is used to represent wavefront tilt in terms of radians
+* The |Tilt| plane is used to represent wavefront tilt in terms of radians
   of x and y tilt.
 * The :class:`~lentil.Rotate` plane rotates a wavefront by an arbitrary angle.
 * The :class:`~lentil.Flip` plane flips a wavefront about its x, y, or both x and y
   axes.
+
+ptype
+=====
+A plane's type (:attr:`~lentil.Plane.ptype`) defines how it interacts with a 
+|Wavefront|. When a wavefront interacts with a plane, it inherits the plane's
+``ptype``. Plane type is set automatically and unexpected behavior may
+occur if it is changed.
+
+Lentil planes support the following ptypes:
+
+================== ======================================================
+ptype              Planes with this type
+================== ======================================================
+:class:`none`      :class:`~lentil.Plane`
+:class:`pupil`     :class:`~lentil.Pupil`
+:class:`image`     :class:`~lentil.Image`, :class:`~lentil.Detector`
+:class:`tilt`      :class:`~lentil.Tilt`, :class:`~lentil.DispersiveTilt`
+:class:`transform` :class:`~lentil.Rotate`, :class:`~lentil.Flip`
+================== ======================================================
+
+The rules defining when a wavefront is allowed to interact with a plane based
+on ``ptype`` are described :ref:`here <user.fundamentals.wavefront.ptype_rules>`.
+
 
 Plane
 =====
@@ -71,12 +90,6 @@ plane. A plane is defined by the following parameters:
     :width: 450px
     :align: center
 
-.. note::
-
-    All Plane attributes have sensible default values that have no effect on
-    propagations when not specified.
-
-
 Create a new Plane with
 
 .. plot::
@@ -84,7 +97,7 @@ Create a new Plane with
     :scale: 50
 
     >>> p = lentil.Plane(amplitude=lentil.util.circle((256,256), 120))
-    >>> plt.imshow(p.amplitude, origin='lower')
+    >>> plt.imshow(p.amplitude)
 
 Once a Plane is defined, its attributes can be modified at any time:
 
@@ -94,7 +107,7 @@ Once a Plane is defined, its attributes can be modified at any time:
 
     >>> p = lentil.Plane(amplitude=lentil.util.circle((256,256), 120))
     >>> p.opd = 2e-6 * lentil.zernike(p.mask, index=4)
-    >>> plt.imshow(p.opd, origin='lower')
+    >>> plt.imshow(p.opd)
 
 
 Resampling or rescaling a Plane
@@ -111,14 +124,31 @@ on a copy of the plane, but it is possible to operate in-place by setting
 Fitting and removing Plane tilt
 -------------------------------
 The plane's :func:`~lentil.Plane.fit_tilt` method performs a least squares fit to
-estimate and remove tilt from the opd attribute. The tilt removed from the opd
-attribute is accounted for by appending an equivalent :class:`~lentil.Tilt` object
-to the plane's :attr:`~lentil.Plane.tilt` attribute. The default behavior is to
-perform this operation on a copy of the plane, but it is possible to operate
-in-place by setting ``inplace=True``.
+estimate and remove tilt from the :attr:`~lentil.Plane.opd` attribute. The removed
+tilt is accounted for by appending an equivalent :class:`~lentil.Tilt` object to the 
+plane's :attr:`~lentil.Plane.tilt` attribute. The optical effect of the tilt is 
+automatically applied during a propagation step.
 
 See :ref:`user.diffraction.tilt` for additional information on when to use
 this method.
+
+Segmented optical systems
+=========================
+Creating a model of a segmented aperture optical system in Lentil doesn't require any
+special treatment. The |Plane| object works the same with sparse or
+segmented amplitude, opd, and mask attributes as with monolithic ones.
+
+That being said, it is advantageous from a performance point of view to supply a
+3-dimensional `segment mask` when specifying a Plane's :attr:`~lentil.Plane.mask`
+attribute rather than a flattened 2-dimensional `global mask` when working
+with a segmented aperture, as depicted below:
+
+.. plot:: _img/python/segmask.py
+    :scale: 50
+
+This modification is not necessary to achieve accurate propagations, but can
+greatly improve performance. For additional details, see
+:ref:`user.diffraction.segmented`.
 
 .. _user.planes.pupil:
 
@@ -221,7 +251,7 @@ tilt outside of the context of a discretely sampled |Plane| object. :class:`~len
 is most useful for representing global tilt in an optical system (for example, due to a
 pointing error).
 
-Given the following |Pupil| and |Detector| planes:
+Given the following |Pupil| plane:
 
 .. plot::
     :include-source:
@@ -300,11 +330,20 @@ It is simple to see the effect of introducing a tilted wavefront into the system
 
 .. _user_guide.planes.special:
 
-Specialized planes
-==================
+Dispersive planes
+=================
+
+DispersiveTilt
+--------------
+
 
 Grism
 -----
+.. warning::
+
+    :class:`~lentil.Grism` is deprecated and will be removed in a future version. Use
+    :class:`~lentil.DispersiveTilt` instead.
+
 A grism is a combination of a diffraction grating and a prism that creates a dispersed
 spectrum normal to the optical axis. This is in contrast to a single grating or prism,
 which creates a dispersed spectrum at some angle that deviates from the optical axis.
@@ -338,8 +377,8 @@ provided below. Additional examples can be found in Model Patterns under
 
             self.x = np.zeros(2)
 
-            # Note that we set normalize=False so that each mode spans [-1, 1] and then
-            # multiply by 0.5 so that each mode has peak-valley = 1
+            # Note that we set normalize=False so that each mode spans [-1, 1] 
+            # and then multiply by 0.5 so that each mode has peak-valley = 1
             self._infl_fn = 0.5 * lentil.zernike_basis(mask=self.amplitude,
                                                        modes=[2,3],
                                                        normalize=False)
@@ -367,116 +406,6 @@ provided below. Additional examples can be found in Model Patterns under
     im = plt.imshow(opd, origin='lower')
     plt.colorbar(im, fraction=0.046, pad=0.04)
 
-Customizing Plane
-=================
-The Plane class or any of the classes derived from Plane can be subclassed to modify
-any of the default behavior. Reasons to do this may include but are not limited to:
-
-* Dynamically computing the :attr:`~lentil.Plane.opd` attribute
-* Changing the Plane-Wavefront interaction by redefining the `Plane.multiply()` method
-* Modifying the way a Plane is resampled or rescaled
-
-Some general guidance for how to safely subclass Plane is provided below.
-
-.. note::
-
-    Lentil's |Plane| class and its subclasses all use Python's ``__init_subclass__()``
-    method to ensure any required default values are set - even if a user-defined
-    subclass does not explicitly call ``Plane``'s constructor ``__init__()`` method. For
-    this reason, it is not strictly necessary to call ``super().__init__()`` when
-    implementing a custom Plane subclass. It also won't hurt, as long as you're careful
-    to either call ``super().__init__()`` before defining any static plane attributes or
-    passing these attributes along to the ``super().__init__()`` call to ensure they are
-    properly set.
-
-Redefining the amplitude, OPD, or mask attributes
----------------------------------------------------
-Plane :attr:`~lentil.Plane.amplitude`, :attr:`~lentil.Plane.opd`, and
-:attr:`~lentil.Plane.mask` are all defined as properties, but Python allows you to
-redefine them as class attributes without issue:
-
-.. code-block:: python3
-
-    import lentil
-
-    class CustomPlane(le.Plane):
-        def __init__(self):
-            self.amplitude = lentil.circle((256,256), 128)
-            self.opd = lentil.zernike(lentil.circlemask((256,256),128), 4)
-
-If more dynamic behavior is required, the property can be redefined. For example, to
-return a new random OPD each time the :attr:`~lentil.Plane.opd` attribute is
-accessed:
-
-.. code-block:: python3
-
-    import numpy as np
-    import lentil
-
-    class CustomPlane(lentil.Plane):
-        def __init__(self):
-            self.mask = lentil.circlemask((256,256), 128)
-            self.amplitude = lentil.circle((256,256), 128)
-
-        @property
-        def phaopdse(self):
-            return lentil.zernike_compose(self.mask, np.random.random(10))
-
-It is also straightforward to implement a custom :attr:`~lentil.Plane.opd` property to
-provide a stateful OPD attribute:
-
-.. code-block:: python3
-
-    import numpy as np
-    import lentil
-
-    class CustomPlane(lentil.Plane):
-        def __init__(self, x=np.zeros(10)):
-            self.mask = lentil.circlemask((256,256), 128)
-            self.amplitude = lentil.circle((256,256), 128)
-            self.x = x
-
-        @property
-        def opd(self):
-            return lentil.zernike_compose(self.mask, self.x)
-
-.. note::
-
-    Polychromatic or broadband diffraction propagations access the OPD, amplitude,
-    and mask attributes for each propagatioon wavelength. Because these attributes
-    remain fixed during a propagation, it is inefficient to repeatedly recompute
-    them. To mitigate this, it can be very useful to provide a mechanism for freezing
-    these dynamic attributes. There are many ways to do this. One approach is provided
-    below:
-
-    .. code-block:: python3
-
-        import copy
-        import numpy as np
-        import lentil
-
-        class CustomPlane(lentil.Plane):
-            def __init__(self):
-                self.mask = lentil.circlemask((256,256), 128)
-                self.amplitude = lentil.circle((256,256), 128)
-
-            @property
-            def opd(self):
-                return lentil.zernike_compose(self.mask, np.random.random(10))
-
-            def freeze(self):
-                # Return a copy of CustomPlane with the OPD attribute redefined
-                # to be a static copy of the OPD when freeze() is called
-                out = copy.deepcopy(self)
-                out.opd = self.opd.copy()
-                return out
-
-
-Customizing Plane methods
--------------------------
-Any of the |Plane| methods can be redefined in a subclass without restriction. Care
-should be taken to ensure any redefined methods return data compatible with the
-parent method's return type to preserve compatibility within Lentil.
 
 
 .. Lenslet Arrays

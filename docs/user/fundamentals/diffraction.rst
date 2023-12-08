@@ -1,14 +1,9 @@
-.. _user.diffraction:
+.. _user.fundamentals.diffraction:
 
-.. |Wavefront| replace:: :class:`~lentil.Wavefront`
-.. |Plane| replace:: :class:`~lentil.Plane`
-.. |Pupil| replace:: :class:`~lentil.Pupil`
-.. |Image| replace:: :class:`~lentil.Image`
-.. |Detector| replace:: :class:`~lentil.Detector`
+*********************************
+Numerical diffraction propagation
+*********************************
 
-********************
-Modeling diffraction
-********************
 Lentil uses Fourier transform-based algorithms to numerically model the propagation of an
 electromagnetic field through an optical system. The electromagnetic field is represented
 by a |Wavefront| object which stores the complex amplitude of the field at a discretely
@@ -83,7 +78,7 @@ follows the same basic flow:
     .. note::
 
         Additional details on the plane-wavefront interaction can be found in
-        :ref:`user.optical_systems.plane_wavefront`.
+        :ref:`user.fundamentals.plane_wavefront`.
 
 3. **Propagate the wavefront to the next plane in the optical system** - the |Wavefront|
    object provides a number of methods to propagate between planes. The appropriate method
@@ -196,7 +191,7 @@ It can be advantageous to specify ``npix_prop`` < ``npix`` for performance
 reasons, although care must be taken to ensure needed data is not accidentally
 left out:
 
-.. plot:: user/plots/npix_prop.py
+.. plot:: user/fundamentals/plots/npix_prop.py
     :scale: 50
 
 For most pupil to image plane propagations, setting ``npix_prop`` to 128 or 256
@@ -266,21 +261,21 @@ Sampling considerations
 
 Working with large tilts
 ========================
-.. .. image:: /_static/img/propagate_tilt_phase.png
-..     :width: 450px
-..     :align: center
+.. image:: /_static/img/propagate_tilt_phase.png
+    :width: 450px
+    :align: center
 
-.. .. image:: /_static/img/propagate_tilt_phase_wrap.png
-..     :width: 650px
-..     :align: center
+.. image:: /_static/img/propagate_tilt_phase_wrap.png
+    :width: 650px
+    :align: center
 
-.. .. image:: /_static/img/propagate_tilt_angle.png
-..     :width: 600px
-..     :align: center
+.. image:: /_static/img/propagate_tilt_angle.png
+    :width: 600px
+    :align: center
 
-.. .. image:: /_static/img/propagate_tilt_angle_steps.png
-..     :width: 600px
-..     :align: center
+.. image:: /_static/img/propagate_tilt_angle_steps.png
+    :width: 600px
+    :align: center
 
 .. _user.diffraction.segmented:
 

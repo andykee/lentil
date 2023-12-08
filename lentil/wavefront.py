@@ -26,9 +26,6 @@ class Wavefront:
     tilt: (2,) array_like, optional
         Radians of wavefront tilt about the x and y axes provided as 
         ``[rx, ry]``. Default is ``[0, 0]`` (no tilt).
-    shape : (2,) array_like, optional
-        Wavefront shape. If ``shape`` is None (default), the wavefront is
-        assumed to be infinite (broadcastable to any shape).
     ptype : lentil.ptype, optional
         Plane type. Default is ``lentil.none``.
     

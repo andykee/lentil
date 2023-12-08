@@ -106,6 +106,18 @@ autodoc_default_options = {
 
 autosummary_generate = True
 
+rst_prolog = """
+.. currentmodule:: lentil
+
+.. |Pupil| replace:: :class:`Pupil`
+.. |Image| replace:: :class:`Image`
+.. |Detector| replace:: :class:`Detector`
+.. |Plane| replace:: :class:`Plane`
+.. |Wavefront| replace:: :class:`Wavefront`
+.. |Tilt| replace:: :class:`Tilt`
+
+"""
+
 # -- Plot config -------------------------------------------------------------
 dpi = 144
 

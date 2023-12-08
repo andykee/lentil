@@ -4,14 +4,29 @@
 Examples
 ********
 
-General
-=======
+This page contains examples and useful model design patterns.
+
 .. toctree::
+    :caption: End-to-end
     :maxdepth: 1
 
     general/simple
     general/large
     general/attributes
+
+.. toctree::
+    :caption: Model patterns
+    :maxdepth: 1
+
+    planes/filter_wheel
+    planes/rb_element
+    planes/translation_stage
+
+.. toctree::
+    :caption: MATLAB
+    :maxdepth: 1
+
+    matlab/matlab_interface
 
 Integration
 ===========
@@ -38,9 +53,4 @@ Radiometry
     radiometry/complex_sources
     radiometry/source_defocus
 
-MATLAB
-======
-.. toctree::
-    :maxdepth: 1
 
-    matlab/matlab_interface
