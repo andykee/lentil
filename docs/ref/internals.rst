@@ -10,6 +10,7 @@ Plane type
     :toctree: generated/
 
     lentil.ptype.ptype
+    lentil.ptype.PType
 
 Field
 -----

@@ -78,7 +78,7 @@ follows the same basic flow:
     .. note::
 
         Additional details on the plane-wavefront interaction can be found in
-        :ref:`user.fundamentals.plane_wavefront`.
+        :ref:`user.fundamentals.wavefront.plane_wavefront`.
 
 3. **Propagate the wavefront to the next plane in the optical system** - the |Wavefront|
    object provides a number of methods to propagate between planes. The appropriate method

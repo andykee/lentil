@@ -9,11 +9,6 @@ interface to represent any discretely sampled plane in an optical model. Planes
 typically have some influence on the propagation of a wavefront though this is 
 not strictly required and models may use *dummy* or *reference* planes as needed.
 
-.. note::
-
-    All Plane attributes have sensible default values that have no effect on
-    propagations when not specified.
-
 Lentil provides several general planes that are the building blocks for most optical
 models:
 
@@ -61,7 +56,6 @@ ptype              Planes with this type
 The rules defining when a wavefront is allowed to interact with a plane based
 on ``ptype`` are described :ref:`here <user.fundamentals.wavefront.ptype_rules>`.
 
-
 Plane
 =====
 Lentil's |Plane| class represents a discretely sampled plane in an optical model. Planes
@@ -82,13 +76,18 @@ plane. A plane is defined by the following parameters:
 .. plot:: _img/python/segmask.py
     :scale: 50
 
-* :attr:`~lentil.Plane.pixelscale` - Defines the physical sampling of each pixel in
-  the above attributes. A simple example of how to calculate the pixelscale for a
+* :attr:`~lentil.Plane.pixelscale` - Defines the physical sampling of the
+  above attributes. A simple example of how to calculate the pixelscale for a
   discretely sampled circular aperture is given below:
 
   .. image:: /_static/img/pixelscale.png
     :width: 450px
     :align: center
+
+.. note::
+
+    All Plane attributes have sensible default values that have no effect on
+    propagations when not specified.
 
 Create a new Plane with
 

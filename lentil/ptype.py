@@ -21,6 +21,14 @@ def ptype(ptype):
 
 
 class PType:
+    """An object to hold the type of a :class:`~lentil.Plane` or 
+    :class:`~lentil.Wavefront`
+
+    Parameters
+    ----------
+    ptype : str
+        Plane type
+    """
     def __init__(self, ptype):
         if ptype not in PTYPES:
             raise TypeError(f"plane type '{ptype}' not understood")

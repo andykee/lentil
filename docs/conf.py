@@ -32,7 +32,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.viewcode',
               'sphinx_copybutton',
               'sphinx_design',
-              'matplotlib.sphinxext.plot_directive']
+              'matplotlib.sphinxext.plot_directive'
+              ]
 templates_path = ['_templates']
 source_suffix = '.rst'
 master_doc = 'docs'
@@ -107,6 +108,15 @@ autodoc_default_options = {
 
 autosummary_generate = True
 
+# Some class/function names differ only in their capitalisation. Since these 
+# resolve to autosummary filenames that also differ only in capitalisation, 
+# this causes problems when the documentation is built on an OS/filesystem 
+# that is enforcing case-insensitive semantics.  This setting defines some 
+# custom names to prevent the clash from happening.
+autosummary_filename_map = {
+    "lentil.ptype.PType": "lentil.ptype.PType_cls.rst"
+}
+
 rst_prolog = """
 .. currentmodule:: lentil
 
@@ -116,6 +126,7 @@ rst_prolog = """
 .. |Plane| replace:: :class:`Plane`
 .. |Wavefront| replace:: :class:`Wavefront`
 .. |Tilt| replace:: :class:`Tilt`
+.. |Field| replace:: :class:`~lentil.field.Field`
 
 """
 

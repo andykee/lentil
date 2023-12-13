@@ -5,6 +5,10 @@ Segmented optical systems
 *************************
 
 Lentil works with segmented apertures out of the box.
+
+
+
+
 Creating a model of a segmented aperture optical system in Lentil doesn't require any
 special treatment. The |Plane| object works the same with sparse or
 segmented amplitude, opd, and mask attributes as with monolithic ones.
@@ -19,3 +23,9 @@ with a segmented aperture, as depicted below:
 
 This modification is not necessary to achieve accurate propagations, but can
 greatly improve performance. 
+
+
+
+
+Since a wavefront is monochromatic, it can be broken into any arbitrary number of
+fields and recombined coherently at a later time.
