@@ -19,9 +19,8 @@ If you'd prefer to use Lentil *en français*, you can try
 
 API documentation for Lentil's standard library is available :ref:`here <api>`.
 
-******************
 Lentil subpackages
-******************
+==================
 Lentil includes subpackges which provide domain-specific functionality. The 
 available subpackages are described below:
 

@@ -116,5 +116,7 @@ should be taken to ensure any redefined methods return data compatible with the
 parent method's return type to preserve compatibility within Lentil.
 
 
-Implementing the _Tilt interface
---------------------------------
+.. _user.advanced.extend.tiltinterface:
+
+Using TiltInterface
+-------------------

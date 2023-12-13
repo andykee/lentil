@@ -12,13 +12,13 @@ The User Guide provides documentation for all of Lentil's features and capabilit
 
     getting_started/install
     getting_started/importing_lentil
-    getting_started/example
     getting_started/resources
 
 .. toctree::
     :caption: Fundamentals
     :maxdepth: 1
 
+    fundamentals/introduction
     fundamentals/coordinates
     fundamentals/planes
     fundamentals/wavefront_error
