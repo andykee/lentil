@@ -56,7 +56,7 @@ directory alongside the ``.m`` interfaces. This simplifies the end user experien
 because it does not require any additional path modification or management to use the
 model.
 
-For an example, see: :ref:`cookbook-matlab`.
+For an example, see: :ref:`examples.matlab_interface`.
 
 Finally, a few links that may be helpful when developing a MATLAB interface:
 

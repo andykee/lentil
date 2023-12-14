@@ -1,7 +1,7 @@
-.. _cookbook-matlab:
+.. _examples.matlab_interface:
 
-Simple MATLAB Interface Class
-=============================
+MATLAB interface class
+======================
 
 Consider the following simple Lentil model which consists of an instrument, optical
 system, and detector:
