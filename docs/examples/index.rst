@@ -6,6 +6,8 @@ Examples
 
 This page contains examples and useful model design patterns.
 
+.. _examples.end_to_end:
+
 End-to-end simulations
 ======================
 
@@ -16,22 +18,36 @@ End-to-end simulations
         :link-type: doc
         :margin: 2 2 0 0
 
-        A simple diffraction simulation
+        .. image:: /_static/img/psf.png
+            :width: 175px
+            :align: center
 
-    .. grid-item-card::  Title 2
+        Simple diffraction simulation
+
+    .. grid-item-card::
         :margin: 2 2 0 0
 
-        B
+        Broadband diffraction simulation
     
-    .. grid-item-card::  Title 3
+    .. grid-item-card::
         :margin: 2 2 0 0
 
-        C
+        Segmented aperture diffraction simulation
 
-    .. grid-item-card::  Title 4
+    .. grid-item-card::
         :margin: 2 2 0 0
 
-        D
+        Diffraction simulation with large tilt
+
+    .. grid-item-card::
+        :margin: 2 2 0 0
+
+        Radiometrically correct propagation
+
+    .. grid-item-card::
+        :margin: 2 2 0 0
+
+        Including a detector model
 
 
 .. toctree::
@@ -39,38 +55,27 @@ End-to-end simulations
     :hidden:
 
     simple
-    general/simple
-    general/large
-    general/attributes
+
+
+.. _examples.useful_patterns:
+
+Useful patterns
+===============
 
 .. toctree::
-    :caption: Model patterns
+    :caption: Useful patterns
     :hidden:
 
     planes/filter_wheel
     planes/rb_element
     planes/translation_stage
 
-.. toctree::
-    :caption: MATLAB
-    :hidden:
 
-    matlab/matlab_interface
-
-.. _patterns.planes:
-
-Planes
-======
-.. toctree::
-    :caption: Planes
-    :hidden:
-
-    planes/filter_wheel
-    planes/rb_element
-    planes/translation_stage
+.. _examples.radiometry:
 
 Radiometry
 ==========
+
 .. toctree::
     :caption: Radiometry
     :hidden:
@@ -80,5 +85,35 @@ Radiometry
     radiometry/self_emission
     radiometry/complex_sources
     radiometry/source_defocus
+
+
+.. _examples.advanced:
+
+Advanced usage
+==============
+
+.. grid:: 3
+
+    .. grid-item-card::  
+        :link: matlab_interface
+        :link-type: doc
+        :margin: 2 2 0 0
+
+        .. image:: /_static/img/psf.png
+            :width: 175px
+            :align: center
+
+        MATLAB interface class
+
+
+.. toctree::
+    :caption: Advanced usage
+    :hidden:
+
+    matlab_interface
+
+    
+
+
 
 

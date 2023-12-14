@@ -1,8 +1,8 @@
 .. _examples.simple_example:
 
-*******************************
-A simple diffraction simulation
-*******************************
+*****************************
+Simple diffraction simulation
+*****************************
 This is an example that demonstrates the core functionality of Lentil. It
 is mainly written for new users. More detailed examples and specific design 
 patterns are available :ref:`here<examples>`.
