@@ -78,7 +78,7 @@ class CircularPupil(lentil.Pupil):
     def __init__(self):
         super().__init__(focal_length=10,
                          pixelscale=2/256,
-                         amplitude=lentil.util.circle((256, 256), 128),
+                         amplitude=lentil.circle((256, 256), 128),
                          opd=np.zeros((256, 256)))
 
 

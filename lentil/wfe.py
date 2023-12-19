@@ -1,7 +1,6 @@
 import numpy as np
 
-from lentil import util
-from lentil import zernike
+import lentil
 
 __all__ = ['power_spectrum', 'translation_defocus']
 
@@ -101,14 +100,14 @@ def translation_defocus(mask, f_number, translation):
     """
     mask = np.asarray(mask)
 
-    rmin, rmax, cmin, cmax = util.boundary(mask)
+    rmin, rmax, cmin, cmax = lentil.boundary(mask)
     extent = max(rmax-rmin, cmax-cmin)
 
-    circlemask = util.circle(mask.shape, np.ceil(extent/2))
+    circlemask = lentil.circle(mask.shape, np.ceil(extent/2))
 
     coeff = translation/(8*f_number**2)  # p-v defocus
 
-    z4 = zernike.zernike(circlemask, 4)
+    z4 = lentil.zernike(circlemask, 4)
     z4 = z4/(z4.max() - z4.min())  # normalize p-v = 1
 
     return z4*mask*coeff

@@ -16,7 +16,7 @@ def test_propagate_slice_one():
     dx = diameter/128
 
     shift = np.random.uniform(low=-50, high=50, size=2).astype(int)
-    amp = lentil.util.circle((256,256), 256//4, shift=shift)
+    amp = lentil.circle((256,256), 256//4, shift=shift)
 
     rho, theta = lentil.zernike_coordinates(amp, shift=shift)
     coeffs = np.random.uniform(low=-1, high=1, size=11)*100e-9
@@ -50,7 +50,7 @@ def test_propagate_slice_multi():
 
     n = 256
 
-    amp1 = lentil.util.circle((n,n), n//5, shift=(0, -0.3*n))
+    amp1 = lentil.circle((n,n), n//5, shift=(0, -0.3*n))
     slc1 = lentil.helper.boundary_slice(amp1)
     ofst1 = lentil.helper.slice_offset(slc1, shape=amp1.shape)
 
@@ -60,7 +60,7 @@ def test_propagate_slice_multi():
     opd1 = lentil.zernike_compose(amp1, coeffs, rho=rho, theta=theta)
 
 
-    amp2 = lentil.util.circle((n,n), n//5, shift=(0, .3*n))
+    amp2 = lentil.circle((n,n), n//5, shift=(0, .3*n))
     slc2 = lentil.helper.boundary_slice(amp2)
     ofst2 = lentil.helper.slice_offset(slc2, shape=amp2.shape)
 
