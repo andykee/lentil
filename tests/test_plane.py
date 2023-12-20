@@ -58,7 +58,7 @@ def test_wavefront_plane_multiply():
 
 
 def test_wavefront_plane_multiply_overlapping_segment_slices():
-    seg = lentil.hexagon((64, 64), 32)
+    seg = lentil.hexagon((64, 64), 32, antialias=False)
     seg = seg[5:60, :]
 
     segmask = np.zeros((2, 128, 128))

@@ -3,8 +3,8 @@ import numpy as np
 import lentil
 
 amp = np.zeros((256, 256))
-amp += lentil.circlemask((256, 256), 64, shift=(32, 8))
-amp -= lentil.circlemask((256, 256), 40, shift=(32, 8))
+amp += lentil.circle((256, 256), 64, shift=(32, 8))
+amp -= lentil.circle((256, 256), 40, shift=(32, 8))
 amp[:, 0:128+8] = 0
 amp[32:225, 104-16:128-16] = 1
 amp[96:120, 128-16:144-8] = 1

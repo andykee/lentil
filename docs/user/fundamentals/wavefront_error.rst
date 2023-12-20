@@ -95,7 +95,7 @@ astigmatism over a circular aperture with :func:`~lentil.zernike`:
     :include-source:
     :scale: 50
 
-    >>> mask = lentil.circlemask((256,256), 120)
+    >>> mask = lentil.circle((256,256), 120, antialias=False)
     >>> astig = 100e-9 * lentil.zernike(mask, index=6)
     >>> plt.imshow(astig, origin='lower')
 
@@ -107,7 +107,7 @@ list of coefficients to the :func:`~lentil.zernike_compose` function:
     :include-source:
     :scale: 50
 
-    >>> mask = lentil.circlemask((256,256), 120)
+    >>> mask = lentil.circle((256,256), 120, antialias=False)
     >>> coeff = np.random.uniform(low=-200e-9, high=200e-9, size=10)
     >>> z = lentil.zernike_compose(mask, coeff)
     >>> plt.imshow(z, origin='lower')
@@ -130,7 +130,7 @@ second corresponds to astigmatism.
     :include-source:
     :scale: 50
 
-    >>> mask = lentil.circlemask((256,256), 120)
+    >>> mask = lentil.circle((256,256), 120, antialias=False)
     >>> coeff = [200e-9, -100e-9]
     >>> basis = lentil.zernike_basis(mask, modes=(4,6))
     >>> z = np.einsum('ijk,i->jk', basis, coeff)
@@ -143,7 +143,7 @@ It's also possible to achieve the same result using Numpy's
     :include-source:
     :scale: 50
 
-    >>> mask = lentil.circlemask((256,256), 120)
+    >>> mask = lentil.circle((256,256), 120, antialias=False)
     >>> coeff = [200e-9, -100e-9]
     >>> basis = lentil.zernike_basis(mask, modes=(4,6))
     >>> z = np.tensordot(basis, coeff, axes=(0,0))
@@ -164,7 +164,7 @@ the error magnitude:
 
 .. code-block:: pycon
 
-    >>> mask = lentil.circlemask((256,256), 128)
+    >>> mask = lentil.circle((256,256), 128, antialias=False)
     >>> z4 = 100e-9 * lentil.zernike(mask, mode=4, normalize=True)
     >>> np.std(z4[np.nonzero(z4)])
 
@@ -176,7 +176,7 @@ the discretely sampled mode spans [-0.5 0.5] before multiplying by the error mag
 
 .. code-block:: pycon
 
-    >>> mask = lentil.circlemask((256,256), 128)
+    >>> mask = lentil.circle((256,256), 128, antialias=False)
     >>> z4 = lentil.zernike(mask, mode=4)
     >>> z4 /= np.max(z4) - np.min(z4)
     >>> z4 *= 100e-9
@@ -199,7 +199,7 @@ the center of the defined array:
     :include-source:
     :scale: 50
 
-    >>> mask = lentil.circlemask((256,256), radius=50, shift=(0,60))
+    >>> mask = lentil.circle((256,256), radius=50, shift=(0,60), antialias=False)
     >>> rho, theta = lentil.zernike_coordinates(mask, shift=(0,60))
     >>> z4 = lentil.zernike(mask, 4, rho=rho, theta=theta)
     >>> plt.imshow(z4, origin='lower')

@@ -2,68 +2,48 @@ import numpy as np
 
 import lentil
 
-def circle(shape, radius, shift=(0, 0)):
-    """Compute a circle with anti-aliasing.
+def circle(shape, radius, shift=(0, 0), antialias=True):
+    """Draw a circle.
 
     Parameters
     ----------
     shape : array_like
         Size of output in pixels (nrows, ncols)
-
     radius : float
         Radius of circle in pixels
-
     shift : (2,) array_like, optional
         How far to shift center in float (rows, cols). Default is (0, 0).
+    antialias : bool, optional
+        If True (default), the shape edges are antialiased.
 
     Returns
     -------
-    circle : ndarray
+    ndarray
 
     """
     rr, cc = lentil.helper.mesh(shape)
     r = np.sqrt(np.square(rr - shift[0]) + np.square(cc - shift[1]))
-    return np.clip(radius + 0.5 - r, 0.0, 1.0)
-
-
-def circlemask(shape, radius, shift=(0, 0)):
-    """Compute a circular mask.
-
-    Parameters
-    ----------
-    shape : array_like
-        Size of output in pixels (nrows, ncols)
-
-    radius : float
-        Radius of circle in pixels
-
-    shift : array_like, optional
-        How far to shift center in float (rows, cols). Default is (0, 0).
-
-    Returns
-    -------
-    mask : ndarray
-
-    """
-
-    mask = lentil.circle(shape, radius, shift)
-    mask[mask > 0] = 1
+    mask = np.clip(radius + 0.5 - r, 0.0, 1.0)
+    if not antialias:
+        mask[mask > 0] = 1
     return mask
 
 
-def hexagon(shape, radius, rotate=False):
+def hexagon(shape, radius, shift=(0, 0), antialias=True, rotate=False):
     """Compute a hexagon mask.
 
     Parameters
     ----------
     shape : array_like
         Size of output in pixels (nrows, ncols)
-
-    radius : int
+    radius : float
         Radius of outscribing circle (which also equals the side length) in
         pixels.
-
-    rotate : bool
+    shift : tuple of floats, optional
+        How far to shift center in (rows, cols). Default is (0, 0).
+    antialias : bool, optional
+        If True (default), the shape edges are antialiased.
+    rotate : bool, optional
         Rotate mask so that flat sides are aligned with the Y direction instead
         of the default orientation which is aligned with the X direction.
 
@@ -73,24 +53,26 @@ def hexagon(shape, radius, rotate=False):
 
     """
 
+    shape = np.broadcast_to(shape, (2,))
+    r, c = lentil.helper.mesh(shape, shift)
+    mask = np.ones(shape)
+
     inner_radius = radius * np.sqrt(3)/2
-    side_length = radius/2
 
-    rr, cc = lentil.helper.mesh(shape)
+    for n in range(6):
+    
+        theta = n * np.pi/3 if rotate else n * np.pi/3 + np.pi/6
+        rho = r * np.sin(theta) + c * np.cos(theta)
+    
+        if antialias:
+            slc = np.clip(inner_radius + 0.5 - rho, 0.0, 1.0)
+        else:
+            slc = np.ones(shape)
+            slc[rho > inner_radius] = 0
+    
+        mask = np.minimum(mask, slc)
 
-    rect = np.where((np.abs(cc) <= side_length) & (np.abs(rr) <= inner_radius))
-    left_tri = np.where((cc <= -side_length) & (cc >= -radius) & (np.abs(rr) <= (cc + radius)*np.sqrt(3)))
-    right_tri = np.where((cc >= side_length) & (cc <= radius) & (np.abs(rr) <= (radius - cc)*np.sqrt(3)))
-
-    mask = np.zeros(shape)
-    mask[rect] = 1
-    mask[left_tri] = 1
-    mask[right_tri] = 1
-
-    if rotate:
-        return mask.transpose()
-    else:
-        return mask
+    return mask
 
 
 def slit(shape, width, length=None):

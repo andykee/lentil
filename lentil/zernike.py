@@ -149,7 +149,7 @@ def zernike_compose(mask, coeffs, normalize=True, rho=None, theta=None):
         >>> import matplotlib.pyplot as plt
         >>> import numpy as np
         >>> import lentil
-        >>> mask = lentil.circlemask((256,256), 120)
+        >>> mask = lentil.circle((256,256), 120, antialias=False)
         >>> coeffs = np.random.rand(10)*1e-8
         >>> opd = lentil.zernike_compose(mask, coeffs)
         >>> plt.imshow(opd, origin='lower')
@@ -274,7 +274,7 @@ def zernike_fit(opd, mask, modes, normalize=True, rho=None, theta=None):
 
         >>> import numpy as np
         >>> import lentil
-        >>> mask = lentil.circlemask((256,256),128)
+        >>> mask = lentil.circle((256,256), 128, antialias=False)
         >>> coeffs = np.random.rand(4)*100e-9
         >>> opd = lentil.zernike_compose(mask, coeffs)
         >>> fit_coeffs = lentil.zernike_fit(opd, mask, np.arange(2,4))

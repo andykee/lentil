@@ -10,7 +10,6 @@ Shapes
     :toctree: generated/
 
     lentil.circle
-    lentil.circlemask
     lentil.hexagon
     lentil.slit
 

@@ -124,7 +124,7 @@ class TiltPupil(lentil.Pupil):
     def __init__(self, npix, diameter=1, coeffs=None):
 
         amplitude = lentil.normalize_power(lentil.circle((npix, npix), npix//2))
-        mask = lentil.circlemask((npix, npix), npix//2)
+        mask = lentil.circle((npix, npix), npix//2, antialias=False)
 
         if coeffs is None:
             coeffs = 5e-6 * np.random.uniform(low=-0.5, high=0.5, size=3)

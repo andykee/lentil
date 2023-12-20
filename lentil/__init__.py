@@ -42,7 +42,6 @@ from lentil import radiometry
 
 from lentil.shape import (
     circle,
-	circlemask,
 	hexagon,
 	slit,
 )

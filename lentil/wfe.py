@@ -103,7 +103,7 @@ def translation_defocus(mask, f_number, translation):
     rmin, rmax, cmin, cmax = lentil.boundary(mask)
     extent = max(rmax-rmin, cmax-cmin)
 
-    circlemask = lentil.circle(mask.shape, np.ceil(extent/2))
+    circlemask = lentil.circle(mask.shape, np.ceil(extent/2), antialias=False)
 
     coeff = translation/(8*f_number**2)  # p-v defocus
 
