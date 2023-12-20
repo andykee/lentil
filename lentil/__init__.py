@@ -40,10 +40,12 @@ from lentil.propagate import (
 
 from lentil import radiometry
 
+from lentil.segmented import hex_segments
+
 from lentil.shape import (
     circle,
 	hexagon,
-	slit,
+	slit
 )
 
 from lentil import util

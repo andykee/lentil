@@ -2,8 +2,9 @@ import numpy as np
 
 import lentil
 
+
 def circle(shape, radius, shift=(0, 0), antialias=True):
-    """Draw a circle.
+    """Draw a circle
 
     Parameters
     ----------
@@ -29,8 +30,8 @@ def circle(shape, radius, shift=(0, 0), antialias=True):
     return mask
 
 
-def hexagon(shape, radius, shift=(0, 0), antialias=True, rotate=False):
-    """Compute a hexagon mask.
+def hexagon(shape, radius, shift=(0, 0), rotate=False, antialias=True):
+    """Draw a hexagon
 
     Parameters
     ----------
@@ -41,18 +42,17 @@ def hexagon(shape, radius, shift=(0, 0), antialias=True, rotate=False):
         pixels.
     shift : tuple of floats, optional
         How far to shift center in (rows, cols). Default is (0, 0).
-    antialias : bool, optional
-        If True (default), the shape edges are antialiased.
     rotate : bool, optional
         Rotate mask so that flat sides are aligned with the Y direction instead
         of the default orientation which is aligned with the X direction.
-
+    antialias : bool, optional
+        If True (default), the shape edges are antialiased.
+        
     Returns
     -------
-    mask : ndarray
+    ndarray
 
     """
-
     shape = np.broadcast_to(shape, (2,))
     r, c = lentil.helper.mesh(shape, shift)
     mask = np.ones(shape)
@@ -76,7 +76,7 @@ def hexagon(shape, radius, shift=(0, 0), antialias=True, rotate=False):
 
 
 def slit(shape, width, length=None):
-    """Compute a slit mask.
+    """Draw a rectangular slit
 
     Parameters
     ----------
@@ -90,10 +90,9 @@ def slit(shape, width, length=None):
 
     Returns
     -------
-    mask : ndarray
+    ndarray
 
     """
-
     rr, cc = lentil.helper.mesh(shape)
     slit = np.ones(shape)
 
