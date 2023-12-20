@@ -18,7 +18,7 @@ End-to-end simulations
         :link-type: doc
         :margin: 2 2 0 0
 
-        .. image:: /_static/img/psf.png
+        .. image:: /examples/_thumbnails/simple_diffraction.png
             :width: 175px
             :align: center
 
@@ -27,10 +27,18 @@ End-to-end simulations
     .. grid-item-card::
         :margin: 2 2 0 0
 
+        .. image:: /examples/_thumbnails/broadband_diffraction.png
+            :width: 175px
+            :align: center
+
         Broadband diffraction simulation
     
     .. grid-item-card::
         :margin: 2 2 0 0
+
+        .. image:: /examples/_thumbnails/segmented_diffraction.png
+            :width: 175px
+            :align: center
 
         Segmented aperture diffraction simulation
 
@@ -99,7 +107,7 @@ Advanced usage
         :link-type: doc
         :margin: 2 2 0 0
 
-        .. image:: /_static/img/psf.png
+        .. image:: /examples/_thumbnails/matlab.png
             :width: 175px
             :align: center
 
