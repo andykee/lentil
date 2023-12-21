@@ -62,6 +62,7 @@ def propagate_fft(wavefront, pixelscale, shape=None, oversample=2,
 
     out = Wavefront.empty(wavelength=prop_wavelength,
                           pixelscale = pixelscale/oversample,
+                          focal_length=wavefront.focal_length,
                           shape = shape_out,
                           ptype = ptype_out)
     
@@ -185,6 +186,7 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
 
     out = Wavefront.empty(wavelength=wavefront.wavelength,
                           pixelscale = du/oversample,
+                          focal_length=wavefront.focal_length,
                           shape = shape_out,
                           ptype = ptype_out)
         
