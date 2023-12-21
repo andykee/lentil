@@ -14,7 +14,7 @@ npix_image = 32
 oversample = np.array([1,2,3,4])
 dx = diameter/npix_pupil
 
-amp = le.util.circle((npix_pupil,npix_pupil), npix_pupil//2)
+amp = le.circle((npix_pupil,npix_pupil), npix_pupil//2)
 f_number = focal_length/diameter
 
 #Q = (wl*f_number)/du

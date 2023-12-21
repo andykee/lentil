@@ -27,7 +27,7 @@ psf = []
 for n in npix_pupil:
     dx = diameter/n
     alpha = (dx*du)/(wl*focal_length*oversample)
-    amp = le.util.circle((n,n), n//2)
+    amp = le.circle((n,n), n//2)
     F = le.fourier.dft2(amp, alpha, npix)
     psf.append(np.abs(F)**2)
 

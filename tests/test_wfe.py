@@ -3,7 +3,7 @@ import lentil
 
 
 def test_power_spectrum_wfe():
-    mask = lentil.util.circlemask((256, 256), 128)
+    mask = lentil.circle((256, 256), 128, antialias=False)
     rms = 50e-9
     opd = lentil.wfe.power_spectrum(mask, pixelscale=1/256, rms=rms,
                                       half_power_freq=5, exp=3)
@@ -12,7 +12,7 @@ def test_power_spectrum_wfe():
 
 
 def test_translation_defocus():
-    mask = lentil.util.circlemask((256, 256), 128)
+    mask = lentil.circle((256, 256), 128, antialias=False)
     f_number = np.random.normal(10)
     translation = np.random.uniform(low=-0.5e-3, high=0.5e-3)
 

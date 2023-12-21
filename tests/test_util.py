@@ -7,7 +7,7 @@ import lentil
 def test_boundary():
     mask = lentil.hexagon((256, 256), 100, rotate=True)
     bounds = lentil.boundary(mask)
-    assert np.array_equal(bounds, [28, 228, 42, 214])
+    assert np.array_equal(bounds, [28, 228, 41, 215])
 
 
 def test_rebin():

@@ -58,7 +58,7 @@ def test_wavefront_plane_multiply():
 
 
 def test_wavefront_plane_multiply_overlapping_segment_slices():
-    seg = lentil.hexagon((64, 64), 32)
+    seg = lentil.hexagon((64, 64), 32, antialias=False)
     seg = seg[5:60, :]
 
     segmask = np.zeros((2, 128, 128))
@@ -78,7 +78,7 @@ class CircularPupil(lentil.Pupil):
     def __init__(self):
         super().__init__(focal_length=10,
                          pixelscale=2/256,
-                         amplitude=lentil.util.circle((256, 256), 128),
+                         amplitude=lentil.circle((256, 256), 128),
                          opd=np.zeros((256, 256)))
 
 

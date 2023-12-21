@@ -96,7 +96,7 @@ Create a new Plane with
     :include-source:
     :scale: 50
 
-    >>> p = lentil.Plane(amplitude=lentil.util.circle((256,256), 120))
+    >>> p = lentil.Plane(amplitude=lentil.circle((256,256), 120))
     >>> plt.imshow(p.amplitude)
 
 Once a Plane is defined, its attributes can be modified at any time:
@@ -105,7 +105,7 @@ Once a Plane is defined, its attributes can be modified at any time:
     :include-source:
     :scale: 50
 
-    >>> p = lentil.Plane(amplitude=lentil.util.circle((256,256), 120))
+    >>> p = lentil.Plane(amplitude=lentil.circle((256,256), 120))
     >>> p.opd = 2e-6 * lentil.zernike(p.mask, index=4)
     >>> plt.imshow(p.opd)
 
@@ -257,7 +257,7 @@ Given the following |Pupil| plane:
     :include-source:
     :scale: 50
 
-    >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 120),
+    >>> pupil = lentil.Pupil(amplitude=lentil.circle((256, 256), 120),
     ...                      focal_length=10, pixelscale=1/250)
     >>> w = lentil.Wavefront(650e-9)
     >>> w *= pupil
@@ -270,7 +270,7 @@ It is simple to see the effect of introducing a tilted wavefront into the system
     :include-source:
     :scale: 50
 
-    >>> pupil = lentil.Pupil(amplitude=lentil.util.circle((256, 256), 120),
+    >>> pupil = lentil.Pupil(amplitude=lentil.circle((256, 256), 120),
     ...                      focal_length=10, pixelscale=1/250)
     >>> tilt = lentil.Tilt(x=10e-6, y=-5e-6)
     >>> w = lentil.Wavefront(650e-9)
@@ -400,7 +400,7 @@ provided below. Additional examples can be found in Model Patterns under
     import matplotlib.pyplot as plt
     import lentil
 
-    mask = lentil.circlemask((256,256), 120)
+    mask = lentil.circle((256,256), 120, antialias=False)
     opd = lentil.zernike_compose(mask, [0, 1e-6, 3e-6], normalize=False)
 
     im = plt.imshow(opd, origin='lower')

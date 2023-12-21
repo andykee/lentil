@@ -10,7 +10,6 @@ Shapes
     :toctree: generated/
 
     lentil.circle
-    lentil.circlemask
     lentil.hexagon
     lentil.slit
 
@@ -34,3 +33,4 @@ Miscellaneous
     lentil.min_sampling
     lentil.pixelscale_nyquist
     lentil.normalize_power
+    lentil.hex_segments

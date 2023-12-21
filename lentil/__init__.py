@@ -40,12 +40,16 @@ from lentil.propagate import (
 
 from lentil import radiometry
 
+from lentil.segmented import hex_segments
+
+from lentil.shape import (
+    circle,
+	hexagon,
+	slit
+)
+
 from lentil import util
 from lentil.util import (
-	circle,
-	circlemask,
-	hexagon,
-	slit,
 	centroid,
 	pad,
 	window,
