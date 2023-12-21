@@ -494,7 +494,7 @@ _mul_ptype_table = {
         lentil.transform: lentil.pupil
     },
     lentil.image: {
-        lentil.pupil: lentil.pupil,
+        lentil.image: lentil.image,
         lentil.tilt: lentil.pupil,
         lentil.transform: lentil.pupil
     }
