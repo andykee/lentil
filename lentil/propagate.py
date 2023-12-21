@@ -172,8 +172,8 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
     
     ptype_out = _propagate_ptype(wavefront.ptype, method='fraunhofer')
     
-    shape = wavefront.shape if shape is None else np.broadcast_to(shape, (2,))
-    prop_shape = shape if prop_shape is None else np.broadcast_to(prop_shape, (2,))
+    shape = np.asarray(wavefront.shape) if shape is None else np.broadcast_to(shape, (2,))
+    prop_shape = np.asarray(shape) if prop_shape is None else np.broadcast_to(prop_shape, (2,))
     shape_out = shape * oversample
     prop_shape_out = prop_shape * oversample
 
