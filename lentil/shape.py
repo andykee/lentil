@@ -75,31 +75,37 @@ def hexagon(shape, radius, shift=(0, 0), rotate=False, antialias=True):
     return mask
 
 
-def slit(shape, width, length=None):
-    """Draw a rectangular slit
+def rectangle(shape, width, height, shift=(0,0), antialias=True):
+    """Draw a rectangle
 
     Parameters
     ----------
     shape : array_like
         Size of output in pixels (nrows, ncols)
     width : float
-        Slit width in pixels
-    length : float, optional
-        Slit length in pixels. If not specified, the slit spans
-        the entire column shape (default).
-
+        Width of rectangle in pixels
+    height : float
+        Height of rectangle in pixels
+    shift : tuple of floats, optional
+        How far to shift center in (rows, cols). Default is (0, 0).
+    antialias : bool, optional
+        If True (default), the shape edges are antialiased.
+        
     Returns
     -------
     ndarray
-
+    
     """
-    rr, cc = lentil.helper.mesh(shape)
-    slit = np.ones(shape)
+    shape = np.broadcast_to(shape, (2,))
+    rr, cc = lentil.helper.mesh(shape, shift)
+    rect = np.ones(shape)
 
-    length = shape[1] if length is None else length
-    width_clip = np.clip(0.5 + (width/2) - np.abs(rr), 0, 1)
-    length_clip = np.clip(0.5 + (length/2) - np.abs(cc), 0, 1)
+    width_clip = np.clip(0.5 + (width/2) - np.abs(cc), 0, 1)
+    height_clip = np.clip(0.5 + (height/2) - np.abs(rr), 0, 1)
 
-    slit = np.minimum(np.minimum(slit, width_clip), length_clip)
+    rect = np.minimum(np.minimum(rect, width_clip), height_clip)
 
-    return slit
+    if not antialias:
+        rect[rect > 0] = 1
+
+    return rect
