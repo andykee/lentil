@@ -20,6 +20,7 @@ The User Guide provides documentation for all of Lentil's features and capabilit
     :maxdepth: 1
 
     fundamentals/coordinates
+    fundamentals/apertures
     fundamentals/planes
     fundamentals/wavefront_error
     fundamentals/wavefront
