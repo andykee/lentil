@@ -75,7 +75,7 @@ def hexagon(shape, radius, shift=(0, 0), rotate=False, antialias=True):
     return mask
 
 
-def rectangle(shape, width, height, shift=(0,0), antialias=True):
+def rectangle(shape, width, height, shift=(0,0), angle=0, antialias=True):
     """Draw a rectangle
 
     Parameters
@@ -88,6 +88,9 @@ def rectangle(shape, width, height, shift=(0,0), antialias=True):
         Height of rectangle in pixels
     shift : tuple of floats, optional
         How far to shift center in (rows, cols). Default is (0, 0).
+    angle : float, optional
+        Rotation of rectangle in degrees counterclockwise from horizontal.
+        Default is 0.
     antialias : bool, optional
         If True (default), the shape edges are antialiased.
         
@@ -97,7 +100,7 @@ def rectangle(shape, width, height, shift=(0,0), antialias=True):
     
     """
     shape = np.broadcast_to(shape, (2,))
-    rr, cc = lentil.helper.mesh(shape, shift)
+    rr, cc = lentil.helper.mesh(shape, shift, angle)
     rect = np.ones(shape)
 
     width_clip = np.clip(0.5 + (width/2) - np.abs(cc), 0, 1)
@@ -109,3 +112,34 @@ def rectangle(shape, width, height, shift=(0,0), antialias=True):
         rect[rect > 0] = 1
 
     return rect
+
+
+def spider(shape, width, angle=0, shift=(0,0), antialias=True):
+    """Draw a spider
+
+    Parameters
+    ----------
+    shape : array_like
+        Size of output in pixels (nrows, ncols)
+    width : float
+        Width of rectangle in pixels
+    angle : float, optional
+        Rotation of spider in degrees counterclockwise from horizontal.
+        Default is 0.
+    shift : tuple of floats, optional
+        How far to shift center in (rows, cols). Default is (0, 0).
+    antialias : bool, optional
+        If True (default), the spider edges are antialiased.
+    
+    Returns
+    -------
+    ndarray
+
+    """
+    shape = np.broadcast_to(shape, (2,))
+    len = np.sqrt(2) * np.max(shape)/2  # max length when angle is a multiple of 45 deg
+    shift_dist = len / 2
+    shift_row = -shift_dist * np.sin(np.deg2rad(angle))
+    shift_col = shift_dist * np.cos(np.deg2rad(angle))
+    shift = (shift[0] + shift_row, shift[1] + shift_col)
+    return 1 - lentil.rectangle(shape, len, width, shift, angle, antialias)

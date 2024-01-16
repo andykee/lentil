@@ -12,6 +12,7 @@ Shapes
     lentil.circle
     lentil.hexagon
     lentil.rectangle
+    lentil.spider
 
 Array manipulation
 ------------------

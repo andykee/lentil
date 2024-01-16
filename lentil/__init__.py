@@ -45,7 +45,8 @@ from lentil.segmented import hex_segments
 from lentil.shape import (
     circle,
 	hexagon,
-	rectangle
+	rectangle,
+    spider
 )
 
 from lentil import util
