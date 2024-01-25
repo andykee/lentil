@@ -18,11 +18,7 @@ End-to-end simulations
         :link-type: doc
         :margin: 2 2 0 0
 
-<<<<<<< HEAD
         .. image:: /examples/_thumbnails/simple_diffraction.png
-=======
-        .. image:: /_static/img/psf.png
->>>>>>> 0dbad6d (Update examples structure)
             :width: 175px
             :align: center
 
@@ -31,29 +27,21 @@ End-to-end simulations
     .. grid-item-card::
         :margin: 2 2 0 0
 
-<<<<<<< HEAD
         .. image:: /examples/_thumbnails/broadband_diffraction.png
             :width: 175px
             :align: center
 
-=======
->>>>>>> 0dbad6d (Update examples structure)
         Broadband diffraction simulation
     
     .. grid-item-card::
         :margin: 2 2 0 0
 
-<<<<<<< HEAD
         .. image:: /examples/_thumbnails/segmented_diffraction.png
             :width: 175px
             :align: center
 
         Segmented aperture diffraction simulation
 
-=======
-        Segmented aperture diffraction simulation
-
->>>>>>> 0dbad6d (Update examples structure)
     .. grid-item-card::
         :margin: 2 2 0 0
 
@@ -68,6 +56,11 @@ End-to-end simulations
         :margin: 2 2 0 0
 
         Including a detector model
+
+    .. grid-item-card::
+        :margin: 2 2 0 0
+
+        Image simulation
 
 
 .. toctree::
@@ -119,11 +112,7 @@ Advanced usage
         :link-type: doc
         :margin: 2 2 0 0
 
-<<<<<<< HEAD
         .. image:: /examples/_thumbnails/matlab.png
-=======
-        .. image:: /_static/img/psf.png
->>>>>>> 0dbad6d (Update examples structure)
             :width: 175px
             :align: center
 

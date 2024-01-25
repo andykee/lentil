@@ -4,5 +4,5 @@
 License
 *******
 
-.. include:: ../../../LICENSE.rst
-   :literal:
+.. literalinclude:: ../../../LICENSE.rst
+   :language: none
