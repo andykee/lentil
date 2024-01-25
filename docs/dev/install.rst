@@ -7,13 +7,14 @@ Install Lentil for development
 
 Forking the Lentil repo
 =======================
-Matplotlib is hosted at `andykee/lentil.git <https://github.com/andykee/lentil>`_. 
+Lentil is hosted at `andykee/lentil.git <https://github.com/andykee/lentil>`_. 
 If you plan on solving issues or submitting pull requests to the main Lentil 
 repository, you should first fork this repository by visiting 
 `andykee/lentil.git <https://github.com/andykee/lentil>`_ and clicking on the 
 ``Fork``  button on the top right of the page. See the 
-`GitHub documentation <https://docs.github.com/en/get-started/quickstart/fork-a-repo>`_
-for more details.
+`GitHub documentation 
+<https://docs.github.com/en/get-started/quickstart/fork-a-repo>`_ for more 
+details.
 
 Installing from source
 ======================

@@ -28,4 +28,4 @@ Upload the release
 
 .. note::
 
-    Only core-team members are able to publish new releases to PyPi.
+    Only core dev team members are able to publish new releases to PyPi.

@@ -71,7 +71,7 @@ containing the JWST NITCam static wavefront error:
 
     >>> import numpy as np
     >>> import lentil
-    >>> opd = np.load('path/to/nircam_wfe.npy')
+    >>> opd = np.load('nircam_wfe.npy')
     >>> pupil = lentil.Pupil(focal_length=119.77, pixelscale=6.6035/1024, opd=opd)
 
 .. image:: /_static/img/nircam.png

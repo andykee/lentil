@@ -13,8 +13,8 @@ Aperture or mask shapes can be loaded from a file, created manually, or
 constructed using one or more of Lentil's functions for drawing common 
 shapes in an array.
 
-Core shapes
-===========
+Basic shapes
+============
 Lentil provides a number of functions for drawing basic shapes in arrays.
 Multiple arrays can be combined to create more complicated shapes.
 

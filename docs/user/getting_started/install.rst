@@ -5,15 +5,15 @@ Installation
 ************
 
 If you are new to Python and/or do not have familiarity with `Python virtual
-environments <https://docs.python.org/3/tutorial/venv.html>`_, then we recommend
-starting by installing the `Anaconda Distribution
-<https://www.anaconda.com/download/>`_. This works on all platforms (linux,
-Mac, Windows) and installs a full-featured scientific Python in a user directory
-without requiring root permissions.
+environments <https://docs.python.org/3/tutorial/venv.html>`_, then we 
+recommend starting by installing the `Anaconda Distribution
+<https://www.anaconda.com/download/>`_. This works on all platforms (Linux,
+MacOS, Windows) and installs a full-featured scientific Python in a user 
+directory without requiring root permissions.
 
 
-Installing ``lentil``
-=====================
+Installing Lentil
+=================
 To install using **pip**:
 
 .. code-block:: bash
