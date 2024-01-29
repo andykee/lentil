@@ -3,6 +3,10 @@
 ************
 Introduction
 ************
+
+.. plot:: user/fundamentals/plots/intro_banner.py
+    :scale: 48
+
 Lentil is a Python library for modeling the imaging chain of an optical 
 system. It was originally developed at NASA's Jet Propulsion Lab by the 
 Wavefront Sensing and Control group (383E) to provide an easy to use framework 
@@ -15,6 +19,3 @@ fidelity models of ground or space telescopes.
 
 Lentil uses one or more |Plane| objects to represent an optical system. A
 |Wavefront| object 
-
-
-PUT A FLOWCHART HERE WITH PICS
