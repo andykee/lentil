@@ -25,6 +25,8 @@ End-to-end simulations
         Simple diffraction simulation
 
     .. grid-item-card::
+        :link: broadband
+        :link-type: doc
         :margin: 2 2 0 0
 
         .. image:: /examples/_thumbnails/broadband_diffraction.png
@@ -34,6 +36,8 @@ End-to-end simulations
         Broadband diffraction simulation
     
     .. grid-item-card::
+        :link: segmented
+        :link-type: doc
         :margin: 2 2 0 0
 
         .. image:: /examples/_thumbnails/segmented_diffraction.png
@@ -43,6 +47,8 @@ End-to-end simulations
         Segmented aperture diffraction simulation
 
     .. grid-item-card::
+        :link: tilt
+        :link-type: doc
         :margin: 2 2 0 0
 
         Diffraction simulation with large tilt
@@ -68,6 +74,9 @@ End-to-end simulations
     :hidden:
 
     simple
+    broadband
+    segmented
+    tilt
 
 
 .. _examples.useful_patterns:
