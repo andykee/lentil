@@ -23,7 +23,6 @@ from lentil.plane import (
 	Plane,
 	Pupil,
 	Image,
-	Detector,
     Tilt,
 	DispersiveTilt,
 	Grism,

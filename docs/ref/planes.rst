@@ -10,7 +10,6 @@ Plane objects
     lentil.Plane
     lentil.Pupil
     lentil.Image
-    lentil.Detector
 
 Plane transformations
 ---------------------

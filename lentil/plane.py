@@ -678,30 +678,6 @@ class Image(Plane):
         return wavefront
 
 
-class Detector(Image):
-    """Class for representing an image plane that returns intensity.
-
-    The Detector should only be used as the last plane in a propagation. If
-    individual wavelength results or access to the complex field is required, an
-    :class:`Image` plane should be used instead.
-
-    Parameters
-    ----------
-    pixelscale : float, optional
-        Pixel size in meters. Pixels are assumed to be square. Default is None.
-    shape : tuple of ints, optional
-        Number of pixels as (rows, cols). If a single value is provided,
-        :class:`Image` is assumed to be square with nrows = ncols = shape.
-        Default is None.
-
-    See Also
-    --------
-    Image
-
-    """
-    pass
-
-
 class TiltInterface(Plane):
     """Utility class for holding common lofic shared by classes that need to
     implement the tilt interface.

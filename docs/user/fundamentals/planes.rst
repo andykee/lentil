@@ -22,8 +22,6 @@ optical models:
   detailed discussion of pupil planes is available in [1]_.
 * The |Image| plane provides a location where the image formed by an
   optical system may be manipulated or viewed.
-* The |Detector| plane is conceptually identical to the Image plane but
-  is optimized to very efficiently compute intensity from a complex field.
 
 In addition, several "utility" planes are provided. These planes do not 
 represent physical components of an optical system, but are used to implement 
@@ -113,7 +111,7 @@ ptype              Planes with this type
 ================== ======================================================
 :class:`none`      :class:`~lentil.Plane`
 :class:`pupil`     :class:`~lentil.Pupil`
-:class:`image`     :class:`~lentil.Image`, :class:`~lentil.Detector`
+:class:`image`     :class:`~lentil.Image`
 :class:`tilt`      :class:`~lentil.Tilt`, :class:`~lentil.DispersiveTilt`
 :class:`transform` :class:`~lentil.Rotate`, :class:`~lentil.Flip`
 ================== ======================================================
@@ -183,37 +181,6 @@ parameters although any of the following can be specified:
   amplitude transmission through the image plane.
 * :attr:`~lentil.Image.opd` - Defines the optical path difference that a 
   wavefront experiences when propagating through the image plane.
-
-Detector
-========
-Lentil's |Detector| plane is used to accumulate the intensity in an image 
-plane. Intensity is computed as the absolute value of the complex amplitude in 
-the image plane squared:
-
-.. math::
-
-    \mathbf{I} = \left|\mathbf{W}\right|^2
-
-Similar to the |Image| plane, a detector plane does not have any required 
-parameters  although any of the following can be specified:
-
-* :attr:`~lentil.Detector.pixelscale` - Defines the physical sampling of each 
-  pixel in the image plane. If not provided, the sampling will be 
-  automatically selected to ensure the results are at least Nyquist sampled.
-* :attr:`~lentil.Detector.shape` - Defines the shape of the image plane. If 
-  not provided, the image plane will grow as necessary to capture all data.
-
-While an |Image| plane can be used to compute intensity, the |Detector| plane 
-implements an algorithm that greatly reduces the memory footprint and 
-increases the speed of this operation. Details of this algorithm are available 
-in the :ref:`technical-notes`.
-
-.. note::
-
-  An |Image| plane is interchangeable with a |Detector| plane, but the 
-  converse is not true. This is because the calculation of the real-valued 
-  intensity discards the complex field information. Because of this, 
-  |Detector| planes can only be used as the final plane in a Lentil model.
 
 .. _user.planes.tilt:
 
