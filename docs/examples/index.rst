@@ -91,10 +91,22 @@ Focal plane modeling
             Including a detector model
 
     .. grid-item-card::
-            :margin: 2 2 0 0
+        :link: bayer
+        :link-type: doc
+        :margin: 2 2 0 0
 
-            Modeling a Bayer detector
+        .. image:: /examples/_thumbnails/bayer.png
+            :width: 175px
+            :align: center
 
+        Modeling a Bayer detector
+
+
+.. toctree::
+    :caption: Focal plane modeling
+    :hidden:
+
+    bayer
 
 .. _examples.advanced:
 
