@@ -15,6 +15,6 @@ for wl in np.arange(450e-9, 650e-9, 5e-9):
     psf += w2.intensity
 
 fig, ax = plt.subplots()
-ax.imshow(psf, norm='log')
+ax.imshow(psf, norm='log', cmap='inferno')
 ax.axis('off')
 fig.savefig('broadband_diffraction.png', dpi=150, bbox_inches='tight')

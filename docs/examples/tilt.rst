@@ -14,6 +14,9 @@ Diffraction simulation with large tilt
     import matplotlib.pyplot as plt
 
     amp = lentil.circle((256,256), 120)
+    amp -= lentil.circle(shape=(256,256), radius=40)
+    for angle in (0, 90, 180, 270):
+        amp *= lentil.spider((256,256), 2, angle)
     opd = lentil.zernike(amp, 2)*15e-6
 
     p = lentil.Pupil(amplitude=amp, opd=opd, focal_length=10, pixelscale=1/240)

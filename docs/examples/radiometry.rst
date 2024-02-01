@@ -1,4 +1,4 @@
-Performing Radiometrically Correct Propagations
+Performing radiometrically correct propagations
 ===============================================
 
 We'll define a simple pupil, detector, and source object that returns at-aperture

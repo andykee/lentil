@@ -304,8 +304,7 @@ architecture for these types of optical elements, Lentil does not provide a
 concrete implementation. Instead, a custom subclass of either |Plane| or 
 |Pupil| should be defined. The exact implementation details will vary by 
 application, but a simple example of a tip-tilt mirror where the plane's OPD 
-is computed dynamically based on the state `x` is provided below. Additional 
-examples can be found in Model Patterns under :ref:`examples.useful_patterns`.
+is computed dynamically based on the state `x` is provided below. 
 
 .. code-block:: python3
 

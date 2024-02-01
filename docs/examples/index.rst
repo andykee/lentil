@@ -8,8 +8,8 @@ This page contains examples and useful model design patterns.
 
 .. _examples.end_to_end:
 
-End-to-end simulations
-======================
+Numerical diffraction propagation
+=================================
 
 .. grid:: 3
 
@@ -51,62 +51,49 @@ End-to-end simulations
         :link-type: doc
         :margin: 2 2 0 0
 
+        .. image:: /examples/_thumbnails/tilt.png
+            :width: 175px
+            :align: center
+
         Diffraction simulation with large tilt
 
     .. grid-item-card::
+        :link: dispersion
+        :link-type: doc
         :margin: 2 2 0 0
 
-        Radiometrically correct propagation
+        .. image:: /examples/_thumbnails/dispersion.png
+            :width: 175px
+            :align: center
 
-    .. grid-item-card::
-        :margin: 2 2 0 0
-
-        Including a detector model
-
-    .. grid-item-card::
-        :margin: 2 2 0 0
-
-        Image simulation
+        Modeling dispersion
 
 
 .. toctree::
-    :caption: End-to-end simulations
+    :caption: Numerical diffraction propagation
     :hidden:
 
     simple
     broadband
     segmented
     tilt
+    dispersion
+    
 
+Focal plane modeling
+====================
 
-.. _examples.useful_patterns:
+.. grid:: 3
 
-Useful patterns
-===============
+    .. grid-item-card::
+            :margin: 2 2 0 0
 
-.. toctree::
-    :caption: Useful patterns
-    :hidden:
+            Including a detector model
 
-    planes/filter_wheel
-    planes/rb_element
-    planes/translation_stage
+    .. grid-item-card::
+            :margin: 2 2 0 0
 
-
-.. _examples.radiometry:
-
-Radiometry
-==========
-
-.. toctree::
-    :caption: Radiometry
-    :hidden:
-
-    radiometry/propagation
-    radiometry/source_coupling
-    radiometry/self_emission
-    radiometry/complex_sources
-    radiometry/source_defocus
+            Modeling a Bayer detector
 
 
 .. _examples.advanced:
@@ -116,6 +103,22 @@ Advanced usage
 
 .. grid:: 3
 
+    .. grid-item-card::
+        :margin: 2 2 0 0
+
+        Image simulation
+
+    .. grid-item-card::  
+        :link: radiometry
+        :link-type: doc
+        :margin: 2 2 0 0
+
+        .. image:: /examples/_thumbnails/matlab.png
+            :width: 175px
+            :align: center
+
+        Radiometrically correct propagations
+    
     .. grid-item-card::  
         :link: matlab_interface
         :link-type: doc
@@ -132,6 +135,7 @@ Advanced usage
     :caption: Advanced usage
     :hidden:
 
+    radiometry
     matlab_interface
 
     
