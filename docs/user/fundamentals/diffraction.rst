@@ -4,127 +4,136 @@
 Numerical diffraction propagation
 *********************************
 
-Lentil uses Fourier transform-based algorithms to numerically model the propagation of an
-electromagnetic field through an optical system. The electromagnetic field is represented
-by a |Wavefront| object which stores the complex amplitude of the field at a discretely
-sampled grid of points. The optical system is represented by a set of user-defined |Plane|
-objects which the wavefront interacts with as it propagates through the system.
+Lentil uses Fourier transform-based algorithms to numerically model the 
+propagation of an electromagnetic field through an optical system. The 
+electromagnetic field is represented by a |Wavefront| object which stores the 
+complex amplitude of the field at a discretely sampled grid of points. The 
+optical system is represented by a set of |Plane| objects which the wavefront 
+interacts with as it propagates through the system.
 
 .. note::
 
-    This section of the User Guide assumes an undergraduate-level understanding of
-    physical and Fourier optics. In-depth mathematical background and an extensive
-    discussion of the validity of each diffraction approximation is available in [1]_.
+    This section of the User Guide assumes some understanding of physical and
+    Fourier optics. In-depth mathematical background and an extensive 
+    discussion of the validity of each diffraction approximation is available 
+    in [1]_.
 
 
 Numerical diffraction propagation
 =================================
-Lentil numerically models diffraction by propagating a |Wavefront| object through
-any number of |Plane| objects representing an optical system. This propagation always
-follows the same basic flow:
+Lentil numerically models diffraction by propagating a |Wavefront| object 
+through any number of |Plane| objects representing an optical system. This 
+propagation always follows the same basic flow:
 
-1. **Create a new wavefront** - A |Wavefront| represents a monochromatic, discretely
-   sampled complex field that may propagate through space. By default, when a new
-   |Wavefront| is constructed it represents an infinite plane wave (``1+0j``). Note
-   that "infinite" in this case really just means that the wavefront field is
-   `broadcastable <https://numpy.org/doc/stable/user/basics.broadcasting.html>`_ to
-   any shape necessary.
+Create a new wavefront
+----------------------
+A |Wavefront| represents a monochromatic, discretely sampled complex field 
+that may propagate through space. By default, when a new |Wavefront| is 
+constructed it represents an infinite plane wave (complex field = ``1+0j``).
+Note that "infinite" in this case really just means that the wavefront field
+is `broadcastable 
+<https://numpy.org/doc/stable/user/basics.broadcasting.html>`_ to any shape 
+necessary.
 
-    .. code-block:: pycon
+.. code-block:: pycon
 
-        >>> w1 = lentil.Wavefront(wavelength=650e-9)
-        >>> w1.field
-        1+0j
-        >>> w1.focal_length
-        inf
+    >>> w1 = lentil.Wavefront(wavelength=650e-9)
+    >>> w1.field
+    1+0j
+    >>> w1.focal_length
+    inf
 
-2. **Propagate the wavefront through the first plane in the optical system** - the
-   planes that describe an optical system typically modify a propagating wavefront
-   in some way. By multiplying a |Wavefront| and a |Plane| together, a new
-   |Wavefront| is returned representing the the complex field after propagating
-   through the plane:
+Propagate the wavefront through a plane
+---------------------------------------
+The planes that describe an optical system typically modify a propagating
+wavefront in some way. By multiplying a |Wavefront| and a |Plane| together, a 
+new |Wavefront| is returned representing the the complex field after 
+propagating through the plane:
 
-    .. code-block:: pycon
+.. code-block:: pycon
 
-        >>> pupil = lentil.Pupil(amplitude=lentil.circle((256, 256), 120),
-        ...                      pixelscale=1/240, focal_length=10)
-        >>> w2 = w1 * pupil
+    >>> pupil = lentil.Pupil(amplitude=lentil.circle((256, 256), 120),
+    ...                      pixelscale=1/240, focal_length=10)
+    >>> w2 = w1 * pupil
 
-    Note the complex field of ``w2`` now clearly shows the effect of propagating through the
-    circular aperture of ``pupil``:
+Note the complex field of ``w2`` now clearly shows the effect of propagating through the
+circular aperture of ``pupil``:
 
-    .. code-block:: pycon
+.. code-block:: pycon
 
-        >>> plt.imshow(np.abs(w2.field))
+    >>> plt.imshow(np.abs(w2.field))
 
-    .. plot::
-        :context: reset
-        :scale: 50
+.. plot::
+    :context: reset
+    :scale: 50
 
-        pupil = lentil.Pupil(amplitude=lentil.circle((256, 256), 120),
-                             pixelscale=1/240, focal_length=10)
-        w1 = lentil.Wavefront(650e-9)
-        w2 = w1 * pupil
-        plt.imshow(np.abs(w2.field))
+    pupil = lentil.Pupil(amplitude=lentil.circle((256, 256), 120),
+                         pixelscale=1/240, focal_length=10)
+    w1 = lentil.Wavefront(650e-9)
+    w2 = w1 * pupil
+    plt.imshow(np.abs(w2.field), cmap='gray')
 
-    Additionally, because ``w2`` was propagated through a |Pupil| plane, it has inherited the
-    pupil's focal length:
+Additionally, because ``w2`` was propagated through a |Pupil| plane, it has inherited the
+pupil's focal length:
 
-    .. code-block:: pycon
+.. code-block:: pycon
 
-        >>> w2.focal_length
-        10
+    >>> w2.focal_length
+    10
 
-    .. note::
+.. note::
 
-        Additional details on the plane-wavefront interaction can be found in
-        :ref:`user.fundamentals.wavefront.plane_wavefront`.
+    Additional details on the plane-wavefront interaction can be found in
+    :ref:`user.fundamentals.wavefront.plane_wavefront`.
 
-3. **Propagate the wavefront to the next plane in the optical system** - the |Wavefront|
-   object provides a number of methods to propagate between planes. The appropriate method
-   should be chosen based on the plane types the wavefront is propagating between.
+Propagate the wavefront to the next plane
+-----------------------------------------
+The table below describes what propagation method (or general transformation) 
+should be performed based on the wavefront and plane ``ptype``:
 
-   ======= ======= =========================================
-   From    To      Method
-   ======= ======= =========================================
-   |Pupil| |Image| :func:`~lentil.Wavefront.propagate_image`
-   |Image| |Pupil| :func:`~lentil.Wavefront.propagate_pupil`
-   |Pupil| |Pupil| N/A
-   |Image| |Image| N/A
-   ======= ======= =========================================
+=================== =============== ==============================================================
+Wavefront ``ptype`` Plane ``ptype`` Method
+=================== =============== ==============================================================
+``pupil``           ``image``       :func:`~lentil.propagate_dft` or :func:`~lentil.propagate_fft`
+``image``           ``pupil``       :func:`~lentil.propagate_dft` or :func:`~lentil.propagate_fft`
+``pupil``           ``pupil``       Flip, resample, or none
+``image``           ``image``       Flip, resample, or none
+``none``            ``none``        Far field propagation not supported
+=================== =============== ==============================================================
 
-   Propagations are defined by the following attributes:
+.. note::
 
-   * :attr:`pixelscale` - the spatial sampling of the output plane
-   * :attr:`npix` - the shape of the output plane
-   * :attr:`npix_prop` - the shape of the propagation plane. See
-     :ref:`user.diffraction.npix` for additional details.
-   * :attr:`oversample` - the number of times to oversample the output plane.
-     See the section on :ref:`user.diffraction.sampling` for more
-     details.
+    When propagating between like planes (pupil to pupil or image to image),
+    no additional diffraction propagation step is required.
 
+Numerical diffraction propagations are defined by the following attributes:
 
-   For example, to propagate a |Wavefront| from a |Pupil| to an |Image| plane:
+* :attr:`pixelscale` - the spatial sampling of the output plane
+* :attr:`shape` - the shape of the output plane
+* :attr:`prop_shape` - the shape of the propagation plane. See
+  :ref:`user.diffraction.shape` for additional details.
+* :attr:`oversample` - the number of times to oversample the output plane.
+  See the section on :ref:`sampling considerations 
+  <user.diffraction.sampling>` for more details.
 
-    .. plot::
-        :context: close-figs
-        :include-source:
-        :scale: 50
+For example, to propagate a |Wavefront| from a |Pupil| to an |Image| plane:
 
-        >>> w2 = lentil.propagate_dft(w2, pixelscale=5e-6, shape=(64,64), oversample=5)
-        >>> plt.imshow(w2.intensity, norm='log')
+.. plot::
+    :context: close-figs
+    :include-source:
+    :scale: 50
 
-    .. note::
+    >>> w2 = lentil.propagate_dft(w2, pixelscale=5e-6, shape=(64,64), oversample=5)
+    >>> plt.imshow(w2.intensity, norm='log', cmap='inferno', vmin=1e-4)
 
-        When propagating between like planes (pupil to pupil or image to image),
-        no additional propagation step is required.
-
-4. **Repeat steps 2 and 3 until the propagation is complete** - if multiple planes
-   are required to model the desired optical system, steps 2 and 3 should be
-   repeated until the |Wavefront| has been propagated through all of the planes.
+Propagate through remainder of model
+------------------------------------
+If multiple planes are required to model the desired optical system, the steps
+described above should be repeated until the |Wavefront| has been propagated 
+through all of the planes.
 
 Broadband (multi-wavelength) propagations
------------------------------------------
+=========================================
 The steps outlined above propagate a single monochromatic |Wavefront| through an
 optical system. The example below performs the same operation for multiple
 different wavelengths and accumulates the resulting image plane intensity:
@@ -146,10 +155,10 @@ different wavelengths and accumulates the resulting image plane intensity:
         w = lentil.propagate_dft(w, pixelscale=5e-6, shape=(64,64), oversample=5)
         img += w.intensity
 
-    plt.imshow(img, norm='log')
+    plt.imshow(img, norm='log', cmap='inferno', vmin=1e-4)
 
 Keep in mind the output ``img`` array must be sized to accommodate the oversampled
-wavefront intensity given by ``npix`` * ``oversample``.
+wavefront intensity given by ``shape`` * ``oversample``.
 
 .. note::
 
@@ -166,19 +175,77 @@ wavefront intensity given by ``npix`` * ``oversample``.
         for wl in wavelengths:
             w = lentil.Wavefront(wl)
             w = w * pupil
-            w = lentil.propagate_dft(w, pixelscale=5e-6, shape=(64,64), oversample=5)
+            w = lentil.propagate_dft(w, pixelscale=5e-6, shape=(64,64), 
+                                     oversample=5)
             img = w.insert(img)
 
-.. _user.diffraction.npix:
 
-``npix`` vs ``npix_prop``
--------------------------
+.. _user.diffraction.sampling:
+
+Sampling considerations
+=======================
+The accuracy of a numerical diffraction simulation depends on adequately 
+sampling the input and output planes. The sections below describe how to 
+select appropriate sampling for these planes and how to configure the
+propagations to avoid the introduction of numerical artifacts.
+
+Ensuring Nyquist-sampled output
+-------------------------------
+The relationship between spatial sampling in the input plane and output plane 
+is defined by :math:`Q` and should be at least 2 in numerical simulations to 
+ensure the output plane is Nyquist-sampled for intensity:
+
+.. math::
+
+    Q = \frac{\lambda \ F/\#}{du}
+
+where :math:`lambda` is propagation wavelength, :math:`F/\#` is focal length 
+divided by diameter, and :math:`du` is output plane spatial sampling. 
+High-frequency ailiasing is clearly apparent in propagations where 
+:math:`Q < 1.5` and still visibile to those with a keen eye when 
+:math:`1.5 < Q < 2`:
+
+.. plot:: user/fundamentals/plots/dft_discrete_Q_sweep.py
+    :scale: 50
+
+In cases where the optical system :math:`Q` is less than 2, the simulation 
+fidelity should be increased by oversampling to avoid ailiasing. For a given 
+imaging system, the system's :math:`F/\#`, output plane sampling, and 
+propagation wavelength(s) will be fixed values. As a result, :math:`Q` can 
+only be increased in a discrete propagation by introducing an ``oversample`` 
+factor that effectively decreases the output plane sampling :math:`du`. In 
+order to view the results of a propagation at native system sampling, the 
+oversampled output plane must be resampled or rebinned.
+
+.. math::
+
+    Q_{\mbox{os}} = \frac{\lambda \ F/\# \ \texttt{oversample}}{du}
+
+.. note::
+
+    ``oversample`` should always be chosen to ensure :math:`Q > 2` for accurate
+    propagation results.
+
+Avoiding periodic wraparound
+----------------------------
+
+.. math::
+
+    \texttt{npix}_{\mbox{DFT}} = \frac{1}{2 \ \alpha \ \ \texttt{oversample}}
+
+.. plot:: user/fundamentals/plots/dft_q_sweep.py
+    :scale: 50
+
+.. _user.diffraction.shape:
+
+``shape`` vs ``prop_shape``
+===========================
 Lentil's propagation methods have two arguments for controlling the shape of
-the propagation output: ``npix`` and ``npix_prop``.
+the propagation output: ``shape`` and ``prop_shape``.
 
-``npix`` specifies the shape of the entire output plane while ``npix_prop``
-specifies the shape of the propagation result. If ``npix_prop`` is not
-specified, it defaults to ``npix``. The propagation result is placed in the
+``shape`` specifies the shape of the entire output plane while ``prop_shape``
+specifies the shape of the propagation result. If ``prop_shape`` is not
+specified, it defaults to ``shape``. The propagation result is placed in the
 appropriate location in the (potentially larger) output plane when a |Wavefront|
 :attr:`~lentil.Wavefront.field` or :attr:`~lentil.Wavefront.intensity`
 attribute is accessed.
@@ -187,23 +254,23 @@ attribute is accessed.
     :width: 450px
     :align: center
 
-It can be advantageous to specify ``npix_prop`` < ``npix`` for performance
+It can be advantageous to specify ``prop_shape`` < ``shape`` for performance
 reasons, although care must be taken to ensure needed data is not accidentally
 left out:
 
-.. plot:: user/fundamentals/plots/npix_prop.py
+.. plot:: user/fundamentals/plots/prop_shape.py
     :scale: 50
 
-For most pupil to image plane propagations, setting ``npix_prop`` to 128 or 256
+For most pupil to image plane propagations, setting ``prop_shape`` to 128 or 256
 pixels provides an appropriate balance of performance and propagation plane size.
 
-For image to pupil plane propagations, ``npix_prop`` must be sized to ensure
+For image to pupil plane propagations, ``prop_shape`` must be sized to ensure
 the pupil extent is adequately captured. Because the sampling constraints on
 image to pupil plane propagations are typically looser, it is safest to let
-``npix_prop`` default to the same value as ``npix``.
+``prop_shape`` default to the same value as ``shape``.
 
 Discrete Fourier transform algorithms
--------------------------------------
+=====================================
 Most diffraction modeling tools use the Fast Fourier Transform (FFT) to evaluate the
 discrete Fourier transform (DFT) when propagating between planes. While the FFT provides
 great computational and memory efficiency, high-fidelity optical simulations may require
@@ -225,41 +292,19 @@ sampling requirements.
 .. _user.diffraction.sign:
 
 Sign of the DFT complex exponential
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------
 Lentil adopts the convention that phasors rotate in the counter-clockwise
 direction, meaning their time dependence has the form :math:`\exp(-i\omega t)`.
 While this is an arbitrary choice, it matches the choice made in most classic
 optics texts. The implications of this choice are as follows:
 
-* Forward propagations use :func:`lentil.fourier.dft2`, `Numpy's fft2 <https://numpy.org/doc/stable/reference/routines.fft.html#implementation-details>`_,
-  or `FFTW's FFTW_FORWARD <http://fftw.org/fftw3_doc/The-1d-Discrete-Fourier-Transform-_0028DFT_0029.html>`_
-* Backward propagations use :func:`lentil.fourier.idft2`, `Numpy's ifft2 <https://numpy.org/doc/stable/reference/routines.fft.html#implementation-details>`_,
-  or `FFTW's FFTW_BACKWARD <http://fftw.org/fftw3_doc/The-1d-Discrete-Fourier-Transform-_0028DFT_0029.html>`_
+* Forward propagations use the DFT or FFT
+* Backward propagations use IDFT or IFFT. Note that Lentil does not currently
+  support propagating backward through an optical system.
 * A converging spherical wave is represented by the expression
   :math:`\exp\left[-i\frac{k}{2z} (x^2 + y^2)\right]`
 * A diverging spherical wave is represented by the expression
   :math:`\exp\left[i\frac{k}{2z} (x^2 + y^2)\right]`
-
-
-.. _user.diffraction.sampling:
-
-Sampling considerations
-=======================
-
-.. .. plot:: _img/python/dft_discrete_Q_sweep.py
-..     :scale: 50
-
-.. .. plot:: _img/python/dft_q_sweep.py
-..     :scale: 50
-
-
-.. .. image:: /_static/img/propagate_fourier_period.png
-..     :width: 550px
-..     :align: center
-
-
-
-
 
 
 .. [1] Goodman, *Introduction to Fourier Optics*.

@@ -11,20 +11,12 @@ Calling Python libraries from MATLAB is as simple as configuring MATLAB to use t
 appropriate Python implementation and prepending the Python command with ``py.``. Before
 using Lentil in MATLAB, be sure that you you have
 :ref:`configured MATLAB to use the correct version of Python installed on your system
-<user.matlab.config>`
+<user.matlab.config>`. 
 
-.. _numpy-matlab:
+A MATLAB helper function is available :download:`here </_static/matlab/check_pyenv.m>`
+for verifying compatibility between MATLAB and Python versions.
 
-Working with NumPy Arrays in MATLAB
------------------------------------
-Many Lentil methods return NumPy arrays. Unfortunately, MATLAB does not fully
-understand this datatype. The two MATLAB functions provided below can be used to easily
-convert back and forth between NumPy arrays and MATLAB matrices:
-
-* `mat2ndarray <../_static/matlab/mat2ndarray.m>`_
-* `ndarray2mat <../_static/matlab/ndarray2mat.m>`_
-
-It's also possible to read and write `.npy` files in MATLAB with `npy-matlab
+It's possible to read and write `.npy` files in MATLAB using `npy-matlab
 <https://github.com/kwikteam/npy-matlab>`_
 
 Interacting directly with Lentil from MATLAB
@@ -36,10 +28,11 @@ create a simple :func:`~util.circle` mask with:
 
     >> mask = py.lentil.util.circle([int16(256),int16(256)],int16(128));
 
-Note that MATLAB `automatically does type conversion <https://www.mathworks.com/help/matlab/matlab_external/passing-data-to-python.html>`_ when MATLAB data is passed to Python but because MATLAB's default numeric type is double-precision floating point, we need to explicitly convert the ``shape`` and ``radius`` parameters to ints before passing them to Python.
-
-This approach is fine for debugging and some light usage, but more robust and
-user-friendly solutions require developing a MATLAB interface.
+Note that MATLAB `automatically does type conversion 
+<https://www.mathworks.com/help/matlab/matlab_external/passing-data-to-python.html>`_ 
+when MATLAB data is passed to Python but because MATLAB's default numeric type is 
+double-precision floating point, the ``shape`` and ``radius`` parameters must
+be explicitly cast to ints before passing them to Python.
 
 Developing a MATLAB interface to a Lentil model
 -----------------------------------------------
@@ -56,19 +49,12 @@ directory alongside the ``.m`` interfaces. This simplifies the end user experien
 because it does not require any additional path modification or management to use the
 model.
 
-For an example, see: :ref:`examples.matlab_interface`.
+A sample implementation is available :ref:`here<examples.matlab_interface>`.
 
 Finally, a few links that may be helpful when developing a MATLAB interface:
 
 * `Calling Python functions from MATLAB <https://www.mathworks.com/help/matlab/matlab_external/python-function-arguments.html>`_
 * `Passing a Python function kwargs from MATLAB <https://www.mathworks.com/help/matlab/ref/pyargs.html>`_
-
-.. warning::
-
-    It is not fully understood what happens when you wrap a call to a Python object in a
-    ``parfor`` loop in MATLAB. Buyer beware.
-
-
 
 .. _user.matlab.config:
 

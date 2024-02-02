@@ -75,7 +75,7 @@ Create a new Plane with
     :scale: 50
 
     >>> p = lentil.Plane(amplitude=lentil.circle((256,256), 120))
-    >>> plt.imshow(p.amplitude)
+    >>> plt.imshow(p.amplitude, cmap='gray')
 
 Once a Plane is defined, its attributes can be modified at any time:
 
@@ -202,7 +202,7 @@ Given the following |Pupil| plane:
     >>> w = lentil.Wavefront(650e-9)
     >>> w *= pupil
     >>> w = lentil.propagate_dft(w, pixelscale=5e-6, shape=(64,64), oversample=2)
-    >>> plt.imshow(w.intensity)
+    >>> plt.imshow(w.intensity, cmap='inferno')
 
 It is simple to see the effect of introducing a tilted wavefront into the 
 system:
@@ -218,7 +218,7 @@ system:
     >>> w *= pupil
     >>> w *= tilt
     >>> w = lentil.propagate_dft(w, pixelscale=5e-6, shape=(64,64), oversample=2)
-    >>> plt.imshow(w.intensity, origin='lower')
+    >>> plt.imshow(w.intensity, origin='lower', cmap='inferno')
 
 .. note::
 

@@ -94,8 +94,6 @@ including it in a to-level subdirectory:
     │       ├── detector_qe.csv
     │       └── pupil_mask.npy
     ├── matlab/
-    │   ├── mat2ndarray.m
-    │   ├── ndarray2mat.m
     │   └── tiny.m
     ├── docs/
     ├── scripts/
@@ -105,5 +103,3 @@ including it in a to-level subdirectory:
     └── setup.py
 
 
-Note the inclusion of ``mat2ndarray.m`` and ``ndarray2mat`` to handle
-:ref:`data conversion between NumPy and MATLAB<numpy-matlab>`

@@ -19,10 +19,10 @@ w2 = lentil.propagate_dft(w2, pixelscale=5e-6, shape=128, prop_shape=40, oversam
 
 fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(4, 4))
 
-ax1.imshow(w1.intensity, origin='lower')
-ax1.set_title('npix_prop ok')
+ax1.imshow(w1.intensity, cmap='inferno')
+ax1.set_title('prop_shape ok')
 ax1.axis('off')
 
-ax2.imshow(w2.intensity, origin='lower')
-ax2.set_title('npix_prop too small')
+ax2.imshow(w2.intensity, cmap='inferno')
+ax2.set_title('prop_shape too small')
 ax2.axis('off')

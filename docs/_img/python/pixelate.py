@@ -15,9 +15,9 @@ psf = w.intensity
 psf_pixelate = lentil.detector.pixelate(psf, oversample=5)
 
 plt.subplot(121)
-plt.imshow(psf, origin='lower')
+plt.imshow(psf, cmap='inferno')
 plt.title('Oversampled propagation')
 
 plt.subplot(122)
-plt.imshow(psf_pixelate, origin='lower')
+plt.imshow(psf_pixelate, cmap='inferno')
 plt.title('Native detector sampling')

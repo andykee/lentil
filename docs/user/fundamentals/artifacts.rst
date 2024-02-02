@@ -24,8 +24,8 @@ directional blur over some distance (or number of pixels):
     >>> psf_smear = lentil.smear(psf, distance=5e-5,
     ...                          pixelscale=5e-6,
     ...                          oversample=5)
-    >>> plt.subplot(121), plt.imshow(psf, origin='lower')
-    >>> plt.subplot(122), plt.imshow(psf_smear, origin='lower')
+    >>> plt.subplot(121), plt.imshow(psf, cmap='inferno')
+    >>> plt.subplot(122), plt.imshow(psf_smear, cmap='inferno')
 
 .. plot:: _img/python/smear.py
     :scale: 50
@@ -40,8 +40,8 @@ be provided:
     >>> psf = ...  # PSF calculation details omitted
     >>> psf_smear = lentil.smear(psf, distance=10,
     ...                          oversample=5)
-    >>> plt.subplot(121), plt.imshow(psf, origin='lower')
-    >>> plt.subplot(122), plt.imshow(psf_smear, origin='lower')
+    >>> plt.subplot(121), plt.imshow(psf, cmap='inferno')
+    >>> plt.subplot(122), plt.imshow(psf_smear, cmap='inferno')
 
 .. plot:: _img/python/smear.py
     :scale: 50
@@ -56,8 +56,8 @@ is called, but a static direction can optionally be specified as needed:
     >>> psf = ...  # PSF calculation details omitted
     >>> psf_smear = lentil.smear(psf, distance=25,
     ...                          angle=30)
-    >>> plt.subplot(121), plt.imshow(psf, origin='lower')
-    >>> plt.subplot(122), plt.imshow(psf_smear, origin='lower')
+    >>> plt.subplot(121), plt.imshow(psf, cmap='inferno')
+    >>> plt.subplot(122), plt.imshow(psf_smear, cmap='inferno')
 
 .. plot:: _img/python/smear_directional.py
     :scale: 50
@@ -75,8 +75,8 @@ directions during one integration time.
     >>> import matplotlib.pyplot as plt
     >>> psf = ...  # PSF calculation details omitted
     >>> psf_jitter = lentil.jitter(psf, scale=2, oversample=5)
-    >>> plt.subplot(121), plt.imshow(psf)
-    >>> plt.subplot(122), plt.imshow(psf_jitter)
+    >>> plt.subplot(121), plt.imshow(psf, cmap='inferno')
+    >>> plt.subplot(122), plt.imshow(psf_jitter, cmap='inferno')
 
 .. plot:: _img/python/jitter.py
     :scale: 50

@@ -15,8 +15,8 @@ psf = w.intensity
 psf_smear = lentil.smear(psf, distance=25, angle=30,
                          oversample=5)
 plt.subplot(121)
-plt.imshow(psf, origin='lower')
+plt.imshow(psf, cmap='inferno')
 plt.title('Input image')
 plt.subplot(122)
-plt.imshow(psf_smear, origin='lower')
+plt.imshow(psf_smear, cmap='inferno')
 plt.title('Smeared image')

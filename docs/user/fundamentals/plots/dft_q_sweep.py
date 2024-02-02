@@ -34,21 +34,21 @@ for n in npix_pupil:
 exp = 0.15
 
 plt.subplot(1,4,1)
-plt.imshow(psf[0]**exp)
+plt.imshow(psf[0]**exp, cmap='inferno')
 plt.title('$q = 0.325$')
 plt.axis('off')
 
 plt.subplot(1,4,2)
-plt.imshow(psf[1]**exp)
+plt.imshow(psf[1]**exp, cmap='inferno')
 plt.title('$q = 0.65$')
 plt.axis('off')
 
 plt.subplot(1,4,3)
-plt.imshow(psf[2]**exp)
+plt.imshow(psf[2]**exp, cmap='inferno')
 plt.title('$q = 1.3$')
 plt.axis('off')
 
 plt.subplot(1,4,4)
-plt.imshow(psf[3]**exp)
+plt.imshow(psf[3]**exp, cmap='inferno')
 plt.title('$q = 2.6$')
 plt.axis('off')

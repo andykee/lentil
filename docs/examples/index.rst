@@ -86,11 +86,6 @@ Focal plane modeling
 .. grid:: 3
 
     .. grid-item-card::
-            :margin: 2 2 0 0
-
-            Including a detector model
-
-    .. grid-item-card::
         :link: bayer
         :link-type: doc
         :margin: 2 2 0 0
@@ -150,8 +145,29 @@ Advanced usage
     radiometry
     matlab_interface
 
-    
+
+.. _examples.patterns:
+
+Useful patterns
+===============
+
+.. grid:: 3
+
+    .. grid-item-card::  
+        :link: bandpass_resampling
+        :link-type: doc
+        :margin: 2 2 0 0
+
+        .. image:: /_static/img/spectrum_bin.png
+            :width: 175px
+            :align: center
+
+        Bandpass and flux resampling
 
 
+.. toctree::
+    :caption: Useful patterns
+    :hidden:
 
+    bandpass_resampling
 

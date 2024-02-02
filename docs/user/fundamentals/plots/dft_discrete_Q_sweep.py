@@ -33,21 +33,21 @@ for os in oversample:
 exp = 0.2
 
 plt.subplot(1,4,1)
-plt.imshow(psf[0]**exp)
+plt.imshow(psf[0]**exp, cmap='inferno')
 plt.title('$Q = 0.6$')
 plt.axis('off')
 
 plt.subplot(1,4,2)
-plt.imshow(psf[1]**exp)
+plt.imshow(psf[1]**exp, cmap='inferno')
 plt.title('$Q = 1.2$')
 plt.axis('off')
 
 plt.subplot(1,4,3)
-plt.imshow(psf[2]**exp)
+plt.imshow(psf[2]**exp, cmap='inferno')
 plt.title('$Q = 1.8$')
 plt.axis('off')
 
 plt.subplot(1,4,4)
-plt.imshow(psf[3]**exp)
+plt.imshow(psf[3]**exp, cmap='inferno')
 plt.title('$Q = 2.4$')
 plt.axis('off')

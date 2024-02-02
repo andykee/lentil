@@ -14,8 +14,8 @@ psf = w.intensity
 
 psf_jitter = lentil.jitter(psf, scale=2, oversample=5)
 plt.subplot(121)
-plt.imshow(psf, origin='lower')
+plt.imshow(psf, cmap='inferno')
 plt.title('Input image')
 plt.subplot(122)
-plt.imshow(psf_jitter, origin='lower')
+plt.imshow(psf_jitter, cmap='inferno')
 plt.title('Jittery image')

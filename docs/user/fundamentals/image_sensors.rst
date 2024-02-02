@@ -18,17 +18,15 @@ two references provide a good starting point:
 * `EVMA Standard 1288 <https://www.emva.org/standards-technology/emva-1288/>`_
 * *Photon Transfer*, James Janesick
 
+.. note::
+    Because both light intensity and QE are spectrally-dependent but electron
+    count is not, it is advantageous to begin working in units of electrons 
+    as early as possible for best performance. 
+
+
 Charge collection
 =================
-Imaging sensors convert light intensity to an electrical signal. The ratio of electrons
-collected to the number of photons striking a sensor's photoreactive surface is called
-the quantum efficiency (commonly represented by :math:`\eta` or abbreviated QE). Because
-both light intensity and QE are spectrally-dependent but electron count is not, it is 
-advantageous to begin working in units of electrons as early as possible for best
-performance. 
-
-
-Lentil's :func:`detector.collect_charge` function models this charge collection process 
+Lentil's :func:`detector.collect_charge` function models the charge collection process 
 for a monochromatic sensor and the :func:`detector.collect_charge_bayer` models the same 
 process for a sensor with a `Bayer filter <https://en.wikipedia.org/wiki/Bayer_filter>`_.
 
@@ -36,14 +34,14 @@ process for a sensor with a `Bayer filter <https://en.wikipedia.org/wiki/Bayer_f
     :width: 550px
     :align: center
 
-There are two different approaches to performing charge collection:
+.. There are two different approaches to performing charge collection:
 
-1. Provide a datacube of photon counts or fluxes separated spectrally (i.e. a
-   nwave x nrows x ncols cube) and a 
+.. 1. Provide a datacube of photon counts or fluxes separated spectrally (i.e. a
+..    nwave x nrows x ncols cube) and a 
 
-Performance considerations
---------------------------
-blah
+.. Performance considerations
+.. --------------------------
+
 
 Pixel effects
 =============
@@ -63,18 +61,18 @@ convolution and resampling operations into a single method.
     >>> import lentil
     >>> psf = ...  # PSF calculation details omitted
     >>> psf_pixelate = lentil.detector.pixelate(psf, oversample=2)
-    >>> plt.subplot(121), plt.imshow(psf, origin='lower')
-    >>> plt.subplot(122), plt.imshow(psf_pixelate, origin='lower')
+    >>> plt.subplot(121), plt.imshow(psf, cmap='inferno')
+    >>> plt.subplot(122), plt.imshow(psf_pixelate, cmap='inferno')
 
 .. plot:: _img/python/pixelate.py
     :scale: 50
 
-Noise sources
-=============
+.. Noise sources
+.. =============
 
 
-Analog to digital conversion
-============================
+.. Analog to digital conversion
+.. ============================
 
 
 Cosmic rays

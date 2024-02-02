@@ -118,5 +118,5 @@ parent method's return type to preserve compatibility within Lentil.
 
 .. _user.advanced.extend.tiltinterface:
 
-Using TiltInterface
--------------------
+.. Using TiltInterface
+.. -------------------
