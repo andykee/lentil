@@ -1,6 +1,36 @@
 Release notes
 =============
 
+v0.8.0
+------
+Released February 2, 2024
+
+
+* New :func:`~lentil.propagate_dft` method for performing far-field
+  propagations using the matrix triple product DFT
+* New :func:`~lentil.propagate_fft` method for performing far-field 
+  propagations using the FFT `#46`_
+* Deprecate ``Wavefront.propagate_image()``
+* Propagation backend updates and enhancements
+* DFT implementation improvements
+* Plane ``phase`` attribute renamed to ``opd``
+* Allow ``amp`` as an alias for ``amplitude`` in Plane constructor
+* New ``ptype`` object for managing plane and wavefront types
+* Enforce ``ptype``-based rules in :func:`Plane.multiply`
+* Streamline :class:`~lentil.Wavefront` constructor
+* New :class:`DispersiveTilt` object
+* Deprecate :class:`Grism` -- :class:`DispersiveTilt` should be used instead
+* Utility shapes now accept an ``antialias`` argument
+* New :func:`~lentil.spider` method for drawing spiders
+* New :func:`~lentil.hex_segments` method for drawing segmented apertures made
+  of rings of hexagonal segments
+* Standardize shape naming
+* Deprecate in-place operations `#43`_
+* Many documentation updates and improvements
+
+.. _#43: https://github.com/andykee/lentil/issues/43
+.. _#46: https://github.com/andykee/lentil/issues/46
+
 v0.7.0
 ------
 Released March 7, 2022
