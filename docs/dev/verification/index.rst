@@ -11,4 +11,5 @@ given here.
 .. toctree::
     :maxdepth: 1
 
+    dft
     pixel_mtf

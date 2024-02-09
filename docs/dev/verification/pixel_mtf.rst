@@ -6,7 +6,6 @@ The following code snippet compares the results of a numerical simulation using 
 with the analytic result for the same imaging system:
 
 .. plot::
-    :scale: 50
     :include-source:
 
     import numpy as np
