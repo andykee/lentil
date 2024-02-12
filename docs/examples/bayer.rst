@@ -73,7 +73,6 @@ Modeling a Bayer detector
 .. plot::
     :context: close-figs
     :include-source:
-    :scale: 50
 
     img = lentil.detector.collect_charge_bayer(psf, qe_wave, qe_red, qe_green,
                                             qe_blue, 'BGGR')
