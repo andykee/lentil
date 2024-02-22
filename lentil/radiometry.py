@@ -598,7 +598,7 @@ class Spectrum:
         value = self.value[indices]
 
         if method == 'simps':
-            result = scipy.integrate.simps(value, wave)
+            result = scipy.integrate.simpson(x=wave, y=value)
         elif method == 'trapz':
             result = np.trapz(value, wave)
         else:
