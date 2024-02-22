@@ -446,8 +446,12 @@ class Plane:
 
         for field in data:
             for n, s in enumerate(self._slice):
-                # We have to multiply amplitude[s] by mask[n][s] because the requested
-                # slice of the amplitude array may contain parts of adjacent segments
+                # If any of (mask, amp, opd) are scalars, we rely on broadcasting
+                # to do the right thing, otherwise grab the appropriate mask and 
+                # multiply it by amp and/or opd. This ensures that amp and opd
+                # contain only the data within the current mask and not any data 
+                # contained in adjacent masks that may be present in the sliced
+                # amp and opd arrays.
                 mask = self.mask if self.size == 1 else self.mask[n]
                 amp = self.amplitude if self.amplitude.size == 1 else self.amplitude[s] * mask[s]
                 opd = self.opd if self.opd.size == 1 else self.opd[s]
