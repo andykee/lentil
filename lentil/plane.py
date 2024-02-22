@@ -117,6 +117,7 @@ class Plane:
     def mask(self, value):
         if value is not None:
             self._mask = np.asarray(value)
+            self._mask[self.mask != 0] = 1
         else:
             self._mask = None
 
