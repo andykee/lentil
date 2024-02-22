@@ -108,7 +108,7 @@ class Spectrum:
         if np.any(value <= 0):
             raise ValueError('Wavelength values must be greater than zero')
 
-        if not np.alltrue(np.sort(value) == value):
+        if not np.all(np.sort(value) == value):
             raise ValueError('Wavelength values must be monotonically increasing')
 
         if np.any(value[1:] - value[:-1] == 0):
