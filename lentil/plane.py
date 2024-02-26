@@ -366,8 +366,6 @@ class Plane:
         if plane.pixelscale is not None:
             plane._pixelscale = (plane.pixelscale[0]/scale, plane.pixelscale[1]/scale)
 
-        #plane._diameter = self.diameter  
-
         return plane
 
     def resample(self, pixelscale):
@@ -563,10 +561,6 @@ class Pupil(Plane):
 
     Parameters
     ----------
-    focal_length : float
-        Focal length
-    pixelscale : float
-        Physical sampling of each pixel in the pupil
     amplitude : array_like, optional
         Electric field amplitude transmission. Amplitude should be normalized
         with :func:`~lentil.normalize_power` if conservation of power
@@ -584,6 +578,13 @@ class Pupil(Plane):
 
         .. plot:: _img/python/segmask.py
             :scale: 50
+    pixelscale : float
+        Physical sampling of each pixel in the pupil
+    focal_length : float
+        Focal length
+    diameter : float, optional
+        Outscribing diameter around mask. If not provided (default), it is computed
+        from the boundary of :attr:`mask`.
 
     Notes
     -----
@@ -603,9 +604,6 @@ class Pupil(Plane):
 
         self.focal_length = focal_length
 
-    def __init_subclass__(cls):
-        cls._focal_length = None
-
     def multiply(self, wavefront):
 
         wavefront = super().multiply(wavefront)
@@ -621,20 +619,19 @@ class Image(Plane):
 
     Parameters
     ----------
-    pixelscale : float, optional
-        Pixel size in meters. Pixels are assumed to be square. Default is None.
-    shape : {int, (2,) array_like}, optional
-        Number of pixels as (rows, cols). If a single value is provided,
-        :class:`Image` is assumed to be square with nrows = ncols = shape.
-        Default is None.
     amplitude : array_like, optional
         Electric field amplitude transmission. Amplitude should be normalized
         with :func:`~lentil.normalize_power` if conservation of power
         through a diffraction propagation is required. If not specified, a
         default amplitude is created which has no effect on wavefront
         propagation. Can also be specified using the ``amp`` keyword.
+    opd : array_like, optional
+        Optical path difference (OPD) induced by plane. If not specified (default), 
+        zero OPD is created which has no effect on wavefront propagation.
     mask : array_like, optional
         Binary mask. If not specified, a mask is created from the amplitude.
+    pixelscale : float, optional
+        Pixel size in meters. Pixels are assumed to be square. Default is None.
 
     Other Parameters
     ----------------
@@ -649,34 +646,17 @@ class Image(Plane):
     See Also
     --------
     Detector
-
     """
-    def __init__(self, shape=None, pixelscale=None, amplitude=1, opd=0, 
-                 mask=None, **kwargs):
+
+    def __init__(self, amplitude=1, opd=0, mask=None, pixelscale=None, 
+                 **kwargs):
         
         super().__init__(amplitude=amplitude, opd=opd, mask=mask, 
                          pixelscale=pixelscale, ptype=lentil.image,
                          **kwargs)
-
-        self.shape = shape
-
-    @property
-    def shape(self):
-        return self._shape
-    
-    @shape.setter
-    def shape(self, value):
-        if value is None:
-            self._shape = ()
-        else:
-            self._shape = tuple(np.broadcast_to(value, (2,)))
         
     def fit_tilt(self, *args, **kwargs):
         return self
-
-    # def slice(self, *args, **kwargs):
-    #     # np.s_[...] = Ellipsis -> returns the whole array
-    #     return [np.s_[...]]
 
     def multiply(self, wavefront):
         wavefront = super().multiply(wavefront)
