@@ -136,9 +136,9 @@ class TiltPupil(lentil.Pupil):
                          pixelscale=1/npix,
                          amplitude=amplitude,
                          opd=opd,
-                         mask=mask)
+                         mask=mask,
+                         diameter=diameter)
 
-        self.diameter = diameter
         self.coeffs = coeffs
 
 

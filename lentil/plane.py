@@ -57,16 +57,34 @@ class Plane:
 
         self.amplitude = np.asarray(amplitude)
         self.opd = np.asarray(opd)
-        self.mask = mask
-        self.pixelscale = pixelscale
-        self.diameter = diameter
-        self.ptype = lentil.ptype(ptype)
+
+        # read-only attributes
+        if mask is not None:
+            self._mask = np.asarray(mask)
+            self._mask[self.mask != 0] = 1
+        else:
+            self._mask = None
+
         self._slice = _plane_slice(self._mask)
+        self._pixelscale = None if pixelscale is None else np.broadcast_to(pixelscale, (2,))
+        self._diameter = diameter
+        self._ptype = lentil.ptype(ptype)
 
         self.tilt = []
 
     def __repr__(self):
         return f'{self.__class__.__name__}()'
+
+    @property
+    def ptype(self):
+        """Plane type
+
+        Returns
+        -------
+        :class:`~lentil.ptype`
+        """
+
+        return self._ptype
 
     @property
     def amplitude(self):
@@ -148,10 +166,6 @@ class Plane:
         
         """
         return self._pixelscale
-    
-    @pixelscale.setter
-    def pixelscale(self, value):
-        self._pixelscale = None if value is None else np.broadcast_to(value, (2,))
 
     @property
     def diameter(self):
@@ -174,10 +188,6 @@ class Plane:
             return np.max(np.max((rmax-rmin, cmax-cmin)) * self.pixelscale)
         else:
             return self._diameter
-        
-    @diameter.setter
-    def diameter(self, value):
-        self._diameter = value
 
     @property
     def shape(self):
@@ -367,7 +377,7 @@ class Plane:
             plane.mask = plane.mask.astype(int)
 
         if plane.pixelscale is not None:
-            plane.pixelscale = (plane.pixelscale[0]/scale, plane.pixelscale[1]/scale)
+            plane._pixelscale = (plane.pixelscale[0]/scale, plane.pixelscale[1]/scale)
 
         return plane
 
@@ -590,15 +600,17 @@ class Pupil(Plane):
     -----
     By definition, a pupil is represented by a spherical wavefront. Any
     aberrations in the optical system appear as deviations from this perfect
-    sphere. The primary use of :class:`Pupil` is to represent these aberrations
+    sphere. The primary use of :class:`Pupil` is to represent this spherical
+    wavefront.
 
     """
 
-    def __init__(self, focal_length=None, pixelscale=None, amplitude=1,
-                 opd=0, mask=None, **kwargs):
+    def __init__(self, amplitude=1, opd=0, mask=None, pixelscale=None,
+                 focal_length=None, diameter=None, **kwargs):
 
-        super().__init__(pixelscale=pixelscale, amplitude=amplitude, opd=opd,
-                         mask=mask, ptype=lentil.pupil, **kwargs)
+        super().__init__(amplitude=amplitude, opd=opd, mask=mask, 
+                         pixelscale=pixelscale, diameter=diameter, 
+                         ptype=lentil.pupil, **kwargs)
 
         self.focal_length = focal_length
 
