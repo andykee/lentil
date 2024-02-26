@@ -61,7 +61,7 @@ class Plane:
         # read-only attributes
         if mask is not None:
             self._mask = np.asarray(mask)
-            self._mask[self.mask != 0] = 1
+            self._mask[self._mask != 0] = 1
         else:
             self._mask = None
 
