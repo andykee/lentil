@@ -58,15 +58,14 @@ class Plane:
         self.amplitude = np.asarray(amplitude)
         self.opd = np.asarray(opd)
 
-        # read-only attributes
-        if mask is not None:
-            self._mask = np.asarray(mask)
-            self._mask[self._mask != 0] = 1
-        else:
-            self._mask = None
+        if mask is None:
+            mask = np.copy(self.amplitude)
+        
+        mask[mask != 0] = 1
+        self._mask = mask
 
         self._slice = _plane_slice(self._mask)
-        self._pixelscale = None if pixelscale is None else np.broadcast_to(pixelscale, (2,))
+        self._pixelscale = None if pixelscale is None else tuple(np.broadcast_to(pixelscale, (2,)))
         self._diameter = diameter
         self._ptype = lentil.ptype(ptype)
 
@@ -93,8 +92,8 @@ class Plane:
         Returns
         -------
         ndarray
-
         """
+
         return self._amplitude
     
     @amplitude.setter
@@ -108,8 +107,8 @@ class Plane:
         Returns
         -------
         ndarray
-
         """
+
         return self._opd
     
     @opd.setter
@@ -124,22 +123,8 @@ class Plane:
         -------
         ndarray
         """
-        if self._mask is not None:
-            return self._mask
-        else:
-            mask = np.copy(self.amplitude)
-            mask[mask != 0] = 1
-            return mask
 
-    @mask.setter
-    def mask(self, value):
-        if value is not None:
-            self._mask = np.asarray(value)
-            self._mask[self.mask != 0] = 1
-        else:
-            self._mask = None
-
-        self._slice = _plane_slice(self._mask)
+        return self._mask
 
     @property
     def global_mask(self):
@@ -183,9 +168,13 @@ class Plane:
         """
         if self._diameter is None:
             [rmin, rmax, cmin, cmax] = lentil.boundary(self.global_mask)
+
+            # need to guarantee pixelscale is an ndarray
+            pixelscale = np.asarray(self.pixelscale)
+
             # since pixelscale has shape=(2,), we need to return the overall
             # max here to get the single largest outer dimension
-            return np.max(np.max((rmax-rmin, cmax-cmin)) * self.pixelscale)
+            return np.max(np.max((rmax-rmin, cmax-cmin)) * pixelscale)
         else:
             return self._diameter
 
@@ -361,23 +350,23 @@ class Plane:
             plane.opd = lentil.rescale(plane.opd, scale=scale, shape=None, mask=None,
                                        order=3, mode='nearest', unitary=False)
 
-        # because plane.mask is automatically computed from amplitude if it is not
-        # provided, we really only want to reinterpolate if a mask was provided (stored
-        # in plane._mask) vs computed on the fly (by the plane.mask property)
-        if plane._mask is not None:
-            if plane.mask.ndim == 2:
-                plane.mask = lentil.rescale(plane.mask, scale=scale, shape=None, mask=None, order=0,
-                                            mode='constant', unitary=False)
-            else:
-                plane.mask = np.asarray([lentil.rescale(mask, scale=scale, shape=None, mask=None,
-                                                        order=0, mode='constant', unitary=False)
-                                         for mask in plane.mask])
-            # mask[mask < np.finfo(mask.dtype).eps] = 0
-            plane.mask[np.nonzero(plane.mask)] = 1
-            plane.mask = plane.mask.astype(int)
+        if plane._mask.ndim == 2:
+            plane._mask = lentil.rescale(plane._mask, scale=scale, shape=None, mask=None, order=0,
+                                         mode='constant', unitary=False)
+        else:
+            plane._mask = np.asarray([lentil.rescale(mask, scale=scale, shape=None, mask=None,
+                                                     order=0, mode='constant', unitary=False)
+                                      for mask in plane._mask])
+
+        plane._mask[np.nonzero(plane._mask)] = 1
+        plane._mask = plane._mask.astype(int)
+
+        plane._slice = _plane_slice(plane._mask)
 
         if plane.pixelscale is not None:
             plane._pixelscale = (plane.pixelscale[0]/scale, plane.pixelscale[1]/scale)
+
+        #plane._diameter = self.diameter  
 
         return plane
 
