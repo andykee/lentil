@@ -5,7 +5,7 @@ v0.8.1
 ------
 Released February 27, 2024
 
-* Deprecate :class:`~lentil.Image`` ``shape`` parameter `#50`_
+* Deprecate :class:`~lentil.Image` ``shape`` parameter `#50`_
 * :class:`~Plane` ``mask``, ``pixelscale``, ``diameter``, and ``ptype`` are 
   now immutable
 * Fix bugs in creation and handling of :class:`~lentil.Plane` ``mask`` and 

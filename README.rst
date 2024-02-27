@@ -1,6 +1,5 @@
 Lentil
 ======
-|build status| |coverage| |docs status| |pypi version|
 
 Lentil is a Python library for modeling the imaging chain of an optical system.
 It was originally developed at NASA's Jet Propulsion Lab by the Wavefront Sensing and
@@ -34,14 +33,4 @@ Links
 
 .. _pip: https://pip.pypa.io/en/stable/quickstart/
 
-.. |pypi version| image:: https://img.shields.io/pypi/v/lentil.svg
-    :target: https://pypi.python.org/pypi/lentil
 
-.. |build status| image:: https://github.com/andykee/lentil/actions/workflows/test.yml/badge.svg
-    :target: https://github.com/andykee/lentil/actions/workflows/test.yml
-
-.. |coverage| image:: https://coveralls.io/repos/github/andykee/lentil/badge.svg
-    :target: https://coveralls.io/github/andykee/lentil
-
-.. |docs status| image:: https://readthedocs.org/projects/lentil/badge/?version=latest
-    :target: https://lentil.readthedocs.io/en/latest/?badge=latest
