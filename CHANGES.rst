@@ -1,6 +1,24 @@
 Release notes
 =============
 
+v0.8.1
+------
+Released February 27, 2024
+
+* Deprecate :class:`~lentil.Image`` ``shape`` parameter `#50`_
+* :class:`~Plane` ``mask``, ``pixelscale``, ``diameter``, and ``ptype`` are 
+  now immutable
+* Fix bugs in creation and handling of :class:`~lentil.Plane` ``mask`` and 
+  ``slice``
+* Fix scipy deprecation warnings
+* Update GitHub actions `#51`_ `#52`_
+* Update docs `#49`_
+
+.. _#49: https://github.com/andykee/lentil/issues/49
+.. _#50: https://github.com/andykee/lentil/issues/50
+.. _#51: https://github.com/andykee/lentil/issues/51
+.. _#52: https://github.com/andykee/lentil/issues/52
+
 v0.8.0
 ------
 Released February 2, 2024
