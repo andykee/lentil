@@ -19,11 +19,22 @@ Field
 
     lentil.field.Field
     lentil.field.boundary
-    lentil.field.extent
     lentil.field.insert
     lentil.field.merge
     lentil.field.overlap
     lentil.field.reduce
+
+Extent
+------
+.. autosummary::
+    :toctree: generated/
+
+    lentil.extent.array_extent
+    lentil.extent.intersect
+    lentil.extent.intersection_extent
+    lentil.extent.intersection_shape
+    lentil.extent.intersection_slices
+    lentil.extent.intersection_shift
 
 Tilt interface
 --------------
@@ -45,6 +56,6 @@ Helper functions
     :toctree: generated/
 
     lentil.helper.mesh
-    lentil.helper.gaussian2d
     lentil.helper.boundary_slice
     lentil.helper.slice_offset
+    lentil.helper.gaussian2d

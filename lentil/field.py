@@ -2,6 +2,8 @@ import sys
 from itertools import combinations
 import numpy as np
 
+import lentil.extent
+
 class Field:
     """
     Two-dimensional discretely sampled complex field.
@@ -51,7 +53,7 @@ class Field:
         self.tilt = tilt if tilt else []
 
         #: tuple of ints : Extent of ``data``
-        self.extent = extent(self.shape, self.offset)
+        self.extent = lentil.extent.array_extent(self.shape, self.offset)
 
     @property
     def shape(self):
@@ -132,11 +134,11 @@ class Field:
         self_data, self_offset, other_data, other_offset = _mul_broadcast(
             self.data, self.offset, other.data, other.offset
         )
-        self_extent = extent(self_data.shape, self_offset)
-        other_extent = extent(other_data.shape, other_offset)
+        self_extent = lentil.extent.array_extent(self_data.shape, self_offset)
+        other_extent = lentil.extent.array_extent(other_data.shape, other_offset)
 
-        self_slice, other_slice = _mul_slices(self_extent, other_extent)
-        offset = _mul_offset(self_extent, other_extent)
+        self_slice, other_slice = lentil.extent.intersection_slices(self_extent, other_extent)
+        offset = lentil.extent.intersection_shift(self_extent, other_extent)
         data = self_data[self_slice] * other_data[other_slice]
 
         if data.size == 0:
@@ -225,25 +227,6 @@ def boundary(fields):
         cmax = fcmax if fcmax > cmax else cmax
 
     return rmin, rmax, cmin, cmax
-
-
-def extent(shape, offset):
-    """
-    Compute the extent of a shifted array.
-
-    Note: To use the values returned by ``extent()`` in a slice, 
-    ``rmax`` and ``cmax`` should be increased by 1.
-    """
-    if len(shape) < 2:
-        shape = (1, 1)
-
-    rmin = int(-(shape[0]//2) + offset[0])
-    cmin = int(-(shape[1]//2) + offset[1])
-    rmax = int(rmin + shape[0] - 1)
-    cmax = int(cmin + shape[1] - 1)
-
-    return rmin, rmax, cmin, cmax
-
 
 def insert(field, out, intensity=False, weight=1):
     """Insert a field into an array.
@@ -417,10 +400,8 @@ def overlap(fields):
     overlap : bool
     
     """
-    #return _overlap(a.extent, b.extent)
-
     if len(fields) == 2:
-        return _overlap(fields[0].extent, fields[1].extent)
+        return lentil.extent.intersect(fields[0].extent, fields[1].extent)
     else:
         fields = _reduce(fields)
         if len(fields) > 1:
@@ -472,21 +453,12 @@ def _disjoint(fields):
     Return fields as a disjoint set.
     """
     for m, n in combinations(range(len(fields)), 2):
-        if _overlap(fields[m]['extent'], fields[n]['extent']):
+        if lentil.extent.intersect(fields[m]['extent'], fields[n]['extent']):
             fields[m]['field'].extend(fields[n]['field'])
             fields[m]['extent'] = boundary(fields[m]['field'])
             fields.pop(n)
             return _disjoint(fields)
     return fields
-
-
-def _overlap(a_extent, b_extent):
-    """
-    Return True if two extents overlap, otherwise False
-    """
-    armin, armax, acmin, acmax = a_extent
-    brmin, brmax, bcmin, bcmax = b_extent
-    return armin <= brmax and armax >= brmin and acmin <= bcmax and acmax >= bcmin
 
 
 def _mul_broadcast(a_data, a_offset, b_data, b_offset):
@@ -510,35 +482,3 @@ def _mul_broadcast(a_data, a_offset, b_data, b_offset):
             b_data = np.broadcast_to(b_data, a_data.shape)
             b_offset = a_offset
     return a_data, a_offset, b_data, b_offset
-
-
-def _mul_boundary(a_extent, b_extent):
-    # bounding  array indices to be multiplied
-    armin, armax, acmin, acmax = a_extent
-    brmin, brmax, bcmin, bcmax = b_extent
-
-    rmin, rmax = max(armin, brmin), min(armax, brmax)
-    cmin, cmax = max(acmin, bcmin), min(acmax, bcmax)
-
-    return rmin, rmax, cmin, cmax
-
-
-def _mul_slices(a_extent, b_extent):
-    rmin, rmax, cmin, cmax = _mul_boundary(a_extent, b_extent)
-
-    armin, armax, acmin, acmax = a_extent
-    brmin, brmax, bcmin, bcmax = b_extent
-
-    arow = slice(rmin-armin, rmax-armin+1)
-    acol = slice(cmin-acmin, cmax-acmin+1)
-    brow = slice(rmin-brmin, rmax-brmin+1)
-    bcol = slice(cmin-bcmin, cmax-bcmin+1)
-
-    return (arow, acol), (brow, bcol)
-
-
-def _mul_offset(a_extent, b_extent):
-    rmin, rmax, cmin, cmax = _mul_boundary(a_extent, b_extent)
-    nrow = rmax - rmin + 1
-    ncol = cmax - cmin + 1
-    return rmin + nrow//2, cmin + ncol//2
