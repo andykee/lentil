@@ -26,5 +26,5 @@ Broadband diffraction simulation
         psf += w2.intensity
 
     fig, ax = plt.subplots()
-    ax.imshow(psf, norm='log')
+    ax.imshow(psf, norm='log', cmap='inferno')
     ax.axis('off')

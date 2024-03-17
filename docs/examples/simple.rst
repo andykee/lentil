@@ -9,6 +9,7 @@ Simple diffraction simulation
     :include-source:
     :scale: 50
 
+    import matplotlib
     import matplotlib.pyplot as plt
     import numpy as np
     import lentil
@@ -18,9 +19,15 @@ Simple diffraction simulation
     opd = lentil.zernike_compose(mask=amp, coeffs=coef)
 
     fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(5, 3))
-    ax1.imshow(amp)
+    ax1.imshow(amp, cmap='gray')
     ax1.set_title('Amplitude')
-    ax2.imshow(opd)
+
+    # set up the OPD colormap to display NaNs as light gray
+    opd_plot = opd.copy()
+    opd_plot[np.where(opd_plot == 0)] = np.nan
+    opd_cmap = matplotlib.colormaps.get_cmap('RdBu_r')
+    opd_cmap.set_bad(color='#dddddd')
+    ax2.imshow(opd_plot, cmap=opd_cmap)
     ax2.set_title('OPD')
 
 
@@ -44,7 +51,7 @@ Simple diffraction simulation
 
     # plot the oversampled PSF
     fig, ax = plt.subplots(figsize=(2.5, 2.5))
-    ax.imshow(w2.intensity)
+    ax.imshow(w2.intensity, cmap='inferno')
 
 
 .. plot::
@@ -56,4 +63,4 @@ Simple diffraction simulation
     # native sampling
     img = lentil.detector.pixelate(w2.intensity, oversample=2)
     fig, ax = plt.subplots(figsize=(2.5, 2.5))
-    ax.imshow(img)
+    ax.imshow(img, cmap='inferno')
