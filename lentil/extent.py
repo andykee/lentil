@@ -1,4 +1,4 @@
-# Functions for working with extent (rmon, rmax, cmin, cmax) data
+# Functions for working with extent (rmin, rmax, cmin, cmax) data
 
 import numpy as np
 
@@ -8,16 +8,20 @@ def array_extent(shape, shift, parent_shape=None):
     Parameters
     ----------
     shape : (2,) array_like
-
+        Array shape
     shift : (2,) array_like
-
+        Array shift in (r, c)
     parent_shape : (2,) array like or None, optional
-    
+        Enclosing parent shape. If None, the returned extent is relative
+        to the origin (0,0). If provided, the returned extent is relative
+        to the upper left corner of the parent shape.
+
     Notes
     -----
     To use the values returned by ``extent()`` in a slice, 
     ``rmax`` and ``cmax`` should be increased by 1.
     """
+
     if len(shape) < 2:
         shape = (1, 1)
 
@@ -36,13 +40,32 @@ def array_extent(shape, shift, parent_shape=None):
     return rmin, rmax, cmin, cmax
 
 
+def array_center(extent):
+    """Compute the center of an extent
+
+    Parameters
+    ----------
+    a : (4,) array_like
+        Array extent (rmin, rmax, cmin, cmax)
+
+    Returns
+    -------
+    tuple
+    """
+
+    rmin, rmax, cmin, cmax = extent
+    nrow = rmax - rmin + 1
+    ncol = cmax - cmin + 1
+    return rmin + nrow//2, cmin + ncol//2
+
+
 def intersect(a, b):
     """Return True if two extents intersect, otherwise False
 
     Parameters
     ----------
     a, b : (4,) array like
-        Two array extents (rmin, rmax, cmin, cmax)
+        Array extents (rmin, rmax, cmin, cmax)
     
     Returns
     -------
@@ -55,7 +78,18 @@ def intersect(a, b):
 
 
 def intersection_extent(a, b):
-    # bounding  array indices to be multiplied
+    """Compute the extent of two overlapping extents
+    
+    Parameters
+    ----------
+    a, b : (4,) array_like
+        Array extents (rmin, rmax, cmin, cmax)
+
+    Returns
+    -------
+    tuple
+    """
+
     armin, armax, acmin, acmax = a
     brmin, brmax, bcmin, bcmax = b
 
@@ -66,13 +100,23 @@ def intersection_extent(a, b):
 
 
 def intersection_shape(a, b):
-    """Compute the shape 
+    """Compute the shape of two overlapping extents. If there is no
+    overlap, an empty tuple is returned.
+
+    Parameters
+    ----------
+    a, b : (4,) array like
+        Array extents (rmin, rmax, cmin, cmax)
+    
+    Returns
+    -------
+    tuple
     """
 
     rmin, rmax, cmin, cmax = intersection_extent(a, b)
     nr, nc = rmax - rmin + 1, cmax - cmin + 1
 
-    if nr < 0 or nc < 0:
+    if nr <= 0 or nc <= 0:
         shape = ()
     else:
         shape = (nr, nc)
@@ -81,6 +125,18 @@ def intersection_shape(a, b):
 
 
 def intersection_slices(a, b):
+    """Compute slices of overlapping areas between two overlapping extents
+
+    Parameters
+    ----------
+    a, b : (4,) array like
+        Array extents (rmin, rmax, cmin, cmax)
+    
+    Returns
+    -------
+    tuples of slices
+    """
+
     rmin, rmax, cmin, cmax = intersection_extent(a, b)
 
     armin, armax, acmin, acmax = a
@@ -95,6 +151,18 @@ def intersection_slices(a, b):
 
 
 def intersection_shift(a, b):
+    """Compute the shift between two overlapping extents
+
+    Parameters
+    ----------
+    a, b : (4,) array like
+        Array extents (rmin, rmax, cmin, cmax)
+    
+    Returns
+    -------
+    tuple
+    """
+    
     rmin, rmax, cmin, cmax = intersection_extent(a, b)
     nrow = rmax - rmin + 1
     ncol = cmax - cmin + 1

@@ -1,6 +1,7 @@
 import numpy as np
 
 import lentil
+import lentil.extent
 from lentil.field import Field
 from lentil.wavefront import Wavefront
 
@@ -144,7 +145,7 @@ def _has_tilt(wavefront):
 
 
 def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None, 
-                  oversample=2):
+                  oversample=2, mask=None):
     """Propagate a Wavefront in the far-field using the DFT.
 
     Parameters
@@ -178,6 +179,16 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
     shape_out = shape * oversample
     prop_shape_out = prop_shape * oversample
 
+    if mask is not None:
+        mask = np.asarray(mask)
+        if np.all(mask.shape != shape_out):
+            raise ValueError(f'shape mismatch: mask shape {mask.shape} != output shape {tuple(shape_out)}')
+        mask_shape = _mask_shape(mask, threshold=0)
+        mask_shift = _mask_shift(mask, threshold=0)
+        out_extent = lentil.extent.array_extent(mask_shape, mask_shift)
+    else:
+        out_extent = lentil.extent.array_extent(shape_out, shift=(0,0))
+
     dx = wavefront.pixelscale
     du = np.broadcast_to(pixelscale, (2,))
     z = wavefront.focal_length
@@ -192,7 +203,7 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
         
     for field in data:
         # compute the field shift from any embedded tilts. note the return value
-        # is specified in terms of (r, c)
+        # is specified as (r, c)
         shift = field.shift(z=wavefront.focal_length, wavelength=wavefront.wavelength,
                             pixelscale=du, oversample=oversample,
                             indexing='ij')
@@ -200,21 +211,56 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
         fix_shift = np.fix(shift)
         subpx_shift = shift - fix_shift
 
-        if _overlap(prop_shape_out, fix_shift, shape_out):
+        prop_extent = lentil.extent.array_extent(prop_shape_out, fix_shift)
+
+        if lentil.extent.intersect(out_extent, prop_extent):
+            intersect_shape = lentil.extent.intersection_shape(out_extent, prop_extent)
+            intersect_shift = lentil.extent.intersection_shift(out_extent, prop_extent)
+            intersect_extent = lentil.extent.array_extent(intersect_shape, intersect_shift)
+
+            # compute additional shift rquired to offset any output clipping that
+            # may have occurred due to a mask or extending beyond the full output
+            # shape. 
+            # NOTE: It appears the same functionality is available using 
+            # extent.intersection_shift() but there is an off by one error on only
+            # one of the shift dimensions for some reason that causes the tests to 
+            # fail
+            prop_center = lentil.extent.array_center(prop_extent)
+            intersect_center = lentil.extent.array_center(intersect_extent)
+            prop_shift = np.array(prop_center) - np.array(intersect_center)
+
             alpha = _dft_alpha(dx=dx, du=du, z=z,
                                wavelength=wavefront.wavelength,
                                oversample=oversample)
             data = lentil.fourier.dft2(f=field.data, alpha=alpha,
-                                       shape=prop_shape_out,
-                                       shift=subpx_shift,
+                                       shape=intersect_shape,
+                                       shift=prop_shift + subpx_shift,
                                        offset=field.offset, unitary=True)
-            out.data.append(Field(data=data, pixelscale=du/oversample,
-                                  offset=fix_shift))
-    
+            out.data.append(Field(data=data, pixelscale=du / oversample,
+                                  offset=intersect_shift))
+
     if not out.data:
         out.data.append(Field(data=0))
 
     return out
+
+
+def _mask_shape(x, threshold=0):
+    # compute the shape of a masked area inside an array of zeros
+    rmin, rmax, cmin, cmax = lentil.boundary(x, threshold)
+    return rmax - rmin + 1, cmax - cmin + 1
+
+
+def _mask_shift(x, threshold=0):
+    # compute the shift of a masked area inside an array of zeros
+    shape_full = x.shape
+    rc_full, cc_full = shape_full[0]//2, shape_full[1]//2
+
+    rmin_extent, rmax_extent, cmin_extent, cmax_extent = lentil.boundary(x, threshold)
+    shape_extent = (rmax_extent-rmin_extent+1, cmax_extent-cmin_extent+1)
+    rc_extent, cc_extent = rmin_extent + shape_extent[0]//2, cmin_extent + shape_extent[1]//2
+
+    return rc_extent - rc_full, cc_extent - cc_full
 
 
 def _overlap(field_shape, field_shift, output_shape):

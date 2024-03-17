@@ -30,6 +30,7 @@ Extent
     :toctree: generated/
 
     lentil.extent.array_extent
+    lentil.extent.array_center
     lentil.extent.intersect
     lentil.extent.intersection_extent
     lentil.extent.intersection_shape
