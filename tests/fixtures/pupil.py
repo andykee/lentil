@@ -7,7 +7,7 @@ def pupil():
 
     def _pupil(focal_length, diameter, shape, radius, coeffs=None):
 
-        amplitude = lentil.circle(shape, radius)
+        amplitude = lentil.normalize_power(lentil.circle(shape, radius))
         pixelscale = diameter/(2*radius)
 
         if coeffs is not None:

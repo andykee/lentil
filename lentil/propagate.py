@@ -263,26 +263,6 @@ def _mask_shift(x, threshold=0):
     return rc_extent - rc_full, cc_extent - cc_full
 
 
-def _overlap(field_shape, field_shift, output_shape):
-    # Return True if there's any overlap between a shifted field and the
-    # output shape
-    output_shape = np.asarray(output_shape)
-    field_shape = np.asarray(field_shape)
-    field_shift = np.asarray(field_shift)
-
-    # Output coordinates of the upper left corner of the shifted data array
-    field_shifted_ul = (output_shape / 2) - (field_shape / 2) + field_shift
-
-    if field_shifted_ul[0] > output_shape[0]:
-        return False
-    if field_shifted_ul[0] + field_shape[0] < 0:
-        return False
-    if field_shifted_ul[1] > output_shape[1]:
-        return False
-    if field_shifted_ul[1] + field_shape[1] < 0:
-        return False
-    return True
-
 def _propagate_ptype(ptype, method='fraunhofer'):
     if method == 'fraunhofer':
         if ptype not in (lentil.pupil, lentil.image):
