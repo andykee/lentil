@@ -55,11 +55,13 @@ class Plane:
                                 "which are aliases of one another")
             amplitude = kwargs['amp']
 
-        self.amplitude = np.asarray(amplitude)
-        self.opd = np.asarray(opd)
+        # directly set internal attributes rather relying on property setter
+        # see: https://github.com/andykee/lentil/issues/53
+        self._amplitude = np.asarray(amplitude)
+        self._opd = np.asarray(opd)
 
         if mask is None:
-            mask = np.copy(self.amplitude)
+            mask = np.copy(self._amplitude)
         
         mask[mask != 0] = 1
         self._mask = mask

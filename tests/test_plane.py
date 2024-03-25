@@ -36,6 +36,34 @@ def test_amp_alias_error():
     with pytest.raises(TypeError):
         lentil.Plane(amplitude=10, amp=10)
 
+
+class PlaneAttributeOverload(lentil.Plane):
+    def __init__(self):
+        super().__init__()
+
+    @property
+    def amplitude(self):
+        return np.array(1)
+    
+    @property
+    def opd(self):
+        return np.array(2)
+    
+
+def test_plane_overload_propertyes():
+    p = PlaneAttributeOverload()
+    
+    assert p.amplitude == 1
+    assert p.opd == 2
+    assert p.mask == 1
+
+    with pytest.raises(AttributeError):
+        p.opd = 5
+
+    with pytest.raises(AttributeError):
+        p.amplitude = 5
+
+
 def test_plane_fit_tilt_inplace():
     p = RandomPlane()
     p_copy = p.fit_tilt(inplace=False)
