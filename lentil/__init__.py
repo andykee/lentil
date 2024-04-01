@@ -29,7 +29,8 @@ from lentil.plane import (
 	Grism,
 	LensletArray,
 	Rotate,
-	Flip
+	Flip,
+    dependent
 )
 
 from lentil.propagate import (
