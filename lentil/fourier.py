@@ -105,21 +105,19 @@ def dft2(f, alpha, shape=None, shift=(0, 0), offset=(0, 0), unitary=True, out=No
 
 def _dft2_matrices(m, n, M, N, alphar, alphac, shiftr, shiftc, offsetr, offsetc):
     R, S, U, V = _dft2_coords(m, n, M, N)
-    E1 = np.exp(-2.0 * 1j * np.pi * alphar * np.outer(R-shiftr+offsetr, U-shiftr)).T
-    E2 = np.exp(-2.0 * 1j * np.pi * alphac * np.outer(S-shiftc+offsetc, V-shiftc))
+    E1 = np.exp(-2.0 * 1j * np.pi * alphar * np.outer(R+offsetr, U-shiftr)).T
+    E2 = np.exp(-2.0 * 1j * np.pi * alphac * np.outer(S+offsetc, V-shiftc))
     return E1, E2
 
 
 @functools.lru_cache(maxsize=32)
 def _dft2_coords(m, n, M, N):
     # R and S are (r,c) coordinates in the (m x n) input plane f
-    # V and U are (r,c) coordinates in the (M x N) output plane F
-
+    # U and V are (r,c) coordinates in the (M x N) output plane F
     R = np.arange(m) - np.floor(m/2.0)
     S = np.arange(n) - np.floor(n/2.0)
     U = np.arange(M) - np.floor(M/2.0)
     V = np.arange(N) - np.floor(N/2.0)
-
     return R, S, U, V
 
 
