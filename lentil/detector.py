@@ -350,9 +350,9 @@ def shot_noise(img, method='poisson', seed=None):
     method : 'poisson' or 'gaussian'
         Noise method.
     seed : None, int, or array_like, optional
-        Random seed used to initialize ``numpy.random.RandomState``. If
-        ``None``, then ``RandomState`` will try to read data from /dev/urandom
-        (or the Windows analogue) if available or seed from the clock otherwise.
+        Random seed used to initialize the pseudo-random number generator. If
+        seed is `None` (default), the seed will be randomly generated from
+        ``/dev/urandom`` if available or the system clock.
 
     Returns
     -------
@@ -373,7 +373,7 @@ def shot_noise(img, method='poisson', seed=None):
     """
     assert method in {'poisson', 'gaussian'}
 
-    rng = np.random.RandomState(seed)
+    rng = np.random.default_rng(seed)
 
     if method == 'poisson':
         try:
@@ -407,9 +407,9 @@ def read_noise(img, electrons, seed=None):
     electrons : int
         Read noise per frame
     seed : None, int, or array_like, optional
-        Random seed used to initialize ``numpy.random.RandomState``. If
-        ``None``, then ``RandomState`` will try to read data from /dev/urandom
-        (or the Windows analogue) if available or seed from the clock otherwise.
+        Random seed used to initialize the pseudo-random number generator. If
+        seed is `None` (default), the seed will be randomly generated from
+        ``/dev/urandom`` if available or the system clock.
 
     Returns
     -------
@@ -418,7 +418,7 @@ def read_noise(img, electrons, seed=None):
 
     """
     img = np.asarray(img)
-    rng = np.random.RandomState(seed)
+    rng = np.random.default_rng(seed)
     noise = rng.normal(loc=0.0, scale=electrons, size=img.shape)
     return img + noise
 
@@ -464,14 +464,14 @@ def dark_current(rate, shape=1, fpn_factor=0, seed=None):
         Dark current FPN factor. Should be between 0.1 and 0.4 for CCD and CMOS
         sensors [1].
     seed : None, int, or array_like, optional
-        Random seed used to initialize ``numpy.random.RandomState``. If
-        ``None``, then ``RandomState`` will try to read data from /dev/urandom
-        (or the Windows analogue) if available or seed from the clock otherwise.
+       Random seed used to initialize the pseudo-random number generator. If
+        seed is `None` (default), the seed will be randomly generated from
+        ``/dev/urandom`` if available or the system clock.
 
-        .. warning::
-            Be aware that if fpn_factor is nonzero and a seed is not provided,
-            the fixed pattern noise will be different each time dark_current is
-            called.
+    .. warning::
+        Be aware that if fpn_factor is nonzero and a seed is not provided,
+        the fixed pattern noise will be different each time dark_current is
+        called.
 
     Returns
     -------
@@ -486,7 +486,7 @@ def dark_current(rate, shape=1, fpn_factor=0, seed=None):
 
     """
     if fpn_factor > 0:
-        rng = np.random.RandomState(seed)
+        rng = np.random.default_rng(seed)
         fpn = rng.lognormal(mean=1.0, sigma=fpn_factor, size=shape)
     else:
         fpn = 1
@@ -519,9 +519,9 @@ def rule07_dark_current(temperature, cutoff_wavelength, pixelscale, shape=1,
         sensors [2]. When fpn_factor is nonzero, seed must be provided. When
         fpn_factor is 0 (default), dark current FPN is not applied.
     seed : None, int, or array_like, optional
-        Random seed used to initialize ``numpy.random.RandomState``. If
-        ``None``, then ``RandomState`` will try to read data from /dev/urandom
-        (or the Windows analogue) if available or seed from the clock otherwise.
+        Random seed used to initialize the pseudo-random number generator. If
+        seed is `None` (default), the seed will be randomly generated from
+        ``/dev/urandom`` if available or the system clock.
 
     Returns
     -------

@@ -38,7 +38,7 @@ def power_spectrum(mask, pixelscale, rms, half_power_freq, exp, seed=None):
     """
 
     mask = np.asarray(mask)
-    rng = np.random.RandomState(seed)
+    rng = np.random.default_rng(seed)
 
     # Define a frequency grid in units of cycles/px
     n, m = mask.shape
