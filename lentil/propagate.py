@@ -239,9 +239,6 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
             out.data.append(Field(data=data, pixelscale=du / oversample,
                                   offset=intersect_shift))
 
-    if not out.data:
-        out.data.append(Field(data=0))
-
     return out
 
 

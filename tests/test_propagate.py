@@ -107,7 +107,7 @@ def test_propagate_tilt_fit_tilt_analytic(pupil):
     coeffs[0] = 0
     p = pupil(focal_length=10, diameter=1, shape=(256,256), radius=120, coeffs=coeffs)
 
-    p.fit_tilt()
+    p.fit_tilt(inplace=True)
     w = lentil.Wavefront(650e-9)
     w = w * p
     w = lentil.propagate_dft(w, shape=npix, pixelscale=pixelscale, oversample=oversample)
@@ -129,6 +129,16 @@ def test_propagate_tilt_fit_tilt_analytic(pupil):
     analytic_shift = analytic_shift[1], -analytic_shift[0]
 
     assert np.all((np.abs(shift - analytic_shift)/oversample) < 0.2)
+
+
+def test_propagate_no_output(pupil):
+
+    p = pupil(focal_length=10, diameter=1, shape=(255,255), radius=120, coeffs=[0, 1e-3])
+    p.fit_tilt(inplace=True)
+    w = lentil.Wavefront(650e-9)
+    w *= p
+    w = lentil.propagate_dft(w, shape=(64,64), pixelscale=5e-6, oversample=2)
+    assert np.all(w.intensity == 0)
 
 
 def test_propagate_resample(pupil):
