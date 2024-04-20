@@ -1,6 +1,18 @@
 Release notes
 =============
 
+v0.8.2
+------
+Released April 20, 2024
+
+* New propagate_dft() functionality for performing propagations
+  in areas limited by a mask
+* Plane directly sets its own internal attribues `#53`_
+* Migrate to numpy random.default_rng() for random numbers
+* Backend enhancements and bugfixes
+
+.. _#53: https://github.com/andykee/lentil/issues/53
+
 v0.8.1
 ------
 Released February 27, 2024
