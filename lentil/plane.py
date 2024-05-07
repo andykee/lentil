@@ -634,9 +634,6 @@ class Image(Plane):
         Binary mask. If not specified, a mask is created from the amplitude.
     pixelscale : float, optional
         Pixel size in meters. Pixels are assumed to be square. Default is None.
-
-    Other Parameters
-    ----------------
     **kwargs : :class:`Plane` parameters
         Keyword arguments passed to :class:`~lentil.Plane` constructor
 
@@ -670,8 +667,8 @@ class TiltInterface(Plane):
     """Utility class for holding common lofic shared by classes that need to
     implement the tilt interface.
 
-    Other Parameters
-    ----------------
+    Parameters
+    ----------
     **kwargs : :class:`~lentil.Plane` parameters
         Keyword arguments passed to :class:`~lentil.Plane` constructor
 
@@ -733,6 +730,8 @@ class Tilt(TiltInterface):
         Radians of tilt about the x-axis
     y : float
         Radians of tilt about the y-axis
+    **kwargs : :class:`Plane` parameters
+        Keyword arguments passed to :class:`~lentil.Plane` constructor
 
     """
     def __init__(self, x, y, **kwargs):
@@ -781,6 +780,8 @@ class DispersiveTilt(TiltInterface):
         Polynomial coefficients describing the dispersion in decreasing powers
         (i.e. dispersion[0] represents the highest order coefficient and 
         dispersion[-1] represents the lowest.)
+    **kwargs : :class:`Plane` parameters
+        Keyword arguments passed to :class:`~lentil.Plane` constructor
 
     Notes
     -----
@@ -994,6 +995,8 @@ class Grism(DispersiveTilt):
         Polynomial coefficients describing the dispersion produced by the grism
         in decreasing powers (i.e. dispersion[0] represents the highest order
         coefficient and dispersion[-1] represents the lowest.)
+    **kwargs : :class:`Plane` parameters
+        Keyword arguments passed to :class:`~lentil.Plane` constructor
 
     .. deprecated:: 1.0.0
         `Grism` will be removed in Lentil v1.0.0, it is replaced by 
