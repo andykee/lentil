@@ -123,8 +123,8 @@ class Field:
             data = self.data * other.data
             offset = self.offset
         else:
-            data = 0
-            offset = [0, 0]
+            data = []
+            offset = None
         return data, offset
     
     def _mul_array(self, other):
@@ -137,13 +137,13 @@ class Field:
         self_extent = lentil.extent.array_extent(self_data.shape, self_offset)
         other_extent = lentil.extent.array_extent(other_data.shape, other_offset)
 
-        self_slice, other_slice = lentil.extent.intersection_slices(self_extent, other_extent)
-        offset = lentil.extent.intersection_shift(self_extent, other_extent)
-        data = self_data[self_slice] * other_data[other_slice]
-
-        if data.size == 0:
-            data = np.array(0, dtype=complex)
-            offset = [0, 0]
+        if lentil.extent.intersect(self_extent, other_extent):
+            self_slice, other_slice = lentil.extent.intersection_slices(self_extent, other_extent)
+            data = self_data[self_slice] * other_data[other_slice]
+            offset = lentil.extent.intersection_shift(self_extent, other_extent)
+        else:
+            data = []
+            offset = None
         return data, offset
 
     def shift(self, z, wavelength, pixelscale, oversample, indexing='ij'):

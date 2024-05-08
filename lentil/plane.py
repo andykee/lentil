@@ -461,7 +461,9 @@ class Plane:
                                offset=lentil.helper.slice_offset(s, self.shape),
                                tilt=[self.tilt[n]] if self.tilt else [])
 
-                out.data.append(field * phasor)
+                res = field * phasor
+                if res.size > 0:
+                    out.data.append(field * phasor)
 
         return out
 

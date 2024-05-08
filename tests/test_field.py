@@ -6,9 +6,9 @@ from lentil.field import Field
 
 @pytest.mark.parametrize('a_data, a_offset, b_data, b_offset, data, offset', [
     (1, [0,0], 1, [0,0], 1+0j, [0,0]),
-    (1, [0,0], 1, [1,0], 0+0j, [0,0]),
+    (1, [0,0], 1, [1,0], [], [0,0]),
     (np.ones((2,2)), [0,0], np.ones((2,2)), [0,0], np.ones((2,2)), [0,0]),
-    (np.ones((2,2)), [0,0], np.ones((2,2)), [4,4], 0+0j, [0,0]),
+    (np.ones((2,2)), [0,0], np.ones((2,2)), [4,4], [], [0,0]),
     (1, [0,0], np.ones((3,3)), [-5,-5], np.ones((3,3)), [-5,-5]),
     (np.ones((5,4)), [-2,-2], np.ones((3,3)), [0,-1], np.ones((2,2)), [0,-1])
 
@@ -19,6 +19,12 @@ def test_multiply(a_data, a_offset, b_data, b_offset, data, offset):
     c = a * b
     assert np.array_equal(c.data, data)
     assert np.array_equal(c.offset, offset)
+
+def test_multiply_disjoint():
+    a = Field(data=1, pixelscale=1, offset=[0,0])
+    b = Field(data=1, pixelscale=1, offset=[-10,0])
+    c = a * b
+    assert c.size == 0
 
 
 def test_merge():
