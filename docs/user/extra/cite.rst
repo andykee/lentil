@@ -18,15 +18,15 @@ reference:
 .. code-block:: bibtex
 
   @inproceedings{lentil2024,
-    author       = {Andrew G. Kee and Mitchell Troy and Carl Nissly and 
-                    Jonathan A. Tesch and Siddarayappa Bikkannavar and 
-                    David C. Redding},
-    title        = {{Lentil: an open-source library for fast optical 
-                    propagation}} ,
-    volume       = {13099},
-    booktitle    = {Modeling, Systems Engineering, and Project Management 
-                    for Astronomy XI},
-    organization = {International Society for Optics and Photonics},
-    publisher    = {SPIE},
-    year         = {2024}
-}
+      author       = {Andrew G. Kee and Mitchell Troy and Carl Nissly and 
+                      Jonathan A. Tesch and Siddarayappa Bikkannavar and 
+                      David C. Redding},
+      title        = {{Lentil: an open-source library for fast optical 
+                      propagation}} ,
+      volume       = {13099},
+      booktitle    = {Modeling, Systems Engineering, and Project Management 
+                      for Astronomy XI},
+      organization = {International Society for Optics and Photonics},
+      publisher    = {SPIE},
+      year         = {2024}
+  }
