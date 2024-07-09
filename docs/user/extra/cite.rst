@@ -6,28 +6,27 @@ Citing Lentil
 
 If Lentil has been significant in your research and you would like to 
 acknowledge the project in a publication, we suggest citing the following
-paper:
+reference:
 
-* Kee, Andrew G., Troy, Mitchell, Nissly, Carl et al. *Lentil: An open-source
-  library for fast optical propagation*
+* Kee, A., Troy, M., Nissly, C. et al. "Lentil: an open-source
+  library for fast optical propagation" in [Modeling, Systems Engineering, and 
+  Project Management for Astronomy XI], 13092, International Society for Optics 
+  and Photonics, SPIE (2024).
 
-*In BibTeX format:*
+*BibTeX:*
 
 .. code-block:: bibtex
 
-    @Article{         kee2024lentil,
-    title         = {Lentil: An open-source library for fast optical 
-                     propagation},
-    author        = {Andrew G. Kee and Mitchell Troy and Carl Nissly and
-                     Jonathan Tesch and Siddarayappa Bikkannavar and David
-                     Redding},
-    year          = {2024},
-    month         = jun,
-    journal       = {},
-    volume        = {},
-    number        = {},
-    pages         = {--},
-    doi           = {},
-    publisher     = {},
-    url           = {}
-    }
+  @inproceedings{lentil2024,
+    author       = {Andrew G. Kee and Mitchell Troy and Carl Nissly and 
+                    Jonathan A. Tesch and Siddarayappa Bikkannavar and 
+                    David C. Redding},
+    title        = {{Lentil: an open-source library for fast optical 
+                    propagation}} ,
+    volume       = {13099},
+    booktitle    = {Modeling, Systems Engineering, and Project Management 
+                    for Astronomy XI},
+    organization = {International Society for Optics and Photonics},
+    publisher    = {SPIE},
+    year         = {2024}
+}
