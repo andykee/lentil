@@ -26,7 +26,7 @@ Install and update using `pip`_:
 
 Links
 -----
-* Documentation: https://lentil.readthedocs.io/
+* Documentation: https://andykee.github.io/lentil/
 * Releases: https://pypi.org/project/lentil/
 * Code: https://github.com/andykee/lentil/
 * Issue tracker: https://github.com/andykee/lentil/issues/
