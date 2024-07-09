@@ -75,6 +75,14 @@ class Plane:
 
     def __repr__(self):
         return f'{self.__class__.__name__}()'
+    
+    def __freeze__(self):
+        return Plane(amplitude=self.amplitude,
+                     opd=self.opd,
+                     mask=self.mask,
+                     pixelscale=self.pixelscale,
+                     diameter=self.diameter,
+                     ptype=self.ptype)
 
     @property
     def ptype(self):
@@ -261,6 +269,22 @@ class Plane:
         :class:`~lentil.Plane`
         """
         return copy.deepcopy(self)
+    
+    def freeze(self):
+        """
+        Return a static copy of this object.
+
+        Returns
+        -------
+        :class:`~lentil.Plane`
+
+        Notes
+        -----
+        The behavior of this function can be changed (for example, to freeze 
+        additional custom attributes in a subclass) by modifying the 
+        ``Plane.__freeze__()`` method.
+        """
+        return self.__freeze__()
 
     def fit_tilt(self, inplace=False):
         """
@@ -608,6 +632,14 @@ class Pupil(Plane):
 
         self.focal_length = focal_length
 
+    def __freeze__(self):
+        return Pupil(amplitude=self.amplitude,
+                     opd=self.opd,
+                     mask=self.mask,
+                     pixelscale=self.pixelscale,
+                     diameter=self.diameter,
+                     focal_length=self.focal_length)
+
     def multiply(self, wavefront):
 
         wavefront = super().multiply(wavefront)
@@ -656,6 +688,14 @@ class Image(Plane):
                          pixelscale=pixelscale, ptype=lentil.image,
                          **kwargs)
         
+    def __freeze__(self):
+        return Image(amplitude=self.amplitude,
+                     opd=self.opd,
+                     mask=self.mask,
+                     pixelscale=self.pixelscale,
+                     diameter=self.diameter,
+                     ptype=self.ptype)
+    
     def fit_tilt(self, *args, **kwargs):
         return self
 
