@@ -336,7 +336,7 @@ def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
     if dtype is not None:
         img = img.astype(dtype)
 
-    img[img > saturation_capacity - 1] = saturation_capacity - 1
+    
 
     return img
 
