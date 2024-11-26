@@ -119,8 +119,6 @@ def subarray(a, shape, shift=(0,0)):
     rmax = rmin + shape[0]
     cmax = cmin + shape[1]
 
-    print(rmin, rmax, cmin, cmax)
-
     if any((rmin<0, cmin<0, rmax>a.shape[0], cmax>a.shape[1])):
         raise ValueError('window lies outside of array')
 
