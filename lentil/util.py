@@ -90,6 +90,43 @@ def pad(array, shape):
     return padded
 
 
+def subarray(a, shape, shift=(0,0)):
+    """Extract a contiguous subarray from a larger array.
+
+    The subarray is extracted about the center of the source array unless
+    a shift is specified.
+
+    Parameters
+    ----------
+    a : array_like
+        Source array
+    shape : array_like of ints
+        Shape of subarray array in ``(nrows, ncols)``.
+    shift : array_like of ints
+        Relative shift of the center of the subarray in ``(row, col)``.
+    
+    Returns
+    -------
+    out : ndarray
+        Subarray extracted from the source array.
+    """
+
+    a = np.asarray(a)
+    shape = np.asarray(shape)
+
+    rmin = a.shape[0]//2 - shape[0]//2 + shift[0]
+    cmin = a.shape[1]//2 - shape[1]//2 + shift[1]
+    rmax = rmin + shape[0]
+    cmax = cmin + shape[1]
+
+    print(rmin, rmax, cmin, cmax)
+
+    if any((rmin<0, cmin<0, rmax>a.shape[0], cmax>a.shape[1])):
+        raise ValueError('window lies outside of array')
+
+    return a[rmin:rmax, cmin:cmax]
+
+
 def window(img, shape=None, slice=None):
     """Extract an appropriately sized, potentially windowed array
 

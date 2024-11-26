@@ -22,6 +22,7 @@ Array manipulation
     lentil.boundary
     lentil.centroid
     lentil.pad
+    lentil.subarray
     lentil.window
     lentil.rebin
     lentil.rescale

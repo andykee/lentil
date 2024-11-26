@@ -53,6 +53,7 @@ from lentil import util
 from lentil.util import (
 	centroid,
 	pad,
+    subarray,
 	window,
 	boundary,
 	rebin,
