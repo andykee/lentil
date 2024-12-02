@@ -1,6 +1,13 @@
 Release notes
 =============
 
+v0.8.4
+------
+Released December 2, 2024
+
+* New subarray() function
+* Minor bugfixes and documentation updates
+
 v0.8.3
 ------
 Released June 15, 2024
