@@ -32,6 +32,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.viewcode',
               'sphinx_copybutton',
               'sphinx_design',
+              'sphinx_favicon',
               'matplotlib.sphinxext.plot_directive'
               ]
 templates_path = ['_templates']
@@ -53,31 +54,8 @@ html_theme_options = {
    },
    "collapse_navigation": True,
    "navbar_persistent": ["search-button"],
-   "pygment_light_style": "tango",
-   "pygment_dark_style": "nord",
-   "favicons": [
-      {
-         "rel": "icon",
-         "sizes": "16x16",
-         "href": "favicon/favicon-16x16.png",
-      },
-      {
-         "rel": "icon",
-         "sizes": "32x32",
-         "href": "favicon/favicon-32x32.png",
-      },
-      {
-         "rel": "icon",
-         "sizes": "48x48",
-         "href": "favicon/favicon-48x48.png",
-      },
-      {
-         "rel": "apple-touch-icon",
-         "sizes": "180x180",
-         "href": "favicon/apple-touch-icon-180x180.png",
-         "color": "#000000",
-      },
-   ]
+   "pygments_light_style": "tango",
+   "pygments_dark_style": "nord",
 }
 
 html_additional_pages = {
@@ -94,6 +72,30 @@ html_show_sourcelink = False
 html_scaled_image_link = False
 
 html_css_files = ['css/lentil.css']
+
+favicons = [
+    {
+        "rel": "icon",
+        "sizes": "16x16",
+        "href": "favicon/favicon-16x16.png",
+    },
+    {
+        "rel": "icon",
+        "sizes": "32x32",
+        "href": "favicon/favicon-32x32.png",
+    },
+    {
+        "rel": "icon",
+        "sizes": "48x48",
+        "href": "favicon/favicon-48x48.png",
+    },
+    {
+        "rel": "apple-touch-icon",
+        "sizes": "180x180",
+        "href": "favicon/apple-touch-icon-180x180.png",
+        "color": "#000000",
+    },
+]
 
 # if true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
@@ -160,8 +162,13 @@ plot_html_show_formats = False
 plot_formats = [('png', dpi*2)]
 plot_pre_code = """
 import lentil
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 np.random.seed(12345)
+
+# set up the OPD colormap to display NaNs as light gray
+opd_cmap = matplotlib.colormaps.get_cmap('RdBu_r')
+opd_cmap.set_bad(color='#dddddd')
 """
 

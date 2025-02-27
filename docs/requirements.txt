@@ -1,5 +1,6 @@
-sphinx>=3.2
+sphinx>=8
 matplotlib>=3.6
-pydata-sphinx-theme
+pydata-sphinx-theme >= 0.16
 sphinx-copybutton
 sphinx-design
+sphinx-favicon
