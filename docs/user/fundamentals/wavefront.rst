@@ -1,6 +1,6 @@
 .. _user.fundamentals.wavefront:
 
-.. currentmodule:: lentil
+.. .. currentmodule:: lentil
 
 *******************
 Wavefront and Field

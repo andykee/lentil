@@ -132,6 +132,8 @@ If multiple planes are required to model the desired optical system, the steps
 described above should be repeated until the |Wavefront| has been propagated 
 through all of the planes.
 
+.. _user.diffraction.broadband:
+
 Broadband (multi-wavelength) propagations
 =========================================
 The steps outlined above propagate a single monochromatic |Wavefront| through an
@@ -160,25 +162,48 @@ different wavelengths and accumulates the resulting image plane intensity:
 Keep in mind the output ``img`` array must be sized to accommodate the oversampled
 wavefront intensity given by ``shape`` * ``oversample``.
 
-.. note::
+Increasing broadband propagation performance
+--------------------------------------------
 
-    Each time ``wavefront.field`` or ``wavefront.intensity`` is accessed, a new Numpy
-    array of zeros with shape = ``wavefront.shape`` is allocated. It is possible to
-    avoid repeatedly allocating large arrays of zeros when accumulating the result of
-    a broadband propagation by using :func:`Wavefront.insert` instead. This can result
-    in significant performance gains, particularly when ``wavefront.shape`` is large.
+Using Wavefront.insert()
+~~~~~~~~~~~~~~~~~~~~~~~~
+Each time ``wavefront.field`` or ``wavefront.intensity`` is accessed, a new Numpy
+array of zeros with shape = ``wavefront.shape`` is allocated. It is possible to
+avoid repeatedly allocating large arrays of zeros when accumulating the result of
+a broadband propagation by using :func:`Wavefront.insert` instead. This can result
+in significant performance gains, particularly when ``wavefront.shape`` is large.
 
-    The above example can be rewritten to use :func:`Wavefront.insert` instead:
+The above example can be rewritten to use :func:`Wavefront.insert` instead:
 
-    .. code-block:: python
+.. code-block:: python
 
-        for wl in wavelengths:
-            w = lentil.Wavefront(wl)
-            w = w * pupil
-            w = lentil.propagate_dft(w, pixelscale=5e-6, shape=(64,64), 
-                                     oversample=5)
-            img = w.insert(img)
+    for wl in wavelengths:
+        w = lentil.Wavefront(wl)
+        w = w * pupil
+        w = lentil.propagate_dft(w, pixelscale=5e-6, shape=(64,64), 
+                                 oversample=5)
+        img = w.insert(img)
 
+Using Plane.freeze()
+~~~~~~~~~~~~~~~~~~~~
+Some planes implement custom :attr:`~lentil.Plane.opd` logic that computes the
+return value each time the attribute (more accurately, property) is accessed. 
+When using these planes in a broadband propagation performance will suffer 
+since the :attr:`~lentil.Plane.opd` attribute is accessed for each wavelength.
+Because the underlying OPD value is static for the duration of a propagation,
+an opportunity exists to use a cached value which can provide a substantial
+performance boost. :func:`Plane.freeze` provides this cache mechanism. Again
+modifying the above example:
+
+.. code-block:: python
+
+    frozen_pupil = pupil.freeze()
+
+    for wl in wavelengths:
+        w = lentil.Wavefront(wl)
+        w = w * frozen_pupil  # cached OPD value is used here
+        w = lentil.propagate_dft(w, pixelscale=5e-6, shape=(64,64), oversample=5)
+        img += w.intensity
 
 .. _user.diffraction.sampling:
 

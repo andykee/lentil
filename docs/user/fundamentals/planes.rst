@@ -79,13 +79,21 @@ Create a new Plane with
 
 Once a Plane is defined, its attributes can be modified at any time:
 
-.. plot::
-    :include-source:
-    :scale: 50
+.. code-block:: pycon
 
     >>> p = lentil.Plane(amplitude=lentil.circle((256,256), 120))
     >>> p.opd = 2e-6 * lentil.zernike(p.mask, index=4)
-    >>> plt.imshow(p.opd)
+    >>> plt.imshow(p.opd, cmap=opd_cmap)
+
+.. plot::
+    :scale: 50
+
+    >>> import matplotlib
+    >>> p = lentil.Plane(amplitude=lentil.circle((256,256), 120))
+    >>> p.opd = 2e-6 * lentil.zernike(p.mask, index=4)
+    >>> opd = p.opd
+    >>> opd[np.where(opd == 0)] = np.nan
+    >>> plt.imshow(opd, cmap=opd_cmap)
 
 
 Resampling or rescaling a Plane
@@ -94,6 +102,38 @@ It is possible to resample a plane using either the
 :func:`~lentil.Plane.resample` or :func:`~lentil.Plane.rescale` methods. Both 
 methods use intrepolation to resample the amplitude, opd, and mask attributes 
 and readjust the pixelscale attribute as necessary.
+
+.. _user.planes.freeze:
+
+Creating a frozen copy of a Plane
+---------------------------------
+Some custom Planes like the 
+:ref:`tip/tilt mirror defined below <user.planes.tip-tilt-mirror>` 
+implement custom :attr:`~lentil.Plane.opd` functionality that computes a 
+dynamic OPD value on the fly. When :attr:`~lentil.Plane.opd` needs to be
+repeatedly accessed (for example, when performing a 
+:ref:`broadband propagation <user.diffraction.broadband>`) and
+is expensive to calculate, it can be beneficial to operate on a
+copy of the plane where its :attr:`~lentil.Plane.opd` attribute has
+been "frozen". This is easily accomplished using the 
+:func:`~lentil.Plane.freeze` method:
+
+.. code-block:: pycon
+  
+    >>> tt = TipTiltMirror()
+    >>> tt.x = [1e-6, 3e-6]
+    >>> ttf = tt.freeze()
+
+By default, only the :attr:`~lentil.Plane.opd` attribute is frozen, but
+it's possible to freeze any other attribute by passing its name to 
+:func:`~lentil.Plane.freeze`:
+
+.. code-block:: pycon
+  
+    >>> ttf = tt.freeze('other_attr')
+
+For additional details see 
+:ref:`The inner workings of Plane.freeze() <user.advanced.freeze>`.
 
 .. _user.planes.pupil:
 
@@ -269,7 +309,7 @@ system:
 .. .. image:: /_static/img/psf_coma_flip.png
 ..     :width: 300px
 
-.. _user_guide.planes.special:
+.. _user.planes.special:
 
 Dispersive planes
 =================
@@ -306,6 +346,8 @@ concrete implementation. Instead, a custom subclass of either |Plane| or
 application, but a simple example of a tip-tilt mirror where the plane's OPD 
 is computed dynamically based on the state `x` is provided below. 
 
+.. _user.planes.tip-tilt-mirror:
+
 .. code-block:: python3
 
     import lentil
@@ -332,19 +374,16 @@ is computed dynamically based on the state `x` is provided below.
 
     >>> tt = TipTiltMirror()
     >>> tt.x = [1e-6, 3e-6]
-    >>> plt.imshow(tt.opd)
+    >>> plt.imshow(tt.opd, cmap=opd_cmap)
     >>> plt.colorbar()
 
 .. plot::
     :scale: 50
 
-    import matplotlib.pyplot as plt
-    import lentil
-
     mask = lentil.circle((256,256), 120, antialias=False)
     opd = lentil.zernike_compose(mask, [0, 1e-6, 3e-6], normalize=False)
-
-    im = plt.imshow(opd, origin='lower')
+    opd[np.where(mask == 0)] = np.nan
+    im = plt.imshow(opd, cmap=opd_cmap)
     plt.colorbar(im, fraction=0.046, pad=0.04)
 
 

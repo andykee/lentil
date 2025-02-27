@@ -1,6 +1,6 @@
 .. _user.fundamentals.radiometry:
 
-.. currentmodule:: lentil
+.. .. currentmodule:: lentil
 
 ************************
 Computational radiometry

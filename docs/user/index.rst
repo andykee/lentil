@@ -37,6 +37,7 @@ The User Guide provides documentation for all of Lentil's features and capabilit
 
     advanced/extend
     advanced/performance
+    advanced/freeze
     advanced/matlab
 
 .. toctree::
