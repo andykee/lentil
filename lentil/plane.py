@@ -73,6 +73,8 @@ class Plane:
 
         self.tilt = []
 
+    __freeze_attrs__ = ['opd']
+
     def __repr__(self):
         return f'{self.__class__.__name__}()'
 
@@ -261,6 +263,42 @@ class Plane:
         :class:`~lentil.Plane`
         """
         return copy.deepcopy(self)
+
+    def freeze(self, *attrs):
+        """Return a new instance of ``self`` where selected properties are
+        cached when this function is called rather than being recomputed 
+        each time they are accessed.
+
+        By default, only :attr:`opd` is frozen, as defined by 
+        ``Plane.__freeze_attrs__``.
+
+        Parameters
+        ----------
+        *attrs : str, optional
+            Additional properties to freeze. 
+
+        Returns
+        -------
+        :class:`Plane`
+        
+        """
+        freeze_attrs = [*self.__freeze_attrs__, *attrs]
+
+        name = 'Frozen' + self.__class__.__name__
+        bases = (self.__class__,)
+        attrs = {f'{attr}': property(fget=_AttrGetter(attr))
+                 for attr in freeze_attrs}
+        cls = type(name, bases, attrs)  # dynamically construct a new type
+        fself = cls() # new instance of cls
+
+        # copy over all of self's attributes to fself
+        fself.__dict__.update(self.__dict__)
+
+        # create static copies of the frozen attributes
+        for attr in freeze_attrs:
+            setattr(fself, f'_{attr}', getattr(self, attr)) 
+
+        return fself
 
     def fit_tilt(self, inplace=False):
         """
@@ -558,6 +596,16 @@ def _plane_slice(mask):
     else:
         raise ValueError('mask has invalid dimensions')
     return s
+
+class _AttrGetter:
+    """Callable object that returns other._attr when called. Used by 
+    Plane.__freeze__()
+    """
+    def __init__(self, attr):
+        self.attr = attr
+    
+    def __call__(self, other):
+        return getattr(other, f'_{self.attr}')
 
 
 class Pupil(Plane):

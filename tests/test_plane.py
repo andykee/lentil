@@ -148,3 +148,25 @@ def test_dispersive_tilt_shift():
     assert x == (wave - dt.dispersion[1])/np.sqrt(2)
     assert y == 1+x
 
+
+class FreezePlane(lentil.Plane):
+
+    @property
+    def opd(self):
+        return np.random.uniform()
+    
+    @property
+    def custom_attr(self):
+        return np.random.uniform()
+
+
+def test_freeze():
+    p = FreezePlane()
+    fp = p.freeze('custom_attr')
+    a = fp.opd
+    b = fp.opd
+    c = fp.custom_attr
+    d = fp.custom_attr
+    assert a == b
+    assert c == d
+    assert a != c
