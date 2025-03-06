@@ -151,22 +151,13 @@ def test_dispersive_tilt_shift():
 
 class FreezePlane(lentil.Plane):
 
-    @property
-    def opd(self):
-        return np.random.uniform()
-    
-    @property
-    def custom_attr(self):
+    def __opd__(self):
         return np.random.uniform()
 
 
 def test_freeze():
     p = FreezePlane()
-    fp = p.freeze('custom_attr')
-    a = fp.opd
-    b = fp.opd
-    c = fp.custom_attr
-    d = fp.custom_attr
+    p.freeze()
+    a = p.opd
+    b = p.opd
     assert a == b
-    assert c == d
-    assert a != c

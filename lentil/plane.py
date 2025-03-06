@@ -73,10 +73,15 @@ class Plane:
 
         self.tilt = []
 
-    __freeze_attrs__ = ['opd']
+        self._frozen = False
 
     def __repr__(self):
         return f'{self.__class__.__name__}()'
+    
+    __freeze_attrs__ = ['opd']
+
+    def __opd__(self):
+        return self._opd
 
     @property
     def ptype(self):
@@ -88,6 +93,10 @@ class Plane:
         """
 
         return self._ptype
+    
+    @property
+    def frozen(self):
+        return self._frozen
 
     @property
     def amplitude(self):
@@ -112,11 +121,15 @@ class Plane:
         -------
         ndarray
         """
-
-        return self._opd
+        if self.frozen:
+            return self._opd
+        else:
+            return self.__opd__() 
     
     @opd.setter
     def opd(self, value):
+        if self.frozen:
+            raise RuntimeError('Can\'t set opd while Plane is frozen')
         self._opd = np.asarray(value)
 
     @property
@@ -264,7 +277,7 @@ class Plane:
         """
         return copy.deepcopy(self)
 
-    def freeze(self, *attrs):
+    def freeze(self):
         """Return a new instance of ``self`` where selected properties are
         cached when this function is called rather than being recomputed 
         each time they are accessed.
@@ -282,23 +295,16 @@ class Plane:
         :class:`Plane`
         
         """
-        freeze_attrs = [*self.__freeze_attrs__, *attrs]
+        if self.frozen:
+            raise RuntimeError('Plane is already frozen')
+        
+        for attr in self.__freeze_attrs__:
+            setattr(self, f'_{attr}', getattr(self, attr))
+        
+        self._frozen = True
 
-        name = 'Frozen' + self.__class__.__name__
-        bases = (self.__class__,)
-        attrs = {f'{attr}': property(fget=_AttrGetter(attr))
-                 for attr in freeze_attrs}
-        cls = type(name, bases, attrs)  # dynamically construct a new type
-        fself = cls() # new instance of cls
-
-        # copy over all of self's attributes to fself
-        fself.__dict__.update(self.__dict__)
-
-        # create static copies of the frozen attributes
-        for attr in freeze_attrs:
-            setattr(fself, f'_{attr}', getattr(self, attr)) 
-
-        return fself
+    def thaw(self):
+        self._frozen = False
 
     def fit_tilt(self, inplace=False):
         """
