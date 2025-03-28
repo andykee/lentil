@@ -48,8 +48,8 @@ this:
                 if nargin < 5; oversample = 3; end
                 if nargin < 4; npix = 1024; end
 
-                img = ndarray2mat(self.cls.propagate(nparray2mat(wave), nparray2mat(weight),...
-                                  int(npix), int(oversample), rebin, tilt, int(npix_chip));
+                img = self.cls.propagate(wave, weight, int(npix), int(oversample),... 
+                                         rebin, tilt, int(npix_chip));
             end
 
         end
@@ -72,8 +72,8 @@ More recent versions of MATLAB (>= 2019b) support optional positional arguments.
             npix_chip = py.None
         end
 
-        img = ndarray2mat(self.cls.propagate(nparray2mat(wave), nparray2mat(weight),...
-                          int(npix), int(oversample), rebin, tilt, int(npix_chip));
+        img = self.cls.propagate(wave, weight), int(npix), int(oversample),... 
+                                 rebin, tilt, int(npix_chip));
     end
 
 

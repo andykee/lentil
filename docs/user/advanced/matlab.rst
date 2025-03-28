@@ -22,11 +22,11 @@ It's possible to read and write `.npy` files in MATLAB using `npy-matlab
 Interacting directly with Lentil from MATLAB
 --------------------------------------------
 It is possible to interact directly with Lentil within MATLAB. For example, we can
-create a simple :func:`~util.circle` mask with:
+create a simple :func:`~circle` mask with:
 
 .. code-block:: matlab
 
-    >> mask = py.lentil.util.circle([int16(256),int16(256)],int16(128));
+    >> mask = py.lentil.circle([int16(256),int16(256)],int16(128));
 
 Note that MATLAB `automatically does type conversion 
 <https://www.mathworks.com/help/matlab/matlab_external/passing-data-to-python.html>`_ 
@@ -41,15 +41,7 @@ develop a separate MATLAB class that mimics the interface of a Lentil class and 
 any data formatting issues that arise between MATLAB and Python. In this way, the model
 logic all resides within the Python code, and the MATLAB code is only responsible for
 managing the interface between languages. An example following this approach is
-available here.
-
-When deploying a MATLAB interface to a Lentil model, it may be convenient to duplicate
-the ``mat2ndarray.m`` and ``ndarray2mat.m`` scripts in the project's local ``matlab``
-directory alongside the ``.m`` interfaces. This simplifies the end user experience
-because it does not require any additional path modification or management to use the
-model.
-
-A sample implementation is available :ref:`here<examples.matlab_interface>`.
+available :ref:`here<examples.matlab_interface>`.
 
 Finally, a few links that may be helpful when developing a MATLAB interface:
 
@@ -135,7 +127,7 @@ Debugging MATLAB's Undefined variable "py" or function "py.command" error
 
 .. code-block:: matlab
 
-    >> mask = py.lentil.util.circle([int16(256),int16(256)],int16(128));
+    >> mask = py.lentil.circle([int16(256),int16(256)],int16(128));
 
 3. Verify there are no import errors in the Python code by importing Lentil and any
 custom models in a Python interpreter:
