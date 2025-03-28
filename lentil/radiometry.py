@@ -915,8 +915,8 @@ def _interp_common(s1, s2, sampling, method, fill_value):
     s2_wave = commonwave[s2_index]
 
     # sample each Spectrum at the requested sampling
-    s1_samplevalue = s1.sample(s1_wave, method=method, fill_value=fill_value)
-    s2_samplevalue = s2.sample(s2_wave, method=method, fill_value=fill_value)
+    s1_samplevalue = s1.sample(s1_wave, method=method, fill_value=fill_value, waveunit=s1.waveunit)
+    s2_samplevalue = s2.sample(s2_wave, method=method, fill_value=fill_value, waveunit=s2.waveunit)
 
     # create nominal value arrays
     s1_value = fill_value * np.ones(commonwave.shape)
