@@ -9,9 +9,10 @@ MATLAB Lentil Interface
 
 Calling Python libraries from MATLAB is as simple as configuring MATLAB to use the
 appropriate Python implementation and prepending the Python command with ``py.``. Before
-using Lentil in MATLAB, be sure that you you have
-:ref:`configured MATLAB to use the correct version of Python installed on your system
-<user.matlab.config>`. 
+using Lentil in MATLAB, be sure that your Python version is `compatible with your MATLAB 
+release <https://www.mathworks.com/support/requirements/python-compatibility.html>`_ and 
+that you have :ref:`configured MATLAB to use the correct version of Python installed on 
+your system <user.matlab.config>`. 
 
 A MATLAB helper function is available :download:`here </_static/matlab/check_pyenv.m>`
 for verifying compatibility between MATLAB and Python versions.
