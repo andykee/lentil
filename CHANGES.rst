@@ -1,6 +1,15 @@
 Release notes
 =============
 
+v0.8.5
+------
+Released May 5, 2025
+
+* New ``Plane.freeze()`` method
+* Documentation updates
+* Updates to GitHub Actions
+* Add support for NumPy versions >= 2.0
+
 v0.8.4
 ------
 Released December 2, 2024
