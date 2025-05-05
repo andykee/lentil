@@ -600,7 +600,7 @@ class Spectrum:
         if method == 'simps':
             result = scipy.integrate.simpson(x=wave, y=value)
         elif method == 'trapz':
-            result = np.trapz(value, wave)
+            result = np.integrate.trapezoid(x=wave, y=value)
         else:
             raise ValueError('Unknown method ', method)
 
