@@ -4,8 +4,10 @@
 Propagation
 ***********
 
+.. currentmodule:: lentil
+
 .. autosummary::
     :toctree: generated/
 
-    lentil.propagate_dft
-    lentil.propagate_fft
+    propagate_dft
+    propagate_fft

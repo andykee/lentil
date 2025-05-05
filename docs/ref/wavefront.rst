@@ -4,7 +4,9 @@
 Wavefront
 *********
 
+.. currentmodule:: lentil
+
 .. autosummary::
     :toctree: generated/
 
-    lentil.Wavefront
+    Wavefront

@@ -4,12 +4,14 @@
 Zernike polynomials
 *******************
 
+.. currentmodule:: lentil
+
 .. autosummary::
     :toctree: generated/
 
-    lentil.zernike
-	lentil.zernike_compose
-	lentil.zernike_fit
-	lentil.zernike_remove
-	lentil.zernike_basis
-	lentil.zernike_coordinates
+    zernike
+	zernike_compose
+	zernike_fit
+	zernike_remove
+	zernike_basis
+	zernike_coordinates

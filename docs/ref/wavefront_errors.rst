@@ -4,10 +4,12 @@
 Wavefront errors
 ****************
 
+.. currentmodule:: lentil
+
 .. autosummary::
     :toctree: generated/
 
-    lentil.power_spectrum
-    lentil.translation_defocus
+    power_spectrum
+    translation_defocus
 
 

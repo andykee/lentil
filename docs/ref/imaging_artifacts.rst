@@ -4,10 +4,12 @@
 Imaging artifacts
 *****************
 
+.. currentmodule:: lentil
+
 .. autosummary::
     :toctree: generated/
 
-    lentil.jitter
-    lentil.smear
+    jitter
+    smear
 
 

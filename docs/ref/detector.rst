@@ -4,44 +4,46 @@
 Detector (``lentil.detector``)
 ******************************
 
+.. currentmodule:: lentil
+
 Charge collection
 -----------------
 .. autosummary::
     :toctree: generated/
 
-    lentil.detector.collect_charge
-    lentil.detector.collect_charge_bayer
+    detector.collect_charge
+    detector.collect_charge_bayer
 
 Pixel effects
 -------------
 .. autosummary::
     :toctree: generated/
 
-    lentil.detector.pixel
-    lentil.detector.pixelate
+    detector.pixel
+    detector.pixelate
 
 Noise
 -----
 .. autosummary::
     :toctree: generated/
 
-    lentil.detector.shot_noise
-    lentil.detector.read_noise
-    lentil.detector.charge_diffusion
-    lentil.detector.dark_current
-    lentil.detector.rule07_dark_current
+    detector.shot_noise
+    detector.read_noise
+    detector.charge_diffusion
+    detector.dark_current
+    detector.rule07_dark_current
 
 Readout
 -------
 .. autosummary::
     :toctree: generated/
 
-    lentil.detector.adc
+    detector.adc
 
 Cosmic rays
 -----------
 .. autosummary::
     :toctree: generated/
 
-    lentil.detector.cosmic_rays
+    detector.cosmic_rays
     

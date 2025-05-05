@@ -4,28 +4,30 @@
 Plane objects
 *************
 
+.. currentmodule:: lentil
+
 .. autosummary::
     :toctree: generated/
 
-    lentil.Plane
-    lentil.Pupil
-    lentil.Image
+    Plane
+    Pupil
+    Image
 
 Plane transformations
 ---------------------
 .. autosummary::
     :toctree: generated/
 
-    lentil.Tilt
-    lentil.Rotate
-    lentil.Flip
+    Tilt
+    Rotate
+    Flip
 
 Dispersive Planes
 -----------------
 .. autosummary::
     :toctree: generated/
 
-    lentil.DispersiveTilt
+    DispersiveTilt
 
 
 Deprecated
@@ -33,4 +35,4 @@ Deprecated
 .. autosummary::
     :toctree: generated/
 
-    lentil.Grism
+    Grism
