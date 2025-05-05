@@ -132,9 +132,6 @@ it's possible to freeze any other attribute by passing its name to
   
     >>> ttf = tt.freeze('other_attr')
 
-For additional details see 
-:ref:`The inner workings of Plane.freeze() <user.advanced.freeze>`.
-
 .. _user.planes.pupil:
 
 ptype
