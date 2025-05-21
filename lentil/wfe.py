@@ -13,11 +13,11 @@ def power_spectrum(mask, pixelscale, rms, half_power_freq, exp, seed=None):
     mask : array_like
         Binary [0,1] mask defining pupil extent
     pixelscale : float
-        Physical size of each pixel in the resulting opd in meters.
+        Physical size of each pixel in the resulting opd
     rms : float
-        RMS value of the PSD error in meters
+        RMS value of the PSD error
     half_power_freq : float
-        Half-power frequency in number of cycles per pixel
+        Half-power frequency in number of cycles per unit
     exp : float
         Exponent of the inverse-power law
     seed : int, optional
@@ -40,7 +40,7 @@ def power_spectrum(mask, pixelscale, rms, half_power_freq, exp, seed=None):
     mask = np.asarray(mask)
     rng = np.random.default_rng(seed)
 
-    # Define a frequency grid in units of cycles/px
+    # Define a frequency grid
     n, m = mask.shape
     yy, xx = np.mgrid[0:m, 0:n]
     yy = (yy - (np.floor(m / 2) + 1)) / m
