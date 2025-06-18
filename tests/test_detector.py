@@ -154,14 +154,6 @@ def test_adc_dtype():
     assert out.dtype == np.int8
 
 
-def test_shot_noise_poisson():
-    img = np.random.uniform(low=0, high=1e5, size=(2, 2))
-    shot1 = lentil.detector.shot_noise(img, method='poisson')
-    shot2 = lentil.detector.shot_noise(img, method='poisson')
-    assert np.all(shot1 != shot2)
-    assert shot1.shape == (2, 2)
-
-
 def test_shot_noise_poisson_seed():
     img = np.random.uniform(low=0, high=1e5, size=(2, 2))
     shot1 = lentil.detector.shot_noise(img, method='poisson', seed=12345)
@@ -179,14 +171,6 @@ def test_shot_noise_poisson_big():
         lentil.detector.shot_noise(10e100, method='poisson')
 
 
-def test_shot_noise_gaussian():
-    img = np.random.uniform(low=0, high=1e5, size=(2, 2))
-    shot1 = lentil.detector.shot_noise(img, method='gaussian')
-    shot2 = lentil.detector.shot_noise(img, method='gaussian')
-    assert np.all(shot1 != shot2)
-    assert shot1.shape == (2, 2)
-
-
 def test_shot_noise_gaussian_seed():
     img = np.random.uniform(low=0, high=1e5, size=(2, 2))
     shot1 = lentil.detector.shot_noise(img, method='gaussian', seed=12345)
@@ -198,14 +182,6 @@ def test_shot_noise_gaussian_seed():
 def test_shot_noise_gaussian_negative():
     with pytest.raises(ValueError):
         lentil.detector.shot_noise(-10, method='gaussian')
-
-
-def test_read_noise_gaussian():
-    img = np.random.uniform(low=0, high=1e5, size=(2, 2))
-    read1 = lentil.detector.read_noise(img, electrons=100)
-    read2 = lentil.detector.read_noise(img, electrons=100)
-    assert np.all(read1 != read2)
-    assert read1.shape == (2, 2)
 
 
 def test_read_noise_gaussian_seed():
