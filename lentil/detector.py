@@ -568,7 +568,8 @@ def rule07_dark_current(temperature, cutoff_wavelength, pixelscale, shape=1,
     return dark_current(rate, shape, fpn_factor, seed)
 
 
-def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, alpha_flux=4e9):
+def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, 
+                alpha_flux=4e9, seed=None):
     """
     Cosmic ray generator for simulating cosmic ray hits on a detector.
 
@@ -594,6 +595,10 @@ def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, alpha_flux=4e9
         Number of electrons liberated per meter of travel for an alpha particle.
         By definition, alpha particles have four times the energy of protons.
         Default is 4e9 e-/m.
+    seed : {int, array_like[ints], None}, optional
+        Random seed used to initialize the pseudo-random number generator. If
+        seed is `None` (default), the seed will be randomly generated from
+        ``/dev/urandom`` if available or the system clock.
 
     Returns
     -------
@@ -622,17 +627,19 @@ def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, alpha_flux=4e9
     [2] `Cosmic ray - Wikipedia <https://en.wikipedia.org/wiki/Cosmic_ray>`_
 
     """
+    rng = np.random.default_rng(seed)
+
     # compute the number of rays that strike the detector during the
     # integration time
-    nrays = _nrays(shape, pixelscale, ts, rate)
+    nrays = _nrays(shape, pixelscale, ts, rate, rng)
 
     img = np.zeros(shape)
     for ray in np.arange(0, nrays):
-        img += _cosmic_ray(shape, pixelscale, alpha_flux, proton_flux)
+        img += _cosmic_ray(shape, pixelscale, alpha_flux, proton_flux, rng)
     return img
 
 
-def _nrays(shape, pixelscale, ts, rate):
+def _nrays(shape, pixelscale, ts, rate, rng):
     area = shape[0]*pixelscale[0]*shape[1]*pixelscale[1]
 
     nrays = area * rate * ts
@@ -640,7 +647,7 @@ def _nrays(shape, pixelscale, ts, rate):
     # even if we don't have any events as defined by the rate, there is
     # still a chance we will see an event
     if nrays < 1:
-        if np.random.uniform() <= nrays:
+        if rng.uniform() <= nrays:
             nrays = 1
         else:
             nrays = 0
@@ -648,10 +655,10 @@ def _nrays(shape, pixelscale, ts, rate):
     return int(nrays)
 
 
-def _cosmic_ray(shape, pixelscale, alpha_flux, proton_flux):
+def _cosmic_ray(shape, pixelscale, alpha_flux, proton_flux, rng):
 
     # randomly choose which type of particle we have
-    if np.random.uniform() > 0.9:
+    if rng.uniform() > 0.9:
         # alpha particle
         electron_flux = alpha_flux
     else:
@@ -661,8 +668,8 @@ def _cosmic_ray(shape, pixelscale, alpha_flux, proton_flux):
     img = np.zeros(shape)
 
     # random position
-    r = np.random.rand() * (shape[0]-1)
-    c = np.random.rand() * (shape[1]-1)
+    r = rng.uniform() * (shape[0]-1)
+    c = rng.uniform() * (shape[1]-1)
     z = 0
     position = np.array([r, c, z])
 
@@ -674,8 +681,8 @@ def _cosmic_ray(shape, pixelscale, alpha_flux, proton_flux):
     # the same effect as one striking it from the front. phi is negative to
     # force the z-direction of v to be negative (traveling into the detector
     # from above)
-    theta = np.random.uniform() * 2 * np.pi
-    phi = np.random.uniform() * 1*np.pi
+    theta = rng.uniform() * 2 * np.pi
+    phi = rng.uniform() * 1*np.pi
     direction = np.array([np.cos(theta)*np.cos(phi), np.sin(theta)*np.cos(phi),
                           -np.sin(phi)])
 
