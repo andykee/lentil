@@ -1,6 +1,13 @@
 Release notes
 =============
 
+v0.8.6
+------
+Released June 20, 2025
+
+* ``detector.cosmic_rays()`` now accepts a seed parameter
+* Minor updates to documentation and unit tests
+
 v0.8.5
 ------
 Released May 5, 2025
