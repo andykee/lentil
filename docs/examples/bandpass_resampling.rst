@@ -19,7 +19,7 @@ Bandpass represented by arrays:
     
     
     start, stop = wave[0], wave[-1]
-    num = int(round(sto-start) / wave_sampling*1e9)
+    num = int(round(sto-start) / (wave_sampling*1e9))
 
     resampled_wave = np.linspace(start, stop, num)
     resampled_bandpass = np.interp(resampled_wave, wave, bandpass)
@@ -59,7 +59,7 @@ its integrated power.
 
     flux.trim(ftrim_tol)
     start, stop = flux.wave[0], flux.wave[-1]
-    num = int(round(sto-start) / wave_sampling*1e9)
+    num = int(round(sto-start) / (wave_sampling*1e9))
 
     wave = np.linspace(start, stop, num)
     binned_flux = flux.bin(wave, waveunit=flux.waveunit)
