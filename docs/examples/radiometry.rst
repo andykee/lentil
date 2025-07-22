@@ -93,7 +93,7 @@ runs 50 times faster.
             if wave_sampling:
                 start = bandpass.wave[0]
                 stop = bandpass.wave[-1]
-                num = int(np.round((stop-start)/wave_sampling*1e9)))
+                num = int(np.round((stop-start)/(wave_sampling*1e9)))
                 wave = np.linspace(start, stop, num)
                 trans = bandpass.sample(wave)
             else:
