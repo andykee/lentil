@@ -125,6 +125,7 @@ def slice_offset(slice, shape):
 
 def get_rng(rng=None, seed=None):
     """Return a numpy Generator in a standardized way
+    
     Parameters
     ----------
     rng : {numpy.Generator, None},  optional
@@ -138,7 +139,7 @@ def get_rng(rng=None, seed=None):
     Returns
     -------
     rng : numpy Generator
-    
+
     """
     if rng is not None and seed is not None:
         raise ValueError('Can\'t re-seed rng')
