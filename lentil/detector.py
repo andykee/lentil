@@ -5,6 +5,7 @@ import scipy.signal
 import scipy.ndimage
 
 import lentil
+from lentil.helper import get_rng
 
 
 def collect_charge(img, wave, qe, waveunit='nm'):
@@ -341,7 +342,7 @@ def adc(img, gain, saturation_capacity=None, warn_saturate=False, dtype=None):
     return img
 
 
-def shot_noise(img, method='poisson', seed=None):
+def shot_noise(img, method='poisson', rng=None, seed=None):
     r"""
     Apply shot noise to an image
 
@@ -351,6 +352,9 @@ def shot_noise(img, method='poisson', seed=None):
         Array of counts. All values must be >= 0.
     method : 'poisson' or 'gaussian'
         Noise method.
+    rng : {numpy.Generator, None},  optional
+        Random number generator to use. If None (default), a new pseudo-random
+        number generator is constructed.
     seed : None, int, or array_like, optional
         Random seed used to initialize the pseudo-random number generator. If
         seed is `None` (default), the seed will be randomly generated from
@@ -375,7 +379,7 @@ def shot_noise(img, method='poisson', seed=None):
     """
     assert method in {'poisson', 'gaussian'}
 
-    rng = np.random.default_rng(seed)
+    rng = get_rng(rng, seed)
 
     if method == 'poisson':
         try:
@@ -398,7 +402,7 @@ def shot_noise(img, method='poisson', seed=None):
     return np.floor(img)
 
 
-def read_noise(img, electrons, seed=None):
+def read_noise(img, electrons, rng=None, seed=None):
     """
     Apply read noise to a frame
 
@@ -408,6 +412,9 @@ def read_noise(img, electrons, seed=None):
         Array of electrons
     electrons : int
         Read noise per frame
+    rng : {numpy.Generator, None},  optional
+        Random number generator to use. If None (default), a new pseudo-random
+        number generator is constructed.
     seed : None, int, or array_like, optional
         Random seed used to initialize the pseudo-random number generator. If
         seed is `None` (default), the seed will be randomly generated from
@@ -420,7 +427,7 @@ def read_noise(img, electrons, seed=None):
 
     """
     img = np.asarray(img)
-    rng = np.random.default_rng(seed)
+    rng = get_rng(rng, seed)
     noise = rng.normal(loc=0.0, scale=electrons, size=img.shape)
     return img + noise
 
@@ -448,7 +455,7 @@ def charge_diffusion(img, sigma, oversample=1):
     return scipy.signal.convolve2d(img, kernel, mode='same')
 
 
-def dark_current(rate, shape=1, fpn_factor=0, seed=None):
+def dark_current(rate, shape=1, fpn_factor=0, rng=None, seed=None):
     """
     Create dark current frame
 
@@ -465,6 +472,9 @@ def dark_current(rate, shape=1, fpn_factor=0, seed=None):
     fpn_factor : float
         Dark current FPN factor. Should be between 0.1 and 0.4 for CCD and CMOS
         sensors [1].
+    rng : {numpy.Generator, None},  optional
+        Random number generator to use. If None (default), a new pseudo-random
+        number generator is constructed.
     seed : None, int, or array_like, optional
        Random seed used to initialize the pseudo-random number generator. If
         seed is `None` (default), the seed will be randomly generated from
@@ -488,7 +498,7 @@ def dark_current(rate, shape=1, fpn_factor=0, seed=None):
 
     """
     if fpn_factor > 0:
-        rng = np.random.default_rng(seed)
+        rng = get_rng(rng, seed)
         fpn = rng.lognormal(mean=1.0, sigma=fpn_factor, size=shape)
     else:
         fpn = 1
@@ -569,7 +579,7 @@ def rule07_dark_current(temperature, cutoff_wavelength, pixelscale, shape=1,
 
 
 def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9, 
-                alpha_flux=4e9, seed=None):
+                alpha_flux=4e9, rng=None, seed=None):
     """
     Cosmic ray generator for simulating cosmic ray hits on a detector.
 
@@ -595,6 +605,9 @@ def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9,
         Number of electrons liberated per meter of travel for an alpha particle.
         By definition, alpha particles have four times the energy of protons.
         Default is 4e9 e-/m.
+    rng : {numpy.Generator, None},  optional
+        Random number generator to use. If None (default), a new pseudo-random
+        number generator is constructed.
     seed : {int, array_like[ints], None}, optional
         Random seed used to initialize the pseudo-random number generator. If
         seed is `None` (default), the seed will be randomly generated from
@@ -627,7 +640,7 @@ def cosmic_rays(shape, pixelscale, ts, rate=4e4, proton_flux=1e9,
     [2] `Cosmic ray - Wikipedia <https://en.wikipedia.org/wiki/Cosmic_ray>`_
 
     """
-    rng = np.random.default_rng(seed)
+    rng = get_rng(rng, seed)
 
     # compute the number of rays that strike the detector during the
     # integration time

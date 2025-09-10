@@ -121,3 +121,29 @@ def slice_offset(slice, shape):
             offset = tuple(slice_offset)
 
     return offset
+
+
+def get_rng(rng=None, seed=None):
+    """Return a numpy Generator in a standardized way
+    Parameters
+    ----------
+    rng : {numpy.Generator, None},  optional
+        Random number generator to use. If None (default), a new pseudo-random
+        number generator is constructed.
+    seed : {int, array_like[ints], None}, optional
+        Random seed used to initialize the pseudo-random number generator. If
+        seed is `None` (default), the seed will be randomly generated from
+        ``/dev/urandom`` if available or the system clock.
+
+    Returns
+    -------
+    rng : numpy Generator
+    
+    """
+    if rng is not None and seed is not None:
+        raise ValueError('Can\'t re-seed rng')
+    if rng is not None:
+        return rng
+    else:
+        return np.random.default_rng(seed=seed)
+    

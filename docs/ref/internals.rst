@@ -62,3 +62,4 @@ Helper functions
     helper.boundary_slice
     helper.slice_offset
     helper.gaussian2d
+    helper.get_rng
