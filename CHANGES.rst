@@ -1,6 +1,15 @@
 Release notes
 =============
 
+v0.8.7
+------
+Released September 10, 2025
+
+* ``detector.*`` methods that use randomness now optionally accept a
+  numpy rng Generator object
+* New helper function ``helper.get_rng()`` for standardizing numpy rng 
+  construction and access
+
 v0.8.6
 ------
 Released June 20, 2025
