@@ -8,7 +8,7 @@ __all__ = ['zernike', 'zernike_compose', 'zernike_fit', 'zernike_remove',
            'zernike_basis', 'zernike_coordinates']
 
 
-def zernike(mask, index, normalize=True, rho=None, theta=None):
+def zernike(mask, index, normalize=True, order='noll', rho=None, theta=None):
     """Compute the circular Zernike polynomial for a given mask.
 
     Parameters
@@ -16,25 +16,23 @@ def zernike(mask, index, normalize=True, rho=None, theta=None):
     mask : array_like
         Mask defining the extent to compute the Zernike polynomial over. All
         nonzero entries are included in the result.
-
     index : int
-        Noll Zernike index as defined in [1]
-
+        Zernike index
     normalize : bool, optional
         If True (default), the output is normalized according to [1]. If False,
         the output value ranges [-1, 1] over the mask.
-
+    order : {'noll', 'fringe', 'ansi'}, optional
+        Zernike ordering scheme. Default is 'noll'.
     rho : array_like, optional
-        Radial coordinates of the mask array. :attr:`rho` should be 0 at the
+        Radial coordinates of the mask. :attr:`rho` should be 0 at the
         origin and 1 at the edge of the circle.
-
     theta : array_like, optional
-        Angular coordinates of the mask array in radians.
+        Angular coordinates of the mask in radians.
 
     Returns
     -------
     out
-        Circular Zernike polynomial computed over the given mask.
+        Zernike polynomial evaluated over the given mask.
 
     Warnings
     --------
@@ -54,9 +52,14 @@ def zernike(mask, index, normalize=True, rho=None, theta=None):
     """
     mask = np.asarray(mask, dtype=bool)
 
-    #out = np.zeros_like(mask)
-    #mask_slice = util.boundary_slice(mask, pad=0)
-    #mask = mask[mask_slice]
+    if order == 'noll':
+        n, m = noll_to_nm(index)
+    elif order == 'fringe':
+        n, m = fringe_to_nm(index)
+    elif order =='ansi':
+        n, m = ansi_to_nm(index)
+    else:
+        raise ValueError('Unknown order', order)
 
     if rho is None:
         rho, theta = zernike_coordinates(mask)
@@ -64,35 +67,33 @@ def zernike(mask, index, normalize=True, rho=None, theta=None):
         if theta is None:
             raise ValueError("Both rho and theta must be specified")
 
-    m, n = zernike_index(index)
-
     if m == 0:
         if n == 0:
             Z = mask
         else:
             if normalize:
-                Z = np.sqrt(n+1) * R(m, n, rho) * mask
+                Z = np.sqrt(n+1) * R(n, m, rho) * mask
             else:
-                Z = R(m, n, rho) * mask
+                Z = R(n, m, rho) * mask
 
     elif m > 0:
         if normalize:
-            Z = np.sqrt(2) * np.sqrt(n+1) * R(m, n, rho) * np.cos(m*theta) * mask
+            Z = np.sqrt(2) * np.sqrt(n+1) * R(n, m, rho) * np.cos(m*theta) * mask
         else:
-            Z = R(m, n, rho) * np.cos(m*theta) * mask
+            Z = R(n, m, rho) * np.cos(m*theta) * mask
 
     else:
         if normalize:
-            Z = np.sqrt(2) * np.sqrt(n+1) * R(m, n, rho) * np.sin(m*theta) * mask
+            Z = np.sqrt(2) * np.sqrt(n+1) * R(n, m, rho) * np.sin(m*theta) * mask
         else:
-            Z = R(m, n, rho) * np.sin(m*theta) * mask
+            Z = R(n, m, rho) * np.sin(m*theta) * mask
 
     #out[mask_slice] = Z
     out = Z
     return out
 
 
-def R(m, n, rho):
+def R(n, m, rho):
 
     m = int(np.abs(m))
     n = int(np.abs(n))
@@ -108,7 +109,8 @@ def R(m, n, rho):
         return R
 
 
-def zernike_compose(mask, coeffs, normalize=True, rho=None, theta=None):
+def zernike_compose(mask, coeffs, normalize=True, order='noll', rho=None, 
+                    theta=None):
     """Create an OPD based on the supplied Zernike coefficients.
 
     Parameters
@@ -116,21 +118,19 @@ def zernike_compose(mask, coeffs, normalize=True, rho=None, theta=None):
     mask : array_like
         Mask defining the extent to compute the Zernike polynomial over. All
         nonzero entries are included in the result.
-
     coeffs : array_like
         List of coefficients corresponding to Zernike indices (Noll ordering)
         used to create the OPD.
-
     normalize : bool, optional
         If True (default), the output is normalized according to [1]. If False,
         the output value ranges [-1, 1] over the mask.
-
+    order : {'noll', 'fringe', 'ansi'}, optional
+        Zernike ordering scheme. Default is 'noll'.
     rho : array_like, optional
-        Radial coordinates of the mask array. :attr:`rho` should be 0 at the
+        Radial coordinates of the mask. :attr:`rho` should be 0 at the
         origin and 1 at the edge of the circle.
-
     theta : array_like, optional
-        Angular coordinates of the mask array in radians.
+        Angular coordinates of the mask in radians.
 
     Returns
     -------
@@ -175,12 +175,13 @@ def zernike_compose(mask, coeffs, normalize=True, rho=None, theta=None):
     opd = np.zeros(mask.shape)
 
     for index, coeff in np.ndenumerate(coeffs):
-        opd += coeff * zernike(mask, index[0]+1, normalize, rho, theta)
+        opd += coeff * zernike(mask, index[0]+1, normalize, order, rho, theta)
 
     return opd
 
 
-def zernike_basis(mask, modes, vectorize=False, normalize=True, rho=None, theta=None):
+def zernike_basis(mask, modes, vectorize=False, normalize=True, order='noll', 
+                  rho=None, theta=None):
     """Compute a Zernike basis set for a given mask.
 
     Parameters
@@ -188,26 +189,23 @@ def zernike_basis(mask, modes, vectorize=False, normalize=True, rho=None, theta=
     mask : array_like
         Mask defining the extent to compute the Zernike polynomial over. All
         nonzero entries are included in the result.
-
     modes : array_like
         List of modes (Noll ordering) to return.
-
     vectorize : bool, optional
         If True, the output is returned as a
         ``(length(modes), modes.shape[0]*modes.shape[1])`` array If False
         (default), the output is returned as a
         ``(length(terms), mask.shape[0], mask.shape[1])`` cube.
-
     normalize : bool, optional
         If True (default), the output is normalized according to [1]. If False,
         the output value ranges [-1, 1] over the mask.
-
+    order : {'noll', 'fringe', 'ansi'}, optional
+        Zernike ordering scheme. Default is 'noll'.
     rho : array_like, optional
-        Radial coordinates of the mask array. :attr:`rho` should be 0 at the
+        Radial coordinates of the mask. :attr:`rho` should be 0 at the
         origin and 1 at the edge of the circle.
-
     theta : array_like, optional
-        Angular coordinates of the mask array in radians.
+        Angular coordinates of the mask in radians.
 
     Returns
     -------
@@ -227,7 +225,7 @@ def zernike_basis(mask, modes, vectorize=False, normalize=True, rho=None, theta=
     basis = np.zeros(modes.shape + mask.shape)
 
     for index, mode in np.ndenumerate(modes):
-        basis[index] = zernike(mask, mode, normalize, rho, theta)
+        basis[index] = zernike(mask, mode, normalize, order, rho, theta)
 
     if vectorize:
         # reshape basis from cube to matrix
@@ -236,31 +234,29 @@ def zernike_basis(mask, modes, vectorize=False, normalize=True, rho=None, theta=
         return basis
 
 
-def zernike_fit(opd, mask, modes, normalize=True, rho=None, theta=None):
+def zernike_fit(opd, mask, modes, normalize=True, order='noll', rho=None,
+                theta=None):
     """Fit a Zernike basis set to an OPD.
 
     Parameters
     ----------
     opd : array_like
         OPD to fit.
-
     mask : array_like
         Mask defining the extent to compute the Zernike polynomial over. All
         nonzero entries are included in the result.
-
     modes : array_like
         List of modes (Noll ordering) to fit.
-
     normalize : bool, optional
         If True (default), the output is normalized according to [1]. If False,
         the output value ranges [-1, 1] over the mask.
-
+    order : {'noll', 'fringe', 'ansi'}, optional
+        Zernike ordering scheme. Default is 'noll'.
     rho : array_like, optional
-        Radial coordinates of the mask array. :attr:`rho` should be 0 at the
+        Radial coordinates of the mask. :attr:`rho` should be 0 at the
         origin and 1 at the edge of the circle.
-
     theta : array_like, optional
-        Angular coordinates of the mask array in radians.
+        Angular coordinates of the mask in radians.
 
     Returns
     -------
@@ -296,34 +292,32 @@ def zernike_fit(opd, mask, modes, normalize=True, rho=None, theta=None):
     opd = np.asarray(opd)
     mask = np.asarray(mask)
 
-    basis = zernike_basis(mask, modes, True, normalize, rho, theta)
+    basis = zernike_basis(mask, modes, True, normalize, order, rho, theta)
 
     basis = np.linalg.pinv(basis)
 
     return np.einsum('ij,i->j', basis, opd.ravel())
 
 
-def zernike_remove(opd, mask, modes, rho=None, theta=None):
+def zernike_remove(opd, mask, modes, order='noll', rho=None, theta=None):
     """Fit and remove a Zernike basis set from an OPD.
 
     Parameters
     ----------
     opd : array_like
         OPD to fit.
-
     mask : array_like
         Mask defining the extent to compute the Zernike polynomial over. All
         nonzero entries are included in the result.
-
     modes : array_like
-        List of modes (Noll ordering) to remove.
-
+        List of modes to remove.
+    order : {'noll', 'fringe', 'ansi'}, optional
+        Zernike ordering scheme. Default is 'noll'.
     rho : array_like, optional
-        Radial coordinates of the mask array. :attr:`rho` should be 0 at the
+        Radial coordinates of the mask. :attr:`rho` should be 0 at the
         origin and 1 at the edge of the circle.
-
     theta : array_like, optional
-        Angular coordinates of the mask array in radians.
+        Angular coordinates of the mask in radians.
 
     Returns
     -------
@@ -343,36 +337,34 @@ def zernike_remove(opd, mask, modes, rho=None, theta=None):
     opd = np.asarray(opd)
     mask = np.asarray(mask)
 
-    coeffs = zernike_fit(opd, mask, modes, rho, theta)
-    fit_opd = zernike_compose(mask, coeffs, rho, theta)
+    coeffs = zernike_fit(opd, mask, modes, True, order, rho, theta)
+    fit_opd = zernike_compose(mask, coeffs, True, order, rho, theta)
 
     residual = opd - fit_opd
 
     return residual
 
 
-def zernike_index(j):
-    """Convert a 1-D Noll index to a 2-D radiul and azimuthal index.
+def noll_to_nm(j):
+    """Convert Noll index to (n, m) index.
 
     Parameters
     ----------
     j : int
-        Noll Zernike index.
+        Noll Zernike index
 
     Returns
     -------
     n : int
-        Radial Zernike index.
-
+        Radial degree.
     m : int
-        Azimuthal Zernike index.
-
+        Azimuthal degree.
     """
     if j < 1:
-        raise ValueError('Zernike index j must be a positive integer')
+        raise ValueError('Noll index must be greater than zero')
 
     # find the row j is in
-    n = int(np.ceil((-1 + np.sqrt(1 + 8*j)) / 2) - 1)
+    n = int(np.ceil((-1 + np.sqrt(1 + 8 * j)) / 2) - 1)
     if n == 0:
         m = 0
     else:
@@ -390,13 +382,63 @@ def zernike_index(j):
         else:
             row_m = [0]
 
-        for i in range(int(np.floor(n / 2))):
+        for _ in range(n // 2):
             row_m.append(row_m[-1] + 2)
             row_m.append(row_m[-1])
 
         m = row_m[r] * sign
 
-    return m, n
+    return int(n), int(m)
+
+
+def ansi_to_nm(j):
+    """Convert ANSI index to (n, m) index.
+
+    Parameters
+    ----------
+    j : int
+        ANSI index
+
+    Returns
+    -------
+    n : int
+        Radial degree
+    m : int
+        Azimuthal degree
+    """
+    if j < 0:
+        raise ValueError('ANSI index must be zero or larger')
+    
+    # https://en.wikipedia.org/wiki/Zernike_polynomials
+    n = np.floor((np.sqrt(8 * j + 1) - 1) / 2)
+    m = 2*j - n*(n + 2)
+    return int(n), int(m)
+
+
+def fringe_to_nm(j):
+    """Convert Fringe index to (n, m) index.
+
+    Parameters
+    ----------
+    j : int
+        Fringe index
+
+    Returns
+    -------
+    n : int
+        Radial degree
+    m : int
+        Azimuthal degree
+    """
+    if j < 1:
+        raise ValueError('Fringe index must be greater than zero')
+    
+    # https://github.com/arielmission-space/PAOS/blob/main/paos/classes/zernike.py
+    m_n = 2 * (np.ceil(np.sqrt(j)) - 1)
+    g_s = (m_n / 2) ** 2 + 1
+    n = m_n / 2 + np.floor((j - g_s) / 2)
+    m = (m_n - n) * (1 - np.mod(j - g_s, 2) * 2)
+    return int(n), int(m)
 
 
 def zernike_coordinates(mask, shift=None, rotate=0):
