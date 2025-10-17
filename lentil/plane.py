@@ -276,16 +276,6 @@ class Plane:
 
         return ptt_vector
 
-    def copy(self):
-        """
-        Make a copy of this object.
-
-        Returns
-        -------
-        :class:`~lentil.Plane`
-        """
-        return copy.deepcopy(self)
-
     def freeze(self, inplace=True):
         """Cache properties defined in ``Plane.__freeze_attrs__``.
          
