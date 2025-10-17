@@ -96,6 +96,15 @@ class Plane:
     
     @property
     def frozen(self):
+        """Freeze (cache) state
+        
+        Returns True if plane is frozen, otherwise returns False (default).
+        
+        See also
+        --------
+        :func:`~lentil.Plane.freeze`
+        :func:`~lentil.Plane.thaw`
+        """
         return self._frozen
 
     @property
@@ -277,33 +286,57 @@ class Plane:
         """
         return copy.deepcopy(self)
 
-    def freeze(self):
-        """Return a new instance of ``self`` where selected properties are
-        cached when this function is called rather than being recomputed 
-        each time they are accessed.
+    def freeze(self, inplace=True):
+        """Cache properties defined in ``Plane.__freeze_attrs__``.
+         
+        When this function is called, properties defined in 
+        ``Plane.__freeze_attrs__`` are cached and the cached value is 
+        returned until :func:`~lentil.Plane.thaw` is called.
 
         By default, only :attr:`opd` is frozen, as defined by 
         ``Plane.__freeze_attrs__``.
 
         Parameters
         ----------
-        *attrs : str, optional
-            Additional properties to freeze. 
+        inplace : bool, optional
+            If True (default), the caching operation is performed on the
+            :class:`~lentil.Plane` in place, otherwise the original
+            object is unchanged and a copy is returned.
 
         Returns
         -------
-        :class:`Plane`
-        
+        None or :class:`Plane`
+
+        See also
+        --------
+        :func:`~lentil.Plane.thaw`
         """
         if self.frozen:
-            raise RuntimeError('Plane is already frozen')
+            raise RuntimeError('Plane is already frozen. Call thaw() to unfreeze.')
         
-        for attr in self.__freeze_attrs__:
-            setattr(self, f'_{attr}', getattr(self, attr))
+        if inplace:
+            cls = self
+        else:
+            cls = copy.deepcopy(self)
         
-        self._frozen = True
+        for attr in cls.__freeze_attrs__:
+            setattr(cls, f'_{attr}', getattr(cls, attr))
+        
+        cls._frozen = True
+
+        if not inplace:
+            return cls
 
     def thaw(self):
+        """Clear property cache
+        
+        When this function is called, properties defined in 
+        ``Plane.__freeze_attrs__`` are recomputed each time.
+
+        See also
+        --------
+        :func:`~lentil.Plane.freeze`
+        """
         self._frozen = False
 
     def fit_tilt(self, inplace=False):
