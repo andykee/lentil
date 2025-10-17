@@ -347,7 +347,7 @@ class Plane:
         if inplace:
             plane = self
         else:
-            plane = self.copy()
+            plane = copy.deepcopy(self)
 
         ptt_vector = plane.ptt_vector
 
@@ -408,7 +408,7 @@ class Plane:
         Plane.resample
 
         """
-        plane = self.copy()
+        plane = copy.deepcopy(self)
 
         if plane.amplitude.ndim > 1:
             plane.amplitude = lentil.rescale(plane.amplitude, scale=scale, shape=None,
