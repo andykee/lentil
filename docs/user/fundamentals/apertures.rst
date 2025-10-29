@@ -42,8 +42,8 @@ Draw a circle with :func:`~lentil.circle`:
     :include-source:
     :scale: 50
 
-    >>> circ = lentil.circle(shape=(256,256), radius=100)
-    >>> plt.imshow(circ, cmap='gray')
+    >>> cmask = lentil.circle(shape=(256,256), radius=100)
+    >>> plt.imshow(cmask, cmap='gray')
 
 Rectangle
 ---------
@@ -53,8 +53,8 @@ Draw a rectangle with :func:`~lentil.rectangle`:
     :include-source:
     :scale: 50
 
-    >>> rect = lentil.rectangle(shape=(256,256), width=200, height=100)
-    >>> plt.imshow(rect, cmap='gray')
+    >>> rmask = lentil.rectangle(shape=(256,256), width=200, height=100)
+    >>> plt.imshow(rmask, cmap='gray')
 
 Hexagon
 -------
@@ -64,8 +64,8 @@ Draw a hexagon with :func:`~lentil.hexagon`:
     :include-source:
     :scale: 50
 
-    >>> hex = lentil.hexagon(shape=(256,256), radius=75)
-    >>> plt.imshow(hex, cmap='gray')
+    >>> hmask = lentil.hexagon(shape=(256,256), radius=75)
+    >>> plt.imshow(hmask, cmap='gray')
 
 Spider
 ------
@@ -75,8 +75,8 @@ Draw a spider with :func:`~lentil.spider`:
     :include-source:
     :scale: 50
 
-    >>> spider = lentil.spider(shape=(256,256), width=3, angle=30)
-    >>> plt.imshow(spider, cmap='gray')
+    >>> smask = lentil.spider(shape=(256,256), width=3, angle=30)
+    >>> plt.imshow(smask, cmap='gray')
 
 
 Composite apertures

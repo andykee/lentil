@@ -153,9 +153,9 @@ Normalization
 -------------
 Each of Lentil's Zernike functions accepts a ``normalize`` parameter. If ``normalize``
 is False (the default), the raw Zernike mode is returned. Each mode will approximately
-span [-1 1] although this shouldn't be relied upon because of the discrete sampling of
-the result. If ``normalize`` is true, the Zernike mode will be normalized so that its
-standard deviation equals 1.
+span the range [-1 1] although this shouldn't be relied upon because of the discrete 
+sampling of the result. If ``normalize`` is true, the Zernike mode will be normalized 
+so that its RMS equals 1.
 
 Normalization becomes important when trying to achieve a specific error magnitude,
 whether it be in terms of RMS or peak to valley. To acihieve a specific error in terms

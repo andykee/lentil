@@ -4,14 +4,12 @@
 Planes
 ******
 
-All Lentil planes are derived from the |Plane| class. This base class defines 
-the interface to represent any discretely sampled plane in an optical model. 
-Planes typically have some influence on the propagation of a wavefront though 
-this is not strictly required and models may use *dummy* or *reference* planes 
-as needed.
+Lentil represents optical systems using one or more planes that have some 
+influence on a propagating wavefront. The following planes are the core 
+building blocks of most models in Lentil:
 
-Lentil provides several general planes that are the building blocks for most 
-optical models:
+* A :ref:`Plane <user.fundamentals.planes.plane>` represents a discretely
+  sampled optical plane at an arbitrary location in an optical system.
 
 * The |Plane| base class provides the core logic for representing and
   working with discretely sampled planes in an optical model.
@@ -23,7 +21,7 @@ optical models:
 * The |Image| plane provides a location where the image formed by an
   optical system may be manipulated or viewed.
 
-In addition, several "utility" planes are provided. These planes do not 
+In addition, several "utility" planes are provided. These planes don't 
 represent physical components of an optical system, but are used to implement 
 commonly encountered optical effects:
 
@@ -33,29 +31,28 @@ commonly encountered optical effects:
 * The :class:`~lentil.Flip` plane flips a wavefront about its x, y, or both x 
   and y axes.
 
-Plane
-=====
-Lentil's |Plane| class represents a discretely sampled plane in an optical 
-model. Planes have attributes for representing the sampled complex amplitude 
-of the plane as well as additional metadata that may influence how a 
-propagating wavefront interacts with the plane. A plane is defined by the 
-following parameters:
+.. _user.fundamentals.planes.plane:
 
-* :attr:`~lentil.Plane.amplitude` - Defines the relative electric field 
-  amplitude transmission through the plane
-* :attr:`~lentil.Plane.opd` - Defines the optical path difference that a 
+Plane basics
+============
+Planes are described by a common set of attributes. The most commonly used 
+attributes are
+
+* :attr:`~lentil.Plane.amplitude` - defines the electric field amplitude 
+  transmission through the plane
+* :attr:`~lentil.Plane.opd` - defines the optical path difference that a 
   wavefront experiences when propagating through the plane
-* :attr:`~lentil.Plane.mask` - Defines the binary mask over which the plane 
+* :attr:`~lentil.Plane.mask` - defines the binary mask over which the plane 
   data is valid. If `mask` is 2-dimensional, the plane is assumed to be 
   monolithic. If `mask` is 3-dimensional, the plane is assumed to be segmented 
-  with the individual segment masks inserted along the first dimension. If 
-  mask is not provided, it is automatically created as needed from the nonzero 
-  values in :attr:`~lentil.Plane.amplitude`.
+  with the individual segment masks provided along the first dimension. If 
+  mask is not provided, it is automatically created from the nonzero values in 
+  :attr:`~lentil.Plane.amplitude`.
 
 .. plot:: _img/python/segmask.py
     :scale: 50
 
-* :attr:`~lentil.Plane.pixelscale` - Defines the physical sampling of the
+* :attr:`~lentil.Plane.pixelscale` - defines the physical sampling of the
   above attributes. A simple example of how to calculate the pixelscale for a
   discretely sampled circular aperture is given below:
 
@@ -63,12 +60,35 @@ following parameters:
     :width: 450px
     :align: center
 
+* :attr:`~lentil.Plane.ptype` - defines how a plane interacts with a 
+  |Wavefront|. When a wavefront interacts with a plane, it inherits the plane's
+  ``ptype``. Plane type is set automatically and unexpected behavior may
+  occur if it is changed.
+
+  Lentil planes support the following ptypes:
+  
+  ================== ======================================================
+  ptype              Planes with this type
+  ================== ======================================================
+  :class:`none`      :class:`~lentil.Plane`
+  :class:`pupil`     :class:`~lentil.Pupil`
+  :class:`image`     :class:`~lentil.Image`
+  :class:`tilt`      :class:`~lentil.Tilt`, :class:`~lentil.DispersiveTilt`
+  :class:`transform` :class:`~lentil.Rotate`, :class:`~lentil.Flip`
+  ================== ======================================================
+  
+  The rules defining when a wavefront is allowed to interact with a plane based
+  on ``ptype`` are described 
+  :ref:`here <user.fundamentals.wavefront.ptype_rules>`.
+
 .. note::
 
     All Plane attributes have sensible default values that have no effect on
     propagations when not specified.
 
-Create a new Plane with
+Plane creation
+--------------
+Create a new ``plane`` with
 
 .. plot::
     :include-source:
@@ -77,7 +97,7 @@ Create a new Plane with
     >>> p = lentil.Plane(amplitude=lentil.circle((256,256), 120))
     >>> plt.imshow(p.amplitude, cmap='gray')
 
-Once a Plane is defined, its attributes can be modified at any time:
+Once a ``plane`` is defined, its attributes can be modified at any time:
 
 .. code-block:: pycon
 
@@ -96,26 +116,57 @@ Once a Plane is defined, its attributes can be modified at any time:
     >>> plt.imshow(opd, cmap=opd_cmap)
 
 
-Resampling or rescaling a Plane
--------------------------------
-It is possible to resample a plane using either the 
+Basic arithmetic operations
+---------------------------
+Planes with the same ``ptype`` can be added or subtracted, returning a new
+``plane``:
+
+
+In-place operations are also supported:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Resampling and rescaling
+------------------------
+It is possible to resample a ``plane`` using either the 
 :func:`~lentil.Plane.resample` or :func:`~lentil.Plane.rescale` methods. Both 
-methods use intrepolation to resample the amplitude, opd, and mask attributes 
-and readjust the pixelscale attribute as necessary.
+methods use intrepolation to resample the ``amplitude``, ``opd``, and ``mask`` 
+attributes and readjust the ``pixelscale`` attribute as necessary.
 
 .. _user.planes.freeze:
 
 Creating a frozen copy of a Plane
 ---------------------------------
+.. MOVE THIS SOMEWHERE ELSE (PERFORMANCE?)
 Some custom Planes like the 
 :ref:`tip/tilt mirror defined below <user.planes.tip-tilt-mirror>` 
 implement custom :attr:`~lentil.Plane.opd` functionality that computes a 
-dynamic OPD value on the fly. When :attr:`~lentil.Plane.opd` needs to be
+dynamic OPD value at runtime. When :attr:`~lentil.Plane.opd` needs to be
 repeatedly accessed (for example, when performing a 
 :ref:`broadband propagation <user.diffraction.broadband>`) and
 is expensive to calculate, it can be beneficial to operate on a
 copy of the plane where its :attr:`~lentil.Plane.opd` attribute has
-been "frozen". This is easily accomplished using the 
+been cached or "frozen". This is easily accomplished using the 
 :func:`~lentil.Plane.freeze` method:
 
 .. code-block:: pycon
@@ -134,28 +185,6 @@ it's possible to freeze any other attribute by passing its name to
 
 .. _user.planes.pupil:
 
-ptype
-=====
-A plane's type (:attr:`~lentil.Plane.ptype`) defines how it interacts with a 
-|Wavefront|. When a wavefront interacts with a plane, it inherits the plane's
-``ptype``. Plane type is set automatically and unexpected behavior may
-occur if it is changed.
-
-Lentil planes support the following ptypes:
-
-================== ======================================================
-ptype              Planes with this type
-================== ======================================================
-:class:`none`      :class:`~lentil.Plane`
-:class:`pupil`     :class:`~lentil.Pupil`
-:class:`image`     :class:`~lentil.Image`
-:class:`tilt`      :class:`~lentil.Tilt`, :class:`~lentil.DispersiveTilt`
-:class:`transform` :class:`~lentil.Rotate`, :class:`~lentil.Flip`
-================== ======================================================
-
-The rules defining when a wavefront is allowed to interact with a plane based
-on ``ptype`` are described 
-:ref:`here <user.fundamentals.wavefront.ptype_rules>`.
 
 Pupil
 =====

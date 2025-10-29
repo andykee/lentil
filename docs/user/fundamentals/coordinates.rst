@@ -30,7 +30,7 @@ of the complex exponential in the Fourier kernel are provided below:
 .. note::
 
     Matplotlib's ``imshow()`` method (and MATLAB's ``imagesc()`` method) place
-    the origin in the upper left corner of the plotted image by default. This presents
+    the origin in the upper left corner of the plotted image by default. This displays
     arrays in the standard (row, column) ordering. The result is that the direction of
     y-axis is flipped relative to Lentil's coordinate system. This doesn't necessarily
     present a problem as long as results are consistently plotted, but to be completely 
