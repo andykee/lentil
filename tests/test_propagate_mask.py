@@ -7,12 +7,12 @@ def test_propagate_mask(pupil):
     mask = lentil.rectangle((256,256), 128,128, shift=(20, -30), antialias=False)
 
     w = lentil.Wavefront(650e-9)
-    w = p.multiply(w)
+    w = w * p
     w = lentil.propagate_dft(w, shape=128, pixelscale=5e-6, oversample=2)
     psf = w.intensity
 
     w_mask = lentil.Wavefront(650e-9)
-    w_mask = p.multiply(w_mask)
+    w_mask = w_mask * p
     w_mask = lentil.propagate_dft(w_mask, shape=128, pixelscale=5e-6, oversample=2, mask=mask)
     psf_mask = w_mask.intensity
 
@@ -25,12 +25,12 @@ def test_propagate_mask_tilt_analytic(pupil):
     mask = lentil.rectangle((256,256), 64, 64, shift=(20, -30), antialias=False)
 
     w = lentil.Wavefront(650e-9)
-    w = p.multiply(w)
+    w = w * p
     w = lentil.propagate_dft(w, shape=128, pixelscale=5e-6, oversample=2)
     psf = w.intensity
 
     w_mask = lentil.Wavefront(650e-9)
-    w_mask = p.multiply(w_mask)
+    w_mask = w_mask * p
     w_mask = lentil.propagate_dft(w_mask, shape=128, pixelscale=5e-6, oversample=2, mask=mask)
     psf_mask = w_mask.intensity
 

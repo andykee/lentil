@@ -33,7 +33,7 @@ def test_amp_alias():
 
 
 def test_amp_alias_error():
-    with pytest.raises(TypeError):
+    with pytest.raises(AttributeError):
         lentil.Plane(amplitude=10, amp=10)
 
 
@@ -41,27 +41,19 @@ class PlaneAttributeOverload(lentil.Plane):
     def __init__(self):
         super().__init__()
 
-    @property
-    def amplitude(self):
+    def __amp__(self):
         return np.array(1)
     
-    @property
-    def opd(self):
+    def __opd__(self):
         return np.array(2)
     
 
-def test_plane_overload_propertyes():
+def test_plane_overload_properties():
     p = PlaneAttributeOverload()
     
     assert p.amplitude == 1
     assert p.opd == 2
     assert p.mask == 1
-
-    with pytest.raises(AttributeError):
-        p.opd = 5
-
-    with pytest.raises(AttributeError):
-        p.amplitude = 5
 
 
 def test_plane_fit_tilt_inplace():
@@ -73,16 +65,40 @@ def test_plane_fit_tilt_inplace():
     assert p_inplace is p
 
 
-def test_wavefront_plane_multiply():
+def test_wavefront_plane_mul():
     p = RandomPlane()
     w = lentil.Wavefront(650e-9)
 
-    w1 = p.multiply(w)
+    w1 = w * p
 
     slc = lentil.helper.boundary_slice(p.mask)
     phasor = p.amplitude[slc] * np.exp(2*np.pi*1j*p.opd[slc]/w.wavelength)
 
     assert np.array_equal(w1.data[0].data, phasor)
+
+
+def test_wavefront_plane_rmul():
+    p = RandomPlane()
+    w = lentil.Wavefront(650e-9)
+
+    w1 = p * w
+
+    slc = lentil.helper.boundary_slice(p.mask)
+    phasor = p.amplitude[slc] * np.exp(2*np.pi*1j*p.opd[slc]/w.wavelength)
+
+    assert np.array_equal(w1.data[0].data, phasor)
+
+
+def test_wavefront_plane_imul():
+    p = RandomPlane()
+    w = lentil.Wavefront(650e-9)
+
+    w *= p
+
+    slc = lentil.helper.boundary_slice(p.mask)
+    phasor = p.amplitude[slc] * np.exp(2*np.pi*1j*p.opd[slc]/w.wavelength)
+
+    assert np.array_equal(w.data[0].data, phasor)
 
 
 def test_wavefront_plane_multiply_overlapping_segment_slices():
@@ -113,7 +129,7 @@ class CircularPupil(lentil.Pupil):
 def test_wavefront_pupil_multiply():
     p = CircularPupil()
     w = lentil.wavefront.Wavefront(650e-9)
-    w = p.multiply(w)
+    w = p * w
     phasor = p.amplitude * np.exp(1j*p.opd * 2 * np.pi / w.wavelength)
 
     assert np.array_equal(w.data[0].data, phasor)

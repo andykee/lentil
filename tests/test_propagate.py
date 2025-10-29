@@ -48,7 +48,7 @@ def test_propagate_fit_tilt(pupil):
     p = pupil(focal_length=10, diameter=1, shape=(256,256), radius=120, coeffs=coeffs)
 
     w = lentil.Wavefront(650e-9)
-    w = p.multiply(w)
+    w = w * p
     w = lentil.propagate_dft(w, shape=128, pixelscale=5e-6, oversample=2)
     psf = w.intensity
 
@@ -76,7 +76,7 @@ def test_propagate_tilt_analytic(pupil):
     p = pupil(focal_length=10, diameter=1, shape=(256,256), radius=120, coeffs=coeffs)
 
     w = lentil.Wavefront(650e-9)
-    w = p.multiply(w)
+    w = w * p
     w = lentil.propagate_dft(w, shape=npix, pixelscale=pixelscale, oversample=oversample)
     psf = w.intensity
 

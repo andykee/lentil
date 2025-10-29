@@ -11,7 +11,12 @@ from lentil.field import Field
 import lentil.helper
 
 
-class Plane:
+# TODO:
+#   __mul__ - type checking
+# move resample and rescale to wavefront?
+# maybe delete diameter
+
+class _PlaneBase:
     """
     Base class for representing a finite geometric plane.
 
@@ -46,42 +51,105 @@ class Plane:
         Plane type
     """
 
-    def __init__(self, amplitude=1, opd=0, mask=None, pixelscale=None, diameter=None,
-                 ptype=None, **kwargs):
+    def __init__(self, amplitude=None, opd=None, mask=None, pixelscale=None, 
+                 diameter=None, ptype=None, **kwargs):
         
         if 'amp' in kwargs.keys():
-            if amplitude != 1:
-                raise TypeError("Got both 'amplitude' and 'amp', "
-                                "which are aliases of one another")
+            if amplitude is not None:
+                raise AttributeError("Got both 'amplitude' and 'amp', "
+                                     "which are aliases of one another")
             amplitude = kwargs['amp']
-
-        # directly set internal attributes rather relying on property setter
-        # see: https://github.com/andykee/lentil/issues/53
-        self._amplitude = np.asarray(amplitude)
-        self._opd = np.asarray(opd)
-
-        if mask is None:
-            mask = np.copy(self._amplitude)
         
-        mask[mask != 0] = 1
-        self._mask = mask
+        self.amplitude = amplitude if amplitude is not None else np.array(1)
+        self.opd = opd if opd is not None else np.array(0)
 
-        self._slice = _plane_slice(self._mask)
-        self._pixelscale = None if pixelscale is None else tuple(np.broadcast_to(pixelscale, (2,)))
         self._diameter = diameter
-        self._ptype = lentil.ptype(ptype)
+        self._pixelscale = np.array(pixelscale) if pixelscale is not None else None
+
+        self.ptype = lentil.ptype(ptype)
 
         self.tilt = []
-
+        self.__freeze_attrs__ = ['amplitude', 'opd']
         self._frozen = False
+
+    def __init_subclass__(cls):
+
+        cls._amplitude = np.array(1)
+        cls._opd = np.array(0)
+        cls._mask = None
+        cls._diameter = None
+        cls._pixelscale = None
+
+        cls.ptype = lentil.ptype(None)
+
+        cls.tilt = []
+        cls._frozen = False
+        cls.__freeze_attrs__ = ['amplitude', 'opd']
 
     def __repr__(self):
         return f'{self.__class__.__name__}()'
-    
-    __freeze_attrs__ = ['opd']
+
+    def __amp__(self):
+        return self._amplitude
+
+    def __mask__(self):
+        if self._mask is None:
+            return np.copy(self.amplitude).astype(bool)
+        else:
+            return self._mask
 
     def __opd__(self):
         return self._opd
+    
+    def __mul__(self, wavefront):
+
+        if not _can_mul_ptype(wavefront.ptype, self.ptype):
+            raise TypeError(f"can't multiply Wavefront with ptype " \
+                            f"'{wavefront.ptype}' by Plane with ptype " \
+                            f"'{self.ptype}'")
+
+        pixelscale = _mul_pixelscale(self.pixelscale, wavefront.pixelscale)
+        shape = wavefront.shape if self.shape == () else self.shape
+        data = wavefront.data
+        ptype = _mul_result_ptype(wavefront.ptype, self.ptype)
+
+        out = lentil.Wavefront.empty(wavelength=wavefront.wavelength,
+                                     pixelscale=pixelscale,
+                                     focal_length=wavefront.focal_length,
+                                     shape=shape,
+                                     ptype=ptype)
+
+
+        for field in data:
+            for n, s in enumerate(self._slice):
+                # If any of (mask, amp, opd) are scalars, we rely on broadcasting
+                # to do the right thing, otherwise grab the appropriate mask and 
+                # multiply it by amp and/or opd. This ensures that amp and opd
+                # contain only the data within the current mask and not any data 
+                # contained in adjacent masks that may be present in the sliced
+                # amp and opd arrays.
+                mask = self.mask if self.size == 1 else self.mask[n]
+                amp = self.amplitude if self.amplitude.size == 1 else self.amplitude[s] * mask[s]
+                opd = self.opd if self.opd.size == 1 else self.opd[s]
+
+                # construct complex phasor
+                phasor = Field(data=amp*np.exp(2*np.pi*1j*opd/wavefront.wavelength),
+                               pixelscale=self.pixelscale,
+                               offset=lentil.helper.slice_offset(s, self.shape),
+                               tilt=[self.tilt[n]] if self.tilt else [])
+
+                res = field * phasor
+                if res.size > 0:
+                    out.data.append(field * phasor)
+
+        return out
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
+    @property
+    def _slice(self):
+        return _plane_slice(self._mask)
 
     @property
     def ptype(self):
@@ -91,8 +159,11 @@ class Plane:
         -------
         :class:`~lentil.ptype`
         """
-
         return self._ptype
+    
+    @ptype.setter
+    def ptype(self, value):
+        self._ptype = lentil.ptype(value)
     
     @property
     def frozen(self):
@@ -115,12 +186,18 @@ class Plane:
         -------
         ndarray
         """
-
-        return self._amplitude
+        if self.frozen:
+            return self._amplitude
+        else:
+            return self.__amp__()
     
     @amplitude.setter
     def amplitude(self, value):
+        if self.frozen:
+            raise RuntimeError('Can\'t set amplitude while Plane is frozen')
         self._amplitude = np.asarray(value)
+
+    amp = amplitude
     
     @property
     def opd(self):
@@ -149,8 +226,7 @@ class Plane:
         -------
         ndarray
         """
-
-        return self._mask
+        return self.__mask__()
 
     @property
     def global_mask(self):
@@ -254,6 +330,8 @@ class Plane:
         else:
             if self.pixelscale is None:
                 raise ValueError("can't create ptt_vector with pixelscale = ()")
+            
+            pixelscale = np.broadcast_to(self.pixelscale, (2,))
 
             # compute unmasked piston, x-tilt, y-tilt vector
             r, c = lentil.helper.mesh(self.shape)
@@ -262,7 +340,7 @@ class Plane:
             # unmasked_ptt_vector should match the shapes returned by lentil.zernike for
             # modes 1:3
             unmasked_ptt_vector = np.einsum('ij,i->ij', [np.ones(r.size), r.ravel(), -c.ravel()],
-                                            [1, self.pixelscale[0], self.pixelscale[1]])
+                                            [1, pixelscale[0], pixelscale[1]])
 
             if self.size == 1:
                 ptt_vector = np.einsum('ij,j->ij', unmasked_ptt_vector, self.mask.ravel())
@@ -419,18 +497,19 @@ class Plane:
             plane.opd = lentil.rescale(plane.opd, scale=scale, shape=None, mask=None,
                                        order=3, mode='nearest', unitary=False)
 
-        if plane._mask.ndim == 2:
-            plane._mask = lentil.rescale(plane._mask, scale=scale, shape=None, mask=None, order=0,
-                                         mode='constant', unitary=False)
-        else:
-            plane._mask = np.asarray([lentil.rescale(mask, scale=scale, shape=None, mask=None,
-                                                     order=0, mode='constant', unitary=False)
-                                      for mask in plane._mask])
+        if plane._mask is not None:
+            if plane._mask.ndim == 2:
+                plane._mask = lentil.rescale(plane._mask, scale=scale, shape=None, mask=None, order=0,
+                                             mode='constant', unitary=False)
+            else:
+                plane._mask = np.asarray([lentil.rescale(mask, scale=scale, shape=None, mask=None,
+                                                         order=0, mode='constant', unitary=False)
+                                          for mask in plane._mask])
 
-        plane._mask[np.nonzero(plane._mask)] = 1
-        plane._mask = plane._mask.astype(int)
+            plane._mask[np.nonzero(plane._mask)] = 1
+            plane._mask = plane._mask.astype(int)
 
-        plane._slice = _plane_slice(plane._mask)
+        #plane._slice = _plane_slice(plane._mask)
 
         if plane.pixelscale is not None:
             plane._pixelscale = (plane.pixelscale[0]/scale, plane.pixelscale[1]/scale)
@@ -493,46 +572,12 @@ class Plane:
             Updated wavefront
 
         """
-        if not _can_mul_ptype(wavefront.ptype, self.ptype):
-            raise TypeError(f"can't multiply Wavefront with ptype " \
-                            f"'{wavefront.ptype}' by Plane with ptype " \
-                            f"'{self.ptype}'")
-
-        pixelscale = _mul_pixelscale(self.pixelscale, wavefront.pixelscale)
-        shape = wavefront.shape if self.shape == () else self.shape
-        data = wavefront.data
-        ptype = _mul_result_ptype(wavefront.ptype, self.ptype)
-
-        out = lentil.Wavefront.empty(wavelength=wavefront.wavelength,
-                                     pixelscale=pixelscale,
-                                     focal_length=wavefront.focal_length,
-                                     shape=shape,
-                                     ptype=ptype)
-
-
-        for field in data:
-            for n, s in enumerate(self._slice):
-                # If any of (mask, amp, opd) are scalars, we rely on broadcasting
-                # to do the right thing, otherwise grab the appropriate mask and 
-                # multiply it by amp and/or opd. This ensures that amp and opd
-                # contain only the data within the current mask and not any data 
-                # contained in adjacent masks that may be present in the sliced
-                # amp and opd arrays.
-                mask = self.mask if self.size == 1 else self.mask[n]
-                amp = self.amplitude if self.amplitude.size == 1 else self.amplitude[s] * mask[s]
-                opd = self.opd if self.opd.size == 1 else self.opd[s]
-
-                # construct complex phasor
-                phasor = Field(data=amp*np.exp(2*np.pi*1j*opd/wavefront.wavelength),
-                               pixelscale=self.pixelscale,
-                               offset=lentil.helper.slice_offset(s, self.shape),
-                               tilt=[self.tilt[n]] if self.tilt else [])
-
-                res = field * phasor
-                if res.size > 0:
-                    out.data.append(field * phasor)
-
-        return out
+        warn('Plane.multiply() will be deprecated in v1.0.0, it is '
+             'replaced by Plane.__mul__().', 
+             DeprecationWarning, 
+             stacklevel=2)
+        
+        return self.__mul__(wavefront)
 
 
 def _mul_pixelscale(a_pixelscale, b_pixelscale):
@@ -626,18 +671,26 @@ def _plane_slice(mask):
         raise ValueError('mask has invalid dimensions')
     return s
 
-class _AttrGetter:
-    """Callable object that returns other._attr when called. Used by 
-    Plane.__freeze__()
-    """
-    def __init__(self, attr):
-        self.attr = attr
-    
-    def __call__(self, other):
-        return getattr(other, f'_{self.attr}')
+#class _AttrGetter:
+#    """Callable object that returns other._attr when called. Used by 
+#    Plane.__freeze__()
+#    """
+#    def __init__(self, attr):
+#        self.attr = attr
+#    
+#    def __call__(self, other):
+#        return getattr(other, f'_{self.attr}')
 
+class Plane(_PlaneBase):
 
-class Pupil(Plane):
+    def __init__(self, amplitude=None, opd=None, mask=None, pixelscale=None, 
+                 diameter=None, ptype=None, **kwargs):
+        super().__init__(amplitude=amplitude, opd=opd, mask=mask,
+                         pixelscale=pixelscale, diameter=diameter, 
+                         ptype=ptype, **kwargs)
+        
+
+class Pupil(_PlaneBase):
     """Class for representing a pupil plane.
 
     Parameters
@@ -676,7 +729,7 @@ class Pupil(Plane):
 
     """
 
-    def __init__(self, amplitude=1, opd=0, mask=None, pixelscale=None,
+    def __init__(self, amplitude=None, opd=None, mask=None, pixelscale=None,
                  focal_length=None, diameter=None, **kwargs):
 
         super().__init__(amplitude=amplitude, opd=opd, mask=mask, 
@@ -685,9 +738,8 @@ class Pupil(Plane):
 
         self.focal_length = focal_length
 
-    def multiply(self, wavefront):
-
-        wavefront = super().multiply(wavefront)
+    def __mul__(self, wavefront):
+        wavefront = super().__mul__(wavefront)
 
         # we inherit the plane's focal length as the wavefront's focal length
         wavefront.focal_length = self.focal_length
@@ -695,7 +747,7 @@ class Pupil(Plane):
         return wavefront
 
 
-class Image(Plane):
+class Image(_PlaneBase):
     """Class for representing an image plane.
 
     Parameters
@@ -733,16 +785,18 @@ class Image(Plane):
                          pixelscale=pixelscale, ptype=lentil.image,
                          **kwargs)
         
-    def fit_tilt(self, *args, **kwargs):
-        return self
-
-    def multiply(self, wavefront):
+    def __mul__(self, wavefront):
         wavefront = super().multiply(wavefront)
         wavefront.ptype = lentil.image
         return wavefront
+    
+    def fit_tilt(self, *args, **kwargs):
+        return self
+
+    
 
 
-class TiltInterface(Plane):
+class _TiltBase(_PlaneBase):
     """Utility class for holding common lofic shared by classes that need to
     implement the tilt interface.
 
@@ -769,7 +823,7 @@ class TiltInterface(Plane):
             ptype = lentil.tilt
         super().__init__(ptype=ptype, **kwargs)
 
-    def multiply(self, wavefront):
+    def __mul__(self, wavefront):
         """Multiply with a wavefront. This is a custom implementation 
         supporting the tilt interface.
 
@@ -789,7 +843,7 @@ class TiltInterface(Plane):
         :class:`~lentil.Wavefront`
 
         """
-        wavefront = super().multiply(wavefront)
+        wavefront = super().__mul__(wavefront)
         for field in wavefront.data:
             field.tilt.append(self)
         return wavefront
@@ -800,7 +854,7 @@ class TiltInterface(Plane):
         raise NotImplementedError
 
 
-class Tilt(TiltInterface):
+class Tilt(_TiltBase):
     """Object for representing tilt in terms of angle
 
     Parameters
@@ -841,7 +895,7 @@ class Tilt(TiltInterface):
         return x, y
 
 
-class DispersiveTilt(TiltInterface):
+class DispersiveTilt(_TiltBase):
     r"""Class for representing spectral dispersion that appears as a tilt.
 
     Light is dispersed along a line called the the spectral trace. The position
@@ -1007,9 +1061,9 @@ class DispersiveTilt(TiltInterface):
         return scipy.integrate.quad(dist_func, a, b)[0]
         
 
-class DispersiveAberration(Plane):
+class DispersiveAberration(_PlaneBase):
 
-    def multiply(self, wavefront):
+    def __mul__(self, wavefront):
         # NOTE: we can handle wavelength-dependent OPD terms here (e.g. chromatic
         # aberrations). Since the OPD will vary by wavelength, we can't fit out the
         # tilt pre-propagation and apply the same tilt for each wavelength like we can
@@ -1094,7 +1148,7 @@ class LensletArray(Plane):
     pass
 
 
-class Rotate(Plane):
+class Rotate(_PlaneBase):
     """Rotate a Wavefront by a specified angle
 
     Parameters
@@ -1122,7 +1176,7 @@ class Rotate(Plane):
         self.angle = -angle
         self.order = order
 
-    def multiply(self, wavefront):
+    def __mul__(self, wavefront):
         """Multiply with a wavefront
 
         Parameters
@@ -1158,7 +1212,7 @@ class Rotate(Plane):
         return out
 
 
-class Flip(Plane):
+class Flip(_PlaneBase):
     """Flip a wavefront along specified axis
 
     Parameters
@@ -1173,7 +1227,7 @@ class Flip(Plane):
         super().__init__()
         self.axis = axis
 
-    def multiply(self, wavefront):
+    def __mul__(self, wavefront):
         """Multiply with a wavefront
 
         Parameters
@@ -1193,7 +1247,7 @@ class Flip(Plane):
         return out
 
 
-class Quadratic(Plane):
+class Quadratic(_PlaneBase):
     """Base class for representing an optical plane with a quadratic phase
     term.
 
@@ -1201,7 +1255,7 @@ class Quadratic(Plane):
     pass
 
 
-class Conic(Plane):
+class Conic(_PlaneBase):
     """Base class for representing an optical plane with a conic phase term.
 
     """
