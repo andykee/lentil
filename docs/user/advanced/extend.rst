@@ -4,6 +4,15 @@
 Extending Lentil
 ****************
 
+Subclassing existing planes
+===========================
+
+
+
+Creating new planes
+===================
+
+
 Customizing Plane
 =================
 The |Plane| class or any of the classes derived from Plane can be subclassed to modify

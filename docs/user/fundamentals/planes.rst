@@ -10,26 +10,20 @@ building blocks of most models in Lentil:
 
 * A :ref:`Plane <user.fundamentals.planes.plane>` represents a discretely
   sampled optical plane at an arbitrary location in an optical system.
-
-* The |Plane| base class provides the core logic for representing and
-  working with discretely sampled planes in an optical model.
-* The |Pupil| plane provides a convenient way to represent a pupil plane
-  in an optical system. There is nothing particularly special about pupil 
-  planes, they merely provide a convenient location (mathematically-speaking) 
-  to enforce limiting apertures or stops and include optical aberrations. More 
-  detailed discussion of pupil planes is available in [1]_.
-* The |Image| plane provides a location where the image formed by an
-  optical system may be manipulated or viewed.
+* A :ref:`Pupil <user.fundamentals.planes.pupil>` represents a discretely
+  sampled pupil plane.
+* An :ref:`Image <user.fundamentals.planes.image>` represents a discretely
+  sampled image plane.
 
 In addition, several "utility" planes are provided. These planes don't 
 represent physical components of an optical system, but are used to implement 
 commonly encountered optical effects:
 
-* The |Tilt| plane is used to represent wavefront tilt in terms of radians
-  of x and y tilt.
-* The :class:`~lentil.Rotate` plane rotates a wavefront by an arbitrary angle.
-* The :class:`~lentil.Flip` plane flips a wavefront about its x, y, or both x 
-  and y axes.
+* The :ref:`Tilt <user.fundamentals.planes.tilt>` plane is used to represent 
+  wavefront tilt in terms x and y tilt (in radians).
+.. * The :class:`~lentil.Rotate` plane rotates a wavefront by an arbitrary angle.
+.. * The :class:`~lentil.Flip` plane flips a wavefront about its x, y, or both x 
+..   and y axes.
 
 .. _user.fundamentals.planes.plane:
 
@@ -38,44 +32,44 @@ Plane basics
 Planes are described by a common set of attributes. The most commonly used 
 attributes are
 
-* :attr:`~lentil.Plane.amplitude` - defines the electric field amplitude 
-  transmission through the plane
-* :attr:`~lentil.Plane.opd` - defines the optical path difference that a 
-  wavefront experiences when propagating through the plane
-* :attr:`~lentil.Plane.mask` - defines the binary mask over which the plane 
-  data is valid. If `mask` is 2-dimensional, the plane is assumed to be 
-  monolithic. If `mask` is 3-dimensional, the plane is assumed to be segmented 
-  with the individual segment masks provided along the first dimension. If 
-  mask is not provided, it is automatically created from the nonzero values in 
-  :attr:`~lentil.Plane.amplitude`.
+* ``amplitude`` - defines the electric field amplitude transmission through 
+  the plane
+* ``opd`` - defines the optical path difference that a wavefront experiences 
+  when propagating through the plane
+* ``mask`` - defines the binary mask over which the plane data is valid. If 
+  ``mask`` is 2-dimensional, the plane is assumed to be monolithic. If 
+  ``mask`` is 3-dimensional, the plane is assumed to be segmented with the 
+  individual segment masks provided along the first dimension. If mask is not 
+  provided, it is automatically created from the nonzero values in 
+  ``amplitude``.
 
 .. plot:: _img/python/segmask.py
     :scale: 50
 
-* :attr:`~lentil.Plane.pixelscale` - defines the physical sampling of the
-  above attributes. A simple example of how to calculate the pixelscale for a
-  discretely sampled circular aperture is given below:
+* ``pixelscale`` - defines the physical sampling of the above attributes. A 
+  simple example of how to calculate the pixelscale for a discretely sampled 
+  circular aperture is given below:
 
   .. image:: /_static/img/pixelscale.png
     :width: 450px
     :align: center
 
-* :attr:`~lentil.Plane.ptype` - defines how a plane interacts with a 
+* ``ptype`` - defines how a plane interacts with a 
   |Wavefront|. When a wavefront interacts with a plane, it inherits the plane's
   ``ptype``. Plane type is set automatically and unexpected behavior may
   occur if it is changed.
 
   Lentil planes support the following ptypes:
   
-  ================== ======================================================
-  ptype              Planes with this type
-  ================== ======================================================
-  :class:`none`      :class:`~lentil.Plane`
-  :class:`pupil`     :class:`~lentil.Pupil`
-  :class:`image`     :class:`~lentil.Image`
-  :class:`tilt`      :class:`~lentil.Tilt`, :class:`~lentil.DispersiveTilt`
-  :class:`transform` :class:`~lentil.Rotate`, :class:`~lentil.Flip`
-  ================== ======================================================
+  ============= ============================
+  ptype         Planes with this type
+  ============= ============================
+  ``none``      ``Plane``
+  ``pupil``     ``Pupil``
+  ``image``     ``Image``
+  ``tilt``      ``Tilt``, ``DispersiveTilt``
+  ``transform`` ``Rotate``, ``Flip``
+  ============= ============================
   
   The rules defining when a wavefront is allowed to interact with a plane based
   on ``ptype`` are described 
@@ -88,7 +82,7 @@ attributes are
 
 Plane creation
 --------------
-Create a new ``plane`` with
+Create a new plane with
 
 .. plot::
     :include-source:
@@ -97,7 +91,7 @@ Create a new ``plane`` with
     >>> p = lentil.Plane(amplitude=lentil.circle((256,256), 120))
     >>> plt.imshow(p.amplitude, cmap='gray')
 
-Once a ``plane`` is defined, its attributes can be modified at any time:
+Once a plane is defined, its attributes can be modified at any time:
 
 .. code-block:: pycon
 
@@ -148,7 +142,7 @@ In-place operations are also supported:
 
 Resampling and rescaling
 ------------------------
-It is possible to resample a ``plane`` using either the 
+It is possible to resample a plane using either the 
 :func:`~lentil.Plane.resample` or :func:`~lentil.Plane.rescale` methods. Both 
 methods use intrepolation to resample the ``amplitude``, ``opd``, and ``mask`` 
 attributes and readjust the ``pixelscale`` attribute as necessary.
@@ -183,16 +177,16 @@ it's possible to freeze any other attribute by passing its name to
   
     >>> ttf = tt.freeze('other_attr')
 
-.. _user.planes.pupil:
 
+.. _user.fundamentals.planes.pupil:
 
 Pupil
 =====
-Lentil's |Pupil| class provides a convenient way to represent a generalized 
-pupil function. |Pupil| planes behave exactly like |Plane| objects but 
-introduce an implied spherical phase term defined by the 
-:attr:`~lentil.Pupil.focal_length` attribute. The spherical phase term is 
-opaque to the user but is given by
+Lentil's ``Pupil`` class provides a convenient way to represent a 
+generalized pupil function. Pupil planes behave exactly like plane 
+objects but introduce an implied spherical phase term defined by the 
+``focal_length`` attribute. The spherical phase term is opaque to the 
+user but is given by
 
 .. math::
 
@@ -203,23 +197,22 @@ plane coordinates.
 
 A pupil is defined by the following required parameters:
 
-* :attr:`~lentil.Pupil.focal_length` - The effective focal length (in meters)
+* ``focal_length`` - The effective focal length (in meters)
   represented by the pupil
-* :attr:`~lentil.Pupil.pixelscale` - Defines the physical sampling of each 
+* ``pixelscale`` - Defines the physical sampling of each 
   pixel in the discretely sampled attributes described below
 
 Discreetly sampled pupil attributes can also be specified:
 
-* :attr:`~lentil.Pupil.amplitude` - Defines the relative electric field 
-  amplitude transmission through the pupil
-* :attr:`~lentil.Pupil.opd` - Defines the optical path difference that a 
-  wavefront experiences when propagating through the pupil.
-* :attr:`~lentil.Pupil.mask` - Defines the binary mask over which the pupil 
-  data is valid. If `mask` is 2-dimensional, the pupil is assumed to be 
-  monolithic. If `mask` is 3-dimensional, the pupil is assumed to be segmented 
-  with the segment masks allocated along the first dimension. If mask is not 
-  provided, it is automatically created as needed from the nonzero values in 
-  :attr:`~lentil.Pupil.amplitude`.
+* ``ampltiude`` - Defines the relative electric field amplitude transmission 
+  through the pupil
+* ``opd`` - Defines the optical path difference that a wavefront experiences 
+  when propagating through the pupil.
+* ``mask`` - Defines the binary mask over which the pupil data is valid. If 
+  ``mask`` is 2-dimensional, the pupil is assumed to be monolithic. If ``mask`` 
+  is 3-dimensional, the pupil is assumed to be segmented with the segment 
+  masks allocated along the first dimension. If mask is not provided, it is 
+  automatically created as needed from the nonzero values in ``amplitude``.
 
 .. note::
 
@@ -232,32 +225,35 @@ Create a pupil with:
 
     >>> p = lentil.Pupil(focal_length=10, pixelscale=1/100, amplitude=1, opd=0)
 
+.. _user.fundamentals.planes.image:
+
 Image
 =====
-Lentil's |Image| plane is used to either manipulate or view a wavefront at an 
+Lentil's ``Image`` plane is used to either manipulate or view a wavefront at an 
 image plane in an optical system. An image plane does not have any required 
 parameters although any of the following can be specified:
 
-* :attr:`~lentil.Image.pixelscale` - Defines the physical sampling of each 
-  pixel in the image plane. If not provided, the sampling will be 
-  automatically selected to ensure the results are at least Nyquist sampled.
-* :attr:`~lentil.Image.shape` - Defines the shape of the image plane. If not 
-  provided, the image plane will grow as necessary to capture all data.
-* :attr:`~lentil.Image.amplitude` - Definers the relative electric field 
-  amplitude transmission through the image plane.
-* :attr:`~lentil.Image.opd` - Defines the optical path difference that a 
-  wavefront experiences when propagating through the image plane.
+* ``pixelscale`` - Defines the physical sampling of each pixel in the image 
+  plane. If not provided, the sampling will be automatically selected to ensure 
+  the results are at least Nyquist sampled.
+* ``shape`` - Defines the shape of the image plane. If not provided, the image 
+  plane will grow as necessary to capture all data.
+* ``amplitude`` - Definers the relative electric field amplitude transmission 
+  through the image plane.
+* ``opd`` - Defines the optical path difference that a wavefront experiences 
+  when propagating through the image plane.
 
-.. _user.planes.tilt:
+.. _user.fundamentals.planes.tilt:
 
 Tilt
 ====
-The :class:`~lentil.Tilt` plane provides a mechanism for directly specifying 
-wavefront tilt outside of the context of a discretely sampled |Plane| object. 
-:class:`~lentil.Tilt` is most useful for representing global tilt in an 
-optical system (for example, due to a pointing error).
+The ``Tilt`` plane provides a mechanism for representing wavefront
+tilt in terms of angular rotations about the plane's x and y-axes. This 
+representation is separate and in addition to any tilt specified in a 
+plane's ``opd`` attribute. Tilt planes most useful for representing global 
+tilt in an optical system (for example, due to a pointing error).
 
-Given the following |Pupil| plane:
+Given the following pupil plane:
 
 .. plot::
     :include-source:
