@@ -813,10 +813,22 @@ class Tilt(TiltInterface):
         Keyword arguments passed to :class:`~lentil.Plane` constructor
 
     """
-    def __init__(self, x, y, **kwargs):
+    def __init__(self, *tilt, indexing='ij', **kwargs):
         super().__init__(**kwargs)
-        self.x = y  # y tilt is about the x-axis.
-        self.y = x  # x tilt is about the y-axis.
+        if len(tilt) != 2:
+            raise ValueError('Tilt must be specified by two values (x,y) or (r,c)')
+        
+        if indexing not in ['xy', 'ij']:
+            raise ValueError("Valid values for `indexing` are 'xy' and 'ij'.")
+    
+        if indexing == 'ij':
+            self.r = tilt[0]
+            self.c = tilt[1]
+        else:
+            self.r = -tilt[1]
+            self.c = tilt[0]
+        #self.x = y  # y tilt is about the x-axis.
+        #self.y = x  # x tilt is about the y-axis.
 
     def shift(self, xs=0, ys=0, z=0, **kwargs):
         """Compute image plane shift due to this angular tilt
