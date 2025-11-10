@@ -21,6 +21,7 @@ commonly encountered optical effects:
 
 * The :ref:`Tilt <user.fundamentals.planes.tilt>` plane is used to represent 
   wavefront tilt in terms x and y tilt (in radians).
+
 .. * The :class:`~lentil.Rotate` plane rotates a wavefront by an arbitrary angle.
 .. * The :class:`~lentil.Flip` plane flips a wavefront about its x, y, or both x 
 ..   and y axes.
@@ -54,12 +55,11 @@ attributes are
     :width: 450px
     :align: center
 
-* ``ptype`` - defines how a plane interacts with a 
-  |Wavefront|. When a wavefront interacts with a plane, it inherits the plane's
-  ``ptype``. Plane type is set automatically and unexpected behavior may
-  occur if it is changed.
+* ``ptype`` - specifies the plane type. Additional details are available in 
+  the sections describing :ref:`user.fundamentals.wavefront.plane_wavefront` 
+  and :ref:`user.fundamentals.wavefront.ptype_rules`
 
-  Lentil planes support the following ptypes:
+  Valid types are:
   
   ============= ============================
   ptype         Planes with this type
@@ -71,10 +71,6 @@ attributes are
   ``transform`` ``Rotate``, ``Flip``
   ============= ============================
   
-  The rules defining when a wavefront is allowed to interact with a plane based
-  on ``ptype`` are described 
-  :ref:`here <user.fundamentals.wavefront.ptype_rules>`.
-
 .. note::
 
     All Plane attributes have sensible default values that have no effect on
@@ -110,34 +106,12 @@ Once a plane is defined, its attributes can be modified at any time:
     >>> plt.imshow(opd, cmap=opd_cmap)
 
 
-Basic arithmetic operations
----------------------------
-Planes with the same ``ptype`` can be added or subtracted, returning a new
-``plane``:
+.. Basic arithmetic operations
+.. ---------------------------
+.. Planes with the same ``ptype`` can be added or subtracted, returning a new
+.. ``plane``:
 
-
-In-place operations are also supported:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.. In-place operations are also supported:
 
 
 Resampling and rescaling
@@ -152,6 +126,7 @@ attributes and readjust the ``pixelscale`` attribute as necessary.
 Creating a frozen copy of a Plane
 ---------------------------------
 .. MOVE THIS SOMEWHERE ELSE (PERFORMANCE?)
+
 Some custom Planes like the 
 :ref:`tip/tilt mirror defined below <user.planes.tip-tilt-mirror>` 
 implement custom :attr:`~lentil.Plane.opd` functionality that computes a 
@@ -413,5 +388,3 @@ is computed dynamically based on the state `x` is provided below.
 .. Lenslet Arrays
 .. ==============
 
-
-.. [1] Goodman, *Introduction to Fourier Optics*.

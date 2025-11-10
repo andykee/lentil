@@ -82,8 +82,8 @@ the wavefront's complex data array.
 
 .. _user.fundamentals.wavefront.ptype_rules:
 
-Multiplication rules
-====================
+Plane-wavefront multiplication rules
+====================================
 The table below outlines when a wavefront can interact with a plane based on their
 ``ptype`` and what the wavefront's pytpe is after interaction:
 

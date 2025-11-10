@@ -4,6 +4,11 @@
 Optimizing Performance
 **********************
 
+.. _user.performance.freeze:
+
+Freezing planes with computationally expensive attribute access
+===============================================================
+
 Selecting sensible propagation parameters
 =========================================
 Performing numerical propagation is almost always the most expensive part of 

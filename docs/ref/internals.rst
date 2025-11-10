@@ -6,6 +6,14 @@ Internals
 
 .. currentmodule:: lentil
 
+Planes
+------
+.. autosummary::
+    :toctree: generated/
+
+    plane._PlaneBase
+    plane._TiltBase
+
 Plane type
 ----------
 .. autosummary::
@@ -38,13 +46,6 @@ Extent
     extent.intersection_shape
     extent.intersection_slices
     extent.intersection_shift
-
-Tilt interface
---------------
-.. autosummary::
-    :toctree: generated/
-
-    plane.TiltInterface
 
 Fourier transforms
 ------------------
