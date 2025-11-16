@@ -85,7 +85,10 @@ polynomials <https://en.wikipedia.org/wiki/Zernike_polynomials>`_.
 
 .. note::
 
-    Lentil uses the Noll indexing scheme for defining Zernike polynomials [1]_.
+    Zernike modes can be ordered according to the `Noll, Fringe, or ANSI 
+    schemes <https://en.wikipedia.org/wiki/Zernike_polynomials#Zernike_polynomials>`_ 
+    by specifying the ``order`` parameter. Supported values are ``noll`` (default),
+    ``fringe``, or ``ansi``.
 
 Wavefront error maps are easily computed using either the :func:`~lentil.zernike` or
 :func:`~lentil.zernike_compose` functions. For example, we can represent 100 nm of 
@@ -111,10 +114,6 @@ list of coefficients to the :func:`~lentil.zernike_compose` function:
     >>> coeff = np.random.uniform(low=-200e-9, high=200e-9, size=10)
     >>> z = lentil.zernike_compose(mask, coeff)
     >>> plt.imshow(z)
-
-Note that the coefficients list is ordered according to the `Noll indexing scheme
-<https://en.wikipedia.org/wiki/Zernike_polynomials#Zernike_polynomials>`_ so the
-first entry in the list represents piston, the second represents, tilt, and so on.
 
 For models requiring many random trials, it may make more sense to pre-compute the
 Zernike modes once and accumulate the error map for each new state. We can do this by
@@ -322,5 +321,3 @@ wavefront error map given a PSD:
 ..
 .. Precomputed phases
 .. ------------------
-
-.. [1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).

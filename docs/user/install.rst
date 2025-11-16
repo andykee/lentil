@@ -22,9 +22,9 @@ To install using **pip**:
 
 Requirements
 ============
-Lentil has the following requirements:
+Lentil has the following package dependencies:
 
-* `Python <https://www.python.org>`_ 3.7 or later
+* `Python <https://www.python.org>`_ 3.8 or later
 * `numpy <https://numpy.org>`_
 * `scipy <https://scipy.org>`_
 

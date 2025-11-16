@@ -12,12 +12,12 @@ The User Guide provides documentation for all of Lentil's features and capabilit
 
     install
     importing_lentil
+    quickstart
 
 .. toctree::
     :caption: Fundamentals
     :maxdepth: 1
 
-    introduction
     coordinates
     apertures
     planes

@@ -15,8 +15,38 @@ be unnecessarily recalculated each time they are accessed (for example, when
 performing a :ref:`broadband propagation <user.diffraction.broadband>`). To 
 mitigate this performance imapct, it can be beneficial to operate on a copy of
 the plane where its dynamic attributes are cached or "frozen". A plane's 
-:func:`~lentil.Plane.freeze` method makes this simple. 
+:func:`~lentil.Plane.freeze` method makes this simple:
 
+.. code-block:: python
+
+    frozen_pupil = pupil.freeze()
+
+    for wl in wavelengths:
+        w = lentil.Wavefront(wl)
+        w = w * frozen_pupil  # cached OPD value is used here
+        w = lentil.propagate_dft(w, pixelscale=5e-6, shape=(64,64), oversample=5)
+        img += w.intensity
+
+.. _user.performance.wavefront_insert:
+
+Using Wavefront.insert() to reduce array allocation during broadband propagation
+================================================================================
+Each time ``wavefront.field`` or ``wavefront.intensity`` is accessed, a new Numpy
+array of zeros with shape = ``wavefront.shape`` is allocated. It is possible to
+avoid repeatedly allocating large arrays of zeros when accumulating the result of
+a broadband propagation by using :func:`Wavefront.insert` instead. This can result
+in significant performance gains, particularly when ``wavefront.shape`` is large.
+
+The above example can be rewritten to use :func:`Wavefront.insert` instead:
+
+.. code-block:: python
+
+    for wl in wavelengths:
+        w = lentil.Wavefront(wl)
+        w = w * pupil
+        w = lentil.propagate_dft(w, pixelscale=5e-6, shape=(64,64), 
+                                 oversample=5)
+        img = w.insert(img)
 
 
 Selecting sensible propagation parameters

@@ -1,7 +1,7 @@
 .. _user.import:
 
 ********************************
-Importing lentil and subpackages
+Importing Lentil and subpackages
 ********************************
 
 Most of the functionality in Lentil resides in the standard library.
