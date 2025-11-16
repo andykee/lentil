@@ -64,7 +64,7 @@ class _PlaneBase:
         self.opd = opd if opd is not None else np.array(0)
 
         self._diameter = diameter
-        self._pixelscale = np.array(pixelscale) if pixelscale is not None else None
+        self._pixelscale = np.broadcast_to(pixelscale, (2,)) if pixelscale is not None else None
 
         self.ptype = lentil.ptype(ptype)
 
