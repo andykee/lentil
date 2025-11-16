@@ -10,39 +10,30 @@ The User Guide provides documentation for all of Lentil's features and capabilit
     :caption: Getting started
     :maxdepth: 1
 
-    getting_started/install
-    getting_started/importing_lentil
-    getting_started/resources
+    install
+    importing_lentil
 
 .. toctree::
     :caption: Fundamentals
     :maxdepth: 1
 
-    fundamentals/introduction
-    fundamentals/coordinates
-    fundamentals/apertures
-    fundamentals/planes
-    fundamentals/wavefront_error
-    fundamentals/wavefront
-    fundamentals/diffraction
-    fundamentals/tilt
-    fundamentals/segmented
-    fundamentals/artifacts
-    fundamentals/image_sensors
-    fundamentals/radiometry
+    introduction
+    coordinates
+    apertures
+    planes
+    wavefront_error
+    wavefront
+    diffraction
+    tilt
+    segmented
+    artifacts
+    image_sensors
+    radiometry
     
 .. toctree::
     :caption: Advanced usage
     :maxdepth: 1
 
-    advanced/extend
-    advanced/performance
-    advanced/matlab
-
-.. toctree::
-    :hidden:
-    :caption: Extras
-
-    extra/release
-    extra/cite
-    extra/license
+    extend
+    performance
+    matlab

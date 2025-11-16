@@ -1,4 +1,4 @@
-.. _user.fundamentals.artifacts:
+.. _user.artifacts:
 
 *****************
 Imaging artifacts

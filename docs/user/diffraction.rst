@@ -1,4 +1,4 @@
-.. _user.fundamentals.diffraction:
+.. _user.diffraction:
 
 *********************************
 Numerical diffraction propagation
@@ -84,7 +84,7 @@ pupil's focal length:
 .. note::
 
     Additional details on the plane-wavefront interaction can be found in
-    :ref:`user.fundamentals.wavefront.plane_wavefront`.
+    :ref:`user.wavefront.plane_wavefront`.
 
 Propagate the wavefront to the next plane
 -----------------------------------------
@@ -230,7 +230,7 @@ High-frequency ailiasing is clearly apparent in propagations where
 :math:`Q < 1.5` and still visibile to those with a keen eye when 
 :math:`1.5 < Q < 2`:
 
-.. plot:: user/fundamentals/plots/dft_discrete_Q_sweep.py
+.. plot:: user/plots/dft_discrete_Q_sweep.py
     :scale: 50
 
 In cases where the optical system :math:`Q` is less than 2, the simulation 
@@ -258,7 +258,7 @@ Avoiding periodic wraparound
 
     \texttt{npix}_{\mbox{DFT}} = \frac{1}{2 \ \alpha \ \ \texttt{oversample}}
 
-.. plot:: user/fundamentals/plots/dft_q_sweep.py
+.. plot:: user/plots/dft_q_sweep.py
     :scale: 50
 
 .. _user.diffraction.shape:
@@ -283,7 +283,7 @@ It can be advantageous to specify ``prop_shape`` < ``shape`` for performance
 reasons, although care must be taken to ensure needed data is not accidentally
 left out:
 
-.. plot:: user/fundamentals/plots/prop_shape.py
+.. plot:: user/plots/prop_shape.py
     :scale: 50
 
 For most pupil to image plane propagations, setting ``prop_shape`` to 128 or 256

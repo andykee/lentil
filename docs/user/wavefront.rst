@@ -1,4 +1,4 @@
-.. _user.fundamentals.wavefront:
+.. _user.wavefront:
 
 .. .. currentmodule:: lentil
 
@@ -22,7 +22,7 @@ wavelength). A wavefront is defined by the following parameters:
 * :attr:`~lentil.Wavefront.ptype` - The plane type of the wavefront
 
 Wavefronts are mutable through interaction with a |Plane|. For more details
-see :ref:`user.fundamentals.wavefront.plane_wavefront`.
+see :ref:`user.wavefront.plane_wavefront`.
 
 Wavefonts have several useful attributes for working with their electric
 field:
@@ -50,37 +50,27 @@ occur if it is changed.
 ==================  ===========================================================
 
 The rules defining when a wavefront is allowed to interact with a plane based
-on ``ptype`` are described :ref:`here <user.fundamentals.wavefront.ptype_rules>`.
+on ``ptype`` are described :ref:`here <user.wavefront.ptype_rules>`.
 
-.. _user.fundamentals.wavefront.plane_wavefront:
+.. _user.wavefront.plane_wavefront:
 
 How a plane affects a wavefront
 ===============================
 An optical plane generally has some effect on a wavefront as it propagates
-through the plane. A plane may change a propagating wavefront's amplitude, phase,
-and/or physical extent. This |Plane|-|Wavefront| interaction is performed by the
-plane's :func:`~lentil.Plane.multiply` method. A |Plane| and |Wavefront| can be
-multiplied in two ways:
-
-* By calling :func:`Plane.multiply` directly:
-
-.. code:: pycon
-
-    >>> w1 = plane.multiply(w0)
-
-* By using the built-in multiplication operator (which in turn calls
-  :func:`Plane.multiply`):
+through the plane. A plane may change a propagating wavefront's amplitude, 
+phase, and/or physical extent. This |Plane|-|Wavefront| interaction is 
+implemented by the multiply operator:
 
 .. code:: pycon
 
     >>> w1 = plane * w0
 
-The :func:`~Plane.multiply` method constructs a complex phasor from the plane's
-:attr:`~lentil.Plane.amplitude` and :attr:`~lentil.Plane.opd` attributes and the
-|Wavefront| wavelength. The plane complex phasor is then multiplied element-wise with
+When a plane and wavefront are multiplied, a complex phasor is constructed 
+from the plane's ``amplitude`` and ``opd`` attributes and the wavefront's 
+wavelength. The plane complex phasor is then multiplied element-wise with
 the wavefront's complex data array.
 
-.. _user.fundamentals.wavefront.ptype_rules:
+.. _user.wavefront.ptype_rules:
 
 Plane-wavefront multiplication rules
 ====================================
@@ -120,5 +110,5 @@ A field is defined by the following parameters:
   field data relative to the global optical axis at (0,0)
 * :attr:`~lentil.field.Field.tilt` - A list of |Tilt| objects [1]_
 
-
-.. [1] Technically any object implementing Lentil's :ref:`TiltInterface <user.advanced.extend.tiltinterface>` is supported
+.. [1] All objects implementing Lentil's :ref:`TiltInterface 
+       <user.extend.tiltinterface>` are supported

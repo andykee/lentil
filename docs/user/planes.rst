@@ -1,4 +1,4 @@
-.. _user.fundamentals.planes:
+.. _user.planes:
 
 ******
 Planes
@@ -8,25 +8,25 @@ Lentil represents optical systems using one or more planes that have some
 influence on a propagating wavefront. The following planes are the core 
 building blocks of most models in Lentil:
 
-* A :ref:`Plane <user.fundamentals.planes.plane>` represents a discretely
+* A :ref:`Plane <user.planes.plane>` represents a discretely
   sampled optical plane at an arbitrary location in an optical system.
-* A :ref:`Pupil <user.fundamentals.planes.pupil>` represents a discretely
+* A :ref:`Pupil <user.planes.pupil>` represents a discretely
   sampled pupil plane.
-* An :ref:`Image <user.fundamentals.planes.image>` represents a discretely
+* An :ref:`Image <user.planes.image>` represents a discretely
   sampled image plane.
 
 In addition, several "utility" planes are provided. These planes don't 
 represent physical components of an optical system, but are used to implement 
 commonly encountered optical effects:
 
-* The :ref:`Tilt <user.fundamentals.planes.tilt>` plane is used to represent 
+* The :ref:`Tilt <user.planes.tilt>` plane is used to represent 
   wavefront tilt in terms x and y tilt (in radians).
 
 .. * The :class:`~lentil.Rotate` plane rotates a wavefront by an arbitrary angle.
 .. * The :class:`~lentil.Flip` plane flips a wavefront about its x, y, or both x 
 ..   and y axes.
 
-.. _user.fundamentals.planes.plane:
+.. _user.planes.plane:
 
 Plane basics
 ============
@@ -56,8 +56,8 @@ attributes are
     :align: center
 
 * ``ptype`` - specifies the plane type. Additional details are available in 
-  the sections describing :ref:`user.fundamentals.wavefront.plane_wavefront` 
-  and :ref:`user.fundamentals.wavefront.ptype_rules`
+  the sections describing :ref:`user.wavefront.plane_wavefront` 
+  and :ref:`user.wavefront.ptype_rules`
 
   Valid types are:
   
@@ -121,39 +121,8 @@ It is possible to resample a plane using either the
 methods use intrepolation to resample the ``amplitude``, ``opd``, and ``mask`` 
 attributes and readjust the ``pixelscale`` attribute as necessary.
 
-.. _user.planes.freeze:
 
-Creating a frozen copy of a Plane
----------------------------------
-.. MOVE THIS SOMEWHERE ELSE (PERFORMANCE?)
-
-Some custom Planes like the 
-:ref:`tip/tilt mirror defined below <user.planes.tip-tilt-mirror>` 
-implement custom :attr:`~lentil.Plane.opd` functionality that computes a 
-dynamic OPD value at runtime. When :attr:`~lentil.Plane.opd` needs to be
-repeatedly accessed (for example, when performing a 
-:ref:`broadband propagation <user.diffraction.broadband>`) and
-is expensive to calculate, it can be beneficial to operate on a
-copy of the plane where its :attr:`~lentil.Plane.opd` attribute has
-been cached or "frozen". This is easily accomplished using the 
-:func:`~lentil.Plane.freeze` method:
-
-.. code-block:: pycon
-  
-    >>> tt = TipTiltMirror()
-    >>> tt.x = [1e-6, 3e-6]
-    >>> ttf = tt.freeze()
-
-By default, only the :attr:`~lentil.Plane.opd` attribute is frozen, but
-it's possible to freeze any other attribute by passing its name to 
-:func:`~lentil.Plane.freeze`:
-
-.. code-block:: pycon
-  
-    >>> ttf = tt.freeze('other_attr')
-
-
-.. _user.fundamentals.planes.pupil:
+.. _user.planes.pupil:
 
 Pupil
 =====
@@ -200,7 +169,7 @@ Create a pupil with:
 
     >>> p = lentil.Pupil(focal_length=10, pixelscale=1/100, amplitude=1, opd=0)
 
-.. _user.fundamentals.planes.image:
+.. _user.planes.image:
 
 Image
 =====
@@ -218,7 +187,7 @@ parameters although any of the following can be specified:
 * ``opd`` - Defines the optical path difference that a wavefront experiences 
   when propagating through the image plane.
 
-.. _user.fundamentals.planes.tilt:
+.. _user.planes.tilt:
 
 Tilt
 ====
@@ -306,13 +275,8 @@ system:
 .. .. image:: /_static/img/psf_coma_flip.png
 ..     :width: 300px
 
-.. _user.planes.special:
-
-Dispersive planes
-=================
-
 DispersiveTilt
---------------
+==============
 
 
 Grism
@@ -331,58 +295,6 @@ for dispersed fringe sensing.
 
 Lentil's :class:`~lentil.Grism` plane provides a straightforward mechanism for
 efficiently modeling a grism.
-
-
-Active optics and deformable mirrors
-====================================
-Active optics and deformable mirrors are easily represented by defining an OPD 
-that depends on some parameterized state. Because there is no standard 
-architecture for these types of optical elements, Lentil does not provide a 
-concrete implementation. Instead, a custom subclass of either |Plane| or 
-|Pupil| should be defined. The exact implementation details will vary by 
-application, but a simple example of a tip-tilt mirror where the plane's OPD 
-is computed dynamically based on the state `x` is provided below. 
-
-.. _user.planes.tip-tilt-mirror:
-
-.. code-block:: python3
-
-    import lentil
-    import numpy as np
-
-    class TipTiltMirror(lentil.Plane):
-
-        def __init__(self):
-            self.amplitude = lentil.circle((256,256),120)
-
-            self.x = np.zeros(2)
-
-            # Note that we set normalize=False so that each mode spans [-1, 1] 
-            # and then multiply by 0.5 so that each mode has peak-valley = 1
-            self._infl_fn = 0.5 * lentil.zernike_basis(mask=self.amplitude,
-                                                       modes=[2,3],
-                                                       normalize=False)
-
-        @property
-        def opd(self):
-            return np.einsum('ijk,i->jk', self._infl_fn, self.x)
-
-.. code-block:: pycon
-
-    >>> tt = TipTiltMirror()
-    >>> tt.x = [1e-6, 3e-6]
-    >>> plt.imshow(tt.opd, cmap=opd_cmap)
-    >>> plt.colorbar()
-
-.. plot::
-    :scale: 50
-
-    mask = lentil.circle((256,256), 120, antialias=False)
-    opd = lentil.zernike_compose(mask, [0, 1e-6, 3e-6], normalize=False)
-    opd[np.where(mask == 0)] = np.nan
-    im = plt.imshow(opd, cmap=opd_cmap)
-    plt.colorbar(im, fraction=0.046, pad=0.04)
-
 
 
 .. Lenslet Arrays

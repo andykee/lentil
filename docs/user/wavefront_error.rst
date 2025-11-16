@@ -1,4 +1,4 @@
-.. _user.fundamentals.wavefront_error:
+.. _user.wavefront_error:
 
 ****************************
 Representing wavefront error
@@ -32,7 +32,7 @@ in a shift in the image plane in the positive y direction. A positive y-tilt
 rotates the xz plane clockwise about the y-axis resulting in a shift in the
 image plane in the negative x direction.
 
-.. plot:: user/fundamentals/plots/tilt_images.py
+.. plot:: user/plots/tilt_images.py
     :scale: 50
 
 Focus
@@ -53,7 +53,7 @@ image to be flipped about both axes relative to the aperture (consistent with
 observing the image after passing through focus). The results of this exercise are
 presented below:
 
-.. plot:: user/fundamentals/plots/focus_images.py
+.. plot:: user/plots/focus_images.py
     :scale: 50
 
 Static Errors
@@ -97,7 +97,7 @@ astigmatism over a circular aperture with :func:`~lentil.zernike`:
 
     >>> mask = lentil.circle((256,256), 120, antialias=False)
     >>> astig = 100e-9 * lentil.zernike(mask, index=6)
-    >>> plt.imshow(astig, origin='lower')
+    >>> plt.imshow(astig)
 
 
 Any arbitrary combination of Zernike polynomials can be represented by providing a 
@@ -110,7 +110,7 @@ list of coefficients to the :func:`~lentil.zernike_compose` function:
     >>> mask = lentil.circle((256,256), 120, antialias=False)
     >>> coeff = np.random.uniform(low=-200e-9, high=200e-9, size=10)
     >>> z = lentil.zernike_compose(mask, coeff)
-    >>> plt.imshow(z, origin='lower')
+    >>> plt.imshow(z)
 
 Note that the coefficients list is ordered according to the `Noll indexing scheme
 <https://en.wikipedia.org/wiki/Zernike_polynomials#Zernike_polynomials>`_ so the
@@ -134,7 +134,7 @@ second corresponds to astigmatism.
     >>> coeff = [200e-9, -100e-9]
     >>> basis = lentil.zernike_basis(mask, modes=(4,6))
     >>> z = np.einsum('ijk,i->jk', basis, coeff)
-    >>> plt.imshow(z, origin='lower')
+    >>> plt.imshow(z)
 
 It's also possible to achieve the same result using Numpy's
 `tensordot <https://numpy.org/doc/stable/reference/generated/numpy.tensordot.html>`_:
@@ -147,7 +147,7 @@ It's also possible to achieve the same result using Numpy's
     >>> coeff = [200e-9, -100e-9]
     >>> basis = lentil.zernike_basis(mask, modes=(4,6))
     >>> z = np.tensordot(basis, coeff, axes=(0,0))
-    >>> plt.imshow(z, origin='lower')
+    >>> plt.imshow(z)
 
 Normalization
 -------------
@@ -188,7 +188,7 @@ Defining custom Zernike coordinates
 -----------------------------------
 By default, all of Lentil's Zernike functions place the center of the coordinate system
 at the centroid of the supplied mask with its axes aligned with Lentil's
-:ref:`user.fundamentals.coordinates`. This works as expected for the vast majority of
+:ref:`user.coordinates`. This works as expected for the vast majority of
 needs, but in some cases it may be desirable to manually define the coordinate system.
 This is accomplished by using :func:`~lentil.zernike_coordinates` to compute ``rho`` and
 ``theta``, and providing these definitions to the appropriate Zernike function. For

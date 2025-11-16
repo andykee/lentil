@@ -1,8 +1,8 @@
 .. _api.planes:
 
-*************
-Plane objects
-*************
+******
+Planes
+******
 
 .. currentmodule:: lentil
 
@@ -12,27 +12,8 @@ Plane objects
     Plane
     Pupil
     Image
-
-Plane transformations
----------------------
-.. autosummary::
-    :toctree: generated/
-
     Tilt
+    DispersiveTilt
+    Grism
     Rotate
     Flip
-
-Dispersive Planes
------------------
-.. autosummary::
-    :toctree: generated/
-
-    DispersiveTilt
-
-
-Deprecated
-----------
-.. autosummary::
-    :toctree: generated/
-
-    Grism

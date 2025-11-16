@@ -1,4 +1,4 @@
-.. _user.fundamentals.segmented:
+.. _user.segmented:
 
 *************************
 Segmented optical systems

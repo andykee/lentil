@@ -11,7 +11,7 @@ Once installed, Lentil's standard library can be imported as follows:
 
     >>> import lentil
 
-If you'd prefer to use Lentil *en français*, you can try
+If you'd prefer to use Lentil *en Français*, you can try
 
 .. code-block:: python3
 

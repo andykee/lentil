@@ -1,4 +1,4 @@
-.. _user.fundamentals.apertures:
+.. _user.apertures:
 
 *******************
 Apertures and masks
@@ -18,19 +18,19 @@ Basic shapes
 Lentil provides a number of functions for drawing basic shapes in arrays.
 Multiple arrays can be combined to create more complicated shapes.
 
-.. plot:: user/fundamentals/plots/apertures.py
+.. plot:: user/plots/apertures.py
     :scale: 50
 
 Basic antialiasing is supported (and is enabled by default):
 
-.. plot:: user/fundamentals/plots/shape_antialias.py
+.. plot:: user/plots/shape_antialias.py
     :scale: 50
 
 The core shape functions also support shifting the center of the shape 
 arbitrarily relative to the center of the array. The shift is defined 
 in terms of (row, col).
 
-.. plot:: user/fundamentals/plots/shape_shift.py
+.. plot:: user/plots/shape_shift.py
     :scale: 50
 
 

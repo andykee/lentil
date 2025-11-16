@@ -682,6 +682,38 @@ def _plane_slice(mask):
 #        return getattr(other, f'_{self.attr}')
 
 class Plane(_PlaneBase):
+    """Class for representing a finite geometric plane.
+    
+    Parameters
+    ----------
+    amplitude : array_like, optional
+        Electric field amplitude transmission. Amplitude should be normalized
+        with :func:`~lentil.normalize_power` if conservation of power
+        through diffraction propagation is required. If not specified (default),
+        amplitude is created which has no effect on wavefront propagation. Can
+        also be specified using the ``amp`` keyword.
+    opd : array_like, optional
+        Optical path difference (OPD) induced by plane. If not specified (default), 
+        zero OPD is created which has no effect on wavefront propagation.
+    mask : array_like, optional
+        Binary mask. If not specified, a mask is created from the amplitude.
+        If ``mask`` has 2 dimensions, the plane is assumed to be monolithic. If
+        ``mask`` has 3 dimensions, the plane is assumed to be segmented with the
+        individual segment masks inserted along the first dimension.
+
+        .. plot:: _img/python/segmask.py
+            :scale: 50
+            
+    pixelscale : float or (2,) array_like, optional
+        Physical sampling of each pixel in the plane. If ``pixelscale`` is a
+        scalar, uniform sampling in x and y is assumed. If None (default),
+        ``pixelscale`` is left undefined.
+    diameter : float, optional
+        Outscribing diameter around mask. If not provided (default), it is computed
+        from the boundary of :attr:`mask`.
+    ptype : ptype object
+        Plane type
+    """
 
     def __init__(self, amplitude=None, opd=None, mask=None, pixelscale=None, 
                  diameter=None, ptype=None, **kwargs):

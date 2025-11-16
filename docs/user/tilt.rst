@@ -1,4 +1,4 @@
-.. _user.fundamentals.tilt:
+.. _user.tilt:
 
 ****************************************
 Diffraction propagation with large tilts

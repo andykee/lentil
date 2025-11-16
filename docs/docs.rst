@@ -6,7 +6,7 @@
     User Guide <user/index>
     Examples <examples/index>
     API Reference <ref/index>
-    Development <dev/index>
+    Resources <resources/index>
 
 ********************
 Lentil Documentation
@@ -79,16 +79,16 @@ functions of segmented aperture telescopes.
 
             To the reference guide
 
-    .. grid-item-card:: :octicon:`terminal;1em;` Development guide
+    .. grid-item-card:: :octicon:`terminal;1em;` Resources
 
-        The development guide provides key information for library developers
-        and maintainers. It also describes algorithm verification efforts.
+        More resources for developers and maintainers. Notes on algorithm
+        verification are also provided here.
 
         +++
 
-        .. button-ref:: dev/index
+        .. button-ref:: resources/index
             :expand:
             :color: info
             :click-parent:
 
-            To the development guide
+            More resources
