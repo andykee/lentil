@@ -183,7 +183,7 @@ class Field:
         x, y = 0, 0
 
         for tilt in self.tilt:
-            x, y = tilt.shift(xs=x, ys=y, z=z, wavelength=wavelength)
+            x, y = tilt.__shift__(xs=x, ys=y, z=z, wavelength=wavelength)
 
         pixelscale = np.broadcast_to(pixelscale, (2,))
         out = x/pixelscale[0] * oversample, y/pixelscale[1] * oversample

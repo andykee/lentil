@@ -449,12 +449,10 @@ def zernike_coordinates(mask, shift=None, rotate=0):
     mask : array_like
         Mask defining the extent to compute the Zernike polynomial over. All
         nonzero entries are included in the result.
-
     shift : (2,) array_like or None, optional
         x, y shift of the coordinate system origin in pixels. If None
         (default), shift is computed automatically to locate the origin at the
         mask centroid.
-
     rotate: float, optional
         Angle to rotate coordinate system by in degrees. rotate is specified
         relative to the x-axis. Default is 0.

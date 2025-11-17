@@ -152,14 +152,14 @@ def test_dispersive_tilt_center():
 
     x0 = np.random.uniform(low=-5, high=5)
     y0 = np.random.uniform(low=-5, high=5)
-    x, y = dt.shift(wavelength=650e-9, xs=x0, ys=y0)
+    x, y = dt.__shift__(wavelength=650e-9, xs=x0, ys=y0)
     assert np.all((x == x0, y == y0))
 
 
 def test_dispersive_tilt_shift():
     dt = lentil.DispersiveTilt(trace=[1,1], dispersion=[1,650e-9])
     wave = 900e-9
-    x, y = dt.shift(wavelength=wave)
+    x, y = dt.__shift__(wavelength=wave)
 
     assert x == (wave - dt.dispersion[1])/np.sqrt(2)
     assert y == 1+x

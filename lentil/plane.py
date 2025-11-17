@@ -880,8 +880,8 @@ class _TiltBase(_PlaneBase):
             field.tilt.append(self)
         return wavefront
     
-    def shift(self, wavelength, x0, y0, **kwargs):
-        """TODO
+    def __shift__(self, wavelength, x0, y0, **kwargs):
+        """Compute image plane shift corresponding to tilt
         """
         raise NotImplementedError
 
@@ -904,7 +904,7 @@ class Tilt(_TiltBase):
         self.x = y  # y tilt is about the x-axis.
         self.y = x  # x tilt is about the y-axis.
 
-    def shift(self, xs=0, ys=0, z=0, **kwargs):
+    def __shift__(self, xs=0, ys=0, z=0, **kwargs):
         """Compute image plane shift due to this angular tilt
 
         Parameters
@@ -998,7 +998,7 @@ class DispersiveTilt(_TiltBase):
         self._dispersion_order = self.dispersion.size - 1
         assert self._dispersion_order >= 1
 
-    def shift(self, wavelength, xs=0., ys=0., **kwargs):
+    def __shift__(self, wavelength, xs=0., ys=0., **kwargs):
 
         dist = self._dispersion(wavelength)
         x, y = self._trace(dist)

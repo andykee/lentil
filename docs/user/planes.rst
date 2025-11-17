@@ -277,6 +277,46 @@ system:
 
 DispersiveTilt
 ==============
+The :class:`~lentil.DispersiveTilt` class can be used to represent any
+wavelength-depentent tilt. Examples include modeling chromatic aberrations, 
+prisms, or diffraction gratings, just to name a few. With a dispersive tilt,
+light is dispersed along a path called a spectral trace. The location of a 
+specific wavelength along this trace is determined by the dispersion function.
+
+The basic geometry of spectral dispersion is illustrated in the figure below:
+
+.. image:: /_static/img/grism_geometry.png
+  :align: center
+  :width: 400px
+
+The spectral trace is parameterized by a polynomial of the form
+
+.. math::
+
+  y = a_n x^n + \cdots + a_2 x^2 + a_1 x + a_0
+
+and should return units of meters on the focal plane provided an input
+in meters on the focal plane.
+
+Similarly, the wavelength along the trace is parameterized by a
+polynomial of the form
+
+.. math::
+
+  \lambda = a_n d^n + \cdots + a_2 d^2 + a_1 d + a_0
+
+and should return units of meters of wavelength provided an input distance
+along the spectral trace.
+
+Lentil supports trace and dispersion functions with any arbitrary polynomial
+order. While a simple analytic solution exists for modeling first-order trace
+and/or dispersion, there is no general solution for higher order functions.
+
+As a result, trace and/or dispersion polynomials with order > 1 are evaluated
+numerically. Although the effects are small, this approach impacts both the
+speed and precision of modeling grisms with higher order trace and/or
+dispersion functions. In cases where speed or accuracy are extremely important,
+a custom solution may be required.
 
 
 Grism
