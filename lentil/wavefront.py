@@ -20,9 +20,9 @@ class Wavefront:
         Physical sampling of wavefront
     diameter: float, optional
         Wavefront diameter. Default is None
-    focal_length : float or np.inf, optional
+    focal_length : float or None, optional
         Wavefront focal length. A plane wave (default) has an infinite focal
-        length (``np.inf``).
+        length (``None``).
     tilt: (2,) array_like, optional
         Radians of wavefront tilt about the x and y axes provided as 
         ``[rx, ry]``. Default is ``[0, 0]`` (no tilt).
@@ -34,7 +34,7 @@ class Wavefront:
                  tilt=None, ptype=None):
         
         #: float: Wavefront focal length
-        self.focal_length = focal_length if focal_length else np.inf
+        self.focal_length = focal_length if focal_length else None
 
         #: float: Wavefront diameter
         self.diameter = diameter
