@@ -10,16 +10,13 @@ Lentil's |Wavefront| class represents a discretely sampled electric field.
 Wavefronts in Lentil are monochromatic (i.e. they represent a single 
 wavelength). A wavefront is defined by the following parameters:
 
-* :attr:`~lentil.Wavefront.wavelength` - The wavefront wavelength
-* :attr:`~lentil.Wavefront.pixelscale` - The physical sampling of the 
-  wavefront's electric field
-* :attr:`~lentil.Wavefront.diameter` - The outscribing diameter around
-  the wavefront
-* :attr:`~lentil.Wavefront.focal_length` - The focal length of the 
-  wavefront. A plane wave has an infinite focal length denoted by ``np.inf``
-* :attr:`~lentil.Wavefront.tilt` - A tuple of tilt angles about the x and y 
-  axes
-* :attr:`~lentil.Wavefront.ptype` - The plane type of the wavefront
+* ``wavelength`` - The wavefront wavelength
+* ``pixelscale`` - The physical sampling of the wavefront's electric field
+* ``diameter`` - The outscribing diameter around the wavefront
+* ``focal_length`` - The focal length of the wavefront. A plane wave has an 
+  infinite focal length denoted by ``None``
+* ``tilt`` - A tuple of tilt angles about the x and y axes
+* ``ptype`` - The plane type of the wavefront
 
 Wavefronts are mutable through interaction with a |Plane|. For more details
 see :ref:`user.wavefront.plane_wavefront`.
@@ -27,10 +24,10 @@ see :ref:`user.wavefront.plane_wavefront`.
 Wavefonts have several useful attributes for working with their electric
 field:
 
-* :attr:`~lentil.Wavefront.field` - returns the wavefront's complex field
-* :attr:`~lentil.Wavefront.intensity` - returns the intensity (modulus
+* ``field`` - returns the wavefront's complex field
+* ``intensity`` - returns the intensity (modulus
   squared) of the wavefront's complex field
-* :attr:`~lentil.Wavefront.shape` - returns the shape of the wavefront's
+* ``shape`` - returns the shape of the wavefront's
   complex field. If shape is ``()``, the wavefront is considered infinite
   and will inherit any finite plane shape 
 
@@ -58,8 +55,8 @@ How a plane affects a wavefront
 ===============================
 An optical plane generally has some effect on a wavefront as it propagates
 through the plane. A plane may change a propagating wavefront's amplitude, 
-phase, and/or physical extent. This |Plane|-|Wavefront| interaction is 
-implemented by the multiply operator:
+phase, and/or physical extent. This ``Plane``-``Wavefront`` interaction is 
+implemented using multiplication:
 
 .. code:: pycon
 
@@ -68,7 +65,13 @@ implemented by the multiply operator:
 When a plane and wavefront are multiplied, a complex phasor is constructed 
 from the plane's ``amplitude`` and ``opd`` attributes and the wavefront's 
 wavelength. The plane complex phasor is then multiplied element-wise with
-the wavefront's complex data array.
+the wavefront's complex data array. Internally, the operation looks something
+like the following pseudocode:
+
+.. code:: python
+
+   phs = plane.amplitude * np.exp(2* np.pi*1j * plane.opd / wavefront.wavelength)
+   wavefront.field = wavefront.field * phasor
 
 .. _user.wavefront.ptype_rules:
 
@@ -96,19 +99,18 @@ The table below outlines when a wavefront can interact with a plane based on the
 Field
 =====
 Lentil's wavefront consists of two major components: electric field data and 
-metadata about the wavefront. Internally |Wavefront| uses one or more |Field| 
+metadata about the wavefront. Internally a wavefront uses one or more |Field| 
 objects to store the electric field data. Users shouldn't need to interact with 
 fields directly, but understanding how they are used helps to understand Lentil 
 better.
 
 A field is defined by the following parameters:
 
-* :attr:`~lentil.field.Field.data` - The complex eletric field data
-* :attr:`~lentil.field.Field.pixelscale` - The physical sampling of the 
-  electric field data
-* :attr:`~lentil.field.Field.offset` - The location of the center of the 
-  field data relative to the global optical axis at (0,0)
-* :attr:`~lentil.field.Field.tilt` - A list of |Tilt| objects [1]_
+* ``data`` - The complex eletric field data
+* ``pixelscale`` - The physical sampling of the electric field data
+* ``offset`` - The location of the center of the field data relative to the 
+  global optical axis at (0,0)
+* ``tilt`` - A list of |Tilt| objects [1]_
 
 .. [1] All objects implementing Lentil's :ref:`TiltInterface 
        <user.extend.tiltinterface>` are supported
