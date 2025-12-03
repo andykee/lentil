@@ -1,0 +1,24 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{textcomp}
+
+\begin{document}
+
+\begin{tikzpicture}
+
+\draw [thick, fill=gray, fill opacity=0.1] (0,0) -- (3,0) -- (3,3) -- (0,3) -- cycle;
+\draw[-latex] (0,3.25) -- (3.5,3.25);
+\node [right] at (3.5, 3.25) {$c$};
+\draw[-latex] (0,3.5) -- (0,-0.25);
+\node [above] at (1.5, 3.5) {$r$};
+\node [below] at (1.5,-1) {Matrix indexing (\texttt{\textquotesingle ij\textquotesingle})};
+
+\draw [thick, fill=gray, fill opacity=0.1] (5,0) -- (5,3) -- (8,3) -- (8,0) -- cycle;
+\draw[-latex] (4.75,3) -- (8.5,3);
+\node [right] at (8.5, 3) {$x$};
+\draw[-latex] (5,3.25) -- (5,-0.5);
+\node [below] at (5, -0.5) {$y$};
+\node [below] at (6.5,-1) {Cartesian indexing (\texttt{\textquotesingle xy\textquotesingle})};
+
+\end{tikzpicture}
+\end{document}

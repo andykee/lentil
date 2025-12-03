@@ -6,11 +6,30 @@ Coordinate system
 
 Lentil adopts the widely used convention of aligning the z-axis along the direction
 of light propagation through an optical system. For a right-handed coordinate system,
-it follows that the remaining axes are oriented as shown in the figure below:
+it follows that the remaining `physical` axes are oriented as shown in the figure 
+below:
 
 .. image:: /_static/img/coordinate_system_3d.png
     :width: 500px
     :align: center
+
+Multiple indexing schemes exist for storing data in 2D arrays. Lentil supports
+both conventions implemented by Numpy's ``meshgrid`` function where "ij" 
+indexing assumes data matrix ordering of data and "xy" indexing assumes a 
+Cartesian ordering of data:
+
+
+Internally lentil performs calculations in ij convention
+
+It's possible to work in xy and mix/match
+
+2D arrays are related by a transpose
+coordinates are related as follows:
+
+ij        xy
+(r,c) -> (c,-r)
+(y,-x) -> (x,y)
+*** check these, they are WAGs
 
 When viewing a plane in 2D, the z-axis comes out of the screen with the
 positive x-axis pointing to the right and the positive y-axis pointing up:
