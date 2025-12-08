@@ -826,7 +826,7 @@ class Image(_PlaneBase):
                          **kwargs)
         
     def __mul__(self, wavefront):
-        wavefront = super().multiply(wavefront)
+        wavefront = super().__mul__(wavefront)
         wavefront.ptype = lentil.image
         return wavefront
     
