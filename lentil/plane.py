@@ -768,7 +768,11 @@ class Pupil(_PlaneBase):
                          pixelscale=pixelscale, diameter=diameter, 
                          ptype=lentil.pupil, **kwargs)
 
-        self.focal_length = focal_length
+        self._focal_length = focal_length
+
+    def __init_subclass__(cls):
+        cls.ptype = lentil.pupil
+        cls._focal_length = None
 
     def __mul__(self, wavefront):
         wavefront = super().__mul__(wavefront)
@@ -777,6 +781,10 @@ class Pupil(_PlaneBase):
         wavefront.focal_length = self.focal_length
 
         return wavefront
+
+    @property
+    def focal_length(self):
+        return self._focal_length
 
 
 class Image(_PlaneBase):
