@@ -149,7 +149,7 @@ class _PlaneBase:
 
     @property
     def _slice(self):
-        return _plane_slice(self._mask)
+        return _plane_slice(self.mask)
 
     @property
     def ptype(self):
