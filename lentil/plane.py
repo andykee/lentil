@@ -581,7 +581,9 @@ class _PlaneBase:
 
 
 def _mul_pixelscale(a_pixelscale, b_pixelscale):
-    # pixelscale reduction for multiplication
+    a_pixelscale = None if a_pixelscale is None else np.broadcast_to(a_pixelscale, (2,))
+    b_pixelscale = None if b_pixelscale is None else np.broadcast_to(b_pixelscale, (2,))
+
     if a_pixelscale is None and b_pixelscale is None:
         out = None
     elif a_pixelscale is None:
@@ -589,7 +591,7 @@ def _mul_pixelscale(a_pixelscale, b_pixelscale):
     elif b_pixelscale is None:
         out = a_pixelscale
     else:
-        if a_pixelscale[0] == b_pixelscale[0] and a_pixelscale[1] == b_pixelscale[1]:
+        if all(a_pixelscale == b_pixelscale):
             out = a_pixelscale
         else:
             raise ValueError(f"can't multiply with inconsistent pixelscales: {a_pixelscale} != {b_pixelscale}")
