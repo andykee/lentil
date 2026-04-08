@@ -105,7 +105,8 @@ add_function_parentheses = True
 
 autodoc_default_options = {
     'member-order': 'alphabetical',
-    'exclude-members': '__init__, __weakref__, __dict__, __module__',
+    'exclude-members': '__new__, __init__, __weakref__, __dict__, __module__',
+    'undoc-members': False,
 }
 
 autosummary_generate = True
@@ -118,6 +119,22 @@ autosummary_generate = True
 autosummary_filename_map = {
     "lentil.ptype.PType": "lentil.ptype.PType_cls.rst"
 }
+
+# Temporary workaround for sphinx #13257
+# autodoc: signature of __new__ overwrites signature of __init__
+# https://github.com/sphinx-doc/sphinx/issues/13257#issuecomment-4182037875
+import inspect
+
+def _fix_class_signature(app, what, name, obj, options, signature, return_annotation):
+    if what == 'class' and '__init__' in obj.__dict__:
+        sig = inspect.signature(obj.__init__)
+        params = [p for p in sig.parameters.values() if p.name != 'self']
+        return (str(inspect.Signature(params)), None)
+
+def setup(app):
+    app.connect('autodoc-process-signature', _fix_class_signature)
+
+
 
 rst_prolog = """
 .. currentmodule:: lentil

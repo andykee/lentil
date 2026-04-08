@@ -17,11 +17,11 @@ class RandomPlane(lentil.Plane):
 
 def test_default_plane():
     # Ensure that a default Plane creates an object that won't have any
-    # impact on an optical system (a perfect optic with no wavefront error 
+    # impact on an optical system (a perfect optic with no wavefront error
     # and perfect optical and spectral transmission).
 
     p = lentil.Plane()
-    assert p.pixelscale == None
+    assert p.pixelscale is None
     assert np.all(p.amplitude == 1)
     assert np.all(p.opd == 0)
     assert p.mask == p.amplitude
@@ -37,23 +37,38 @@ def test_amp_alias_error():
         lentil.Plane(amplitude=10, amp=10)
 
 
-class PlaneAttributeOverload(lentil.Plane):
-    def __init__(self):
-        super().__init__()
+def test_plane_overload_methods():
+    class Plane(lentil.Plane):
+        def __init__(self):
+            super().__init__()
 
-    def __amp__(self):
-        return np.array(1)
-    
-    def __opd__(self):
-        return np.array(2)
-    
+        def __amp__(self):
+            return np.array(1)
 
-def test_plane_overload_properties():
-    p = PlaneAttributeOverload()
-    
+        def __opd__(self):
+            return np.array(2)
+
+        def __mask__(self):
+            return np.array(3)
+
+    p = Plane()
+
     assert p.amplitude == 1
     assert p.opd == 2
-    assert p.mask == 1
+    assert p.mask == 3
+
+
+def test_plane_opd_overload_call_mask():
+    class Plane(lentil.Plane):
+
+        def __opd__(self):
+            return 2 * self.mask
+
+        def __mask__(self):
+            return 3
+
+    p = Plane()
+    assert p.opd == 6
 
 
 def test_plane_fit_tilt_inplace():
@@ -157,7 +172,7 @@ def test_dispersive_tilt_center():
 
 
 def test_dispersive_tilt_shift():
-    dt = lentil.DispersiveTilt(trace=[1,1], dispersion=[1,650e-9])
+    dt = lentil.DispersiveTilt(trace=[1, 1], dispersion=[1, 650e-9])
     wave = 900e-9
     x, y = dt.__shift__(wavelength=wave)
 
@@ -177,3 +192,28 @@ def test_freeze():
     a = p.opd
     b = p.opd
     assert a == b
+
+
+@pytest.mark.parametrize('plane, ptype', [
+    (lentil.Plane, lentil.ptype(None)),
+    (lentil.Pupil, lentil.pupil),
+    (lentil.Image, lentil.image),
+    (lentil.plane._TiltBase, lentil.tilt)
+])
+def test_default_ptype(plane, ptype):
+    p = plane()
+    assert p.ptype == ptype
+
+
+def test_tilt_ptype_overload():
+    t = lentil.plane._TiltBase(ptype=lentil.pupil)
+    assert t.ptype == lentil.pupil
+
+
+def test_dispersivetilt_overload():
+    class Plane(lentil.DispersiveTilt):
+        dispersion = [1, 0]
+        trace = [1, 0]
+
+    p = Plane()
+    assert np.allclose(p.__shift__(1), np.sqrt(2)/2)

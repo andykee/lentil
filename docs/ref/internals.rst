@@ -6,12 +6,11 @@ Internals
 
 .. currentmodule:: lentil
 
-Planes
-------
+Plane base classes
+------------------
 .. autosummary::
     :toctree: generated/
 
-    plane._PlaneBase
     plane._TiltBase
 
 Plane type

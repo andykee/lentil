@@ -14,6 +14,23 @@ overloading:
 
 Customizing plane attributes
 ----------------------------
+Plane attributes are classified as being either static or dynamic attributes
+
+Static plane attributes
+~~~~~~~~~~~~~~~~~~~~~~~
+Static plane attributes are those which are not expected to change or evolve.
+These attributes are typically defined in a call to the subclassed plane's
+parent ``__init__()`` method:
+
+.. code-block:: python
+
+    class PlaneSubclass(lentil.Plane):
+        def __init__(self):
+            super().__init__(focal_length=10, ptype=lentil.pupil)
+
+
+Dynamic plane attributes
+~~~~~~~~~~~~~~~~~~~~~~~~
 The following methods can be defined to create dynamic plane attributes. These 
 are commonly used when a plane attribute is stateful and needs to be 
 recomputed at the time of attribute access.
@@ -84,8 +101,8 @@ Customizing how a plane interacts with a wavefront
    Called when a plane is multiplied with a wavefront.
 
 
-Creating new planes
-===================
+.. Creating new planes
+.. ===================
 
 
 
