@@ -1,6 +1,25 @@
 Release notes
 =============
 
+v0.8.8
+------
+Released April 8, 2026
+
+* Include support for alternate Zernike ordering schemes (Noll, Fringe, or
+  ANSI)
+* Expanded support for providing a single pixelscale value to represent equal
+  sampling in (r,c)
+* Minor restructuring of the functionality split betwen ``Plane`` and 
+  ``_PlaneBase``
+* ``Plane.multiply()`` is now deprecated
+* Plane waves now have ``None`` focal length `#62`_
+* Resolve ``Plane._slice`` attribute access error `#64`_
+* Documentation updates
+* Expanded unit test coverage
+
+.. _#62: https://github.com/andykee/lentil/issues/62
+.. _#64: https://github.com/andykee/lentil/issues/64
+
 v0.8.7
 ------
 Released September 10, 2025
