@@ -222,12 +222,27 @@ def test_ptp_state():
 
 
 def test_ptp_accepts_conjugates_returns_none():
+    # a Pupil without optical power leaves the reference planar; PTP
+    # accepts the conjugate wavefront and returns ptype none
     amp = lentil.circle((64, 64), 24)
     w = lentil.Wavefront(1e-6)
-    w = w * lentil.Pupil(amplitude=amp, pixelscale=1e-4, focal_length=1)
+    w = w * lentil.Pupil(amplitude=amp, pixelscale=1e-4)
     assert w.ptype == lentil.pupil
     out = lentil.propagate_ptp(w, 0.01)
     assert out.ptype == lentil.none
+
+
+def test_ptp_rejects_spherical_reference_after_lens():
+    # a curvature-bearing Pupil/Lens produces a spherical-reference
+    # wavefront whose array is not the true field; propagating it
+    # directly with PTP would be wrong and must raise. The entry point
+    # (propagate_fresnel_*) handles this case via STW composition
+    amp = lentil.circle((64, 64), 24)
+    w = lentil.Wavefront(1e-6)
+    w = w * lentil.Pupil(amplitude=amp, pixelscale=1e-4, focal_length=1)
+    assert w.reference == 'spherical'
+    with pytest.raises(ValueError):
+        lentil.propagate_ptp(w, 0.01)
 
 
 def test_ptp_uniform_field_unchanged():
@@ -407,3 +422,276 @@ def test_defocus_sign_convention():
 
     assert err[-1] < 5e-2   # correct sign agrees
     assert err[+1] > 0.3    # wrong sign clearly does not
+
+
+# ---------------------------------------------------------------------------
+# Phase 2: WTS/STW primitives and propagate_fresnel_* entry points
+
+
+def _waist_wavefront(wl=1e-6, dx=4e-6, n=512, w0_px=40):
+    # Gaussian field at its waist with a matching (exact) pilot
+    w0 = w0_px*dx
+    f = np.fft.fftshift(np.fft.fftfreq(n, 1/(n*dx)))
+    r, c = np.meshgrid(f, f, indexing='ij')
+    E0 = np.exp(-(r**2 + c**2)/w0**2)
+    b = GaussianBeam(w0, wl)
+    w = lentil.Wavefront(wl, pixelscale=dx, pilot=b)
+    w = w * lentil.Plane(amplitude=E0, pixelscale=dx)
+    return w, b
+
+
+@pytest.mark.parametrize('method', ['fft', 'dft'])
+def test_wts_gaussian_closed_form(method):
+    # WTS of a Gaussian at its waist matches the analytic Gaussian beam
+    # relative to the spherical reference surface:
+    #   array = E_true * conj(q_ref) * exp(+j*pi/2)
+    # where the +pi/2 is the dropped 1/j prefactor, recorded in the path
+    # ledger as -lambda/4
+    wl = 1e-6
+    w, b = _waist_wavefront(wl)
+    dz = 3*b.rayleigh_distance
+
+    out = lentil.propagate_wts(w, dz, method=method, oversample=2)
+    E = out.field
+    cc = E.shape[0]//2
+    du = out.pixelscale[0]
+
+    wz, Rz, gouy = b.radius(dz), b.phase_radius(dz), b.gouy(dz)
+    k = 2*np.pi/wl
+
+    # ledger: path = dz - lambda/4
+    assert np.isclose(out.path, dz - wl/4)
+
+    # envelope (fully vectorized against the analytic profile)
+    rr = np.arange(40)*du
+    prof = E[cc, cc:cc+40]
+    assert np.allclose(np.abs(prof)/np.abs(E[cc, cc]),
+                       np.exp(-rr**2/wz**2), atol=1e-9)
+
+    # total on-axis phase: array + reference (1 on axis) + ledger
+    # correction beyond geometric path = -gouy
+    ledger_phase = k*(out.path - dz)
+    assert np.isclose(np.angle(E[cc, cc]) + ledger_phase, -gouy, atol=1e-9)
+
+    # residual curvature relative to the reference sphere:
+    # k*r^2/2*(1/R - 1/dz); compare as complex phasors to avoid wrapping
+    pred = np.exp(1j*(k*rr**2/2*(1/Rz - 1/dz)))
+    got = prof/np.abs(prof)/(E[cc, cc]/np.abs(E[cc, cc]))
+    assert np.allclose(got, pred, atol=1e-6)
+
+    # state
+    assert out.reference == 'spherical'
+    assert out.z_focus == w.z         # reference centered at the waist
+    assert np.isclose(out.focal_length, -dz)
+
+
+def test_wts_stw_roundtrip():
+    # STW exactly inverts WTS, restoring the field and all state
+    wl, dx, n = 1e-6, 4e-6, 512
+    w, b = _waist_wavefront(wl, dx, n)
+    dz = 3*b.rayleigh_distance
+
+    out = lentil.propagate_wts(w, dz, method='dft', oversample=1)
+    back = lentil.propagate_stw(out, method='dft', pixelscale=dx, shape=n,
+                                oversample=1)
+
+    assert np.allclose(back.field, w.field, atol=1e-12)
+    assert back.z == w.z
+    assert back.reference == 'planar'
+    assert back.focal_length == 0
+    assert np.isclose(back.path, 0)   # ledger corrections cancel
+
+
+def test_wts_fft_dft_agree():
+    w, b = _waist_wavefront(n=256, w0_px=20)
+    dz = 2*b.rayleigh_distance
+    out_fft = lentil.propagate_wts(w, dz, method='fft', oversample=2)
+    out_dft = lentil.propagate_wts(w, dz, method='dft', oversample=2)
+    assert np.allclose(out_fft.pixelscale, out_dft.pixelscale)
+    assert np.allclose(out_fft.field, out_dft.field, atol=1e-10)
+
+
+def test_stw_validation():
+    w, b = _waist_wavefront(n=64, w0_px=8)
+
+    # planar reference input raises
+    with pytest.raises(ValueError):
+        lentil.propagate_stw(w)
+
+    out = lentil.propagate_wts(w, b.rayleigh_distance)
+    # a dz that does not terminate at the reference focus raises
+    with pytest.raises(ValueError):
+        lentil.propagate_stw(out, dz=-0.5*b.rayleigh_distance)
+
+
+def test_fresnel_ii_matches_ptp():
+    # planar reference, destination inside z_R: pure plane-to-plane
+    w, b = _waist_wavefront(n=256, w0_px=20)
+    dz = 0.5*b.rayleigh_distance
+    out = lentil.propagate_fresnel_dft(w, dz)
+    ref = lentil.propagate_ptp(w, dz, method='dft')
+    assert np.allclose(out.field, ref.field, atol=1e-12)
+
+    # a conflicting pixelscale request raises for the II case
+    with pytest.raises(ValueError):
+        lentil.propagate_fresnel_dft(w, dz, pixelscale=1e-5)
+
+
+@pytest.mark.parametrize('method', ['fft', 'dft'])
+def test_fresnel_io_gaussian(method):
+    # planar reference at the waist, destination outside: PTP + WTS.
+    # Verify the full composed intensity against the analytic Gaussian
+    wl = 1e-6
+    w, b = _waist_wavefront(wl, n=256, w0_px=20)
+    dz = 5*b.rayleigh_distance
+
+    prop = (lentil.propagate_fresnel_fft if method == 'fft'
+            else lentil.propagate_fresnel_dft)
+    out = prop(w, dz, oversample=2)
+    assert out.reference == 'spherical'
+    assert out.z == dz
+
+    I = out.intensity
+    cc = I.shape[0]//2
+    du = out.pixelscale[0]
+    wz = b.radius(dz)
+    rr = np.arange(30)*du
+    assert np.allclose(I[cc, cc:cc+30]/I[cc, cc],
+                       np.exp(-2*rr**2/wz**2), atol=1e-9)
+    # energy conserved through the composition
+    assert np.isclose(np.sum(I), np.sum(w.intensity), rtol=1e-9)
+
+
+def test_fresnel_oi_focus_matches_far_field():
+    # the seam: a pupil with a Lens propagated to its focus with the
+    # near-field entry point produces the same PSF intensity as the
+    # far-field propagator (the phase differs by the focal-plane chirp,
+    # which STW retains and the Fraunhofer convention drops)
+    wl, f, D = 1e-6, 1.0, 0.01
+    n, rad = 256, 100
+    dx = D/(2*rad)
+    du = wl*(f/D)/4  # Q = 4
+    amp = lentil.normalize_power(lentil.circle((n, n), rad))
+
+    w_nf = lentil.Wavefront(wl)
+    w_nf = w_nf * lentil.Plane(amplitude=amp, pixelscale=dx)
+    w_nf = w_nf * lentil.Lens(focal_length=f)
+    assert w_nf.reference == 'spherical'
+    out_nf = lentil.propagate_fresnel_dft(w_nf, f, pixelscale=du, shape=64,
+                                          oversample=2)
+
+    w_ff = lentil.Wavefront(wl)
+    w_ff = w_ff * lentil.Pupil(amplitude=amp, pixelscale=dx, focal_length=f)
+    out_ff = lentil.propagate_dft(w_ff, pixelscale=du, shape=64, oversample=2)
+
+    assert out_nf.z == f
+    assert np.allclose(out_nf.pixelscale, out_ff.pixelscale)
+    assert np.allclose(out_nf.intensity, out_ff.intensity,
+                       atol=1e-9*np.max(out_ff.intensity))
+
+
+def test_fresnel_oi_defocus():
+    # OI with a PTP tail: near-field propagation to focus + delta matches
+    # the Phase 1 defocus idiom (far-field to focus, then PTP)
+    wl, f, D = 1e-6, 1.0, 0.01
+    n, rad = 256, 100
+    dx = D/(2*rad)
+    fno = f/D
+    du = wl*fno/4
+    amp = lentil.normalize_power(lentil.circle((n, n), rad))
+    dz = wl*fno**2  # W020 = lambda/8, inside the post-lens Rayleigh
+                    # distance so the composition is OI (STW + PTP tail)
+
+    w_nf = lentil.Wavefront(wl)
+    w_nf = w_nf * lentil.Plane(amplitude=amp, pixelscale=dx)
+    w_nf = w_nf * lentil.Lens(focal_length=f)
+    assert w_nf.pilot.inside(f + dz)
+    out_nf = lentil.propagate_fresnel_dft(w_nf, f + dz, pixelscale=du,
+                                          shape=64, oversample=2)
+    assert out_nf.z == f + dz
+    assert out_nf.reference == 'planar'
+
+    w_ff = lentil.Wavefront(wl)
+    w_ff = w_ff * lentil.Pupil(amplitude=amp, pixelscale=dx, focal_length=f)
+    w_ff = lentil.propagate_dft(w_ff, pixelscale=du, shape=64, oversample=2)
+    out_ff = lentil.propagate_ptp(w_ff, dz, oversample=1)
+
+    i_nf = out_nf.intensity
+    i_ff = out_ff.intensity
+    # crop to common center
+    c_nf, c_ff = i_nf.shape[0]//2, i_ff.shape[0]//2
+    m = 48
+    i_nf = i_nf[c_nf-m:c_nf+m, c_nf-m:c_nf+m]
+    i_ff = i_ff[c_ff-m:c_ff+m, c_ff-m:c_ff+m]
+    # the two paths differ by the focal-plane chirp: STW retains it
+    # (exact Fresnel composition) while the far-field leg drops it (the
+    # Fraunhofer convention), making the far-field + PTP defocus idiom an
+    # approximation. The ~2% residual observed here quantifies that
+    # approximation for this geometry (W020 = lambda/8, Q = 4)
+    assert np.max(np.abs(i_nf - i_ff)) < 3e-2*np.max(i_ff)
+
+
+def test_fresnel_oo_through_focus():
+    # OO: propagate a converging beam through its focus and out the
+    # other side; the result matches the analytic Gaussian and the
+    # ledger records the two dropped pi/2 pistons
+    wl = 1e-6
+    w, b = _waist_wavefront(wl, n=256, w0_px=20)
+    zr = b.rayleigh_distance
+
+    # put the beam outside: waist -> +3 z_R (spherical reference)
+    w2 = lentil.propagate_wts(w, 3*zr, method='dft', oversample=1)
+
+    # now propagate backward through the waist to -3 z_R on the far side
+    out = lentil.propagate_fresnel_dft(w2, -6*zr, oversample=1)
+    assert out.z == -3*zr
+    assert out.reference == 'spherical'
+
+    I = out.intensity
+    cc = I.shape[0]//2
+    du = out.pixelscale[0]
+    wz = b.radius(-3*zr)
+    rr = np.arange(20)*du
+    assert np.allclose(I[cc, cc:cc+20]/I[cc, cc],
+                       np.exp(-2*rr**2/wz**2), atol=1e-8)
+    # ledger: +3zr (WTS) + (-3zr - 3zr STW+WTS backward)
+    # = -3zr total distance; piston corrections: -lambda/4 (forward WTS)
+    # then +lambda/4 +lambda/4 (two backward transforms)
+    assert np.isclose(out.path, -3*zr + wl/4)
+
+
+def test_fresnel_pixelscale_honored():
+    # a requested pixelscale is honored exactly by the dft entry point
+    # (output sampling = pixelscale/oversample, as in the far field)
+    wl = 1e-6
+    w, b = _waist_wavefront(wl, n=256, w0_px=20)
+    du = 2e-5
+    out = lentil.propagate_fresnel_dft(w, 5*b.rayleigh_distance,
+                                       pixelscale=du, shape=64, oversample=2)
+    assert np.allclose(out.pixelscale, du/2)
+    assert out.shape == (128, 128)
+
+
+def test_fresnel_lommel_on_axis():
+    # circular aperture on-axis Fresnel diffraction: the on-axis
+    # intensity is 4*sin^2(pi*N_F/2) times the incident intensity -
+    # bright for odd Fresnel numbers, null for even
+    wl, dx, n = 1e-6, 2e-6, 1024
+    rad = 128
+    a = rad*dx
+    amp = lentil.circle((n, n), rad)
+    w = lentil.Wavefront(wl, pixelscale=dx)
+    w = w * lentil.Plane(amplitude=amp, pixelscale=dx)
+
+    for nf, expect in ((4, 0.0), (3, 4.0), (2, 0.0), (1, 4.0)):
+        dz = a**2/(nf*wl)
+        out = lentil.propagate_ptp(w, dz, oversample=2)
+        cc = out.shape[0]//2
+        i0 = out.intensity[cc, cc]
+        assert np.isclose(i0, expect, atol=0.05), f'N_F={nf}'
+
+
+def test_fresnel_requires_pilot():
+    w = lentil.Wavefront(1e-6, pixelscale=1e-5)
+    with pytest.raises(ValueError, match='pilot'):
+        lentil.propagate_fresnel_dft(w, 0.1)

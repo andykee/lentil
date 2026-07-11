@@ -20,7 +20,14 @@ from lentil import detector
 
 from lentil import fourier
 
-from lentil.fresnel import GaussianBeam, propagate_ptp
+from lentil.fresnel import (
+    GaussianBeam,
+    propagate_ptp,
+    propagate_wts,
+    propagate_stw,
+    propagate_fresnel_dft,
+    propagate_fresnel_fft
+)
 
 from lentil.plane import (
 	Plane,

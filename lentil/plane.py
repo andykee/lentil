@@ -654,9 +654,13 @@ def _apply_lens(wavefront, focal_length):
     # the wavefront's current axial position: update the analytic
     # curvature state (via the wavefront focal_length setter, which
     # bookkeeps z_focus) and transform the pilot beam. The ideal quadratic
-    # phase is never sampled.
+    # phase is never sampled; instead the wavefront's reference surface
+    # becomes spherical (centered on the analytic focus) whenever the
+    # resulting focal length is finite. A lens that exactly collimates
+    # the wavefront restores a planar reference.
     wavefront.focal_length = _lens_focal_length(wavefront.focal_length,
                                                 focal_length)
+    wavefront.reference = 'planar' if wavefront.focal_length is None else 'spherical'
     if wavefront.pilot is not None:
         f = np.inf if focal_length is None else focal_length
         wavefront.pilot = wavefront.pilot.lens(f, wavefront.z)

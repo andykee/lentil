@@ -103,6 +103,9 @@ def test_wavefront_state_preserved_through_multiply():
     w = lentil.Wavefront(wavelength=500e-9, z=1)
     w2 = w * p
     assert w2.z == 1
-    assert w2.reference == 'planar'
+    # a curvature-bearing plane produces a spherical-reference wavefront:
+    # the (never sampled) ideal quadratic phase is absorbed by the
+    # reference surface centered on the analytic focus
+    assert w2.reference == 'spherical'
     assert w2.focal_length == 2
     assert w2.z_focus == 3
