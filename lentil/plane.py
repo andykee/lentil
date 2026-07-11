@@ -8,6 +8,7 @@ import scipy.optimize
 
 import lentil
 from lentil.field import Field
+from lentil.fresnel import GaussianBeam
 import lentil.helper
 
 
@@ -489,7 +490,11 @@ class Plane(_PlaneBase):
                                      pixelscale=pixelscale,
                                      focal_length=wavefront.focal_length,
                                      shape=shape,
-                                     ptype=ptype)
+                                     ptype=ptype,
+                                     z=wavefront.z,
+                                     pilot=self._mul_pilot(wavefront),
+                                     reference=wavefront.reference,
+                                     path=wavefront.path)
 
         for field in data:
             for n, s in enumerate(self._slice):
@@ -514,6 +519,22 @@ class Plane(_PlaneBase):
                     out.data.append(field * phasor)
 
         return out
+
+    def _mul_pilot(self, wavefront):
+        # Pilot beam inheritance at multiply time. If the wavefront doesn't
+        # already have a pilot and this plane can provide a diameter, create
+        # one with the waist at the wavefront's current position. This
+        # mirrors the way focal_length is inherited in Pupil.__mul__.
+        if wavefront.pilot is not None:
+            return wavefront.pilot
+        try:
+            diameter = self.diameter
+        except (ValueError, TypeError, IndexError):
+            return None
+        if not diameter:
+            return None
+        return GaussianBeam(diameter/2, wavefront.wavelength,
+                            waist_position=wavefront.z)
 
     @property
     def _slice(self):
@@ -611,6 +632,37 @@ class Plane(_PlaneBase):
         return plane
 
 
+def _lens_focal_length(focal_length, lens_focal_length):
+    # Combine an incoming wavefront focal length with a thin lens focal
+    # length according to 1/fl_out = 1/fl_in + 1/f. This is the Gaussian
+    # lens law 1/R2 = 1/R1 - 1/f expressed in terms of the wavefront
+    # focal length (fl = -R, see lentil.fresnel sign conventions).
+    # None represents a plane wave (fl infinite)/a lens with no power.
+    f = lens_focal_length
+    if f is None or np.isinf(f):
+        return focal_length
+    if focal_length is None or np.isinf(focal_length):
+        return f
+    if focal_length + f == 0:
+        # lens exactly collimates the wavefront
+        return None
+    return focal_length*f/(focal_length + f)
+
+
+def _apply_lens(wavefront, focal_length):
+    # Apply a thin lens with the provided focal length to a wavefront at
+    # the wavefront's current axial position: update the analytic
+    # curvature state (via the wavefront focal_length setter, which
+    # bookkeeps z_focus) and transform the pilot beam. The ideal quadratic
+    # phase is never sampled.
+    wavefront.focal_length = _lens_focal_length(wavefront.focal_length,
+                                                focal_length)
+    if wavefront.pilot is not None:
+        f = np.inf if focal_length is None else focal_length
+        wavefront.pilot = wavefront.pilot.lens(f, wavefront.z)
+    return wavefront
+
+
 def _mul_pixelscale(a_pixelscale, b_pixelscale):
     a_pixelscale = None if a_pixelscale is None else np.broadcast_to(a_pixelscale, (2,))
     b_pixelscale = None if b_pixelscale is None else np.broadcast_to(b_pixelscale, (2,))
@@ -640,11 +692,13 @@ _mul_ptype_table = {
         lentil.transform: lentil.none
     },
     lentil.pupil: {
+        lentil.none: lentil.pupil,
         lentil.pupil: lentil.pupil,
         lentil.tilt: lentil.pupil,
         lentil.transform: lentil.pupil
     },
     lentil.image: {
+        lentil.none: lentil.image,
         lentil.image: lentil.image,
         lentil.tilt: lentil.pupil,
         lentil.transform: lentil.pupil
@@ -761,10 +815,11 @@ class Pupil(Plane):
     def __mul__(self, wavefront):
         wavefront = super().__mul__(wavefront)
 
-        # we inherit the plane's focal length as the wavefront's focal length
-        wavefront.focal_length = self.focal_length
-
-        return wavefront
+        # the plane's focal length is combined with the wavefront's
+        # focal length via the lens law and the pilot beam is updated.
+        # for a plane wave input, this is equivalent to inheriting the
+        # plane's focal length as the wavefront's focal length
+        return _apply_lens(wavefront, self.focal_length)
 
     @property
     def focal_length(self):
@@ -818,6 +873,70 @@ class Image(Plane):
 
     def fit_tilt(self, *args, **kwargs):
         return self
+
+
+class Lens(Plane):
+    """Class for representing a thin lens.
+
+    A Lens updates a wavefront's analytic curvature state via the Gaussian
+    lens law and transforms its pilot beam. The lens's ideal quadratic
+    phase is tracked analytically and never sampled into the field data;
+    only aberration ``opd`` (and ``amplitude``) are sampled, exactly as
+    for any other :class:`Plane`.
+
+    A Lens is not a conjugate plane: it carries ptype ``none`` and
+    preserves the conjugate status of the wavefront it multiplies.
+
+    Parameters
+    ----------
+    focal_length : float
+        Focal length. Positive is converging. ``inf`` applies no optical
+        power.
+    amplitude : array_like, optional
+        Electric field amplitude transmission. See :class:`Plane`.
+    opd : array_like, optional
+        Optical path difference (OPD) induced by plane, representing lens
+        aberration. If not specified (default), zero OPD is created which
+        has no effect on wavefront propagation.
+    mask : array_like, optional
+        Binary mask. See :class:`Plane`.
+    pixelscale : float or (2,) array_like, optional
+        Physical sampling of each pixel in the plane. See :class:`Plane`.
+    diameter : float, optional
+        Outscribing diameter around mask. See :class:`Plane`.
+    **kwargs : :class:`Plane` parameters
+        Keyword arguments passed to :class:`~lentil.Plane` constructor
+
+    See Also
+    --------
+    Pupil
+
+    """
+    def __new__(cls, *args, **kwargs):
+        self = super().__new__(cls, *args, **kwargs)
+        self._focal_length = None
+        return self
+
+    def __init__(self, focal_length, amplitude=None, opd=None, mask=None,
+                 pixelscale=None, diameter=None, **kwargs):
+        super().__init__(amplitude=amplitude, opd=opd, mask=mask,
+                         pixelscale=pixelscale, diameter=diameter,
+                         ptype=lentil.none, **kwargs)
+
+        if focal_length == 0:
+            raise ValueError('focal_length must be nonzero')
+        self._focal_length = focal_length
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}(focal_length={self.focal_length})'
+
+    def __mul__(self, wavefront):
+        wavefront = super().__mul__(wavefront)
+        return _apply_lens(wavefront, self.focal_length)
+
+    @property
+    def focal_length(self):
+        return self._focal_length
 
 
 class _TiltBase(Plane):
@@ -1286,14 +1405,6 @@ class Flip(Plane):
         for field in out.data:
             field.data = np.flip(field.data, axis=self.axis)
         return out
-
-
-class Quadratic(Plane):
-    """Base class for representing an optical plane with a quadratic phase
-    term.
-
-    """
-    pass
 
 
 class Conic(Plane):

@@ -7,6 +7,7 @@ from lentil import Tilt
 import lentil.field
 from lentil.field import Field
 import lentil.fourier
+from lentil.fresnel import GaussianBeam
 import lentil.helper
 
 class Wavefront:
@@ -24,20 +25,46 @@ class Wavefront:
         Wavefront focal length. A plane wave (default) has an infinite focal
         length (``None``).
     tilt: (2,) array_like, optional
-        Radians of wavefront tilt about the x and y axes provided as 
+        Radians of wavefront tilt about the x and y axes provided as
         ``[rx, ry]``. Default is ``[0, 0]`` (no tilt).
     ptype : lentil.ptype, optional
         Plane type. Default is ``lentil.none``.
-    
+    z : float, optional
+        Axial position of the wavefront. Default is 0.
+    pilot : :class:`~lentil.fresnel.GaussianBeam`, optional
+        Pilot beam used to steer near-field propagation decisions. If None
+        (default) and ``diameter`` is provided, a pilot beam is
+        automatically created with ``waist_radius = diameter/2`` and its
+        waist located at ``z``.
+
     """
     def __init__(self, wavelength, pixelscale=None, diameter=None, focal_length=None,
-                 tilt=None, ptype=None):
-        
-        #: float: Wavefront focal length
-        self.focal_length = focal_length if focal_length else None
+                 tilt=None, ptype=None, z=0, pilot=None):
+
+        #: float: Axial position of the wavefront
+        self.z = z
+
+        #: str: Reference surface the field data is defined against
+        #: ('planar' or 'spherical')
+        self.reference = 'planar'
+
+        #: float: Accumulated optical path in meters (path ledger)
+        self.path = 0.0
+
+        # Curvature state is stored as the axial location of the analytic
+        # focus. focal_length is derived from it and z.
+        self._z_focus = z + focal_length if focal_length else None
 
         #: float: Wavefront diameter
         self.diameter = diameter
+
+        if pilot is not None:
+            #: GaussianBeam or None: Pilot beam
+            self.pilot = pilot
+        elif diameter is not None:
+            self.pilot = GaussianBeam(diameter/2, wavelength, waist_position=z)
+        else:
+            self.pilot = None
 
         #: tuple of ints: Wavefront shape
         self.shape = ()
@@ -64,12 +91,48 @@ class Wavefront:
     @property
     def wavelength(self):
         """Wavefront wavelength
-        
+
         Returns
         -------
         float
         """
         return self._wavelength
+
+    @property
+    def z_focus(self):
+        """Axial location of the analytic focus
+
+        A plane wave has ``z_focus = None``. Fixed between lenses; only
+        multiplication by a curvature-bearing plane changes it.
+
+        Returns
+        -------
+        float or None
+        """
+        return self._z_focus
+
+    @property
+    def focal_length(self):
+        """Distance from the wavefront's current position to the analytic
+        focus
+
+        Derived from :attr:`z_focus` and :attr:`z`. A plane wave (default)
+        has an infinite focal length (``None``).
+
+        Returns
+        -------
+        float or None
+        """
+        if self._z_focus is None:
+            return None
+        return self._z_focus - self.z
+
+    @focal_length.setter
+    def focal_length(self, value):
+        if value is None or np.isinf(value):
+            self._z_focus = None
+        else:
+            self._z_focus = self.z + value
 
     @property
     def pixelscale(self):
@@ -126,17 +189,21 @@ class Wavefront:
 
     @classmethod
     def empty(cls, wavelength, pixelscale=None, diameter=None, focal_length=None,
-              tilt=None, shape=None, ptype=None):
+              tilt=None, shape=None, ptype=None, z=0, pilot=None,
+              reference='planar', path=0.0):
         """Create an empty Wavefront
 
         The resulting wavefront will have an empty :attr:`data` attribute.
 
         Parameters
         ----------
-        
+
         """
         w = cls(wavelength=wavelength, pixelscale=pixelscale, diameter=diameter,
-                focal_length=focal_length, tilt=tilt, ptype=ptype)
+                focal_length=focal_length, tilt=tilt, ptype=ptype, z=z,
+                pilot=pilot)
+        w.reference = reference
+        w.path = path
         w.data = []
         w.shape = () if shape is None else shape
         return w

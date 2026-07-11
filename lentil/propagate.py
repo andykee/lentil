@@ -65,7 +65,10 @@ def propagate_fft(wavefront, pixelscale, shape=None, oversample=2,
                           pixelscale = pixelscale/oversample,
                           focal_length=wavefront.focal_length,
                           shape = shape_out,
-                          ptype = ptype_out)
+                          ptype = ptype_out,
+                          z=wavefront.z, pilot=wavefront.pilot,
+                          reference=wavefront.reference,
+                          path=wavefront.path)
     
     if scratch is not None:
         if not all(np.asarray(scratch.shape) > fft_shape):
@@ -199,7 +202,10 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
                           pixelscale = du/oversample,
                           focal_length=wavefront.focal_length,
                           shape = shape_out,
-                          ptype = ptype_out)
+                          ptype = ptype_out,
+                          z=wavefront.z, pilot=wavefront.pilot,
+                          reference=wavefront.reference,
+                          path=wavefront.path)
         
     for field in data:
         # compute the field shift from any embedded tilts. note the return value

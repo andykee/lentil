@@ -217,3 +217,114 @@ def test_dispersivetilt_overload():
 
     p = Plane()
     assert np.allclose(p.__shift__(1), np.sqrt(2)/2)
+
+
+def test_mul_ptype_none_preserves_conjugate():
+    # a ptype-none plane (screen, mask, lens) does not move the wavefront
+    # off a conjugate: pupil x none -> pupil, image x none -> image
+    amp = lentil.circle((32, 32), 12)
+    screen = lentil.Plane(amplitude=amp, pixelscale=1e-3)
+
+    w = lentil.Wavefront(wavelength=500e-9, ptype=lentil.pupil)
+    assert (w * screen).ptype == lentil.pupil
+
+    w = lentil.Wavefront(wavelength=500e-9, ptype=lentil.image)
+    assert (w * screen).ptype == lentil.image
+
+    w = lentil.Wavefront(wavelength=500e-9)
+    assert (w * screen).ptype == lentil.none
+
+
+def test_lens_plane_wave():
+    w = lentil.Wavefront(wavelength=500e-9)
+    w2 = w * lentil.Lens(focal_length=2)
+    assert w2.focal_length == 2
+    assert w2.z_focus == 2
+    assert w2.ptype == lentil.none
+
+
+def test_lens_law_combination():
+    # 1/fl_out = 1/fl_in + 1/f
+    w = lentil.Wavefront(wavelength=500e-9, focal_length=2)
+    w2 = w * lentil.Lens(focal_length=2)
+    assert np.isclose(w2.focal_length, 1)
+
+
+def test_lens_collimates():
+    # a wavefront diverging from a virtual focus one focal length behind
+    # the lens is collimated by it
+    w = lentil.Wavefront(wavelength=500e-9, focal_length=-2)
+    w2 = w * lentil.Lens(focal_length=2)
+    assert w2.focal_length is None
+
+
+def test_lens_no_power():
+    w = lentil.Wavefront(wavelength=500e-9, focal_length=3)
+    w2 = w * lentil.Lens(focal_length=np.inf)
+    assert w2.focal_length == 3
+
+
+def test_lens_stack_combined_power():
+    # two thin lenses in contact combine their powers
+    w = lentil.Wavefront(wavelength=500e-9)
+    w2 = w * lentil.Lens(focal_length=1) * lentil.Lens(focal_length=1)
+    assert np.isclose(w2.focal_length, 0.5)
+
+
+def test_lens_updates_pilot():
+    # collimated pilot focused by a lens comes to a waist ~one focal
+    # length away with the diffraction-limited radius
+    wavelength, diameter, f = 1e-6, 0.01, 1
+    w = lentil.Wavefront(wavelength=wavelength, diameter=diameter)
+    w2 = w * lentil.Lens(focal_length=f)
+    assert np.isclose(w2.pilot.waist_position, f, rtol=1e-3)
+    assert np.isclose(w2.pilot.waist_radius,
+                      wavelength*f/(np.pi*diameter/2), rtol=1e-3)
+    # the input wavefront's pilot is unchanged
+    assert w.pilot.waist_position == 0
+
+
+def test_lens_never_samples_quadratic_phase():
+    # only aberration OPD is sampled into the field; the ideal quadratic
+    # phase lives in the analytic curvature state
+    amp = lentil.circle((32, 32), 12)
+    opd = 1e-7 * lentil.circle((32, 32), 12)
+    lens = lentil.Lens(focal_length=2, amplitude=amp, opd=opd,
+                       pixelscale=1e-3)
+    w = lentil.Wavefront(wavelength=500e-9)
+    w2 = w * lens
+
+    expected = amp * np.exp(2*np.pi*1j*opd/500e-9)
+    assert np.allclose(w2.field, expected)
+    assert w2.focal_length == 2
+
+
+def test_lens_pupil_equivalence():
+    # for a plane-wave input, Lens and Pupil produce the same curvature
+    # state; they differ only in ptype
+    amp = lentil.circle((32, 32), 12)
+    lens = lentil.Lens(focal_length=2, amplitude=amp, pixelscale=1e-3)
+    pupil = lentil.Pupil(focal_length=2, amplitude=amp, pixelscale=1e-3)
+
+    wl = lentil.Wavefront(wavelength=500e-9) * lens
+    wp = lentil.Wavefront(wavelength=500e-9) * pupil
+
+    assert wl.focal_length == wp.focal_length
+    assert wl.z_focus == wp.z_focus
+    assert np.isclose(wl.pilot.waist_position, wp.pilot.waist_position)
+    assert np.isclose(wl.pilot.waist_radius, wp.pilot.waist_radius)
+    assert wl.ptype == lentil.none
+    assert wp.ptype == lentil.pupil
+
+
+def test_pupil_updates_pilot():
+    amp = lentil.circle((32, 32), 12)
+    pupil = lentil.Pupil(focal_length=2, amplitude=amp, pixelscale=1e-3)
+    w = lentil.Wavefront(wavelength=500e-9) * pupil
+    assert w.pilot is not None
+    assert np.isclose(w.pilot.waist_position, 2, rtol=1e-3)
+
+
+def test_lens_zero_focal_length():
+    with pytest.raises(ValueError):
+        lentil.Lens(focal_length=0)
