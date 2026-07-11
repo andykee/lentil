@@ -52,8 +52,12 @@ class Wavefront:
         self.path = 0.0
 
         # Curvature state is stored as the axial location of the analytic
-        # focus. focal_length is derived from it and z.
-        self._z_focus = z + focal_length if focal_length else None
+        # focus. focal_length is derived from it and z. Note focal_length=0
+        # is meaningful (the wavefront is at its focus).
+        if focal_length is None or np.isinf(focal_length):
+            self._z_focus = None
+        else:
+            self._z_focus = z + focal_length
 
         #: float: Wavefront diameter
         self.diameter = diameter

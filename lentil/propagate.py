@@ -61,14 +61,19 @@ def propagate_fft(wavefront, pixelscale, shape=None, oversample=2,
         else:
             shape_out = (shape[0] * oversample, shape[1]*oversample)
 
+    # the propagation advances the wavefront to the conjugate. Note that
+    # at a conjugate, focal_length retains its far-field meaning (the
+    # conjugate hop distance) rather than becoming zero
+    z_out, path_out = _advance_z(wavefront)
+
     out = Wavefront.empty(wavelength=prop_wavelength,
                           pixelscale = pixelscale/oversample,
                           focal_length=wavefront.focal_length,
                           shape = shape_out,
                           ptype = ptype_out,
-                          z=wavefront.z, pilot=wavefront.pilot,
-                          reference=wavefront.reference,
-                          path=wavefront.path)
+                          z=z_out, pilot=wavefront.pilot,
+                          reference='planar',
+                          path=path_out)
     
     if scratch is not None:
         if not all(np.asarray(scratch.shape) > fft_shape):
@@ -139,6 +144,17 @@ def _fft2(x):
     return np.fft.ifftshift(np.fft.fft2(np.fft.fftshift(x), norm='ortho'))
 
 
+def _advance_z(wavefront):
+    # Compute the axial position and accumulated path of a wavefront
+    # after a far-field hop to its conjugate (in either the pupil ->
+    # image or image -> pupil direction, the hop distance is the
+    # wavefront's focal_length)
+    if wavefront.focal_length is not None:
+        return (wavefront.z + wavefront.focal_length,
+                wavefront.path + wavefront.focal_length)
+    return wavefront.z, wavefront.path
+
+
 def _has_tilt(wavefront):
     # Return True if and Wavefront Field has nonempty tilt
     for field in wavefront.data:
@@ -198,14 +214,19 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
 
     data = wavefront.data
 
+    # the propagation advances the wavefront to the conjugate. Note that
+    # at a conjugate, focal_length retains its far-field meaning (the
+    # conjugate hop distance) rather than becoming zero
+    z_out, path_out = _advance_z(wavefront)
+
     out = Wavefront.empty(wavelength=wavefront.wavelength,
                           pixelscale = du/oversample,
                           focal_length=wavefront.focal_length,
                           shape = shape_out,
                           ptype = ptype_out,
-                          z=wavefront.z, pilot=wavefront.pilot,
-                          reference=wavefront.reference,
-                          path=wavefront.path)
+                          z=z_out, pilot=wavefront.pilot,
+                          reference='planar',
+                          path=path_out)
         
     for field in data:
         # compute the field shift from any embedded tilts. note the return value

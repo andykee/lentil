@@ -195,4 +195,8 @@ def idft2(F, alpha, shape=None, shift=(0,0), unitary=True, out=None):
     # will allocate memory for F if out == None
     F = dft2(np.conj(F), alpha, shape, shift, unitary=unitary, out=out)
     np.conj(F, out=F)
+    if unitary:
+        # the unitary forward transform is self-inverting under the
+        # conjugation trick; no additional normalization is required
+        return F
     return np.divide(F, N, out=F)
