@@ -107,22 +107,9 @@ def propagate_ptp(wavefront, dz, method='fft', shape=None, oversample=2,
     shape = np.asarray(wavefront.shape) if shape is None else np.broadcast_to(shape, (2,))
     shape_out = np.round(np.asarray(shape)*oversample).astype(int)
 
-    # focal_length is derived from z_focus and must be recomputed at the
-    # output position; z_focus itself is fixed during propagation
-    if wavefront.z_focus is None:
-        focal_length_out = None
-    else:
-        focal_length_out = wavefront.z_focus - z_out
-
-    out = lentil.Wavefront.empty(wavelength=wavefront.wavelength,
-                                 pixelscale=dx,
-                                 focal_length=focal_length_out,
-                                 shape=tuple(shape_out),
-                                 ptype=lentil.none,
-                                 z=z_out,
-                                 pilot=wavefront.pilot,
-                                 reference='planar',
-                                 path=wavefront.path + dz)
+    # z_focus (and everything else not stated here) is inherited;
+    # focal_length re-derives itself at the new z
+    out = wavefront.derive(dz=dz, shape=tuple(shape_out), ptype=lentil.none)
 
     # sort fields: uniform (scalar) fields pass through PTP unchanged,
     # untilted sampled fields may be consolidated (fft), tilted sampled
@@ -382,23 +369,42 @@ def _waist_transform(wavefront, dz, method, pixelscale, shape, oversample,
     # Each waist transform drops the 1/j prefactor of the Fresnel
     # integral (the unitary transform does not include it), leaving the
     # array with an unphysical +pi/2*sign(dz) piston. The path ledger
-    # records the correction as its path-equivalent, -sign(dz)*lambda/4,
-    # so the smooth Gouy evolution stays in the array while the dropped
-    # constant stays recoverable. (Verified against the analytic Gaussian
-    # in tests/test_fresnel.py.)
-    out = lentil.Wavefront.empty(wavelength=wl,
-                                 pixelscale=tuple(du),
-                                 focal_length=z_w - z_out,
-                                 shape=tuple(shape_out),
-                                 ptype=lentil.none,
-                                 z=z_out,
-                                 pilot=wavefront.pilot,
-                                 reference='spherical' if direction == 'wts' else 'planar',
-                                 path=wavefront.path + dz - np.sign(dz)*wl/4)
-    if direction == 'stw':
-        # the output is at the waist; the reference collapses to the
-        # current position (focal_length = 0)
-        out.focal_length = 0
+    # records the correction via dpath as its path-equivalent,
+    # -sign(dz)*lambda/4, so the smooth Gouy evolution stays in the
+    # array while the dropped constant stays recoverable. (Verified
+    # against the analytic Gaussian in tests/test_fresnel.py.)
+    #
+    # z_focus is the center of the spherical reference: the input plane
+    # for WTS; for STW the reference collapses to the output plane (the
+    # wavefront lands at its waist with focal_length = 0)
+    out = wavefront.derive(dz=dz,
+                           dpath=dz - np.sign(dz)*wl/4,
+                           pixelscale=tuple(du),
+                           shape=tuple(shape_out),
+                           ptype=lentil.none,
+                           reference='spherical' if direction == 'wts' else 'planar',
+                           z_focus=wavefront.z if direction == 'wts' else z_out)
+
+    # The waist-side chirp q(dz) is sampled at the waist-plane grid: on
+    # the input grid for WTS, the output grid for STW. It aliases at
+    # radii beyond r_N = lambda*|dz|/(2*max(pixelscale)). The pilot
+    # guarantees gentleness over its own radius when |dz| >= z_R, but
+    # diffraction structure (e.g. Airy rings) extending well beyond the
+    # pilot into the aliased region corrupts the result - most severe
+    # for |dz| only slightly larger than z_R. Empirically, r_N covering
+    # ~8 pilot radii at the waist keeps the error at the fraction of a
+    # percent level; warn below that. Increase oversample (or shape) to
+    # refine the waist-plane sampling.
+    if wavefront.pilot is not None:
+        dx_waist = np.max(dx) if direction == 'wts' else np.max(du)
+        r_nyq = wl*np.abs(dz)/(2*dx_waist)
+        if r_nyq < 8*wavefront.pilot.radius(z_w):
+            warnings.warn(
+                f'waist-plane chirp q(dz) aliases at radius '
+                f'{r_nyq:.3g} m, less than 8x the pilot beam radius '
+                f'{wavefront.pilot.radius(z_w):.3g} m; expect errors in '
+                f'the outer field. Increase oversample or shape to '
+                f'refine the waist-plane sampling.')
 
     for field in wavefront.data:
         if field.size == 1:

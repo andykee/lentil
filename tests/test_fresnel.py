@@ -695,3 +695,62 @@ def test_fresnel_requires_pilot():
     w = lentil.Wavefront(1e-6, pixelscale=1e-5)
     with pytest.raises(ValueError, match='pilot'):
         lentil.propagate_fresnel_dft(w, 0.1)
+
+
+# ---------------------------------------------------------------------------
+# Phase 3: Wavefront.phasor() materializer
+
+
+def test_phasor_inverts_fit_tilt():
+    # materializing a fit-tilt wavefront reproduces the sampled-phasor
+    # field exactly (phasor() is the inverse of Plane.fit_tilt)
+    wl, dx, n = 1e-6, 4e-6, 128
+    amp = lentil.circle((n, n), 40)
+    mask = amp > 0
+    x = (np.arange(n) - n//2)*dx
+    opd = (3.7e-4*np.tile(x, (n, 1)) + 1.9e-4*np.tile(x, (n, 1)).T)*mask
+
+    w_sampled = lentil.Wavefront(wl) * lentil.Plane(amplitude=amp, opd=opd,
+                                                    pixelscale=dx)
+    w_fit = lentil.Wavefront(wl) * lentil.Plane(amplitude=amp, opd=opd,
+                                                pixelscale=dx).fit_tilt()
+
+    assert np.allclose(w_fit.phasor(), w_sampled.field, atol=1e-9)
+
+
+def test_phasor_spherical_reference():
+    # a post-Lens pupil materializes to amplitude * lens quadratic phase
+    wl, dx, n, f = 1e-6, 5e-5, 128, 2.0
+    amp = lentil.circle((n, n), 40)
+    w = lentil.Wavefront(wl)
+    w = w * lentil.Plane(amplitude=amp, pixelscale=dx)
+    w = w * lentil.Lens(focal_length=f)
+
+    x = (np.arange(n) - n//2)*dx
+    rsq = x[:, np.newaxis]**2 + x[np.newaxis, :]**2
+    expected = amp*np.exp(-1j*np.pi*rsq/(wl*f))
+
+    assert np.allclose(w.phasor(), expected, atol=1e-12)
+
+
+def test_phasor_absolute_phase_after_wts():
+    # the materialized on-axis phase after WTS is the true absolute
+    # Gaussian phase k*dz - gouy(dz): the array's Gouy evolution, the
+    # reference (unity on axis) and the ledger piston combine exactly
+    wl = 1e-6
+    w, b = _waist_wavefront(wl, n=256, w0_px=20)
+    dz = 3*b.rayleigh_distance
+    out = lentil.propagate_wts(w, dz, method='dft', oversample=1)
+
+    E = out.phasor()
+    cc = E.shape[0]//2
+    k = 2*np.pi/wl
+    expected = np.exp(1j*(k*dz - b.gouy(dz)))
+    assert np.allclose(E[cc, cc]/np.abs(E[cc, cc]), expected, atol=1e-9)
+
+
+def test_phasor_dispersive_tilt_raises():
+    w, _ = _waist_wavefront(n=64, w0_px=8)
+    w.data[0].tilt.append(lentil.DispersiveTilt(trace=[1, 0], dispersion=[1, 1e-6]))
+    with pytest.raises(NotImplementedError):
+        w.phasor()

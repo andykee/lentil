@@ -61,19 +61,9 @@ def propagate_fft(wavefront, pixelscale, shape=None, oversample=2,
         else:
             shape_out = (shape[0] * oversample, shape[1]*oversample)
 
-    # the propagation advances the wavefront to the conjugate. Note that
-    # at a conjugate, focal_length retains its far-field meaning (the
-    # conjugate hop distance) rather than becoming zero
-    z_out, path_out = _advance_z(wavefront)
-
-    out = Wavefront.empty(wavelength=prop_wavelength,
-                          pixelscale = pixelscale/oversample,
-                          focal_length=wavefront.focal_length,
-                          shape = shape_out,
-                          ptype = ptype_out,
-                          z=z_out, pilot=wavefront.pilot,
-                          reference='planar',
-                          path=path_out)
+    out = _derive_conjugate(wavefront, wavelength=prop_wavelength,
+                            pixelscale=pixelscale/oversample,
+                            shape=shape_out, ptype=ptype_out)
     
     if scratch is not None:
         if not all(np.asarray(scratch.shape) > fft_shape):
@@ -144,15 +134,22 @@ def _fft2(x):
     return np.fft.ifftshift(np.fft.fft2(np.fft.fftshift(x), norm='ortho'))
 
 
-def _advance_z(wavefront):
-    # Compute the axial position and accumulated path of a wavefront
-    # after a far-field hop to its conjugate (in either the pupil ->
-    # image or image -> pupil direction, the hop distance is the
-    # wavefront's focal_length)
-    if wavefront.focal_length is not None:
-        return (wavefront.z + wavefront.focal_length,
-                wavefront.path + wavefront.focal_length)
-    return wavefront.z, wavefront.path
+def _derive_conjugate(wavefront, wavelength, pixelscale, shape, ptype):
+    # Derive the output wavefront of a far-field hop to the conjugate.
+    # The hop distance is the wavefront's focal_length in either
+    # direction (pupil -> image or image -> pupil). Note that at the
+    # conjugate, focal_length retains its far-field meaning (the
+    # conjugate hop distance, z_focus = z_out + focal_length) rather
+    # than becoming zero - the convention that existing image -> pupil
+    # far-field chains depend on. See plan-near-field.md for the
+    # near-field re-entry implications.
+    fl = wavefront.focal_length
+    dz = fl if fl is not None else 0
+    z_focus = wavefront.z + dz + fl if fl is not None else None
+    return wavefront.derive(dz=dz, wavelength=wavelength,
+                            pixelscale=pixelscale, shape=shape,
+                            ptype=ptype, reference='planar',
+                            z_focus=z_focus)
 
 
 def _has_tilt(wavefront):
@@ -214,19 +211,9 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
 
     data = wavefront.data
 
-    # the propagation advances the wavefront to the conjugate. Note that
-    # at a conjugate, focal_length retains its far-field meaning (the
-    # conjugate hop distance) rather than becoming zero
-    z_out, path_out = _advance_z(wavefront)
-
-    out = Wavefront.empty(wavelength=wavefront.wavelength,
-                          pixelscale = du/oversample,
-                          focal_length=wavefront.focal_length,
-                          shape = shape_out,
-                          ptype = ptype_out,
-                          z=z_out, pilot=wavefront.pilot,
-                          reference='planar',
-                          path=path_out)
+    out = _derive_conjugate(wavefront, wavelength=wavefront.wavelength,
+                            pixelscale=du/oversample,
+                            shape=shape_out, ptype=ptype_out)
         
     for field in data:
         # compute the field shift from any embedded tilts. note the return value

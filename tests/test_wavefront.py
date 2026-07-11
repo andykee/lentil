@@ -109,3 +109,100 @@ def test_wavefront_state_preserved_through_multiply():
     assert w2.reference == 'spherical'
     assert w2.focal_length == 2
     assert w2.z_focus == 3
+
+
+# ---------------------------------------------------------------------------
+# Wavefront.derive()
+
+
+def _stateful_wavefront():
+    # a wavefront with every piece of Wavefront-level state set to a
+    # non-default value
+    from lentil.fresnel import GaussianBeam
+    w = lentil.Wavefront(wavelength=633e-9, pixelscale=2e-5, diameter=0.02,
+                         focal_length=1.5, ptype=lentil.pupil, z=1.0,
+                         pilot=GaussianBeam(1e-3, 633e-9, waist_position=0.5))
+    w.reference = 'spherical'
+    w.path = 0.75
+    w.shape = (64, 64)
+    return w
+
+
+def test_derive_preserves_all_state():
+    # structural completeness: derive() with no deltas preserves every
+    # instance attribute except data (emptied). Iterating vars() means a
+    # future Wavefront attribute is automatically covered by this test.
+    w = _stateful_wavefront()
+    out = w.derive()
+
+    assert out.data == []
+    assert set(vars(out)) == set(vars(w))
+    for attr, value in vars(w).items():
+        if attr == 'data':
+            continue
+        got = getattr(out, attr)
+        if isinstance(value, np.ndarray):
+            assert np.array_equal(got, value), attr
+        else:
+            assert got is value or got == value, attr
+
+
+def test_derive_dz_advances_z_and_path():
+    w = _stateful_wavefront()
+    out = w.derive(dz=0.25)
+    assert out.z == 1.25
+    assert out.path == 1.0
+    # z_focus is fixed; focal_length re-derives at the new position
+    assert out.z_focus == w.z_focus
+    assert np.isclose(out.focal_length, w.focal_length - 0.25)
+
+
+def test_derive_dpath_overrides_ledger_advance():
+    w = _stateful_wavefront()
+    out = w.derive(dz=0.25, dpath=0.25 - 633e-9/4)
+    assert out.z == 1.25
+    assert np.isclose(out.path, 0.75 + 0.25 - 633e-9/4)
+
+
+def test_derive_deltas_change_only_their_target():
+    w = _stateful_wavefront()
+    out = w.derive(ptype=lentil.none, pixelscale=5e-6)
+    assert out.ptype == lentil.none
+    assert np.all(out.pixelscale == np.broadcast_to(5e-6, (2,)))
+    # spot-check that unrelated state survived
+    assert out.z == w.z
+    assert out.pilot is w.pilot
+    assert out.reference == w.reference
+    assert out.z_focus == w.z_focus
+    assert out.diameter == w.diameter
+    assert out.wavelength == w.wavelength
+
+
+def test_derive_none_deltas_are_meaningful():
+    # None is a legal replacement value, distinct from "not provided"
+    w = _stateful_wavefront()
+    w.reference = 'planar'
+    out = w.derive(z_focus=None, pilot=None, pixelscale=None)
+    assert out.z_focus is None
+    assert out.focal_length is None
+    assert out.pilot is None
+    assert out.pixelscale is None
+
+
+def test_derive_spherical_requires_z_focus():
+    w = _stateful_wavefront()
+    with pytest.raises(ValueError):
+        w.derive(z_focus=None)  # reference is spherical
+    w.reference = 'planar'
+    w.focal_length = None
+    with pytest.raises(ValueError):
+        w.derive(reference='spherical')
+
+
+def test_derive_does_not_mutate_source():
+    w = _stateful_wavefront()
+    z, path, z_focus = w.z, w.path, w.z_focus
+    w.derive(dz=1, ptype=lentil.none, reference='planar', z_focus=None)
+    assert (w.z, w.path, w.z_focus) == (z, path, z_focus)
+    assert w.ptype == lentil.pupil
+    assert w.reference == 'spherical'

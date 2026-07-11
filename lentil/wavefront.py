@@ -7,8 +7,13 @@ from lentil import Tilt
 import lentil.field
 from lentil.field import Field
 import lentil.fourier
-from lentil.fresnel import GaussianBeam
+from lentil.fresnel import GaussianBeam, _chirp
 import lentil.helper
+
+# sentinel for Wavefront.derive() deltas. None can't serve: it is a
+# meaningful value for several kinds of Wavefront state (z_focus=None is
+# a plane wave, pilot=None is no pilot, ...)
+_UNSET = object()
 
 class Wavefront:
     """A class representing a monochromatic wavefront.
@@ -178,6 +183,81 @@ class Wavefront:
             out = lentil.field.insert(field, out)
         return out
 
+    def phasor(self):
+        """Materialize the wavefront's total complex field as a sampled
+        array.
+
+        The returned array is the stored field data with all analytically
+        bookkept phase multiplied back in:
+
+        * per-field tilt (:class:`~lentil.Tilt` objects)
+        * the reference-surface quadratic phase (for a
+          spherical-reference wavefront, the sphere centered on
+          :attr:`z_focus`)
+        * the accumulated path ledger piston ``exp(j*k*path)``
+
+        .. warning::
+
+            Lentil bookkeeps these terms analytically precisely because
+            they may not be representable at the array's sampling. The
+            materialized phasor can alias badly — a fast beam's
+            reference sphere or a large tilt can wrap many times per
+            pixel. Use for diagnostics, external handoff, and
+            small-phase regimes; never as an input to Lentil's own
+            propagators.
+
+        Returns
+        -------
+        ndarray
+
+        See Also
+        --------
+        Wavefront.field : the raw (reference-relative) field data
+        """
+        k = 2*np.pi/self.wavelength
+
+        out = np.zeros(self.shape, dtype=complex)
+        for field in self.data:
+            if field.tilt:
+                data = field.data * self._tilt_phasor(field)
+                field = Field(data=data, pixelscale=field.pixelscale,
+                              offset=field.offset)
+            out = lentil.field.insert(field, out)
+
+        if self.reference == 'spherical':
+            if self.pixelscale is None:
+                raise ValueError("can't materialize spherical reference "
+                                 "phase with pixelscale = None")
+            # the array is defined relative to a sphere centered on
+            # z_focus; the absorbed phase is q(dz_ref) with
+            # dz_ref = z - z_focus = -focal_length
+            out = out * _chirp(out.shape, (0, 0), self.pixelscale,
+                               self.wavelength, self.z - self._z_focus)
+
+        return out * np.exp(1j*k*self.path)
+
+    def _tilt_phasor(self, field):
+        # reconstruct the sampled phasor of a field's analytic Tilt
+        # objects, evaluated at the field's own (offset) coordinates.
+        # This is the exact inverse of Plane.fit_tilt's OPD removal:
+        # opd_tilt = t1*(r*dr) + t2*(-c*dc) with Tilt(x=t1, y=t2)
+        # stored as T.x = t2, T.y = t1
+        if self.pixelscale is None:
+            raise ValueError("can't materialize tilt with pixelscale = None")
+        for tilt in field.tilt:
+            if type(tilt) is not Tilt:
+                raise NotImplementedError(
+                    f"can't materialize phase for tilt object of type "
+                    f"'{type(tilt).__name__}'")
+
+        n0, n1 = field.shape
+        r = (np.arange(n0) - n0//2 + field.offset[0])*self.pixelscale[0]
+        c = (np.arange(n1) - n1//2 + field.offset[1])*self.pixelscale[1]
+        opd = np.zeros((n0, n1))
+        for tilt in field.tilt:
+            opd = opd + tilt.y*r[:, np.newaxis] - tilt.x*c[np.newaxis, :]
+        return np.exp(2j*np.pi*opd/self.wavelength)
+
     @property
     def intensity(self):
         """Wavefront intensity
@@ -212,6 +292,84 @@ class Wavefront:
         w.shape = () if shape is None else shape
         return w
     
+
+    def derive(self, *, dz=0, dpath=None, wavelength=_UNSET, pixelscale=_UNSET,
+               shape=_UNSET, ptype=_UNSET, z_focus=_UNSET, pilot=_UNSET,
+               reference=_UNSET):
+        """Create a new Wavefront derived from this one.
+
+        A derived wavefront inherits **all** Wavefront-level bookkeeping
+        state (wavelength, sampling, diameter, position, analytic
+        curvature, pilot beam, reference surface, path ledger, ptype)
+        unless a delta explicitly states otherwise, and always has an
+        empty :attr:`data` attribute — Field-level state (data, offset,
+        tilt) is the caller's responsibility. This is the required way
+        for propagators and planes to construct their output wavefronts:
+        state that is not explicitly changed cannot be accidentally
+        dropped.
+
+        The inheritance is structural (the entire instance state is
+        copied before deltas are applied), so attributes added to
+        Wavefront in the future are inherited automatically.
+
+        Parameters
+        ----------
+        dz : float, optional
+            Signed axial distance to advance the wavefront. Advances
+            both :attr:`z` and the :attr:`path` ledger. Default is 0.
+        dpath : float, optional
+            Amount added to the path ledger, overriding the default
+            advance of ``dz``. Used for ledger corrections beyond the
+            geometric distance (e.g. the dropped Fresnel ``1/j`` piston
+            of a waist transform). There is deliberately no absolute
+            path setter.
+        wavelength, pixelscale, shape, ptype, z_focus, pilot, reference :
+            Optional replacement values. Note ``z_focus`` (the analytic
+            curvature state) transfers directly; there is deliberately
+            no ``focal_length`` delta — the ``z + focal_length``
+            round-trip is error-prone and ``focal_length`` remains a
+            derived property.
+
+        Returns
+        -------
+        :class:`~lentil.Wavefront`
+
+        Notes
+        -----
+        The copy is shallow: in particular, :attr:`pilot` is shared with
+        the source wavefront. This is safe because ``GaussianBeam``
+        objects are treated as immutable throughout Lentil (lenses
+        replace the pilot rather than mutating it).
+        """
+        out = self.__class__.__new__(self.__class__)
+        out.__dict__.update(self.__dict__)
+        out.data = []
+
+        out.z = self.z + dz
+        out.path = self.path + (dz if dpath is None else dpath)
+
+        if wavelength is not _UNSET:
+            out._wavelength = wavelength
+        if pixelscale is not _UNSET:
+            out._pixelscale = None if pixelscale is None else np.broadcast_to(pixelscale, (2,))
+        if shape is not _UNSET:
+            out.shape = () if shape is None else shape
+        if ptype is not _UNSET:
+            out.ptype = ptype
+        if z_focus is not _UNSET:
+            out._z_focus = z_focus
+        if pilot is not _UNSET:
+            out.pilot = pilot
+        if reference is not _UNSET:
+            out.reference = reference
+
+        # state invariant: a spherical reference surface is a sphere
+        # centered on the analytic focus, which must therefore exist
+        if out.reference == 'spherical' and out._z_focus is None:
+            raise ValueError("spherical-reference wavefront requires a "
+                             "defined z_focus")
+
+        return out
 
     def insert(self, out, weight=1):
         """Directly insert wavefront intensity data into an output array.

@@ -486,15 +486,10 @@ class Plane(_PlaneBase):
         data = wavefront.data
         ptype = _mul_result_ptype(wavefront.ptype, self.ptype)
 
-        out = lentil.Wavefront.empty(wavelength=wavefront.wavelength,
-                                     pixelscale=pixelscale,
-                                     focal_length=wavefront.focal_length,
-                                     shape=shape,
-                                     ptype=ptype,
-                                     z=wavefront.z,
-                                     pilot=self._mul_pilot(wavefront),
-                                     reference=wavefront.reference,
-                                     path=wavefront.path)
+        out = wavefront.derive(pixelscale=pixelscale,
+                               shape=shape,
+                               ptype=ptype,
+                               pilot=self._mul_pilot(wavefront))
 
         for field in data:
             for n, s in enumerate(self._slice):
