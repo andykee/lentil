@@ -1,10 +1,10 @@
 # Lentil
 # Heart-healthy physical optics
 #
-# Copyright (c) 2020-2024, California Institute of Technology ("Caltech"). 
+# Copyright (c) 2020-2026, California Institute of Technology ("Caltech"). 
 # U.S. Government sponsorship acknowledged.
 
-__version__ = '0.8.8'
+__version__ = '0.8.9'
 
 from lentil.ptype import ptype
 

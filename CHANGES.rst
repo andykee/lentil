@@ -1,6 +1,13 @@
 Release notes
 =============
 
+v0.8.9
+------
+Released July 16, 2026
+
+* Fix bug that caused incorrect behavior when calling ``fit_tilt()`` on a
+  plane that defines a custom ``__opd__()`` method
+
 v0.8.8
 ------
 Released April 8, 2026
