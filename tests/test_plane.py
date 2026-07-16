@@ -80,6 +80,60 @@ def test_plane_fit_tilt_inplace():
     assert p_inplace is p
 
 
+class ComputedOPDPupil(lentil.Pupil):
+    # opd is computed on every access via __opd__()
+    def __init__(self, coeffs, **kwargs):
+        super().__init__(**kwargs)
+        self.coeffs = np.asarray(coeffs)
+
+    def __opd__(self):
+        return lentil.zernike_compose(self.mask, self.coeffs)
+
+
+def _fit_residual_tilt(plane):
+    ptt = plane.ptt_vector
+    t = np.linalg.lstsq(ptt.T, np.asarray(plane.opd).ravel(), rcond=None)[0]
+    return t[1], t[2]
+
+
+def test_fit_tilt_computed_opd_removes_tilt():
+    mask = lentil.circle((64, 64), 30)
+    coeffs = [0, 300e-9, 200e-9, 100e-9]  # piston, x-tilt, y-tilt, focus
+    p = ComputedOPDPupil(coeffs, amplitude=mask, mask=mask, pixelscale=1/64,
+                         focal_length=10)
+
+    pf = p.fit_tilt(inplace=False)
+
+    # tilt is actually removed from the returned opd
+    tx, ty = _fit_residual_tilt(pf)
+    assert np.isclose(tx, 0, atol=1e-12)
+    assert np.isclose(ty, 0, atol=1e-12)
+
+    # bookkept exactly once
+    assert len(pf.tilt) == 1
+
+    # the result is a frozen snapshot
+    assert pf.frozen
+
+    # and the original is untouched (fit_tilt returned a copy)
+    assert not p.frozen
+    otx, oty = _fit_residual_tilt(p)
+    assert not np.isclose(otx, 0, atol=1e-12)
+
+
+def test_fit_tilt_idempotent_on_frozen():
+    mask = lentil.circle((64, 64), 30)
+    coeffs = [0, 300e-9, 200e-9, 100e-9]
+    p = ComputedOPDPupil(coeffs, amplitude=mask, mask=mask, pixelscale=1/64,
+                         focal_length=10).fit_tilt(inplace=False)
+
+    # already frozen -> fit_tilt must not raise and must leave a tilt-free opd
+    pf = p.fit_tilt(inplace=False)
+    tx, ty = _fit_residual_tilt(pf)
+    assert np.isclose(tx, 0, atol=1e-12)
+    assert np.isclose(ty, 0, atol=1e-12)
+
+
 def test_wavefront_plane_mul():
     p = RandomPlane()
     w = lentil.Wavefront(650e-9)

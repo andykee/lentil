@@ -248,13 +248,16 @@ class _PlaneBase:
         else:
             cls = copy.deepcopy(self)
 
-        for attr in cls.__freeze_attrs__:
-            setattr(cls, f'_{attr}', getattr(cls, attr))
-
-        cls._frozen = True
+        cls._freeze()
 
         if not inplace:
             return cls
+
+    def _freeze(self):
+        """Cache __freeze_attrs__ and mark frozen."""
+        for attr in self.__freeze_attrs__:
+            setattr(self, f'_{attr}', getattr(self, attr))
+        self._frozen = True
 
     def thaw(self):
         """Clear property cache
@@ -575,6 +578,18 @@ class Plane(_PlaneBase):
         Returns
         -------
         :class:`~lentil.Plane`
+
+        Notes
+        -----
+        When tilt is removed, the returned Plane is frozen with the 
+        tilt-removed :attr:`opd` cached in place of the computed value.
+        Calling :func:`~lentil.Plane.thaw` on a Plane whose :attr:`opd` is
+        computed by an overloaded ``__opd__`` reintroduces the fitted tilt and
+        is not recommended.
+
+        See Also
+        --------
+        :func:`lentil.Plane.freeze`
         """
         if inplace:
             plane = self
@@ -583,30 +598,38 @@ class Plane(_PlaneBase):
 
         ptt_vector = plane.ptt_vector
 
+        # freeze plane and snapshot opd
+        plane._freeze()
+        opd = np.asarray(plane.opd)
+
         # There are a couple of cases where we don't have enough information to remove the
         # tilt, so we just return the Plane as-is
-        if ptt_vector is None or plane.opd.size == 1:
+        if ptt_vector is None or opd.size == 1:
             return plane
 
         if self.size == 1:
-            t = np.linalg.lstsq(ptt_vector.T, plane.opd.ravel(), rcond=None)[0]
+            t = np.linalg.lstsq(ptt_vector.T, opd.ravel(), rcond=None)[0]
             opd_tilt = np.einsum('ij,i->j', ptt_vector[1:3], t[1:3])
-            plane.opd -= opd_tilt.reshape(plane.opd.shape)
+            residual = opd - opd_tilt.reshape(opd.shape)
             plane.tilt.append(Tilt(x=t[1], y=t[2]))
 
         else:
             t = np.empty((self.size, 3))
-            opd_no_tilt = np.empty((self.size, plane.opd.shape[0], plane.opd.shape[1]))
+            opd_no_tilt = np.empty((self.size, opd.shape[0], opd.shape[1]))
 
             # iterate over the segments and compute the tilt term
             for seg in np.arange(self.size):
-                t[seg] = np.linalg.lstsq(ptt_vector[3 * seg:3 * seg + 3].T, plane.opd.ravel(),
+                t[seg] = np.linalg.lstsq(ptt_vector[3 * seg:3 * seg + 3].T, opd.ravel(),
                                          rcond=None)[0]
                 seg_tilt = np.einsum('ij,i->j', ptt_vector[3 * seg + 1:3 * seg + 3], t[seg, 1:3])
-                opd_no_tilt[seg] = (plane.opd - seg_tilt.reshape(plane.opd.shape)) * self.mask[seg]
+                opd_no_tilt[seg] = (opd - seg_tilt.reshape(opd.shape)) * self.mask[seg]
 
-            plane.opd = np.sum(opd_no_tilt, axis=0)
+            residual = np.sum(opd_no_tilt, axis=0)
             plane.tilt.extend([Tilt(x=t[seg, 1], y=t[seg, 2]) for seg in range(self.size)])
+
+        # substitute the opd computed earlier when we called _freeze() with
+        # the tilt-removed residual
+        plane._opd = residual
 
         return plane
 
