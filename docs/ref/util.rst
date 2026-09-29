@@ -26,6 +26,7 @@ Array manipulation
     pad
     subarray
     window
+    sample
     rebin
     rescale
 
