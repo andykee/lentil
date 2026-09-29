@@ -10,6 +10,46 @@ def test_boundary():
     assert np.array_equal(bounds, [28, 228, 41, 215])
 
 
+@pytest.mark.parametrize('shape, oversample, offset, result', [
+    ((2, 2), 1, 0, [[0, 1], [2, 3]]),
+    ((2, 2), 2, 0, [3]),
+    ((2, 2), 2, (-1, 0), [1]),
+    ((2, 2), 2, (0, -1), [2]),
+    ((2, 2), 2, (-1, -1), [0]),
+    ((3, 3), 1, 0, [[0, 1, 2], [3, 4, 5], [6, 7, 8]]),
+    ((3, 3), 3, 0, [4]),
+    ((3, 3), 3, (-1, 0), [1]),
+    ((3, 3), 3, (1, 0), [7]),
+    ((3, 3), 3, (0, -1), [3]),
+    ((3, 3), 3, (0, 1), [5]),
+    ((3, 3), 3, (-1, -1), [0]),
+    ((3, 3), 3, (-1, 1), [2]),
+    ((3, 3), 3, (1, -1), [6]),
+    ((3, 3), 3, (1, 1), [8]),
+    ((4, 4), 1, 0, [[0, 1, 2, 3], [4, 5, 6, 7],
+                    [8, 9, 10, 11], [12, 13, 14, 15]]),
+    ((4, 4), 2, 0, [[5, 7], [13, 15]]),
+    ])
+def test_sample(shape, oversample, offset, result):
+    x = np.arange(np.prod(shape)).reshape(shape)
+    assert np.all(lentil.sample(x, oversample, offset) == result)
+
+
+@pytest.mark.parametrize('shape, oversample, offset', [
+    ((2, 2), 1, 1),
+    ((2, 2), 1, -2),
+    ((2, 2), 2, 1),
+    ((3, 3), 3, -2),
+    ((3, 3), 3, 2),
+    ((4, 4), 2, 1),
+    ((4, 4), 2, -2)
+    ])
+def test_sample_value_error(shape, oversample, offset):
+    x = np.arange(np.prod(shape)).reshape(shape)
+    with pytest.raises(ValueError):
+        lentil.sample(x, oversample, offset)
+
+
 def test_rebin():
     img = np.array([[1, 1, 2, 2], [1, 1, 2, 2], [3, 3, 4, 4], [3, 3, 4, 4]])
     factor = 2

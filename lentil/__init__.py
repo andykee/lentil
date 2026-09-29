@@ -53,9 +53,10 @@ from lentil import util
 from lentil.util import (
 	centroid,
 	pad,
-    subarray,
+	subarray,
 	window,
 	boundary,
+	sample,
 	rebin,
 	rescale,
 	pixelscale_nyquist,

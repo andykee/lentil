@@ -218,6 +218,70 @@ def boundary(x, threshold=0):
     return rmin, rmax, cmin, cmax
 
 
+def sample(x, oversample, offset=0, axes=(-2, -1), indexing='ij'):
+    """Extract samples from an oversampled array.
+
+    The sampled axes are tiled into contiguous blocks of ``oversample``
+    samples, with one sample being taken from each block. No averaging or
+    filtering is performed.
+
+    Parameters
+    ----------
+    x : array_like
+        Array to sample
+    oversample : int or tuple of ints
+        Decimation factor. Providing two values defines asymmetric
+        oversampling with ordering interpreted according to ``indexing``.
+    offset : int or tuple of ints, optional
+        Position of the sample with each block, measured from
+        ``oversample//2``. The sub-sampled position reachable by ``offset`` is
+        quantized to ``1/oversample``. Default is 0. If two values are
+        provided, their ordering is interpreted according to ``indexing``.
+    axes : (2,) sequence of ints, optional
+        Axes over which to sample. If not provided, the last two axes are
+        used.
+    indexing : {'ij', 'xy'}, optional
+        Matrix (‘ij’, default) or cartesian (‘xy’) indexing of ``x`` grid.
+
+    Returns
+    -------
+    x : ndarray
+        Each sampled axis has length ``x.shape[axis]//oversample``. If axis
+        length is not a multiple of ``oversample``, samples taken beyond the
+        last whole block are ignored.
+
+    """
+    x = np.asarray(x)
+
+    if indexing not in ('ij', 'xy'):
+        raise ValueError("Valid values for indexing are 'xy' and 'ij'.")
+
+    oversample = tuple(int(v) for v in np.broadcast_to(oversample, (2,)))
+    offset = tuple(int(v) for v in np.broadcast_to(offset, (2,)))
+    axes = tuple(int(a) % x.ndim for a in axes)
+
+    if indexing == 'xy':
+        offset = (-offset[1], offset[0])
+        oversample = (oversample[1], oversample[0])
+
+    idx = [slice(None)] * x.ndim
+
+    for ax, m, o in zip(axes, oversample, offset):
+
+        lo, hi = -(m // 2), m - 1 - m // 2
+        if not lo <= o <= hi:
+            raise ValueError(f'offset {o} lies outside one pixel for oversample '
+                             f'{m} on axis {ax}; require {lo} <= offset <= {hi}')
+
+        n = x.shape[ax] // m
+        start = m // 2 + o
+        stop = start + m * n
+
+        idx[ax] = slice(start, stop, m)
+
+    return x[tuple(idx)]
+
+
 def rebin(img, factor):
     """Rebin an image by an integer factor.
 
