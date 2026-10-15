@@ -1,6 +1,12 @@
 Release notes
 =============
 
+v0.8.10
+-------
+Released October 15, 2026
+
+* New ``sample()`` function for taking values from an oversampled array
+
 v0.8.9
 ------
 Released July 16, 2026
