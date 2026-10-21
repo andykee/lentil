@@ -1,8 +1,8 @@
 import math
-import numpy as np
-import scipy.interpolate
-import scipy.special
+
 import lentil
+import numpy as np
+import pytest
 
 
 def test_amplitude_normalize_power(pupil):
@@ -161,3 +161,82 @@ def test_propagate_resample(pupil):
 
     assert np.allclose(cent, [320, 320])
     assert math.isclose(np.sum(wi.intensity), np.sum(w2i.intensity), rel_tol=1e-2)
+
+@pytest.mark.parametrize('shift', [(5, 5), (-3, 7), (0, -4)])
+def test_propagate_shift_integer(pupil, shift):
+    oversample = 5
+    npix = np.array([64, 64])
+    p = pupil(focal_length=10, diameter=1, shape=(256, 256), radius=120)
+
+    w = lentil.Wavefront(650e-9) * p
+    psf = lentil.propagate_dft(w, shape=npix, pixelscale=5e-6,
+                               oversample=oversample).intensity
+
+    w = lentil.Wavefront(650e-9) * p
+    psf_shift = lentil.propagate_dft(w, shape=npix, pixelscale=5e-6,
+                                     oversample=oversample,
+                                     shift=shift).intensity
+
+    # an integer shift should exactly translate the PSF. compare the region
+    # where the shifted and unshifted PSFs overlap
+    dr, dc = np.asarray(shift) * oversample
+    nr, nc = npix * oversample
+    shifted = psf_shift[max(dr, 0):nr+min(dr, 0), max(dc, 0):nc+min(dc, 0)]
+    unshifted = psf[max(-dr, 0):nr+min(-dr, 0), max(-dc, 0):nc+min(-dc, 0)]
+
+    assert np.allclose(shifted, unshifted, rtol=0, atol=1e-12*psf.max())
+
+
+def test_propagate_shift_subpixel(pupil):
+    oversample = 10
+    npix = np.array([64, 64])
+    shift = np.random.uniform(low=-5, high=5, size=2)
+    p = pupil(focal_length=10, diameter=1, shape=(256, 256), radius=120)
+
+    w = lentil.Wavefront(650e-9) * p
+    w = lentil.propagate_dft(w, shape=npix, pixelscale=5e-6,
+                             oversample=oversample, shift=shift)
+    psf = w.intensity
+
+    psf = psf/np.max(psf)
+    psf[psf < 0.2] = 0  # threshold for centroiding
+
+    center = npix//2 * oversample
+    observed_shift = np.asarray(lentil.util.centroid(psf)) - center
+
+    assert np.all(np.abs(observed_shift - shift*oversample)/oversample < 0.02)
+
+
+def test_propagate_shift_tilt_additive(pupil):
+    oversample = 10
+    npix = np.array([64, 64])
+    shift = (3, -2)
+
+    coeffs = 5e-6 * np.random.uniform(low=-0.5, high=0.5, size=3)
+    coeffs[0] = 0
+    p = pupil(focal_length=10, diameter=1, shape=(256, 256), radius=120,
+              coeffs=coeffs)
+    p.fit_tilt(inplace=True)
+
+    p = pupil(focal_length=10, diameter=1, shape=(256, 256), radius=120,
+              coeffs=coeffs)
+    p.fit_tilt(inplace=True)
+
+    w = lentil.Wavefront(650e-9) * p
+    psf = lentil.propagate_dft(w, shape=npix, pixelscale=5e-6,
+                               oversample=oversample).intensity
+
+    w = lentil.Wavefront(650e-9) * p
+    psf_shift = lentil.propagate_dft(w, shape=npix, pixelscale=5e-6,
+                                     oversample=oversample,
+                                     shift=shift).intensity
+
+    psf = psf/np.max(psf)
+    psf[psf < 0.2] = 0
+    psf_shift = psf_shift/np.max(psf_shift)
+    psf_shift[psf_shift < 0.2] = 0
+
+    delta = (np.asarray(lentil.util.centroid(psf_shift)) -
+             np.asarray(lentil.util.centroid(psf)))
+
+    assert np.all(np.abs(delta - np.asarray(shift)*oversample)/oversample < 0.02)
