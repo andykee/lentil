@@ -1,0 +1,2 @@
+Detector modeling (``lentil.detector``)
+=======================================
