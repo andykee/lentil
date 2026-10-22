@@ -44,3 +44,4 @@ Learn more
 ----------
 See the :doc:`first steps<getting-started/first-steps>` or jump straight to
 the :doc:`guides<guides/index>` to start using Lentil.
+
