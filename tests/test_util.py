@@ -160,3 +160,22 @@ def test_normalize_power():
 def test_normalize_power_2():
     amp_norm = lentil.normalize_power(amp, power=2)
     assert np.isclose(np.sum(np.abs(amp_norm)**2), 2.0)
+
+
+@pytest.mark.parametrize('mode, indexing, result', [
+    ('absolute', 'ij', (44, 94)),
+    ('absolute', 'xy', (94, 44)),
+    ('center', 'ij', (-20, 30)),
+    ('center', 'xy', (30, 20)),
+])
+def test_centroid(mode, indexing, result):
+    # circle shifted 20 rows up and 30 columns right of center
+    circ = lentil.circle((128, 128), 25, shift=(-20, 30), antialias=False)
+    assert np.allclose(lentil.centroid(circ, mode=mode, indexing=indexing), result)
+
+
+@pytest.mark.parametrize('n', [64, 65])
+@pytest.mark.parametrize('indexing', ['ij', 'xy'])
+def test_centroid_center_mode_centered(n, indexing):
+    circ = lentil.circle((n, n), 20, antialias=False)
+    assert np.allclose(lentil.centroid(circ, mode='center', indexing=indexing), (0, 0))

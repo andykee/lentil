@@ -83,17 +83,13 @@ def test_propagate_tilt_analytic(pupil):
     psf = psf/np.max(psf)
     psf[psf < 0.2] = 0  # threshold for centroiding
 
-    center = npix//2 * oversample
-    centroid = np.asarray(lentil.util.centroid(psf))
-    shift = centroid - center
+    shift = np.asarray(lentil.centroid(psf, mode='center', indexing='xy'))
 
     pupil_tilt = coeffs[1:3]
 
     # The factor of 4 gets you from RMS to PV
     analytic_shift = ((pupil_tilt/p.diameter)*p.focal_length/pixelscale) * oversample * 4
 
-    # Analytic shift is in terms of (x, y) but we really want (r, c) to match the centroid
-    analytic_shift = analytic_shift[1], -analytic_shift[0]
 
     assert np.all((np.abs(shift - analytic_shift)/oversample) < 0.2)
 
@@ -116,17 +112,12 @@ def test_propagate_tilt_fit_tilt_analytic(pupil):
     psf = psf/np.max(psf)
     psf[psf < 0.2] = 0  # threshold for centroiding
 
-    center = npix//2 * oversample
-    centroid = np.asarray(lentil.util.centroid(psf))
-    shift = centroid - center
+    shift = np.asarray(lentil.centroid(psf, mode='center', indexing='xy'))
 
     pupil_tilt = coeffs[1:3]
 
     # The factor of 4 gets you from RMS to PV
     analytic_shift = ((pupil_tilt/p.diameter)*p.focal_length/pixelscale) * oversample * 4
-
-    # Analytic shift is in terms of (x, y) but we really want (r, c) to match the centroid
-    analytic_shift = analytic_shift[1], -analytic_shift[0]
 
     assert np.all((np.abs(shift - analytic_shift)/oversample) < 0.2)
 

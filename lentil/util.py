@@ -1,29 +1,89 @@
+import warnings
+
 import numpy as np
 from scipy.ndimage import map_coordinates
 import lentil
 
 
-def centroid(img):
-    """Compute image centroid location.
+def centroid(x, where=None, mode='absolute', indexing='xy'):
+    """Compute array centroid location.
 
     Parameters
     ----------
-    img : array_like
+    x : array_like
         Input array.
+    where: array_like of bool, optional
+        Elements to include in the centroid calculation. If None (default),
+        all finite and non-NaN values are used.
+    mode : {'absolute', 'center'}, optional
+        Specifies how the centroid is computed. If 'absolute' (default),
+        the absolute centroid within the input is returned. If 'center', the
+        centroid relative to the center of the input is returned.
+    indexing : {'xy', 'ij'}, optional
+        Cartesian ('xy', default) or matrix ('ij', default) indexing of mesh.
 
     Returns
     -------
-    tuple
-        ``(r,c)`` centroid location.
-    """
+    centroid : tuple
+        (r, c) or (x, y) centroid location
 
-    img = np.asarray(img)
-    img = img/np.sum(img)
-    nr, nc = img.shape
+    Examples
+    --------
+    .. plot::
+        :include-source:
+        :context: reset
+        :scale: 50
+
+        >>> circ = lentil.circle(shape=(256, 256), radius=25, shift=(-80, 50))
+        >>> plt.imshow(circ, cmap='gray')
+
+    .. code:: pycon
+
+        >>> lentil.centroid(circ)
+        (48.0, 178.0)
+        >>> lentil.centroid(circ, mode='center')
+        (-80.0, 50.0)
+        >>> lentil.centroid(circ, mode='center', indexing='xy')
+        (50.0, -80.0)
+
+    """
+    x = np.asarray(x)
+
+    if mode not in ('absolute', 'center'):
+        raise ValueError(f'Unknown kind {mode}')
+
+    if indexing not in ('ij', 'xy'):
+        raise ValueError("Valid values for indexing are 'xy' and 'ij'.")
+
+    if where is None:
+        where = np.isfinite(x)
+    else:
+        where = np.asarray(where, dtype=bool)
+
+    if np.isnan(x[where]).any():
+        warnings.warn('Unmasked NaN in input', RuntimeWarning,
+                      stacklevel=2)
+
+    anorm = x[where]/np.sum(x[where])
+
+    nr, nc = x.shape
     rr, cc = np.mgrid[0:nr, 0:nc]
 
-    r = np.dot(rr.ravel(), img.ravel())
-    c = np.dot(cc.ravel(), img.ravel())
+    r = np.dot(rr[where].ravel(), anorm.ravel())
+    c = np.dot(cc[where].ravel(), anorm.ravel())
+
+    if mode == 'center':
+        rc, cc = np.floor(np.asarray(x.shape)/2)
+        r = r - rc
+        c = c - cc
+
+    if indexing == 'xy':
+        if mode == 'center':
+            # Cartesian offset from center: +x right, +y up
+            r, c = c, -r
+        else:
+            # absolute pixel coordinates (col, row); +y down
+            r, c = c, r
 
     return r, c
 
