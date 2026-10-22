@@ -88,66 +88,93 @@ def centroid(x, where=None, mode='absolute', indexing='xy'):
     return r, c
 
 
-def pad(array, shape):
-    """Zero-pad an array.
+def pad(x, shape, fill=0):
+    """Pad or crop an array about its center.
 
-    Note that pad works for both two and three dimensional arrays.
+    Note that pad accepts both two and three dimensional arrays.
 
     Parameters
     ----------
-    array : array_like
+    x : array_like
         Array to be padded.
-
-    shape : tuple of ints
+    shape : array_like of ints
         Shape of output array in ``(nrows, ncols)``.
+    fill : scalar
+        Fill value used when pad operation increases array size.
 
     Returns
     -------
-    padded : ndarray
-        Zero-padded array with shape ``(nrows, ncols)``. If ``array`` has a
-        third dimension, the return shape will be ``(nrows, ncols, depth)``.
+    padded_array : ndarray
+        Zero-padded array with shape ``(nrows, ncols)``. If ``x`` has a
+        third dimension, the return shape will be ``(depth, nrows, ncols)``.
+
+    See Also
+    --------
+    :func:`crop`
+
+    Examples
+    --------
+    .. plot::
+        :include-source:
+        :context: reset
+        :scale: 50
+
+        >>> circ = lentil.circle(shape=(128, 128), radius=64)
+        >>> circ_pad = lentil.pad(circ, shape=(200, 200))
+        >>> fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5, 2))
+        >>> ax[0].imshow(circ, cmap='gray')
+        >>> ax[0].set_title('Original array')
+        >>> ax[1].imshow(circ_pad, cmap='gray')
+        >>> ax[1].set_title('Padded array')
+
+    .. plot::
+        :include-source:
+        :context: reset
+        :scale: 50
+
+        >>> circ = lentil.circle(shape=(128, 128), radius=64)
+        >>> circ_pad = lentil.pad(circ, shape=(110, 110))
+        >>> fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5, 2))
+        >>> ax[0].imshow(circ, cmap='gray')
+        >>> ax[0].set_title('Original array')
+        >>> ax[1].imshow(circ_pad, cmap='gray')
+        >>> ax[1].set_title('Padded array')
+
     """
+    x = np.atleast_2d(x)
+    shape = np.broadcast_to(np.asarray(shape, dtype=int), (2,))
 
-    array = np.asarray(array)
+    squeeze = x.ndim == 2
+    if squeeze:
+        out_shape = (1, int(shape[0]), int(shape[1]))
+        x = x[np.newaxis, :]
+    else:  # a.ndim == 3
+        out_shape = (x.shape[0], int(shape[0]), int(shape[1]))
 
-    offset = 0
-    if array.ndim == 3:
-        offset = 1
+    # The row and col indices here are 1 and 2 respectively since we've
+    # forced both x and out to have a 3rd dimension
+    rmin = min(x.shape[1] // 2, out_shape[1] // 2)
+    rmax = min(x.shape[1] - x.shape[1] // 2, out_shape[1] - out_shape[1] // 2)
+    cmin = min(x.shape[2] // 2, out_shape[2] // 2)
+    cmax = min(x.shape[2] - x.shape[2] // 2, out_shape[2] - out_shape[2] // 2)
 
+    # Extract the overlapping region from the source array
+    a_slc_r = slice(x.shape[1] // 2 - rmin, x.shape[1] // 2 + rmax)
+    a_slc_c = slice(x.shape[2] // 2 - cmin, x.shape[2] // 2 + cmax)
+    cropped = x[:, a_slc_r, a_slc_c]
 
-    dr = shape[0] - array.shape[0+offset]
-    dc = shape[1] - array.shape[1+offset]
+    # Pad the cropped region to the output shape
+    pad_r_before = out_shape[1] // 2 - rmin
+    pad_r_after = out_shape[1] - out_shape[1] // 2 - rmax
+    pad_c_before = out_shape[2] // 2 - cmin
+    pad_c_after = out_shape[2] - out_shape[2] // 2 - cmax
 
-    if dr <= 0:
-        rmin0 = (array.shape[0+offset] - shape[0])//2
-        rmax0 = rmin0 + shape[0]
-        rmin1 = 0
-        rmax1 = shape[0]
-    else:
-        rmin0 = 0
-        rmax0 = array.shape[0+offset]
-        rmin1 = (shape[0] - array.shape[0+offset])//2
-        rmax1 = rmin1 + array.shape[0+offset]
+    out = np.pad(cropped,
+                 ((0, 0), (pad_r_before, pad_r_after), (pad_c_before, pad_c_after)),
+                 mode='constant', constant_values=fill)
 
-    if dc <= 0:
-        cmin0 = (array.shape[1+offset] - shape[1])//2
-        cmax0 = cmin0 + shape[1]
-        cmin1 = 0
-        cmax1 = shape[1]
-    else:
-        cmin0 = 0
-        cmax0 = array.shape[1]
-        cmin1 = (shape[1] - array.shape[1+offset])//2
-        cmax1 = cmin1 + array.shape[1+offset]
-
-    if array.ndim < 3:
-        padded = np.zeros((shape[0], shape[1]), dtype=array.dtype)
-        padded[rmin1:rmax1, cmin1:cmax1] = array[rmin0:rmax0, cmin0:cmax0]
-    else:
-        padded = np.zeros((array.shape[0], shape[0], shape[1]), dtype=array.dtype)
-        padded[:, rmin1:rmax1, cmin1:cmax1] = array[:, rmin0:rmax0, cmin0:cmax0]
-
-    return padded
+    # only remove the depth axis added above
+    return out[0] if squeeze else out
 
 
 def subarray(a, shape, shift=(0,0)):
