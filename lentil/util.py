@@ -198,18 +198,141 @@ def subarray(a, shape, shift=(0,0)):
         Subarray extracted from the source array.
     """
 
-    a = np.asarray(a)
+    msg = """
+    lentil.subarray() is deprecated and will be removed in a future release.
+    
+    Use lentil.crop() instead.
+    """
+    warnings.warn('lentil.subarray() is deprecated and will be removed in a '
+                  'future release. Use lentil.crop() instead.',
+                  DeprecationWarning, stacklevel=2)
+
+    return crop(x=a, shape=shape, shift=shift, mode='center', indexing='ij')
+
+
+def crop(x, shape, shift=None, mode='absolute', indexing='xy',
+         copy=False):
+    """Extract a contiguous subarray from a larger array.
+
+    The subarray is extracted about the center of the source array unless
+    a shift is specified.
+
+    Parameters
+    ----------
+    x : array_like
+        Source array
+    shape : array_like of ints
+        Shape of subarray in ``(nrows, ncols)``.
+    shift : array_like of ints, optional
+        Subarray center shift. Default is None (subarray is extracted about
+        the center of the source array). Fractional shifts are rounded to the
+        nearest integer.
+    mode : {'absolute', 'center'}, optional
+        Specifies how the subarray center located. If 'absolute' (default)
+        the subarray is extracted about the location given by ``shift``. If
+        'center', the subarray is extracted about the center of the source
+        array shifted by ``shift``.
+    indexing : {'xy', 'ij'}, optional
+        Cartesian ('xy', default) or matrix ('ij') indexing of shift.
+    copy: bool, optional
+        If True, a copy is returned. If False (default), a view of the
+        original array is returned.
+
+    Returns
+    -------
+    out : ndarray
+        Subarray extracted from the source array.
+
+    See Also
+    --------
+    :func:`pad`
+
+    Examples
+    --------
+    .. plot::
+        :include-source:
+        :context: reset
+        :scale: 50
+
+        >>> circ = lentil.circle(shape=(128,128), radius=64)
+        >>> circ_crop = lentil.crop(circ, shape=(110,110))
+        >>> fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5,2))
+        >>> ax[0].imshow(circ, cmap='gray')
+        >>> ax[0].set_title('Original array')
+        >>> ax[1].imshow(circ_crop, cmap='gray')
+        >>> ax[1].set_title('Subarray')
+
+    .. plot::
+        :include-source:
+        :context: reset
+        :scale: 50
+
+        >>> circ = lentil.circle(shape=(128,128), radius=64)
+        >>> circ_crop = lentil.crop(circ, shape=(64,64), shift=(32,32))
+        >>> fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5,2))
+        >>> ax[0].imshow(circ, cmap='gray')
+        >>> ax[0].set_title('Original array')
+        >>> ax[1].imshow(circ_crop, cmap='gray')
+        >>> ax[1].set_title('Subarray')
+
+    .. plot::
+        :include-source:
+        :context: reset
+        :scale: 50
+
+        >>> circ = lentil.circle(shape=(128,128), radius=64)
+        >>> circ_crop = lentil.crop(circ, shape=(64,64), shift=(-32,-32), 
+        ...                                  mode='center')
+        >>> fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5,2))
+        >>> ax[0].imshow(circ, cmap='gray')
+        >>> ax[0].set_title('Original array')
+        >>> ax[1].imshow(circ_crop, cmap='gray')
+        >>> ax[1].set_title('Subarray')
+
+    Crop about an array's centroid with
+
+    .. code:: python
+
+        crop(x, shape, shift=lentil.centroid(x))
+
+    """
+    x = np.asarray(x)
     shape = np.asarray(shape)
 
-    rmin = a.shape[0]//2 - shape[0]//2 + shift[0]
-    cmin = a.shape[1]//2 - shape[1]//2 + shift[1]
+    if mode not in ('absolute', 'center'):
+        raise ValueError(f'Unknown mode {mode}')
+
+    if indexing not in ('ij', 'xy'):
+        raise ValueError("Valid values for indexing are 'xy' and 'ij'.")
+
+    if shift is not None:
+        shift = np.round(shift).astype(int)
+        if indexing == 'xy':
+            if mode == 'center':
+                # Cartesian offset from center: +x right, +y up
+                shift = (-shift[1], shift[0])
+            else:
+                # absolute pixel coordinates (col, row)
+                shift = (shift[1], shift[0])
+        if mode == 'absolute':
+            shift = np.array(shift - np.array(x.shape[-2:])//2)
+    else:
+        shift = (0,0)
+
+    nr, nc = x.shape[-2:]
+
+    rmin = nr//2 - shape[0]//2 + shift[0]
+    cmin = nc//2 - shape[1]//2 + shift[1]
     rmax = rmin + shape[0]
     cmax = cmin + shape[1]
 
-    if any((rmin<0, cmin<0, rmax>a.shape[0], cmax>a.shape[1])):
+    if any((rmin<0, cmin<0, rmax>nr, cmax>nc)):
         raise ValueError('window lies outside of array')
 
-    return a[rmin:rmax, cmin:cmax]
+    if copy:
+        return np.copy(x[..., rmin:rmax, cmin:cmax])
+    else:
+        return x[..., rmin:rmax, cmin:cmax]
 
 
 def window(img, shape=None, slice=None):
