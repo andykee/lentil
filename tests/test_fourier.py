@@ -72,9 +72,9 @@ def test_dft2_shift():
 
     F = lentil.fourier.dft2(f, 1/n, shift=shift)
 
-    (xc, yc) = (np.floor(n/2), np.floor(n/2))
-    (x, y) = lentil.util.centroid(np.abs(F)**2)
-    observed_shift = (x-xc, y-yc)
+    (rc, cc) = (np.floor(n/2), np.floor(n/2))
+    (r, c) = lentil.util.centroid(np.abs(F)**2, indexing='ij')
+    observed_shift = (r-rc, c-cc)
     assert np.array_equal(shift, observed_shift)
 
 

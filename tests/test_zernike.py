@@ -38,3 +38,47 @@ def test_zernike_random_mask():
     random_mask = np.random.uniform(low=-1, high=1, size=mask.shape) * mask
 
     assert np.array_equal(lentil.zernike(mask, 1), lentil.zernike(random_mask, 1))
+
+
+# Sample points on a 65x65 circular mask centered at (32, 32):
+# right edge, top edge, and upper-right diagonal (45 deg)
+RIGHT, TOP, UPPER_RIGHT = (32, 60), (4, 32), (12, 52)
+
+
+@pytest.mark.parametrize('index, positive_at', [
+    (2, RIGHT),         # x tilt
+    (3, TOP),           # y tilt
+    (5, UPPER_RIGHT),   # 45 deg astigmatism
+    (7, TOP),           # y coma
+    (8, RIGHT),         # x coma
+])
+def test_zernike_orientation(index, positive_at):
+    # theta is measured CCW from +x (increasing column) toward +y
+    # (decreasing row)
+    mask = lentil.circle((65, 65), 32, antialias=False)
+    z = lentil.zernike(mask, index)
+    assert z[positive_at] > 0.5
+
+
+def test_zernike_coordinates_origin_at_mask_centroid():
+    mask = lentil.circle((128, 128), 30, shift=(-20, 30), antialias=False)
+
+    rho_xy, theta_xy = lentil.zernike_coordinates(mask, indexing='xy')
+    rho_ij, theta_ij = lentil.zernike_coordinates(mask, indexing='ij')
+
+    assert np.unravel_index(np.argmin(rho_xy), rho_xy.shape) == (44, 94)
+    assert np.allclose(rho_xy, rho_ij)
+    assert np.allclose(theta_xy, theta_ij)
+
+
+def test_zernike_coordinates_shift_indexing():
+    mask = lentil.circle((128, 128), 30, shift=(-20, 30), antialias=False)
+
+    rho_auto, theta_auto = lentil.zernike_coordinates(mask)
+    rho_xy, theta_xy = lentil.zernike_coordinates(mask, shift=(30, 20), indexing='xy')
+    rho_ij, theta_ij = lentil.zernike_coordinates(mask, shift=(-20, 30), indexing='ij')
+
+    assert np.allclose(rho_xy, rho_auto)
+    assert np.allclose(theta_xy, theta_auto)
+    assert np.allclose(rho_ij, rho_auto)
+    assert np.allclose(theta_ij, theta_auto)
