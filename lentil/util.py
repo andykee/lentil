@@ -196,6 +196,10 @@ def subarray(a, shape, shift=(0,0)):
     -------
     out : ndarray
         Subarray extracted from the source array.
+
+    See Also
+    --------
+    :func:`crop`
     """
 
     msg = """
