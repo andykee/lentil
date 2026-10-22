@@ -41,7 +41,7 @@ extensions = ['sphinx.ext.autodoc',
               ]
 templates_path = ['_templates']
 source_suffix = '.rst'
-master_doc = 'docs'
+master_doc = 'index'
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 
@@ -59,6 +59,7 @@ html_theme_options = {
     "collapse_navigation": True,
     "navbar_persistent": ["search-button"],
     "navbar_end": ["version-switcher", "theme-switcher", "navbar-icon-links"],
+    "article_header_start": [],
     "switcher": {
        "json_url": "https://andykee.github.io/lentil/versions.json",
        "version_match": docs_version,
@@ -67,12 +68,12 @@ html_theme_options = {
     "pygments_dark_style": "nord",
 }
 
-html_additional_pages = {
-    'index': 'index.html'
-}
+# html_additional_pages = {
+#     'index': 'index.html'
+# }
 
 html_sidebars = {
-    'index': []
+    '**': ['sidebar-nav-root']
 }
 
 html_static_path = ['_static']
@@ -141,9 +142,17 @@ def _fix_class_signature(app, what, name, obj, options, signature, return_annota
         params = [p for p in sig.parameters.values() if p.name != 'self']
         return (str(inspect.Signature(params)), None)
 
+# Hide the secondary sidebar (page TOC) on generated API pages. This can't be
+# done with a secondary_sidebar_items dict without pydata-sphinx-theme warning
+# that each page matches two wildcard patterns. Runs after the theme's own
+# html-page-context handler (priority 500), which sets secondary_sidebar_items.
+def _remove_api_secondary_sidebar(app, pagename, templatename, context, doctree):
+    if pagename.startswith('api/generated/'):
+        context['secondary_sidebar_items'] = []
 
 def setup(app):
     app.connect('autodoc-process-signature', _fix_class_signature)
+    app.connect('html-page-context', _remove_api_secondary_sidebar, priority=501)
 
 
 rst_prolog = """
@@ -198,4 +207,3 @@ np.random.seed(12345)
 opd_cmap = matplotlib.colormaps.get_cmap('RdBu_r')
 opd_cmap.set_bad(color='#dddddd')
 """
-
