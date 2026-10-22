@@ -23,7 +23,7 @@ Lentil to a Numpy array.
     * Rotations (i.e. tilts) follows the right hand rule
     
     A more in depth treatment of this topic is 
-    :doc:`available in the technical notes<../resources/tech-notes/coords>`. 
+    :doc:`available in the technical notes<../../resources/tech-notes/coords>`. 
 
 Static Errors
 -------------
