@@ -60,6 +60,14 @@ def test_zernike_orientation(index, positive_at):
     assert z[positive_at] > 0.5
 
 
+def _same_coordinates(a, b):
+    # compare (rho, theta) pairs as points in the plane. theta is +/-pi on the
+    # -x axis and undefined at the origin, so a 1-ulp difference in the shift
+    # can flip those pixels without changing the coordinates
+    (rho_a, theta_a), (rho_b, theta_b) = a, b
+    return np.allclose(rho_a*np.exp(1j*theta_a), rho_b*np.exp(1j*theta_b))
+
+
 def test_zernike_coordinates_origin_at_mask_centroid():
     mask = lentil.circle((128, 128), 30, shift=(-20, 30), antialias=False)
 
@@ -67,18 +75,15 @@ def test_zernike_coordinates_origin_at_mask_centroid():
     rho_ij, theta_ij = lentil.zernike_coordinates(mask, indexing='ij')
 
     assert np.unravel_index(np.argmin(rho_xy), rho_xy.shape) == (44, 94)
-    assert np.allclose(rho_xy, rho_ij)
-    assert np.allclose(theta_xy, theta_ij)
+    assert _same_coordinates((rho_xy, theta_xy), (rho_ij, theta_ij))
 
 
 def test_zernike_coordinates_shift_indexing():
     mask = lentil.circle((128, 128), 30, shift=(-20, 30), antialias=False)
 
-    rho_auto, theta_auto = lentil.zernike_coordinates(mask)
-    rho_xy, theta_xy = lentil.zernike_coordinates(mask, shift=(30, 20), indexing='xy')
-    rho_ij, theta_ij = lentil.zernike_coordinates(mask, shift=(-20, 30), indexing='ij')
+    auto = lentil.zernike_coordinates(mask)
+    xy = lentil.zernike_coordinates(mask, shift=(30, 20), indexing='xy')
+    ij = lentil.zernike_coordinates(mask, shift=(-20, 30), indexing='ij')
 
-    assert np.allclose(rho_xy, rho_auto)
-    assert np.allclose(theta_xy, theta_auto)
-    assert np.allclose(rho_ij, rho_auto)
-    assert np.allclose(theta_ij, theta_auto)
+    assert _same_coordinates(xy, auto)
+    assert _same_coordinates(ij, auto)
