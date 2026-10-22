@@ -138,9 +138,9 @@ def zernike_compose(mask, coeffs, normalize=True, order='noll', rho=None, theta=
         :include-source:
         :context: reset
 
-        >>> mask = prtools.circle((256,256), 120, antialias=False)
+        >>> mask = lentil.circle((256,256), 120, antialias=False)
         >>> coeffs = np.random.rand(10)*1e-8
-        >>> opd = prtools.zernike_compose(mask, coeffs)
+        >>> opd = lentil.zernike_compose(mask, coeffs)
         >>> plt.imshow(opd)
 
     Using the same mask, compute an OPD representing 200 nm focus error (Z4) and -100 nm
@@ -151,7 +151,7 @@ def zernike_compose(mask, coeffs, normalize=True, order='noll', rho=None, theta=
         :include-source:
         :scale: 50
 
-        >>> opd = prtools.zernike_compose(mask, [0, 0, 0, 200e-9, 0, -100e-9])
+        >>> opd = lentil.zernike_compose(mask, [0, 0, 0, 200e-9, 0, -100e-9])
         >>> plt.imshow(opd)
 
     References
@@ -252,10 +252,10 @@ def zernike_fit(opd, mask, modes, normalize=True, order='noll', rho=None,
     -------
     .. code:: pycon
 
-        >>> mask = prtools.circle((256,256),128)
+        >>> mask = lentil.circle((256,256),128)
         >>> coeffs = np.random.rand(4)*100e-9
-        >>> opd = prtools.zernike_compose(mask, coeffs)
-        >>> fit_coeffs = prtools.zernike_fit(opd, mask, np.arange(2,4))
+        >>> opd = lentil.zernike_compose(mask, coeffs)
+        >>> fit_coeffs = lentil.zernike_fit(opd, mask, np.arange(2,4))
         >>> print('Tip/tilt coefficients:', coeffs[1:3])
         >>> print('Fit tip/tilt coefficients:', fit_coeffs)
 
