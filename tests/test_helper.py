@@ -34,7 +34,8 @@ def test_boundary_slice():
 def test_slice_offset(shape, radius):
     shift = np.random.uniform(low=-50, high=50, size=2).astype(int)
 
-    a = lentil.circle(shape=shape, radius=radius, shift=shift, antialias=False)
+    a = lentil.circle(shape=shape, radius=radius, shift=shift, antialias=False,
+                      indexing='ij')
     slc = lentil.helper.boundary_slice(a)
     offset = lentil.helper.slice_offset(slc, shape=a.shape)
 

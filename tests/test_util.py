@@ -5,7 +5,7 @@ import lentil
 
 
 def test_boundary():
-    mask = lentil.hexagon((256, 256), 100, rotate=True)
+    mask = lentil.hexagon((256, 256), 100, rotate=False)
     bounds = lentil.boundary(mask)
     assert np.array_equal(bounds, [28, 228, 41, 215])
 
@@ -131,7 +131,8 @@ def test_normalize_power_2():
 ])
 def test_centroid(mode, indexing, result):
     # circle shifted 20 rows up and 30 columns right of center
-    circ = lentil.circle((128, 128), 25, shift=(-20, 30), antialias=False)
+    circ = lentil.circle((128, 128), 25, shift=(-20, 30), antialias=False,
+                         indexing='ij')
     assert np.allclose(lentil.centroid(circ, mode=mode, indexing=indexing), result)
 
 
