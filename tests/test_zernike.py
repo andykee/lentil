@@ -69,7 +69,8 @@ def _same_coordinates(a, b):
 
 
 def test_zernike_coordinates_origin_at_mask_centroid():
-    mask = lentil.circle((128, 128), 30, shift=(-20, 30), antialias=False)
+    mask = lentil.circle((128, 128), 30, shift=(-20, 30), antialias=False,
+                         indexing='ij')
 
     rho_xy, theta_xy = lentil.zernike_coordinates(mask, indexing='xy')
     rho_ij, theta_ij = lentil.zernike_coordinates(mask, indexing='ij')
@@ -79,7 +80,8 @@ def test_zernike_coordinates_origin_at_mask_centroid():
 
 
 def test_zernike_coordinates_shift_indexing():
-    mask = lentil.circle((128, 128), 30, shift=(-20, 30), antialias=False)
+    mask = lentil.circle((128, 128), 30, shift=(-20, 30), antialias=False,
+                         indexing='ij')
 
     auto = lentil.zernike_coordinates(mask)
     xy = lentil.zernike_coordinates(mask, shift=(30, 20), indexing='xy')
