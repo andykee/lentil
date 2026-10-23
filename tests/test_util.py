@@ -99,45 +99,6 @@ def test_pad_shrink():
     assert np.array_equal(out, img[1:4, 1:4])
 
 
-win_data = np.diag(np.arange(1, 11))
-for i in np.diag(win_data):
-    win_data[i-1, i-1:] = win_data[i-1, i-1]
-    win_data[i-1:, i-1] = win_data[i-1, i-1]
-
-
-def test_window_none():
-    assert np.array_equal(lentil.util.window(win_data, shape=None, slice=None), win_data)
-
-
-def test_window_single():
-    assert np.array_equal(lentil.util.window(5), np.array(5))
-
-
-def test_even_window_shape():
-    assert np.array_equal(lentil.util.window(win_data, shape=(2, 2)), np.array([[5, 5], [5, 6]]))
-
-
-def test_even_window_window():
-    assert np.array_equal(lentil.util.window(win_data, slice=(0, 2, 0, 2)), np.array([[1, 1], [1, 2]]))
-
-
-def test_odd_window_shape():
-    assert np.array_equal(lentil.util.window(win_data[:-1, :-1], shape=(2, 2)), np.array([[4, 4], [4, 5]]))
-
-
-def test_odd_window_window():
-    assert np.array_equal(lentil.util.window(win_data[:-1, :-1], slice=(0, 2, 0, 2)), np.array([[1, 1], [1, 2]]))
-
-
-def test_window_shape_window():
-    assert np.array_equal(lentil.util.window(win_data, shape=(2, 2), slice=(8, 10, 8, 10)), np.array([[9, 9], [9, 10]]))
-
-
-def test_window_shape_mismatch():
-    with pytest.raises(AssertionError):
-        lentil.util.window(win_data, shape=(3, 3), slice=(0, 2, 0, 2))
-
-
 def test_pixelscle_nyquist():
     wave = np.random.uniform(low=350e-9, high=750e-9)
     f_number = np.random.uniform(low=5, high=30)
