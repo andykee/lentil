@@ -55,7 +55,6 @@ from lentil.util import (
 	pad,
     crop,
 	subarray,
-	window,
 	boundary,
 	sample,
 	rebin,
