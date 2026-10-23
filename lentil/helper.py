@@ -4,18 +4,6 @@ import numpy as np
 
 import lentil
 
-def mesh(shape, shift=(0, 0), angle=0):
-    """Generate a standard mesh."""
-    nr = shape[0]
-    nc = shape[1]
-    rr, cc = np.meshgrid(np.arange(nr) - np.floor(nr/2.0) - shift[0],
-                         np.arange(nc) - np.floor(nc/2.0) - shift[1], 
-                         indexing='ij')
-    angle = np.deg2rad(angle)
-    r = rr * np.cos(angle) + cc * np.sin(angle)
-    c = rr * -np.sin(angle) + cc * np.cos(angle)
-    return r, c
-
 
 def gaussian2d(size, sigma):
     """2D Gaussian kernel."""
