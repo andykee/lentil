@@ -370,7 +370,7 @@ def boundary(x, threshold=0):
     return rmin, rmax, cmin, cmax
 
 
-def sample(x, oversample, offset=0, axes=(-2, -1), indexing='ij'):
+def sample(x, oversample, offset=0, axes=(-2, -1), indexing='xy'):
     """Extract samples from an oversampled array.
 
     The sampled axes are tiled into contiguous blocks of ``oversample``
@@ -392,8 +392,8 @@ def sample(x, oversample, offset=0, axes=(-2, -1), indexing='ij'):
     axes : (2,) sequence of ints, optional
         Axes over which to sample. If not provided, the last two axes are
         used.
-    indexing : {'ij', 'xy'}, optional
-        Matrix (‘ij’, default) or cartesian (‘xy’) indexing of ``x`` grid.
+    indexing : {'xy', 'ij'}, optional
+        Cartesian ('xy', default) or matrix ('ij') indexing of ``x`` grid.
 
     Returns
     -------
@@ -402,6 +402,10 @@ def sample(x, oversample, offset=0, axes=(-2, -1), indexing='ij'):
         length is not a multiple of ``oversample``, samples taken beyond the
         last whole block are ignored.
 
+    See Also
+    --------
+    :func:`rebin`
+    :func:`rescale`
     """
     x = np.asarray(x)
 
@@ -453,8 +457,8 @@ def rebin(img, factor):
 
     See Also
     --------
+    :func:`sample`
     :func:`rescale`
-
     """
     img = np.asarray(img)
 
@@ -522,6 +526,7 @@ def rescale(img, scale, shape=None, mask=None, order=3, mode='nearest',
 
     See Also
     --------
+    :func:`sample`
     :func:`rebin`
 
     """
@@ -627,18 +632,4 @@ def normalize_power(array, power=1):
     return array * np.sqrt(power/np.sum(np.abs(array)**2))
 
 
-def sanitize_shape(shape):
-    shape = np.asarray(shape)
-    if shape.size == 0:
-        shape = ()
-    else:
-        if shape.shape == ():
-            shape = np.append(shape, shape)
-    return tuple(shape)
-
-
-def sanitize_bandpass(vec):
-    vec = np.asarray(vec)
-    if vec.shape == ():
-        vec = vec[np.newaxis, ...]
-    return vec
+normpow = normalize_power

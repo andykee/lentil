@@ -49,7 +49,6 @@ from lentil.shape import (
     spider
 )
 
-from lentil import util
 from lentil.util import (
 	centroid,
 	pad,
@@ -62,8 +61,7 @@ from lentil.util import (
 	pixelscale_nyquist,
 	min_sampling,
 	normalize_power,
-	sanitize_shape,
-	sanitize_bandpass
+    normpow,
 )
 
 from lentil.wavefront import Wavefront

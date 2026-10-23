@@ -32,7 +32,7 @@ def test_boundary():
     ])
 def test_sample(shape, oversample, offset, result):
     x = np.arange(np.prod(shape)).reshape(shape)
-    assert np.all(lentil.sample(x, oversample, offset) == result)
+    assert np.all(lentil.sample(x, oversample, offset, indexing='ij') == result)
 
 
 @pytest.mark.parametrize('shape, oversample, offset', [
@@ -47,7 +47,7 @@ def test_sample(shape, oversample, offset, result):
 def test_sample_value_error(shape, oversample, offset):
     x = np.arange(np.prod(shape)).reshape(shape)
     with pytest.raises(ValueError):
-        lentil.sample(x, oversample, offset)
+        lentil.sample(x, oversample, offset, indexing='ij')
 
 
 def test_rebin():
