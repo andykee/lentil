@@ -4,22 +4,17 @@
     <meta charset="utf-8">
     <title>Page not found - Lentil documentation</title>
     <script>
-      // GitHub Pages serves this page for any missing path. Links from before
-      // the docs were versioned point at /lentil/<page>, so send those to the
-      // same page under stable/. Paths already under a version directory are
-      // real 404s, which also prevents a redirect loop.
+      // GitHub Pages serves this page for any missing path. The stable docs
+      // used to live under /lentil/stable/ but are now served from the site
+      // root, so send old stable/ links to the same page at the root.
       (function () {
-        var base = '/lentil/';
-        var path = window.location.pathname;
-        if (path.indexOf(base) !== 0) return;
-        var rest = path.slice(base.length);
-        var first = rest.split('/')[0];
-        if (/^(latest|stable|\d+\.\d+.*)$/.test(first)) return;
-        window.location.replace(base + 'stable/' + rest + window.location.search + window.location.hash);
+        var match = window.location.pathname.match(/^\/lentil\/stable(\/.*)?$/);
+        if (!match) return;
+        window.location.replace('/lentil' + (match[1] || '/') + window.location.search + window.location.hash);
       })();
     </script>
   </head>
   <body>
-    <p>Page not found. Go to the <a href="/lentil/stable/">Lentil documentation</a>.</p>
+    <p>Page not found. Go to the <a href="/lentil/">Lentil documentation</a>.</p>
   </body>
 </html>

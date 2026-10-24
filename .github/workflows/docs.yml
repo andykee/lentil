@@ -1,13 +1,14 @@
 # Builds the docs and publishes them to a subdirectory of the gh-pages branch:
 #
 #   push to master   -> latest/
-#   push a v* tag    -> <version>/ (and stable/ if it's the newest final release)
+#   push a v* tag    -> <version>/ (and the site root if it's the newest final release)
 #   manual run       -> <version>/ for the given tag, or latest/ if left blank
 #
 # Each run only replaces its own subdirectory, so previously published
-# versions are left in place. docs/versions.json (read by the version
-# switcher) and the site-wide files in docs/_gh-pages (root redirect, 404
-# page) are copied to the branch root on every run.
+# versions are left in place. The newest release is also served directly
+# from the site root, so https://andykee.github.io/lentil/ needs no redirect.
+# docs/versions.json (read by the version switcher) and the site-wide files
+# in docs/_gh-pages (404 page) are copied to the branch root on every run.
 name: Publish docs
 
 on:
@@ -130,11 +131,21 @@ jobs:
           rm -rf "site/${TARGET}"
           cp -R src/docs/_build/html "site/${TARGET}"
           if [ "${STABLE}" = "true" ]; then
-            rm -rf site/stable
-            cp -R src/docs/_build/html site/stable
+            # Replace the previous release at the site root, keeping the
+            # version directories and git metadata
+            shopt -s dotglob
+            for path in site/*; do
+              name="${path#site/}"
+              if [ "${name}" = ".git" ] || [ "${name}" = "latest" ] || [[ "${name}" =~ ^[0-9]+\.[0-9]+ ]]; then
+                continue
+              fi
+              rm -rf "${path}"
+            done
+            shopt -u dotglob
+            cp -R src/docs/_build/html/. site/
           fi
 
-          # Site-wide files (root redirect, 404 page, .nojekyll)
+          # Site-wide files (404 page, .nojekyll)
           cp -R meta/docs/_gh-pages/. site/
           cp meta/docs/versions.json site/versions.json
 
