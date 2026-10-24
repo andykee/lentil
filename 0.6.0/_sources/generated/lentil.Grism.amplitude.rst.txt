@@ -1,0 +1,6 @@
+lentil.Grism.amplitude
+======================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Grism.amplitude

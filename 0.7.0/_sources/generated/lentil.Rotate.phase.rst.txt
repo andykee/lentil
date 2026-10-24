@@ -1,0 +1,6 @@
+lentil.Rotate.phase
+===================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Rotate.phase

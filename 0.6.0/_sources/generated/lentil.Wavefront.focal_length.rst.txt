@@ -1,0 +1,6 @@
+lentil.Wavefront.focal\_length
+==============================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: Wavefront.focal_length

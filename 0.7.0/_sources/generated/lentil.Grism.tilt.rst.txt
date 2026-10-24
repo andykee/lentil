@@ -1,0 +1,6 @@
+lentil.Grism.tilt
+=================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Grism.tilt

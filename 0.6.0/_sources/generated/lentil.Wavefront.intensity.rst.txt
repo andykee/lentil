@@ -1,0 +1,6 @@
+lentil.Wavefront.intensity
+==========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Wavefront.intensity

@@ -1,0 +1,6 @@
+lentil.Wavefront.wavelength
+===========================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: Wavefront.wavelength

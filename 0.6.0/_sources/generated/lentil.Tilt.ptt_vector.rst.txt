@@ -1,0 +1,6 @@
+lentil.Tilt.ptt\_vector
+=======================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Tilt.ptt_vector

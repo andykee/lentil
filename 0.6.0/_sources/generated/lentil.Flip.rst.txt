@@ -1,0 +1,39 @@
+﻿lentil.Flip
+===========
+
+.. currentmodule:: lentil
+
+.. autoclass:: Flip
+
+
+
+**Attributes**
+
+.. autosummary::
+    :toctree:
+    
+    ~Flip.amplitude
+    ~Flip.depth
+    ~Flip.global_mask
+    ~Flip.mask
+    ~Flip.phase
+    ~Flip.pixelscale
+    ~Flip.ptt_vector
+    ~Flip.shape
+    ~Flip.slice
+    ~Flip.tilt
+
+
+
+
+**Methods**
+
+.. autosummary::
+    :toctree:
+    
+    ~Flip.copy
+    ~Flip.fit_tilt
+    ~Flip.multiply
+    ~Flip.resample
+    ~Flip.rescale
+

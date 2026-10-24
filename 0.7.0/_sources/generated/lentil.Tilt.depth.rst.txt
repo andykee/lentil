@@ -1,0 +1,6 @@
+lentil.Tilt.depth
+=================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Tilt.depth

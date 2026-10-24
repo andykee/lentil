@@ -1,0 +1,642 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Image sensors &#8212; Lentil 0.6.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/lentil.css?v=03c9bbe5" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/syntax-highlighting.css?v=2676ebba" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=8fa8b3e9"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/image_sensors';</script>
+    <script src="../_static/js/copybutton.js?v=fdf1d7ba"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Model Patterns" href="../patterns/index.html" />
+    <link rel="prev" title="Sources and Scenes" href="sources.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.6.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/lentil.png" class="logo__image only-light" alt="Lentil 0.6.0 documentation - Home"/>
+    <img src="../_static/lentil.png" class="logo__image only-dark pst-js-only" alt="Lentil 0.6.0 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="coordinates.html">Coordinate system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="planes.html">Specifying planes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavefront_error.html">Representing wavefront error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optical_systems.html">Describing optical systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diffraction.html">Modeling diffraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sources.html">Sources and Scenes</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Image sensors</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../patterns/index.html">Model Patterns</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/general/simple.html">Simple Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/general/large.html">Larger Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/general/attributes.html">System Attributes and Common Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/planes/filter_wheel.html">Implementing a Filter Wheel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/planes/rb_element.html">Developing an Element with 6DOF Rigid Body Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/planes/translation_stage.html">Adjusting focus with a translation stage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/propagation.html">Performing Radiometrically Correct Propagations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/source_coupling.html">Coupling a source into an optical system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/self_emission.html">Including Self-Emission Flux in IR Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/complex_sources.html">Developing Complex Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/source_defocus.html">Representing Source Defocus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/matlab/matlab_interface.html">Simple MATLAB Interface Class</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Optimizing Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matlab.html">Using Lentil with MATLAB</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="verification/index.html">Algorithm Verification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="verification/pixel_mtf.html">Pixel MTF</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Image sensors</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="image-sensors">
+<span id="user-guide-image-sensors"></span><h1>Image sensors<a class="headerlink" href="#image-sensors" title="Link to this heading">#</a></h1>
+<p>Lentil does not provide an integrated detector modeling capability, but instead provides
+a collection of functions in the <a class="reference internal" href="../reference.html#api-detector"><span class="std std-ref">detector module</span></a> to help model
+image sensors and represent some of the more commonly encountered noise sources.</p>
+<section id="signal-flow">
+<h2>Signal flow<a class="headerlink" href="#signal-flow" title="Link to this heading">#</a></h2>
+<p>An image sensor converts photons striking a pixel into a digital signal. The signal
+produced by each pixel is subject to a number of physical characteristics and is
+degraded by a variety of noise sources. The core components of this process are
+represented in the figure below:</p>
+<img alt="../_images/image_sensor_signal_flow.png" class="align-center" src="../_images/image_sensor_signal_flow.png" style="width: 85%;" />
+<p>Photons striking a pixel during an integration time will result in the accumulation of
+electrons in the pixel well. The fraction of photons striking a pixel that are collected
+as electrons is the sensor’s <em>quantum efficiency</em> (QE). Additional electrons “leaking”
+into each pixel are represented as <em>dark signal</em>. The electrons collected in each pixel
+during an integration time are converted to a voltage (up to some saturation point),
+amplified, and converted to a digital signal by an ADC. Additional noise generated
+during the readout and conversion of the analog signal is represented as <em>read noise</em>.</p>
+<p>This is a somewhat simplistic model of a digital image sensor but it provides the
+framework for capturing the majority of physical effects and noise sources present and
+is easily extended to capture more complex and nuanced effects.</p>
+</section>
+<section id="charge-collection">
+<h2>Charge collection<a class="headerlink" href="#charge-collection" title="Link to this heading">#</a></h2>
+<p>Imaging sensors convert light intensity to an electrical signal. The ratio of electrons
+collected to the number of photons striking a sensor’s photoreactive surface is called
+the quantum efficiency (typically abbreviated QE).</p>
+<img alt="../_images/bayer.png" class="align-center" src="../_images/bayer.png" style="width: 550px;" />
+</section>
+<section id="pixel-effects">
+<h2>Pixel effects<a class="headerlink" href="#pixel-effects" title="Link to this heading">#</a></h2>
+<p>A focal plane array samples a continuous light field to produce a digital image. Because
+Lentil models diffraction numerically by propagating a finite set of points through an
+optical system, the discretely sampled image plane intensity must be convolved with the
+pixel’s aperture function to accurately represent the intensity signal sensed by each
+pixel. Lentil’s <a class="reference internal" href="../generated/lentil.detector.pixel.html#lentil.detector.pixel" title="lentil.detector.pixel"><code class="xref py py-func docutils literal notranslate"><span class="pre">detector.pixel()</span></code></a> method implements this convolution.
+After convolving the image plane intensity with the pixel MTF, the data should be
+resampled to native detector sampling using <a class="reference internal" href="../generated/lentil.rescale.html#lentil.rescale" title="lentil.rescale"><code class="xref py py-func docutils literal notranslate"><span class="pre">rescale()</span></code></a>. The
+<a class="reference internal" href="../generated/lentil.detector.pixelate.html#lentil.detector.pixelate" title="lentil.detector.pixelate"><code class="xref py py-func docutils literal notranslate"><span class="pre">detector.pixelate()</span></code></a> method combines the convolution and resampling operations
+into a single method.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psf</span> <span class="o">=</span> <span class="o">...</span>  <span class="c1"># PSF calculation details omitted</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psf_pixelate</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">pixelate</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf_pixelate</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/pixelate.png" class="plot-directive" src="../_images/pixelate.png" style="width: 565.0px; height: 303.0px;" />
+</figure>
+</section>
+<section id="noise-sources">
+<h2>Noise sources<a class="headerlink" href="#noise-sources" title="Link to this heading">#</a></h2>
+</section>
+<section id="analog-to-digital-conversion">
+<h2>Analog to digital conversion<a class="headerlink" href="#analog-to-digital-conversion" title="Link to this heading">#</a></h2>
+</section>
+<section id="cosmic-rays">
+<h2>Cosmic rays<a class="headerlink" href="#cosmic-rays" title="Link to this heading">#</a></h2>
+<p>Cosmic rays are high energy particles that travel through space. When they strike
+an image sensor they create a signal that appears as a saturated pixel or streak of
+saturated pixels.</p>
+</section>
+<section id="imaging-artifacts">
+<h2>Imaging artifacts<a class="headerlink" href="#imaging-artifacts" title="Link to this heading">#</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To ensure accuracy and avoid introducing ailiasing artifacts, the input data should
+be at least Nyquist sampled when applying imaging artifacts via convolution.</p>
+</div>
+<section id="smear">
+<h3>Smear<a class="headerlink" href="#smear" title="Link to this heading">#</a></h3>
+<p>Smear is used to represent image motion with a relatively low temporal frequency relative
+to integration time. The motion occurs in a slowly varying or fixed direction over one
+integration time. Lentil’s <a class="reference internal" href="../generated/lentil.smear.html#lentil.smear" title="lentil.smear"><code class="xref py py-func docutils literal notranslate"><span class="pre">smear()</span></code></a> method represents smear as a linear
+directional blur over some distance (or number of pixels):</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psf</span> <span class="o">=</span> <span class="o">...</span>  <span class="c1"># PSF calculation details omitted</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psf_smear</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">smear</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mf">5e-5</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">pixelscale</span><span class="o">=</span><span class="mf">5e-6</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">oversample</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf_smear</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/smear.png" class="plot-directive" src="../_images/smear.png" style="width: 565.0px; height: 303.0px;" />
+</figure>
+<p>As an alternative to specifying physical distance and pixelscale, a number of pixels can also
+be provided:</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psf</span> <span class="o">=</span> <span class="o">...</span>  <span class="c1"># PSF calculation details omitted</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psf_smear</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">smear</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">oversample</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf_smear</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/smear.png" class="plot-directive" src="../_images/smear.png" style="width: 565.0px; height: 303.0px;" />
+</figure>
+<p>The default behavior is to choose a new random smear direction each time <a class="reference internal" href="../generated/lentil.smear.html#lentil.smear" title="lentil.smear"><code class="xref py py-func docutils literal notranslate"><span class="pre">smear()</span></code></a>
+is called, but a static direction can optionally be specified as needed:</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psf</span> <span class="o">=</span> <span class="o">...</span>  <span class="c1"># PSF calculation details omitted</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psf_smear</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">smear</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">angle</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf_smear</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/smear_directional.png" class="plot-directive" src="../_images/smear_directional.png" style="width: 565.0px; height: 303.0px;" />
+</figure>
+</section>
+<section id="jitter">
+<h3>Jitter<a class="headerlink" href="#jitter" title="Link to this heading">#</a></h3>
+<p>Jitter is used to represent image motion with a relatively high temporal frequency relative
+to integration time. Lentil’s <a class="reference internal" href="../generated/lentil.jitter.html#lentil.jitter" title="lentil.jitter"><code class="xref py py-func docutils literal notranslate"><span class="pre">jitter()</span></code></a> method represents jitter with a
+Gaussian blur operation. Note this approach is only valid if the motion occurs randomly in all
+directions during one integration time.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psf</span> <span class="o">=</span> <span class="o">...</span>  <span class="c1"># PSF calculation details omitted</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psf_jitter</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">jitter</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf_jitter</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/jitter.png" class="plot-directive" src="../_images/jitter.png" style="width: 565.0px; height: 303.0px;" />
+</figure>
+<p>If the jitter direction is not sufficiently random during a typical integration time, a timeseries
+should be used instead. Note this will have a major impact on propagation performance but will
+provide the most accurate results.</p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#signal-flow">Signal flow</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#charge-collection">Charge collection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pixel-effects">Pixel effects</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#noise-sources">Noise sources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analog-to-digital-conversion">Analog to digital conversion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cosmic-rays">Cosmic rays</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imaging-artifacts">Imaging artifacts</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#smear">Smear</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jitter">Jitter</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026 California Institute of Technology.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

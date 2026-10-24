@@ -1,0 +1,6 @@
+lentil.Grism.copy
+=================
+
+.. currentmodule:: lentil
+
+.. automethod:: Grism.copy

@@ -1,0 +1,6 @@
+lentil.Plane.ptt\_vector
+========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Plane.ptt_vector

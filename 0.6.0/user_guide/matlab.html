@@ -1,0 +1,672 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Using Lentil with MATLAB &#8212; Lentil 0.6.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/lentil.css?v=03c9bbe5" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/syntax-highlighting.css?v=2676ebba" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=8fa8b3e9"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/matlab';</script>
+    <script src="../_static/js/copybutton.js?v=fdf1d7ba"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Algorithm Verification" href="verification/index.html" />
+    <link rel="prev" title="Optimizing Performance" href="performance.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.6.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/lentil.png" class="logo__image only-light" alt="Lentil 0.6.0 documentation - Home"/>
+    <img src="../_static/lentil.png" class="logo__image only-dark pst-js-only" alt="Lentil 0.6.0 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="coordinates.html">Coordinate system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="planes.html">Specifying planes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavefront_error.html">Representing wavefront error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optical_systems.html">Describing optical systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diffraction.html">Modeling diffraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sources.html">Sources and Scenes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="image_sensors.html">Image sensors</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../patterns/index.html">Model Patterns</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/general/simple.html">Simple Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/general/large.html">Larger Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/general/attributes.html">System Attributes and Common Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/planes/filter_wheel.html">Implementing a Filter Wheel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/planes/rb_element.html">Developing an Element with 6DOF Rigid Body Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/planes/translation_stage.html">Adjusting focus with a translation stage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/propagation.html">Performing Radiometrically Correct Propagations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/source_coupling.html">Coupling a source into an optical system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/self_emission.html">Including Self-Emission Flux in IR Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/complex_sources.html">Developing Complex Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/source_defocus.html">Representing Source Defocus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/matlab/matlab_interface.html">Simple MATLAB Interface Class</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Optimizing Performance</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Using Lentil with MATLAB</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="verification/index.html">Algorithm Verification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="verification/pixel_mtf.html">Pixel MTF</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Using Lentil with MATLAB</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="using-lentil-with-matlab">
+<h1>Using Lentil with MATLAB<a class="headerlink" href="#using-lentil-with-matlab" title="Link to this heading">#</a></h1>
+<section id="matlab-lentil-interface">
+<h2>MATLAB Lentil Interface<a class="headerlink" href="#matlab-lentil-interface" title="Link to this heading">#</a></h2>
+<p>Calling Python libraries from MATLAB is as simple as configuring MATLAB to use the
+appropriate Python implementation and prepending the Python command with <code class="docutils literal notranslate"><span class="pre">py.</span></code>. Before
+using Lentil in MATLAB, be sure that you you have
+<a class="reference internal" href="#configuring-matlab"><span class="std std-ref">configured MATLAB to use the correct version of Python installed on your system</span></a></p>
+<section id="working-with-numpy-arrays-in-matlab">
+<span id="numpy-matlab"></span><h3>Working with NumPy Arrays in MATLAB<a class="headerlink" href="#working-with-numpy-arrays-in-matlab" title="Link to this heading">#</a></h3>
+<p>Many Lentil methods return NumPy arrays. Unfortunately, MATLAB does not fully
+understand this datatype. The two MATLAB functions provided below can be used to easily
+convert back and forth between NumPy arrays and MATLAB matrices:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="../_static/matlab/mat2ndarray.m">mat2ndarray</a></p></li>
+<li><p><a class="reference external" href="../_static/matlab/ndarray2mat.m">ndarray2mat</a></p></li>
+</ul>
+<p>It’s also possible to read and write <cite>.npy</cite> files in MATLAB with <a class="reference external" href="https://github.com/kwikteam/npy-matlab">npy-matlab</a></p>
+</section>
+<section id="interacting-directly-with-lentil-from-matlab">
+<h3>Interacting directly with Lentil from MATLAB<a class="headerlink" href="#interacting-directly-with-lentil-from-matlab" title="Link to this heading">#</a></h3>
+<p>It is possible to interact directly with Lentil within MATLAB. For example, we can
+create a simple <code class="xref py py-func docutils literal notranslate"><span class="pre">circle()</span></code> mask with:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">mask</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">py</span><span class="p">.</span><span class="n">lentil</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">circle</span><span class="p">([</span><span class="nb">int16</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span><span class="nb">int16</span><span class="p">(</span><span class="mi">256</span><span class="p">)],</span><span class="nb">int16</span><span class="p">(</span><span class="mi">128</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Note that MATLAB <a class="reference external" href="https://www.mathworks.com/help/matlab/matlab_external/passing-data-to-python.html">automatically does type conversion</a> when MATLAB data is passed to Python but because MATLAB’s default numeric type is double-precision floating point, we need to explicitly convert the <code class="docutils literal notranslate"><span class="pre">shape</span></code> and <code class="docutils literal notranslate"><span class="pre">radius</span></code> parameters to ints before passing them to Python.</p>
+<p>This approach is fine for debugging and some light usage, but more robust and
+user-friendly solutions require developing a MATLAB interface.</p>
+</section>
+<section id="developing-a-matlab-interface-to-a-lentil-model">
+<h3>Developing a MATLAB interface to a Lentil model<a class="headerlink" href="#developing-a-matlab-interface-to-a-lentil-model" title="Link to this heading">#</a></h3>
+<p>The easiest way to provide a MATLAB interface to an underlying Lentil model is to
+develop a separate MATLAB class that mimics the interface of a Lentil class and handles
+any data formatting issues that arise between MATLAB and Python. In this way, the model
+logic all resides within the Python code, and the MATLAB code is only responsible for
+managing the interface between languages. An example following this approach is
+available here.</p>
+<p>When deploying a MATLAB interface to a Lentil model, it may be convenient to duplicate
+the <code class="docutils literal notranslate"><span class="pre">mat2ndarray.m</span></code> and <code class="docutils literal notranslate"><span class="pre">ndarray2mat.m</span></code> scripts in the project’s local <code class="docutils literal notranslate"><span class="pre">matlab</span></code>
+directory alongside the <code class="docutils literal notranslate"><span class="pre">.m</span></code> interfaces. This simplifies the end user experience
+because it does not require any additional path modification or management to use the
+model.</p>
+<p>For an example, see: <a class="reference internal" href="../patterns/matlab/matlab_interface.html#cookbook-matlab"><span class="std std-ref">Simple MATLAB Interface Class</span></a>.</p>
+<p>Finally, a few links that may be helpful when developing a MATLAB interface:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mathworks.com/help/matlab/matlab_external/python-function-arguments.html">Calling Python functions from MATLAB</a></p></li>
+<li><p><a class="reference external" href="https://www.mathworks.com/help/matlab/ref/pyargs.html">Passing a Python function kwargs from MATLAB</a></p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is not fully understood what happens when you wrap a call to a Python object in a
+<code class="docutils literal notranslate"><span class="pre">parfor</span></code> loop in MATLAB. Buyer beware.</p>
+</div>
+</section>
+</section>
+<section id="configuring-matlab-to-use-the-correct-version-of-python">
+<span id="configuring-matlab"></span><h2>Configuring MATLAB to use the correct version of Python<a class="headerlink" href="#configuring-matlab-to-use-the-correct-version-of-python" title="Link to this heading">#</a></h2>
+<p>MATLAB automatically selects and loads a Python version when you type a Python command.
+It commonly defaults to using Python 2.7, which is not at all what we want. We need to
+tell MATLAB where to find the correct version of Python (&gt;=3.7). For MATLAB r2020a or
+later:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">pyenv</span><span class="p">(</span><span class="s">'Version'</span><span class="p">,</span><span class="w"> </span><span class="s">'/path/to/python3/executable'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For MATLAB r2019b or earlier:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">pyversion</span><span class="w"> </span><span class="s">'/path/to/python3/executable'</span>
+</pre></div>
+</div>
+<p>The Python version can be set temporarily by executing the above command when MATLAB
+launches or automatically by adding the command to your <code class="docutils literal notranslate"><span class="pre">startup.m</span></code> file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you’re using virtual environments to manage different Lentil models, the
+<code class="docutils literal notranslate"><span class="pre">pyenv/pyversion</span></code> configuration specified above won’t work. Instead, you’ll need
+to call <code class="docutils literal notranslate"><span class="pre">pyenv/pyversion</span></code> with the correct virtual environment version before
+working with a model. Don’t forget to call the MKL conflict fix as well. This is
+annoying. Sorry about that. It’s a MATLAB “feature”.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Once you’ve set <code class="docutils literal notranslate"><span class="pre">pyenv/pyversion</span></code> within a MATLAB session, the only way to change
+it is to restart MATLAB. This means that if you’re working with virtual
+environments to manage different models, you’ll have to restart MATLAB each time you
+want to switch models. This is annoying. Sorry about that. It’s a MATLAB “feature”.</p>
+</div>
+<p>For more help on setting MATLAB’s Python version, see
+<a class="reference external" href="https://www.mathworks.com/help/matlab/matlab_external/system-and-configuration-requirements.html">System and Configuration Requirements</a>.</p>
+<section id="resolving-mkl-conflicts">
+<h3>Resolving MKL Conflicts<a class="headerlink" href="#resolving-mkl-conflicts" title="Link to this heading">#</a></h3>
+<p>MATLAB doesn’t always load the correct libraries the underlying Python code relies on.
+In particular, there seems to be some confusion about when to load MKL. There is no
+telltale sign this has occurred. Sometimes MATLAB crashes while other times Python
+method calls will error out with messages that may or may not be useful. The following
+command will clear up MATLAB’s confusion by handing control of which libraries Python
+needs back to Python:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="p">.</span><span class="n">sys</span><span class="p">.</span><span class="n">setdlopenflags</span><span class="p">(</span><span class="nb">int32</span><span class="p">(</span><span class="mi">10</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>This command sets the <code class="docutils literal notranslate"><span class="pre">RTLD_NOW</span></code> and <code class="docutils literal notranslate"><span class="pre">RTLD_DEEPBIND</span></code> flags when the active Python
+instance calls <code class="docutils literal notranslate"><span class="pre">dlopen()</span></code> <a class="reference external" href="https://www.mathworks.com/matlabcentral/answers/327193-calling-python-module-from-matlab-causes-segmentation-fault-in-h5py#answer_296569">[1]</a> <a class="reference external" href="http://man7.org/linux/man-pages/man3/dlopen.3.html">[2]</a> <a class="reference external" href="https://docs.python.org/3.6/library/sys.html#sys.setdlopenflags">[3]</a>. Note that this command is Unix only
+and must be called before the Python interpreter is loaded within MATLAB but after
+<code class="docutils literal notranslate"><span class="pre">pyenv/pyversion</span></code> is set, making it a prime candidate for inclusion in <code class="docutils literal notranslate"><span class="pre">startup.m</span></code>.</p>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h2>
+<section id="debugging-matlab-s-undefined-variable-py-or-function-py-command-error">
+<h3>Debugging MATLAB’s Undefined variable “py” or function “py.command” error<a class="headerlink" href="#debugging-matlab-s-undefined-variable-py-or-function-py-command-error" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Make sure Python is loaded and working:</p></li>
+</ol>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">py</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">'test'</span><span class="p">)</span>
+
+<span class="n">test</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Make sure Lentil is loaded and working:</p></li>
+</ol>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">mask</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">py</span><span class="p">.</span><span class="n">lentil</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">circle</span><span class="p">([</span><span class="nb">int16</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span><span class="nb">int16</span><span class="p">(</span><span class="mi">256</span><span class="p">)],</span><span class="nb">int16</span><span class="p">(</span><span class="mi">128</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>3. Verify there are no import errors in the Python code by importing Lentil and any
+custom models in a Python interpreter:</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="n">your</span><span class="o">-</span><span class="n">model</span><span class="o">&gt;&gt;</span>
+</pre></div>
+</div>
+<p>For more hints, see the MATLAB documentation on <a class="reference external" href="https://www.mathworks.com/help/matlab/matlab_external/undefined-variable-py-or-function-py-command.html">Undefined variable “py” or function
+“py.command”</a></p>
+</section>
+<section id="resolving-python-error-importerror-importing-the-numpy-c-extensions-failed-error">
+<h3>Resolving “Python Error: ImportError: Importing the numpy c-extensions failed.” error<a class="headerlink" href="#resolving-python-error-importerror-importing-the-numpy-c-extensions-failed-error" title="Link to this heading">#</a></h3>
+<p>On Windows, if the system path is not correctly configured, Python will throw a lengthy
+error message when trying to import Numpy:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">py</span><span class="p">.</span><span class="n">importlib</span><span class="p">.</span><span class="n">import_module</span><span class="p">(</span><span class="s">'numpy'</span><span class="p">)</span>
+<span class="n">Error</span><span class="w"> </span><span class="s">using</span><span class="w"> </span><span class="s">__init__&gt;&lt;module&gt;</span><span class="w"> </span><span class="s">(line</span><span class="w"> </span><span class="s">54)</span>
+<span class="n">Python</span><span class="w"> </span><span class="s">Error:</span><span class="w"> </span><span class="s">ImportError:</span>
+
+<span class="n">IMPORTANT</span><span class="p">:</span><span class="w"> </span><span class="n">PLEASE</span><span class="w"> </span><span class="n">READ</span><span class="w"> </span><span class="n">THIS</span><span class="w"> </span><span class="n">FOR</span><span class="w"> </span><span class="n">ADVICE</span><span class="w"> </span><span class="n">ON</span><span class="w"> </span><span class="n">HOW</span><span class="w"> </span><span class="n">TO</span><span class="w"> </span><span class="n">SOLVE</span><span class="w"> </span><span class="n">THIS</span><span class="w"> </span><span class="n">ISSUE</span>!
+
+<span class="n">Importing</span><span class="w"> </span><span class="s">the</span><span class="w"> </span><span class="s">numpy</span><span class="w"> </span><span class="s">c-extensions</span><span class="w"> </span><span class="s">failed.</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Try</span><span class="w"> </span><span class="n">uninstalling</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">reinstalling</span><span class="w"> </span><span class="n">numpy</span><span class="p">.</span>
+
+<span class="k">...</span>
+</pre></div>
+</div>
+<p>There appear to be several causes, but the error is most likely triggered because Python
+is not able to locate the necessary Numpy DLL files. The most common culprit is not
+electing to add Anaconda to the Windows PATH (which for some reason is the recommended
+choice during installation). The issue is fixed by appending the system path. Note that
+it is safest to do this from within MATLAB, in case a different version of Python is
+on the system path and is being used by other applications.</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="nb">setenv</span><span class="p">(</span><span class="s">'path'</span><span class="p">,[</span><span class="s">'C:\Path\To\Anaconda3\Library\bin;'</span><span class="p">,</span><span class="w"> </span><span class="nb">getenv</span><span class="p">(</span><span class="s">'path'</span><span class="p">)]);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="useful-links">
+<h2>Useful Links<a class="headerlink" href="#useful-links" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="../examples">MATLAB Examples</a></p></li>
+<li><p><a class="reference external" href="https://www.mathworks.com/help/matlab/matlab_external/handling-data-returned-from-python.html">Handling Data Returned from Python</a></p></li>
+<li><p><a class="reference external" href="https://www.mathworks.com/help/matlab/matlab_external/limitations-to-python-support.html">Limitations to Python Support</a></p></li>
+<li><p><a class="reference external" href="https://www.mathworks.com/help/matlab/matlab_external/call-modified-python-module.html">Reloading Modified User-Defined Python Modules</a></p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matlab-lentil-interface">MATLAB Lentil Interface</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-numpy-arrays-in-matlab">Working with NumPy Arrays in MATLAB</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interacting-directly-with-lentil-from-matlab">Interacting directly with Lentil from MATLAB</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#developing-a-matlab-interface-to-a-lentil-model">Developing a MATLAB interface to a Lentil model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuring-matlab-to-use-the-correct-version-of-python">Configuring MATLAB to use the correct version of Python</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resolving-mkl-conflicts">Resolving MKL Conflicts</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting">Troubleshooting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-matlab-s-undefined-variable-py-or-function-py-command-error">Debugging MATLAB’s Undefined variable “py” or function “py.command” error</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resolving-python-error-importerror-importing-the-numpy-c-extensions-failed-error">Resolving “Python Error: ImportError: Importing the numpy c-extensions failed.” error</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#useful-links">Useful Links</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026 California Institute of Technology.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

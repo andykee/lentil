@@ -1,0 +1,6 @@
+lentil.field.Field.pixelscale
+=============================
+
+.. currentmodule:: lentil.field
+
+.. autoproperty:: Field.pixelscale

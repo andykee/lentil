@@ -1,0 +1,6 @@
+lentil.field.NDField.overlap
+============================
+
+.. currentmodule:: lentil.field
+
+.. automethod:: NDField.overlap

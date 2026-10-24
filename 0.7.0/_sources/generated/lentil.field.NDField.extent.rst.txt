@@ -1,0 +1,6 @@
+lentil.field.NDField.extent
+===========================
+
+.. currentmodule:: lentil.field
+
+.. autoproperty:: NDField.extent

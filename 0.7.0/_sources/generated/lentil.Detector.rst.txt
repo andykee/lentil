@@ -1,0 +1,39 @@
+﻿lentil.Detector
+===============
+
+.. currentmodule:: lentil
+
+.. autoclass:: Detector
+
+
+
+**Attributes**
+
+.. autosummary::
+    :toctree:
+    
+    ~Detector.amplitude
+    ~Detector.depth
+    ~Detector.global_mask
+    ~Detector.mask
+    ~Detector.phase
+    ~Detector.pixelscale
+    ~Detector.ptt_vector
+    ~Detector.shape
+    ~Detector.slice
+    ~Detector.tilt
+
+
+
+
+**Methods**
+
+.. autosummary::
+    :toctree:
+    
+    ~Detector.copy
+    ~Detector.fit_tilt
+    ~Detector.multiply
+    ~Detector.resample
+    ~Detector.rescale
+

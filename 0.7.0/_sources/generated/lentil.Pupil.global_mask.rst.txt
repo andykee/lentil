@@ -1,0 +1,6 @@
+lentil.Pupil.global\_mask
+=========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Pupil.global_mask

@@ -1,0 +1,6 @@
+lentil.field.Field.size
+=======================
+
+.. currentmodule:: lentil.field
+
+.. autoproperty:: Field.size

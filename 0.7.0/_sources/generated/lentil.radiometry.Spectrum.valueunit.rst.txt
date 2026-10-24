@@ -1,0 +1,6 @@
+lentil.radiometry.Spectrum.valueunit
+====================================
+
+.. currentmodule:: lentil.radiometry
+
+.. autoproperty:: Spectrum.valueunit

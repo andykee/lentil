@@ -1,0 +1,6 @@
+lentil.field.NDField.append
+===========================
+
+.. currentmodule:: lentil.field
+
+.. automethod:: NDField.append

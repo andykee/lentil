@@ -1,0 +1,6 @@
+lentil.Pupil.focal\_length
+==========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Pupil.focal_length

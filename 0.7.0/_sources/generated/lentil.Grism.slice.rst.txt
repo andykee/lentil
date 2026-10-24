@@ -1,0 +1,6 @@
+lentil.Grism.slice
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Grism.slice

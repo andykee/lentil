@@ -1,0 +1,6 @@
+lentil.Plane.slice
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Plane.slice

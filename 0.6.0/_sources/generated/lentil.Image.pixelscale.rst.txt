@@ -1,0 +1,6 @@
+lentil.Image.pixelscale
+=======================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Image.pixelscale

@@ -1,0 +1,6 @@
+lentil.Wavefront.copy
+=====================
+
+.. currentmodule:: lentil
+
+.. automethod:: Wavefront.copy

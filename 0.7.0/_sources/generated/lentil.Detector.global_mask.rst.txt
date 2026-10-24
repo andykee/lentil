@@ -1,0 +1,6 @@
+lentil.Detector.global\_mask
+============================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Detector.global_mask

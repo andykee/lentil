@@ -1,0 +1,6 @@
+lentil.Detector.slice
+=====================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Detector.slice

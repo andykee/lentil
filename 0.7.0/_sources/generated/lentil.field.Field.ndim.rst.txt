@@ -1,0 +1,6 @@
+lentil.field.Field.ndim
+=======================
+
+.. currentmodule:: lentil.field
+
+.. autoproperty:: Field.ndim

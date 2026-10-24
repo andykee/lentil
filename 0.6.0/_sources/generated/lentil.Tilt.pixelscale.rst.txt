@@ -1,0 +1,6 @@
+lentil.Tilt.pixelscale
+======================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Tilt.pixelscale

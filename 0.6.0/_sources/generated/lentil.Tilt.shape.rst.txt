@@ -1,0 +1,6 @@
+lentil.Tilt.shape
+=================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Tilt.shape

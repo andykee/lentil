@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Specifying planes &#8212; Lentil 0.7.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/lentil.css?v=5019c365" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/syntax-highlighting.css?v=2676ebba" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../_static/documentation_options.js?v=fe7df9b0"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/planes';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/js/copybutton.js?v=fdf1d7ba"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Representing wavefront error" href="wavefront_error.html" />
+    <link rel="prev" title="Coordinate system" href="coordinates.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.7.0" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/lentil.png" class="logo__image only-light" alt="Lentil 0.7.0 documentation - Home"/>
+    <img src="../_static/lentil.png" class="logo__image only-dark pst-js-only" alt="Lentil 0.7.0 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="coordinates.html">Coordinate system</a></li>
+<li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">Specifying planes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavefront_error.html">Representing wavefront error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optical_systems.html">Describing optical systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diffraction.html">Modeling diffraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sources.html">Sources and Scenes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="image_sensors.html">Image sensors</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../patterns/index.html">Model Patterns</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/general/simple.html">Simple Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/general/large.html">Larger Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/general/attributes.html">System Attributes and Common Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/planes/filter_wheel.html">Implementing a Filter Wheel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/planes/rb_element.html">Developing an Element with 6DOF Rigid Body Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/planes/translation_stage.html">Adjusting focus with a translation stage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/propagation.html">Performing Radiometrically Correct Propagations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/source_coupling.html">Coupling a source into an optical system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/self_emission.html">Including Self-Emission Flux in IR Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/complex_sources.html">Developing Complex Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/radiometry/source_defocus.html">Representing Source Defocus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../patterns/matlab/matlab_interface.html">Simple MATLAB Interface Class</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Optimizing Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matlab.html">Using Lentil with MATLAB</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="verification/index.html">Algorithm Verification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="verification/pixel_mtf.html">Pixel MTF</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Specifying planes</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <span class="target" id="user-guide-planes"></span><section id="specifying-planes">
+<h1>Specifying planes<a class="headerlink" href="#specifying-planes" title="Link to this heading">#</a></h1>
+<section id="lentil-plane-types">
+<h2>Lentil plane types<a class="headerlink" href="#lentil-plane-types" title="Link to this heading">#</a></h2>
+<p>All Lentil planes are derived from the <a class="reference internal" href="../generated/lentil.Plane.html#lentil.Plane" title="lentil.Plane"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plane</span></code></a> class. This base class defines the
+interface to represent any discretely sampled plane in an optical model. It can also
+be used directly in a model. Planes typically have some influence on the propagation
+of a wavefront though this is not strictly required and some models may use <em>dummy</em>
+or <em>reference</em> planes as needed.</p>
+<p>Lentil provides several general planes that are the building blocks for most optical
+models:</p>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="../generated/lentil.Plane.html#lentil.Plane" title="lentil.Plane"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plane</span></code></a> base class provides the core logic for representing and
+working with discretely sampled planes in an optical model.</p></li>
+<li><p>The <a class="reference internal" href="../generated/lentil.Pupil.html#lentil.Pupil" title="lentil.Pupil"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pupil</span></code></a> plane provides a convenient way to represent a pupil plane
+in an optical system. There is nothing particularly special about pupil planes, they
+merely provide a convenient location (mathematically-speaking) to enforce limiting
+apertures or stops and include optical aberrations. More detailed discussion of pupil
+planes is available in <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p></li>
+<li><p>The <a class="reference internal" href="../generated/lentil.Image.html#lentil.Image" title="lentil.Image"><code class="xref py py-class docutils literal notranslate"><span class="pre">Image</span></code></a> plane provides a location where the image formed by an
+optical system may be manipulated or viewed.</p></li>
+<li><p>The <a class="reference internal" href="../generated/lentil.Detector.html#lentil.Detector" title="lentil.Detector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Detector</span></code></a> plane is conceptually identical to the Image plane but
+is optimized to very efficiently compute intensity from a complex field.</p></li>
+</ul>
+<p>In addition, several “utility” planes are provided. These planes do not represent
+physical components of an optical system, but are used to implement commonly encountered
+optical effects:</p>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="../generated/lentil.Tilt.html#lentil.Tilt" title="lentil.Tilt"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tilt</span></code></a> is used to represent wavefront tilt in terms of radians
+of x and y tilt.</p></li>
+<li><p>The <a class="reference internal" href="../generated/lentil.Rotate.html#lentil.Rotate" title="lentil.Rotate"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rotate</span></code></a> plane rotates a wavefront by an arbitrary angle.</p></li>
+<li><p>The <a class="reference internal" href="../generated/lentil.Flip.html#lentil.Flip" title="lentil.Flip"><code class="xref py py-class docutils literal notranslate"><span class="pre">Flip</span></code></a> plane flips a wavefront about its x, y, or both x and y
+axes.</p></li>
+</ul>
+</section>
+<section id="plane">
+<h2>Plane<a class="headerlink" href="#plane" title="Link to this heading">#</a></h2>
+<p>Lentil’s <a class="reference internal" href="../generated/lentil.Plane.html#lentil.Plane" title="lentil.Plane"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plane</span></code></a> class represents a discretely sampled plane in an optical model. Planes
+have attributes for representing the sampled complex amplitude of the plane as well as
+additional metadata that may influence how a propagating wavefront interacts with the
+plane. A plane is defined by the following parameters:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../generated/lentil.Plane.amplitude.html#lentil.Plane.amplitude" title="lentil.Plane.amplitude"><code class="xref py py-attr docutils literal notranslate"><span class="pre">amplitude</span></code></a> - Defines the relative electric field amplitude
+transmission through the plane</p></li>
+<li><p><a class="reference internal" href="../generated/lentil.Plane.phase.html#lentil.Plane.phase" title="lentil.Plane.phase"><code class="xref py py-attr docutils literal notranslate"><span class="pre">phase</span></code></a> - Defines the electric field phase shift that a wavefront
+experiences when propagating through the plane</p></li>
+<li><p><a class="reference internal" href="../generated/lentil.Plane.mask.html#lentil.Plane.mask" title="lentil.Plane.mask"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mask</span></code></a> - Defines the binary mask over which the plane data is
+valid. If <cite>mask</cite> is 2-dimensional, the plane is assumed to be monolithic. If <cite>mask</cite>
+is 3-dimensional, the plane is assumed to be segmented with the individual segment
+masks inserted along the first dimension. If mask is not provided, it is automatically
+created as needed from the nonzero values in <a class="reference internal" href="../generated/lentil.Plane.amplitude.html#lentil.Plane.amplitude" title="lentil.Plane.amplitude"><code class="xref py py-attr docutils literal notranslate"><span class="pre">amplitude</span></code></a>.</p></li>
+</ul>
+<figure class="align-default">
+<img alt="../_images/segmask.png" class="plot-directive" height="216" src="../_images/segmask.png" width="586" />
+</figure>
+<ul>
+<li><p><a class="reference internal" href="../generated/lentil.Plane.pixelscale.html#lentil.Plane.pixelscale" title="lentil.Plane.pixelscale"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pixelscale</span></code></a> - Defines the physical sampling of each pixel in
+the above attributes. A simple example of how to calculate the pixelscale for a
+discretely sampled circular aperture is given below:</p>
+<img alt="../_images/pixelscale.png" class="align-center" src="../_images/pixelscale.png" style="width: 450px;" />
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All Plane attributes have sensible default values that have no effect on
+propagations when not defined.</p>
+</div>
+<p>Create a new Plane with</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">Plane</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="n">lentil</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/planes-1.png" class="plot-directive" height="329" src="../_images/planes-1.png" width="344" />
+</figure>
+<p>Once a Plane is defined, its attributes can be modified at any time:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">Plane</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="n">lentil</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="mf">2e-6</span> <span class="o">*</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/planes-2.png" class="plot-directive" height="329" src="../_images/planes-2.png" width="344" />
+</figure>
+<section id="resampling-or-rescaling-a-plane">
+<h3>Resampling or rescaling a Plane<a class="headerlink" href="#resampling-or-rescaling-a-plane" title="Link to this heading">#</a></h3>
+<p>It is possible to resample a plane using either the <a class="reference internal" href="../generated/lentil.Plane.resample.html#lentil.Plane.resample" title="lentil.Plane.resample"><code class="xref py py-func docutils literal notranslate"><span class="pre">resample()</span></code></a>
+or <a class="reference internal" href="../generated/lentil.Plane.rescale.html#lentil.Plane.rescale" title="lentil.Plane.rescale"><code class="xref py py-func docutils literal notranslate"><span class="pre">rescale()</span></code></a> methods. Both methods use intrepolation to
+resample the amplitude, phase, and mask attributes and readjust the pixelscale
+attribute as necessary. The default behavior is to perform this interpolation
+on a copy of the plane, but it is possible to operate in-place by setting
+<code class="docutils literal notranslate"><span class="pre">inplace=True</span></code>.</p>
+</section>
+<section id="fitting-and-removing-plane-tilt">
+<span id="user-guide-planes-fit-tilt"></span><h3>Fitting and removing Plane tilt<a class="headerlink" href="#fitting-and-removing-plane-tilt" title="Link to this heading">#</a></h3>
+<p>The plane’s <a class="reference internal" href="../generated/lentil.Plane.fit_tilt.html#lentil.Plane.fit_tilt" title="lentil.Plane.fit_tilt"><code class="xref py py-func docutils literal notranslate"><span class="pre">fit_tilt()</span></code></a> method performs a least squares fit to
+estimate and remove tilt from the phase attribute. The tilt removed from the phase
+attribute is accounted for by appending an equivalent <a class="reference internal" href="../generated/lentil.Tilt.html#lentil.Tilt" title="lentil.Tilt"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tilt</span></code></a> object
+to the plane’s <a class="reference internal" href="../generated/lentil.Plane.tilt.html#lentil.Plane.tilt" title="lentil.Plane.tilt"><code class="xref py py-attr docutils literal notranslate"><span class="pre">tilt</span></code></a> attribute. The default behavior is to
+perform this operation on a copy of the plane, but it is possible to operate
+in-place by setting <code class="docutils literal notranslate"><span class="pre">inplace=True</span></code>.</p>
+<p>See <span class="xref std std-ref">user_guide.diffraction.tilt</span> for additional information on when to use
+this method.</p>
+</section>
+</section>
+<section id="pupil">
+<span id="user-guide-planes-pupil"></span><h2>Pupil<a class="headerlink" href="#pupil" title="Link to this heading">#</a></h2>
+<p>Lentil’s <a class="reference internal" href="../generated/lentil.Pupil.html#lentil.Pupil" title="lentil.Pupil"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pupil</span></code></a> class provides a convenient way to represent a generalized pupil
+function. <a class="reference internal" href="../generated/lentil.Pupil.html#lentil.Pupil" title="lentil.Pupil"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pupil</span></code></a> planes behave exactly like <a class="reference internal" href="../generated/lentil.Plane.html#lentil.Plane" title="lentil.Plane"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plane</span></code></a> objects but introduce an implied
+spherical phase term defined by the <a class="reference internal" href="../generated/lentil.Pupil.focal_length.html#lentil.Pupil.focal_length" title="lentil.Pupil.focal_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">focal_length</span></code></a> attribute. The
+spherical phase term is opaque to the user but is given by</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{2f} \left(x^2 + y^2\right)\]</div>
+<p>where <span class="math notranslate nohighlight">\(f\)</span> is the focal length and <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> are pupil plane
+coordinates.</p>
+<p>A pupil is defined by the following required parameters:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../generated/lentil.Pupil.focal_length.html#lentil.Pupil.focal_length" title="lentil.Pupil.focal_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">focal_length</span></code></a> - The effective focal length (in meters)
+represented by the pupil</p></li>
+<li><p><a class="reference internal" href="../generated/lentil.Pupil.pixelscale.html#lentil.Pupil.pixelscale" title="lentil.Pupil.pixelscale"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pixelscale</span></code></a> - Defines the physical sampling of each pixel in
+the discretely sampled attributes described below</p></li>
+</ul>
+<p>Discretely sampled pupil attributes can also be specified:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../generated/lentil.Pupil.amplitude.html#lentil.Pupil.amplitude" title="lentil.Pupil.amplitude"><code class="xref py py-attr docutils literal notranslate"><span class="pre">amplitude</span></code></a> - Defines the relative electric field amplitude
+transmission through the pupil</p></li>
+<li><p><a class="reference internal" href="../generated/lentil.Pupil.phase.html#lentil.Pupil.phase" title="lentil.Pupil.phase"><code class="xref py py-attr docutils literal notranslate"><span class="pre">phase</span></code></a> - Defines the electric field phase shift that a wavefront
+experiences when propagating through the pupil. This term is commonly known as the
+optical path difference (OPD).</p></li>
+<li><p><a class="reference internal" href="../generated/lentil.Pupil.mask.html#lentil.Pupil.mask" title="lentil.Pupil.mask"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mask</span></code></a> - Defines the binary mask over which the pupil data is
+valid. If <cite>mask</cite> is 2-dimensional, the pupil is assumed to be monolithic. If <cite>mask</cite>
+is 3-dimensional, the pupil is assumed to be segmented with the segment masks
+allocated along the first dimension. If mask is not provided, it is automatically
+created as needed from the nonzero values in <a class="reference internal" href="../generated/lentil.Pupil.amplitude.html#lentil.Pupil.amplitude" title="lentil.Pupil.amplitude"><code class="xref py py-attr docutils literal notranslate"><span class="pre">amplitude</span></code></a>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All optional Pupil attributes have sensible default values that have no effect on
+propagations when not defined.</p>
+</div>
+<p>Create a pupil with:</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">Pupil</span><span class="p">(</span><span class="n">focal_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pixelscale</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="image">
+<h2>Image<a class="headerlink" href="#image" title="Link to this heading">#</a></h2>
+<p>Lentil’s <a class="reference internal" href="../generated/lentil.Image.html#lentil.Image" title="lentil.Image"><code class="xref py py-class docutils literal notranslate"><span class="pre">Image</span></code></a> plane is used to either manipulate or view a wavefront at a focal point
+in an optical system. An image plane does not have any required parameters although any
+of the following can be specified:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../generated/lentil.Image.pixelscale.html#lentil.Image.pixelscale" title="lentil.Image.pixelscale"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pixelscale</span></code></a> - Defines the physical sampling of each pixel in
+the image plane. If not provided, the sampling will be automatically selected to
+ensure the results are at least Nyquist sampled.</p></li>
+<li><p><a class="reference internal" href="../generated/lentil.Image.shape.html#lentil.Image.shape" title="lentil.Image.shape"><code class="xref py py-attr docutils literal notranslate"><span class="pre">shape</span></code></a> - Defines the shape of the image plane. If not provided,
+the image plane will grow as necessary to capture all data.</p></li>
+<li><p><a class="reference internal" href="../generated/lentil.Image.amplitude.html#lentil.Image.amplitude" title="lentil.Image.amplitude"><code class="xref py py-attr docutils literal notranslate"><span class="pre">amplitude</span></code></a> - Definers the relative electric field amplitude
+transmission through the image plane.</p></li>
+<li><p><a class="reference internal" href="../generated/lentil.Image.phase.html#lentil.Image.phase" title="lentil.Image.phase"><code class="xref py py-attr docutils literal notranslate"><span class="pre">phase</span></code></a> - Defines the electric field phase shift that a wavefront
+experiences when propagating through the image plane.</p></li>
+</ul>
+</section>
+<section id="detector">
+<h2>Detector<a class="headerlink" href="#detector" title="Link to this heading">#</a></h2>
+<p>Lentil’s <a class="reference internal" href="../generated/lentil.Detector.html#lentil.Detector" title="lentil.Detector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Detector</span></code></a> plane is used to accumulate the intensity in an image plane.
+Intensity is computed as the absolute value of the complex amplitude in the image plane
+squared:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{I} = \left|\mathbf{W}\right|^2\]</div>
+<p>Similar to the <a class="reference internal" href="../generated/lentil.Image.html#lentil.Image" title="lentil.Image"><code class="xref py py-class docutils literal notranslate"><span class="pre">Image</span></code></a> plane, a detector plane does not have any required parameters
+although any of the following can be specified:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../generated/lentil.Detector.pixelscale.html#lentil.Detector.pixelscale" title="lentil.Detector.pixelscale"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pixelscale</span></code></a> - Defines the physical sampling of each pixel in
+the image plane. If not provided, the sampling will be automatically selected to
+ensure the results are at least Nyquist sampled.</p></li>
+<li><p><a class="reference internal" href="../generated/lentil.Detector.shape.html#lentil.Detector.shape" title="lentil.Detector.shape"><code class="xref py py-attr docutils literal notranslate"><span class="pre">shape</span></code></a> - Defines the shape of the image plane. If not provided,
+the image plane will grow as necessary to capture all data.</p></li>
+</ul>
+<p>While an <a class="reference internal" href="../generated/lentil.Image.html#lentil.Image" title="lentil.Image"><code class="xref py py-class docutils literal notranslate"><span class="pre">Image</span></code></a> plane can be used to compute intensity, the <a class="reference internal" href="../generated/lentil.Detector.html#lentil.Detector" title="lentil.Detector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Detector</span></code></a> plane implements
+an algorithm that greatly reduces the memory footprint and increases the speed of this
+operation. Details of this algorithm are available in the <a class="reference internal" href="../dev/tech_notes/index.html#technical-notes"><span class="std std-ref">Technical Notes</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>An <a class="reference internal" href="../generated/lentil.Image.html#lentil.Image" title="lentil.Image"><code class="xref py py-class docutils literal notranslate"><span class="pre">Image</span></code></a> plane is interchangeable with a <a class="reference internal" href="../generated/lentil.Detector.html#lentil.Detector" title="lentil.Detector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Detector</span></code></a> plane, but the converse is not
+true. This is because the calculation of the real-valued intensity discards the complex
+field information. Because of this, <a class="reference internal" href="../generated/lentil.Detector.html#lentil.Detector" title="lentil.Detector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Detector</span></code></a> planes can only be used as the final
+plane in a Lentil model.</p>
+</div>
+</section>
+<section id="tilt">
+<span id="user-guide-planes-tilt"></span><h2>Tilt<a class="headerlink" href="#tilt" title="Link to this heading">#</a></h2>
+<p>The <a class="reference internal" href="../generated/lentil.Tilt.html#lentil.Tilt" title="lentil.Tilt"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tilt</span></code></a> plane provides a mechanism for directly specifying wavefront
+tilt outside of the context of a discretely sampled <a class="reference internal" href="../generated/lentil.Plane.html#lentil.Plane" title="lentil.Plane"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plane</span></code></a> object. <a class="reference internal" href="../generated/lentil.Tilt.html#lentil.Tilt" title="lentil.Tilt"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tilt</span></code></a>
+is most useful for representing global tilt in an optical system (for example, due to a
+pointing error).</p>
+<p>Given the following <a class="reference internal" href="../generated/lentil.Pupil.html#lentil.Pupil" title="lentil.Pupil"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pupil</span></code></a> and <a class="reference internal" href="../generated/lentil.Detector.html#lentil.Detector" title="lentil.Detector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Detector</span></code></a> planes:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pupil</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">Pupil</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="n">lentil</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">),</span>
+<span class="gp">... </span>                     <span class="n">focal_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pixelscale</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="mi">250</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">Wavefront</span><span class="p">(</span><span class="mf">650e-9</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">*=</span> <span class="n">pupil</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">propagate_image</span><span class="p">(</span><span class="n">pixelscale</span><span class="o">=</span><span class="mf">5e-6</span><span class="p">,</span> <span class="n">npix</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">),</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">intensity</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/planes-3.png" class="plot-directive" height="329" src="../_images/planes-3.png" width="340" />
+</figure>
+<p>It is simple to see the effect of introducing a tilted wavefront into the system:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pupil</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">Pupil</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="n">lentil</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">),</span>
+<span class="gp">... </span>                     <span class="n">focal_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pixelscale</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="mi">250</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tilt</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">Tilt</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">10e-6</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mf">5e-6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">Wavefront</span><span class="p">(</span><span class="mf">650e-9</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">*=</span> <span class="n">pupil</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">*=</span> <span class="n">tilt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">propagate_image</span><span class="p">(</span><span class="n">pixelscale</span><span class="o">=</span><span class="mf">5e-6</span><span class="p">,</span> <span class="n">npix</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">),</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">intensity</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/planes-4.png" class="plot-directive" height="329" src="../_images/planes-4.png" width="340" />
+</figure>
+</section>
+<section id="specialized-planes">
+<span id="user-guide-planes-special"></span><h2>Specialized planes<a class="headerlink" href="#specialized-planes" title="Link to this heading">#</a></h2>
+<section id="grism">
+<h3>Grism<a class="headerlink" href="#grism" title="Link to this heading">#</a></h3>
+<p>A grism is a combination of a diffraction grating and a prism that creates a dispersed
+spectrum normal to the optical axis. This is in contrast to a single grating or prism,
+which creates a dispersed spectrum at some angle that deviates from the optical axis.
+Grisms are most commonly used to create dispersed spectra for slitless spectroscopy or
+to create interference fringes for dispersed fringe sensing.</p>
+<p>Lentil’s <a class="reference internal" href="../generated/lentil.Grism.html#lentil.Grism" title="lentil.Grism"><code class="xref py py-class docutils literal notranslate"><span class="pre">Grism</span></code></a> plane provides a straightforward mechanism for
+efficiently modeling a grism.</p>
+</section>
+</section>
+<section id="active-optics-and-deformable-mirrors">
+<h2>Active optics and deformable mirrors<a class="headerlink" href="#active-optics-and-deformable-mirrors" title="Link to this heading">#</a></h2>
+<p>Active optics and deformable mirrors are easily represented by defining a phase that
+depends on some parameterized state. Because there is no standard architecture for these
+types of optical elements, Lentil does not provide a concrete implementation. Instead,
+a custom subclass of either <a class="reference internal" href="../generated/lentil.Plane.html#lentil.Plane" title="lentil.Plane"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plane</span></code></a> or <a class="reference internal" href="../generated/lentil.Pupil.html#lentil.Pupil" title="lentil.Pupil"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pupil</span></code></a> should be defined. The exact
+implementation details will vary by application, but a simple example of a tip-tilt
+mirror where the plane’s phase is computed dynamically based on the state <cite>x</cite> is
+provided below. Additional examples can be found in Model Patterns under
+<a class="reference internal" href="../patterns/index.html#patterns-planes"><span class="std std-ref">Planes</span></a>.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TipTiltMirror</span><span class="p">(</span><span class="n">lentil</span><span class="o">.</span><span class="n">Plane</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span><span class="mi">120</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Note that we set normalize=False so that each mode spans [-1, 1] and then</span>
+        <span class="c1"># multiply by 0.5 so that each mode has peak-valley = 1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_infl_fn</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_basis</span><span class="p">(</span><span class="n">mask</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="p">,</span>
+                                                   <span class="n">modes</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+                                                   <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ijk,i-&gt;jk'</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_infl_fn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tt</span> <span class="o">=</span> <span class="n">TipTiltMirror</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tt</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mf">3e-6</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">phase</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/planes-5.png" class="plot-directive" height="322" src="../_images/planes-5.png" width="370" />
+</figure>
+</section>
+<section id="customizing-plane">
+<h2>Customizing Plane<a class="headerlink" href="#customizing-plane" title="Link to this heading">#</a></h2>
+<p>The Plane class or any of the classes derived from Plane can be subclassed to modify
+any of the default behavior. Reasons to do this may include but are not limited to:</p>
+<ul class="simple">
+<li><p>Dynamically computing the <a class="reference internal" href="../generated/lentil.Plane.phase.html#lentil.Plane.phase" title="lentil.Plane.phase"><code class="xref py py-attr docutils literal notranslate"><span class="pre">phase</span></code></a> attribute</p></li>
+<li><p>Changing the Plane-Wavefront interaction by redefining the <cite>Plane.multiply()</cite> method</p></li>
+<li><p>Modifying the way a Plane is resampled or rescaled</p></li>
+</ul>
+<p>Some general guidance for how to safely subclass Plane is provided below.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Lentil’s <a class="reference internal" href="../generated/lentil.Plane.html#lentil.Plane" title="lentil.Plane"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plane</span></code></a> class and its subclasses all use Python’s <code class="docutils literal notranslate"><span class="pre">__init_subclass__()</span></code>
+method to ensure any required default values are set - even if a user-defined
+subclass does not explicitly call <code class="docutils literal notranslate"><span class="pre">Plane</span></code>’s constructor <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method. For
+this reason, it is not strictly necessary to call <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code> when
+implementing a custom Plane subclass. It also won’t hurt, as long as you’re careful
+to either call <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code> before defining any static plane attributes or
+passing these attributes along to the <code class="docutils literal notranslate"><span class="pre">super().__init__()</span></code> call to ensure they are
+properly set.</p>
+</div>
+<section id="redefining-the-amplitude-phase-or-mask-attributes">
+<h3>Redefining the amplitude, phase, or mask attributes<a class="headerlink" href="#redefining-the-amplitude-phase-or-mask-attributes" title="Link to this heading">#</a></h3>
+<p>Plane <a class="reference internal" href="../generated/lentil.Plane.amplitude.html#lentil.Plane.amplitude" title="lentil.Plane.amplitude"><code class="xref py py-attr docutils literal notranslate"><span class="pre">amplitude</span></code></a>, <a class="reference internal" href="../generated/lentil.Plane.phase.html#lentil.Plane.phase" title="lentil.Plane.phase"><code class="xref py py-attr docutils literal notranslate"><span class="pre">phase</span></code></a>, and
+<a class="reference internal" href="../generated/lentil.Plane.mask.html#lentil.Plane.mask" title="lentil.Plane.mask"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mask</span></code></a> are all defined as properties, but Python allows you to
+redefine them as class attributes without issue:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomPlane</span><span class="p">(</span><span class="n">le</span><span class="o">.</span><span class="n">Plane</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">128</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike</span><span class="p">(</span><span class="n">lentil</span><span class="o">.</span><span class="n">circlemask</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span><span class="mi">128</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If more dynamic behavior is required, the property can be redefined. For example, to
+return a new random phase each time the <a class="reference internal" href="../generated/lentil.Plane.phase.html#lentil.Plane.phase" title="lentil.Plane.phase"><code class="xref py py-attr docutils literal notranslate"><span class="pre">phase</span></code></a> attribute is
+accessed:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomPlane</span><span class="p">(</span><span class="n">lentil</span><span class="o">.</span><span class="n">Plane</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circlemask</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">128</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">128</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_compose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>It is also straightforward to implement a custom <a class="reference internal" href="../generated/lentil.Plane.phase.html#lentil.Plane.phase" title="lentil.Plane.phase"><code class="xref py py-attr docutils literal notranslate"><span class="pre">phase</span></code></a> property to
+provide a stateful phase attribute:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomPlane</span><span class="p">(</span><span class="n">lentil</span><span class="o">.</span><span class="n">Plane</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circlemask</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">128</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">128</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_compose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Polychromatic or broadband diffraction propagations access the phase, amplitude,
+and mask attributes for each propagatioon wavelength. Because these attributes
+remain fixed during a propagation, it is inefficient to repeatedly recompute
+them. To mitigate this, it can be very useful to provide a mechanism for freezing
+these dynamic attributes. There are many ways to do this. One approach is provided
+below:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomPlane</span><span class="p">(</span><span class="n">lentil</span><span class="o">.</span><span class="n">Plane</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circlemask</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">128</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">128</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_compose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">freeze</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Return a copy of CustomPlane with the phase attribute redefined</span>
+        <span class="c1"># to be a static copy of the phase when freeze() is called</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="customizing-plane-methods">
+<h3>Customizing Plane methods<a class="headerlink" href="#customizing-plane-methods" title="Link to this heading">#</a></h3>
+<p>Any of the <a class="reference internal" href="../generated/lentil.Plane.html#lentil.Plane" title="lentil.Plane"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plane</span></code></a> methods can be redefined in a subclass without restriction. Care
+should be taken to ensure any redefined methods return data compatible with the
+parent method’s return type to preserve compatibility within Lentil.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Goodman, <em>Introduction to Fourier Optics</em>.</p>
+</aside>
+</aside>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lentil-plane-types">Lentil plane types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plane">Plane</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling-or-rescaling-a-plane">Resampling or rescaling a Plane</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-and-removing-plane-tilt">Fitting and removing Plane tilt</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pupil">Pupil</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#image">Image</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#detector">Detector</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tilt">Tilt</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#specialized-planes">Specialized planes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grism">Grism</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#active-optics-and-deformable-mirrors">Active optics and deformable mirrors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-plane">Customizing Plane</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#redefining-the-amplitude-phase-or-mask-attributes">Redefining the amplitude, phase, or mask attributes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-plane-methods">Customizing Plane methods</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026 California Institute of Technology.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

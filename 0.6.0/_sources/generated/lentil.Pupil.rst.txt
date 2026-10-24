@@ -1,0 +1,40 @@
+﻿lentil.Pupil
+============
+
+.. currentmodule:: lentil
+
+.. autoclass:: Pupil
+
+
+
+**Attributes**
+
+.. autosummary::
+    :toctree:
+    
+    ~Pupil.amplitude
+    ~Pupil.depth
+    ~Pupil.focal_length
+    ~Pupil.global_mask
+    ~Pupil.mask
+    ~Pupil.phase
+    ~Pupil.pixelscale
+    ~Pupil.ptt_vector
+    ~Pupil.shape
+    ~Pupil.slice
+    ~Pupil.tilt
+
+
+
+
+**Methods**
+
+.. autosummary::
+    :toctree:
+    
+    ~Pupil.copy
+    ~Pupil.fit_tilt
+    ~Pupil.multiply
+    ~Pupil.resample
+    ~Pupil.rescale
+

@@ -1,0 +1,6 @@
+lentil.Image.rescale
+====================
+
+.. currentmodule:: lentil
+
+.. automethod:: Image.rescale

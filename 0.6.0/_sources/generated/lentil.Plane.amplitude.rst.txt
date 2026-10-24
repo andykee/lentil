@@ -1,0 +1,6 @@
+lentil.Plane.amplitude
+======================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Plane.amplitude

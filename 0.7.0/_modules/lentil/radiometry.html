@@ -1,0 +1,2106 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>lentil.radiometry &#8212; Lentil 0.7.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/lentil.css?v=5019c365" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/syntax-highlighting.css?v=2676ebba" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../../_static/documentation_options.js?v=fe7df9b0"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/lentil/radiometry';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../../_static/js/copybutton.js?v=fdf1d7ba"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.7.0" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/lentil.png" class="logo__image only-light" alt="Lentil 0.7.0 documentation - Home"/>
+    <img src="../../_static/lentil.png" class="logo__image only-dark pst-js-only" alt="Lentil 0.7.0 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">lentil.radiometry</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for lentil.radiometry</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
+
+<span class="c1"># Charlotte - We love you and will miss you forever. You were the light of our lives.</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Spectrum'</span><span class="p">,</span> <span class="s1">'Blackbody'</span><span class="p">,</span> <span class="s1">'Material'</span><span class="p">,</span> <span class="s1">'path_emission'</span><span class="p">,</span> <span class="s1">'path_transmission'</span><span class="p">,</span>
+           <span class="s1">'planck_radiance'</span><span class="p">,</span> <span class="s1">'planck_exitance'</span><span class="p">,</span> <span class="s1">'vegaflux'</span><span class="p">]</span>
+
+<span class="c1"># Constants</span>
+<span class="n">H</span> <span class="o">=</span> <span class="mf">6.62606957e-34</span>  <span class="c1"># Planck constant, J/s (kg m^2/s^2)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="mi">299792456</span>      <span class="c1"># Speed of light, m/s</span>
+<span class="n">K</span> <span class="o">=</span> <span class="mf">1.3806488e-23</span>  <span class="c1"># Boltzmann constant, J/K (kg m^2/K)</span>
+
+
+<div class="viewcode-block" id="Spectrum">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.html#lentil.radiometry.Spectrum">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Spectrum</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Class for representing spectral quantities.</span>
+
+<span class="sd">    :class:`~lentil.radiometry.Spectrum` provides core functionality for</span>
+<span class="sd">    defining and interacting with spectral data in lentil. Some basic</span>
+<span class="sd">    arithmetic functions are overloaded, so you can add, multiply, and</span>
+<span class="sd">    exponentiate :class:`Spectrum` objects</span>
+
+<span class="sd">        * with each other</span>
+<span class="sd">        * by constants</span>
+<span class="sd">        * with arrays having the same length as :attr:`value`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    wave : array_like</span>
+<span class="sd">        Array of wavelengths.</span>
+<span class="sd">    value : array_like</span>
+<span class="sd">        Array of values corresponding to wavelengths in :attr:`wave`.</span>
+<span class="sd">    waveunit : str, optional</span>
+<span class="sd">        Wavelength units, as accepted by :func:`Unit`. Default is ``nm``.</span>
+<span class="sd">    valueunit : str or None, optional</span>
+<span class="sd">        Value units, as accepted by :func:`Unit`. Default is None.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    When performing arithmetic operations between two</span>
+<span class="sd">    :class:`Spectrum` objects, the code will behave differently depending on</span>
+<span class="sd">    the ``wave`` vectors of each :class:`Spectrum`:</span>
+
+<span class="sd">        1. If the :attr:`wave` vectors of each :class:`Spectrum` are the same,</span>
+<span class="sd">        the arithmetic operation is directly performed element-wise on the</span>
+<span class="sd">        :attr:`value` vectors of each :class:`Spectrum`.</span>
+
+<span class="sd">        2. If the :attr:`wave` vectors of each :class:`Spectrum` are</span>
+<span class="sd">        different, the :attr:`value` vectors of each :class:`Spectrum` are</span>
+<span class="sd">        interpolated to the same sampling, and then the arithmetic operation is</span>
+<span class="sd">        performed element-wise on the resulting interpolated :attr:`value`</span>
+<span class="sd">        vectors. Before interpolating, the :attr:`wave` and :attr:`value`</span>
+<span class="sd">        vectors are zero-padded to cover the entire wave range represented by</span>
+<span class="sd">        the union of both :class:`Spectrum` objects. The sampling is determined</span>
+<span class="sd">        by the smaller sampling of the two :attr:`wave` vectors.</span>
+
+<span class="sd">    You can fine tune the sampling, interpolation, and padding methods by</span>
+<span class="sd">    interfacing directly with the :func:`Spectrum.add` and</span>
+<span class="sd">    :func:`Spectrum.multiply` methods.</span>
+
+<span class="sd">    """</span>
+
+    <span class="c1"># TODO: astropy unit cutover</span>
+    <span class="c1">#   * manage data and units separately</span>
+    <span class="c1">#   * in __init__, unpack wave and value arrays from unit if passed as a</span>
+    <span class="c1">#     quantity</span>
+    <span class="c1">#   * in the wave/value getter, repack as a quantity</span>
+    <span class="c1">#   * for speed, underlying computations should operate on _wave or _value</span>
+    <span class="c1">#     and keep the units in mind</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">waveunit</span><span class="o">=</span><span class="s1">'nm'</span><span class="p">,</span> <span class="n">valueunit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">=</span> <span class="n">wave</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">waveunit</span> <span class="o">=</span> <span class="n">waveunit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">valueunit</span> <span class="o">=</span> <span class="n">valueunit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__array_priority__</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wave</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Wave and value must have the same shape'</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="fm">__rmul__</span> <span class="o">=</span> <span class="fm">__mul__</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wave</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wave</span>
+
+    <span class="nd">@wave</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wave</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Wavelength values must be greater than zero'</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">alltrue</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">value</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Wavelength values must be monotonically increasing'</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">value</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Wavelength values must be unique'</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wave</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+    <span class="nd">@value</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">waveunit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waveunit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waveunit</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@waveunit</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">waveunit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_waveunit</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">waveunit</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">valueunit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_valueunit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_valueunit</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@valueunit</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">valueunit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">valueunit</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_valueunit</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">valueunit</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ufunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ufunc</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">sampling</span><span class="o">=</span><span class="s1">'min'</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+            <span class="n">wave</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">ufunc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">raise</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Spectrum</span><span class="p">):</span>
+            <span class="n">wave</span><span class="p">,</span> <span class="n">self_value</span><span class="p">,</span> <span class="n">other_value</span> <span class="o">=</span> <span class="n">_interp_common</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">sampling</span><span class="p">,</span>
+                                                           <span class="n">method</span><span class="p">,</span> <span class="n">fill_value</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">ufunc</span><span class="p">(</span><span class="n">self_value</span><span class="p">,</span> <span class="n">other_value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"can't </span><span class="si">{</span><span class="n">ufunc</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> Spectrum with object of type "</span>
+                            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Spectrum</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveunit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">valueunit</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Spectrum.add">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.add.html#lentil.radiometry.Spectrum.add">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">sampling</span><span class="o">=</span><span class="s1">'min'</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Add Spectrum and other, element-wise</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : scalar, sequence, or Spectrum</span>
+<span class="sd">            Any accepted data structure</span>
+<span class="sd">        sampling : {'min', 'left', 'right', float}, optional</span>
+<span class="sd">            Method used for computing wavelength sampling when Spectrum</span>
+<span class="sd">            resampling is required prior to adding</span>
+
+<span class="sd">            * 'min' uses the minimum sampling in either Spectrum (Default)</span>
+<span class="sd">            * 'left' uses the minimum sampling in the left Spectrum</span>
+<span class="sd">            * 'right' uses the minimum sampling in the right Spectrum</span>
+<span class="sd">            * &lt;float&gt; uses the float value specified</span>
+<span class="sd">        method : {'linear', 'quadratic', 'cubic'}, optional</span>
+<span class="sd">            * 'linear' uses linear interpolation (Default)</span>
+<span class="sd">            * 'quadratic' uses second-order spline interpolation</span>
+<span class="sd">            * 'cubic' uses third-order spline interpolation</span>
+<span class="sd">        fill_value : float or array_like, optional</span>
+<span class="sd">            * If a float, this value will be used to fill in requested points</span>
+<span class="sd">              outside of the data range.</span>
+<span class="sd">            * If a two-element array, the first element is used to fill</span>
+<span class="sd">              `value_new &lt; value[0]` and the second element is used for</span>
+<span class="sd">              `value_new &gt; value[-1]`.</span>
+<span class="sd">            * If not provided, the default is 0.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        result : Spectrum</span>
+<span class="sd">            Result of the arithmetic operation.</span>
+
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ufunc</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">sampling</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">fill_value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.multiply">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.multiply.html#lentil.radiometry.Spectrum.multiply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">sampling</span><span class="o">=</span><span class="s1">'min'</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Multiply Spectrum and other, element-wise</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : scalar, sequence, or Spectrum</span>
+<span class="sd">            Any accepted data structure</span>
+<span class="sd">        sampling : {'min', 'left', 'right'} or float, optional</span>
+<span class="sd">            Method used for computing wavelength sampling when Spectrum</span>
+<span class="sd">            resampling is required prior to adding</span>
+
+<span class="sd">            * 'min' uses the minimum sampling in either Spectrum (Default)</span>
+<span class="sd">            * 'left' uses the minimum sampling in the left Spectrum</span>
+<span class="sd">            * 'right' uses the minimum sampling in the right Spectrum</span>
+<span class="sd">            * &lt;float&gt; uses the float value specified</span>
+<span class="sd">        method : {'linear', 'quadratic', 'cubic'}, optional</span>
+<span class="sd">            * 'linear' uses linear interpolation (Default)</span>
+<span class="sd">            * 'quadratic' uses second-order spline interpolation</span>
+<span class="sd">            * 'cubic' uses third-order spline interpolation</span>
+<span class="sd">        fill_value : float or array_like, optional</span>
+<span class="sd">            * If a float, this value will be used to fill in requested points</span>
+<span class="sd">              outside of the data range.</span>
+<span class="sd">            * If a two-element array, the first element is used to fill</span>
+<span class="sd">              `value_new &lt; value[0]` and the second element is used for</span>
+<span class="sd">              `value_new &gt; value[-1]`.</span>
+<span class="sd">            * If not provided, the default is 0.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        result : Spectrum</span>
+<span class="sd">            Result of the arithmetic operation.</span>
+
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ufunc</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">sampling</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">fill_value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.power">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.power.html#lentil.radiometry.Spectrum.power">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">power</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">sampling</span><span class="o">=</span><span class="s1">'min'</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Spectrum elements raised to powers from other, element-wise</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : scalar, sequence, or Spectrum</span>
+<span class="sd">            Any accepted data structure</span>
+<span class="sd">        sampling : {'min', 'left', 'right'} or float, optional</span>
+<span class="sd">            Method used for computing wavelength sampling when Spectrum</span>
+<span class="sd">            resampling is required prior to adding</span>
+
+<span class="sd">            * 'min' uses the minimum sampling in either Spectrum (Default)</span>
+<span class="sd">            * 'left' uses the minimum sampling in the left Spectrum</span>
+<span class="sd">            * 'right' uses the minimum sampling in the right Spectrum</span>
+<span class="sd">            * &lt;float&gt; uses the float value specified</span>
+<span class="sd">        method : {'linear', 'quadratic', 'cubic'}, optional</span>
+<span class="sd">            * 'linear' uses linear interpolation (Default)</span>
+<span class="sd">            * 'quadratic' uses second-order spline interpolation</span>
+<span class="sd">            * 'cubic' uses third-order spline interpolation</span>
+<span class="sd">        fill_value : float or array_like, optional</span>
+<span class="sd">            * If a float, this value will be used to fill in requested points</span>
+<span class="sd">              outside of the data range.</span>
+<span class="sd">            * If a two-element array, the first element is used to fill</span>
+<span class="sd">              `value_new &lt; value[0]` and the second element is used for</span>
+<span class="sd">              `value_new &gt; value[-1]`.</span>
+<span class="sd">            * If not provided, the default is 0.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        result : Spectrum</span>
+<span class="sd">            Result of the arithmetic operation.</span>
+
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ufunc</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">sampling</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">fill_value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.subtract">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.subtract.html#lentil.radiometry.Spectrum.subtract">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">subtract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">sampling</span><span class="o">=</span><span class="s1">'min'</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Subtract Spectrum and other, element-wise</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : scalar, sequence, or Spectrum</span>
+<span class="sd">            Any accepted data structure</span>
+<span class="sd">        sampling : {'min', 'left', 'right'} or float, optional</span>
+<span class="sd">            Method used for computing wavelength sampling when Spectrum</span>
+<span class="sd">            resampling is required prior to adding</span>
+
+<span class="sd">            * 'min' uses the minimum sampling in either Spectrum (Default)</span>
+<span class="sd">            * 'left' uses the minimum sampling in the left Spectrum</span>
+<span class="sd">            * 'right' uses the minimum sampling in the right Spectrum</span>
+<span class="sd">            * &lt;float&gt; uses the float value specified</span>
+<span class="sd">        method : {'linear', 'quadratic', 'cubic'}, optional</span>
+<span class="sd">            * 'linear' uses linear interpolation (Default)</span>
+<span class="sd">            * 'quadratic' uses second-order spline interpolation</span>
+<span class="sd">            * 'cubic' uses third-order spline interpolation</span>
+<span class="sd">        fill_value : float or array_like, optional</span>
+<span class="sd">            * If a float, this value will be used to fill in requested points</span>
+<span class="sd">              outside of the data range.</span>
+<span class="sd">            * If a two-element array, the first element is used to fill</span>
+<span class="sd">              `value_new &lt; value[0]` and the second element is used for</span>
+<span class="sd">              `value_new &gt; value[-1]`.</span>
+<span class="sd">            * If not provided, the default is 0.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        result : Spectrum</span>
+<span class="sd">            Result of the arithmetic operation.</span>
+
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ufunc</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">sampling</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">fill_value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.divide">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.divide.html#lentil.radiometry.Spectrum.divide">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">divide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">sampling</span><span class="o">=</span><span class="s1">'min'</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Divide Spectrum and other, element-wise</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : scalar, sequence, or Spectrum</span>
+<span class="sd">            Any accepted data structure</span>
+<span class="sd">        sampling : {'min', 'left', 'right'} or float, optional</span>
+<span class="sd">            Method used for computing wavelength sampling when Spectrum</span>
+<span class="sd">            resampling is required prior to adding</span>
+
+<span class="sd">            * 'min' uses the minimum sampling in either Spectrum (Default)</span>
+<span class="sd">            * 'left' uses the minimum sampling in the left Spectrum</span>
+<span class="sd">            * 'right' uses the minimum sampling in the right Spectrum</span>
+<span class="sd">            * &lt;float&gt; uses the float value specified</span>
+<span class="sd">        method : {'linear', 'quadratic', 'cubic'}, optional</span>
+<span class="sd">            * 'linear' uses linear interpolation (Default)</span>
+<span class="sd">            * 'quadratic' uses second-order spline interpolation</span>
+<span class="sd">            * 'cubic' uses third-order spline interpolation</span>
+<span class="sd">        fill_value : float or array_like, optional</span>
+<span class="sd">            * If a float, this value will be used to fill in requested points</span>
+<span class="sd">              outside of the data range.</span>
+<span class="sd">            * If a two-element array, the first element is used to fill</span>
+<span class="sd">              `value_new &lt; value[0]` and the second element is used for</span>
+<span class="sd">              `value_new &gt; value[-1]`.</span>
+<span class="sd">            * If not provided, the default is 0.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        result : Spectrum</span>
+<span class="sd">            Result of the arithmetic operation.</span>
+
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ufunc</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">sampling</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">fill_value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.append">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.append.html#lentil.radiometry.Spectrum.append">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Append Spectrum to the end of caller</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : Spectrum</span>
+<span class="sd">            Spectrum to be appended with</span>
+<span class="sd">        copy : bool, optional</span>
+<span class="sd">            If True, the a new :class:`Spectrum` object is returned. If False</span>
+<span class="sd">            (default), the append operation occurs in place.</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Spectrum</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Spectrum objects can only be appended with other '</span>
+                             <span class="s1">'Spectrum objects'</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">wave</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">copy</span><span class="p">:</span>
+            <span class="n">new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">new</span><span class="o">.</span><span class="n">wave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new</span><span class="o">.</span><span class="n">wave</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">wave</span><span class="p">)</span>
+            <span class="n">new</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">new</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">wave</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.copy">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.copy.html#lentil.radiometry.Spectrum.copy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.sample">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.sample.html#lentil.radiometry.Spectrum.sample">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">waveunit</span><span class="o">=</span><span class="s1">'nm'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Sample the :class:`Spectrum` at a set of desired wavelengths.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        wave : array_like or float</span>
+<span class="sd">            Wavelength set for sampling.</span>
+<span class="sd">        method : {'linear', 'quadratic', 'cubic'}, optional</span>
+<span class="sd">            * 'linear' uses linear interpolation (default)</span>
+<span class="sd">            * 'quadratic' uses second order spline interpolation</span>
+<span class="sd">            * 'cubic' uses third order spline interpolation</span>
+<span class="sd">        fill_value : float or array_like, optional</span>
+<span class="sd">            * If a float, this value will be used to fill in requested</span>
+<span class="sd">              points outside of the data range.</span>
+<span class="sd">            * If a two-element array, the first element is used to fill</span>
+<span class="sd">              `value_new &lt; value[0]` and the second element is used for</span>
+<span class="sd">              `value_new &gt; value[-1]`.</span>
+<span class="sd">            * If not provided, the default is 0.</span>
+<span class="sd">        waveunit : str</span>
+<span class="sd">            Wavelength units, as accepted by :func:`Unit`. Default is ``nm``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ndarray</span>
+<span class="sd">            An array of sampled values.</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">waveunit</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveunit</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">waveunit</span><span class="p">)</span>
+
+        <span class="n">interp</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">interpolate</span><span class="o">.</span><span class="n">interp1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+                                            <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                            <span class="n">fill_value</span><span class="o">=</span><span class="n">fill_value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">interp</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.resample">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.resample.html#lentil.radiometry.Spectrum.resample">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">waveunit</span><span class="o">=</span><span class="s1">'nm'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Sample the :class:`Spectrum` object at a set of desired wavelengths</span>
+<span class="sd">        and overwrite the object's :attr:`wave` and :attr:`value` attributes.</span>
+<span class="sd">        This method can be viewed as a destructive version of</span>
+<span class="sd">        :func:`Spectrum.sample`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        wave : array_like or float</span>
+<span class="sd">            Wavelength set for sampling.</span>
+<span class="sd">        method : {'linear', 'quadratic', 'cubic'}, optional</span>
+<span class="sd">            * 'linear' uses linear interpolation (default)</span>
+<span class="sd">            * 'quadratic' uses second order spline interpolation</span>
+<span class="sd">            * 'cubic' uses third order spline interpolation</span>
+<span class="sd">        fill_value : float or array_like, optional</span>
+<span class="sd">            * If a float, this value will be used to fill in requested points</span>
+<span class="sd">              outside of the data range.</span>
+<span class="sd">            * If a two-element array, the first element is used to fill</span>
+<span class="sd">              `value_new &lt; value[0]` and the second element is used for</span>
+<span class="sd">              `value_new &gt; value[-1]`.</span>
+<span class="sd">            * If not provided, the default is 0.</span>
+
+<span class="sd">            Wavelength units, as accepted by :func:`Unit`. Default is ``nm``.</span>
+
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">fill_value</span><span class="p">,</span>
+                                 <span class="n">waveunit</span><span class="o">=</span><span class="n">waveunit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">=</span> <span class="n">wave</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">waveunit</span> <span class="o">=</span> <span class="n">waveunit</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.bin">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.bin.html#lentil.radiometry.Spectrum.bin">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">interp_method</span><span class="o">=</span><span class="s1">'simps'</span><span class="p">,</span> <span class="n">ends</span><span class="o">=</span><span class="s1">'symmetric'</span><span class="p">,</span> <span class="n">preserve_power</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">sample_method</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">waveunit</span><span class="o">=</span><span class="s1">'nm'</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""Compute a binned representation of the :class:`Spectrum` data at a</span>
+<span class="sd">        given array of central wavelengths.</span>
+
+<span class="sd">        The general algorithm computes bin edges, sampling the :class:`Spectrum`</span>
+<span class="sd">        values at these edges, and numerically integrating within the edges of</span>
+<span class="sd">        each bin. For :math:`n` bins (centered at the wavelength values in the</span>
+<span class="sd">        ``wave`` array), there will be :math:`n+1` edges. The edges at each bin</span>
+<span class="sd">        centered at :math:`\lambda_k` are given by</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            e_{\mbox{left}} = \lambda_k - \frac{\lambda_k - \lambda_{k-1}}{2}</span>
+
+<span class="sd">            e_{\mbox{right}} = \lambda_k + \frac{\lambda_{k+1} - \lambda_k}{2}</span>
+
+<span class="sd">        Special treatment is required for the first and last edges</span>
+<span class="sd">        (:math:`\lambda_k =` ``wave[0]`` and :math:`\lambda_k =` ``wave[-1]``)</span>
+<span class="sd">        since :math:`\lambda_{k-1}` and :math:`\lambda_{k+1}` are undefined,</span>
+<span class="sd">        respectively.</span>
+
+<span class="sd">        Two different first/last bin edge methods are available:</span>
+
+<span class="sd">        .. image:: /_static/img/spectrum_bin.png</span>
+
+<span class="sd">        ========= =============================================== ==================================================================================</span>
+<span class="sd">        ends      Left edge for ``wave[0]``                       Right edge for ``wave[-1]``</span>
+<span class="sd">        ========= =============================================== ==================================================================================</span>
+<span class="sd">        symmetric :math:`\lambda_1-\frac{\lambda_2-\lambda_1}{2}` :math:`\lambda_{\mbox{end}}+\frac{\lambda_{\mbox{end}}-\lambda_{\mbox{end}-1}}{2}`</span>
+<span class="sd">        inside    :math:`\lambda_1`                               :math:`\lambda_{\mbox{end}}`</span>
+<span class="sd">        ========= =============================================== ==================================================================================</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        wave : array_like</span>
+<span class="sd">            Central wavelength set for binning. At least two wavelengths must be</span>
+<span class="sd">            provided.</span>
+<span class="sd">        interp_method : {'simps', 'trapz'}, optional</span>
+<span class="sd">            Numerical integration method. 'simps' (default) is better for smooth</span>
+<span class="sd">            data while 'trapz' is better for linear data.</span>
+<span class="sd">        ends : {'symmetric', 'inside'}, optional</span>
+<span class="sd">            Method for handling the first and last bin edge value. Default is</span>
+<span class="sd">            'symmetric'. See the notes below for details on the available</span>
+<span class="sd">            methods.</span>
+<span class="sd">        preserve_power : bool, optional</span>
+
+<span class="sd">        sample_method : {'linear', 'quadratic', 'cubic'}, optional</span>
+<span class="sd">            * 'linear' uses linear interpolation (default)</span>
+<span class="sd">            * 'quadratic' uses second order spline interpolation</span>
+<span class="sd">            * 'cubic' uses third order spline interpolation</span>
+<span class="sd">        fill_value : float or array_like, optional</span>
+<span class="sd">            * If a float, this value will be used to fill in requested points</span>
+<span class="sd">              outside of the data range.</span>
+<span class="sd">            * If a two-element array, the first element is used to fill</span>
+<span class="sd">              `value_new &lt; value[0]` and the second element is used for</span>
+<span class="sd">              `value_new &gt; value[-1]`.</span>
+<span class="sd">            * If not provided, the default is 0.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : ndarray</span>
+<span class="sd">            The binned values, same shape as wave.</span>
+
+<span class="sd">        """</span>
+        <span class="n">wave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">wave</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Spectrum.bin requires a minimum of two wavelengths.</span><span class="se">\n</span><span class="s1">'</span>
+                             <span class="s1">'If this Spectrum must be represented by a single '</span>
+                             <span class="s1">'wavelength, consider using Spectrum.integrate() instead.'</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">waveunit</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveunit</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">waveunit</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">interp_method</span> <span class="o">==</span> <span class="s1">'trapz'</span><span class="p">:</span>
+            <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">wave</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dx</span>
+
+            <span class="k">if</span> <span class="n">ends</span> <span class="o">==</span> <span class="s1">'symmetric'</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="n">wave</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">dx</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">wave</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">dx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]])</span>
+            <span class="k">elif</span> <span class="n">ends</span> <span class="o">==</span> <span class="s1">'inside'</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="n">wave</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">wave</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown ends '</span><span class="p">,</span> <span class="n">ends</span><span class="p">)</span>
+
+            <span class="c1"># sample</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">sample_method</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">fill_value</span><span class="p">)</span>
+
+            <span class="c1"># apply the chained trapezoidal rule</span>
+            <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+                <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">f</span><span class="p">[</span><span class="n">k</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="k">elif</span> <span class="n">interp_method</span> <span class="o">==</span> <span class="s1">'simps'</span><span class="p">:</span>
+            <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+            <span class="n">wave_mid</span> <span class="o">=</span> <span class="n">wave</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dx</span>
+
+            <span class="c1"># interleave the wave and wave_mid arrays</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">wave</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="n">wave_mid</span><span class="o">.</span><span class="n">size</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">wave</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave</span>
+            <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">wave_mid</span>
+
+            <span class="k">if</span> <span class="n">ends</span> <span class="o">==</span> <span class="s1">'symmetric'</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="n">wave</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">dx</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">wave</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">dx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]])</span>
+            <span class="k">elif</span> <span class="n">ends</span> <span class="o">==</span> <span class="s1">'inside'</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown ends '</span><span class="p">,</span> <span class="n">ends</span><span class="p">)</span>
+
+            <span class="c1"># sample</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">sample_method</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">fill_value</span><span class="p">)</span>
+
+            <span class="c1"># apply the chained simpson's rule</span>
+            <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">+</span><span class="n">f</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown method '</span><span class="p">,</span> <span class="n">interp_method</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">preserve_power</span><span class="p">:</span>
+            <span class="n">norm_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">wave</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">wave</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="n">interp_method</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
+            <span class="n">bins</span> <span class="o">*=</span> <span class="n">norm_factor</span>
+
+        <span class="k">return</span> <span class="n">bins</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.integrate">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.integrate.html#lentil.radiometry.Spectrum.integrate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">integrate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'simps'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Compute the integrated value between ``start`` and ``end``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        start : float, optional</span>
+<span class="sd">            Lower wavelength bound. If not specified (default),</span>
+<span class="sd">            ``min(self.wave)`` is used.</span>
+<span class="sd">        end : float, optional</span>
+<span class="sd">            Upper wavelength bound. If not specified (default),</span>
+<span class="sd">            ``max(self.wave)`` is used.</span>
+<span class="sd">        method : {'simps', 'trapz'}, optional</span>
+<span class="sd">            Numerical integration method. 'simps' (default) is better for smooth</span>
+<span class="sd">            data while 'trapz' is better for linear data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        result : float</span>
+<span class="sd">            Integral as approximated by ``interp_method``</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">)</span>
+
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">&gt;=</span> <span class="n">start</span><span class="p">),</span>
+                                 <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">))</span>
+        <span class="n">wave</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">'simps'</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">integrate</span><span class="o">.</span><span class="n">simps</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">wave</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">'trapz'</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">wave</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown method '</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.ends">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.ends.html#lentil.radiometry.Spectrum.ends">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ends</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Locate the indices defining the continuous nonzero portion of the</span>
+<span class="sd">        :attr:`~radiometry.Spectrum.value`</span>
+
+<span class="sd">        The first and last indices where the normalized :attr:`Spectrum.value`</span>
+<span class="sd">        is greater than :attr:`tol` define the bounds of the retained portion of</span>
+<span class="sd">        the :class:`Spectrum`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tol : float, optional</span>
+<span class="sd">            Relative tolerance used to find ends. Default is 1e-4</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Spectrum.trim is only available when '</span>
+                             <span class="s1">'max(Spectrum.value) &gt; 0'</span><span class="p">)</span>
+        <span class="n">normval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">/</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">normval</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">)</span>
+        <span class="n">index_min</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">index_max</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">index_min</span><span class="p">,</span> <span class="n">index_max</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.trim">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.trim.html#lentil.radiometry.Spectrum.trim">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">trim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Trim the zero or near-zero ends off the :class:`Spectrum` object.</span>
+
+<span class="sd">        The first and last indices where the normalized :attr:`Spectrum.value`</span>
+<span class="sd">        is greater than :attr:`tol` define the bounds of the retained portion of</span>
+<span class="sd">        the :class:`Spectrum`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tol : float, optional</span>
+<span class="sd">            Relative tolerance used to find ends. Default is 1e-4</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        If :attr:`~radiometry.Spectrum.value` is all zeros, no trim operation is</span>
+<span class="sd">        performed and the Spectrum remains unchanged.</span>
+
+<span class="sd">        """</span>
+        <span class="c1"># If the value array is all zeros, do nothing!</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">return</span>
+
+        <span class="n">index_min</span><span class="p">,</span> <span class="n">index_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ends</span><span class="p">(</span><span class="n">tol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">[</span><span class="n">index_min</span><span class="p">:</span><span class="n">index_max</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">index_min</span><span class="p">:</span><span class="n">index_max</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.crop">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.crop.html#lentil.radiometry.Spectrum.crop">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">crop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_wave</span><span class="p">,</span> <span class="n">max_wave</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Crop a :class:`Spectrum` object."""</span>
+
+        <span class="k">if</span> <span class="n">min_wave</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">indx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">min_wave</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">,</span> <span class="n">indx</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">indx</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">max_wave</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">indx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">max_wave</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">,</span> <span class="n">indx</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">indx</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.pad">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.pad.html#lentil.radiometry.Spectrum.pad">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ends</span><span class="p">,</span> <span class="n">sampling</span><span class="o">=</span><span class="s1">'min'</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'constant'</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Pad a Spectrum</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ends : sequence or array_like, optional</span>
+<span class="sd">            Wavelength ends to pad to. If None (default), a single value is</span>
+<span class="sd">            padded to each end of the Spectrum according to the sampling and</span>
+<span class="sd">            mode parameters.</span>
+<span class="sd">        sampling : 'min' or float, optional</span>
+<span class="sd">            * 'min' (Default)</span>
+<span class="sd">            * float</span>
+<span class="sd">        mode : {'constant', 'edge'}, optional</span>
+<span class="sd">            * 'constant' pads with a constant value (Default)</span>
+<span class="sd">            * 'edge' pads with the edge values</span>
+<span class="sd">        values : sequence or int, optional</span>
+<span class="sd">            Used in 'constant'. The (before, after) values to set the padded</span>
+<span class="sd">            values for each end. int is a shortcut for before = after. Default</span>
+<span class="sd">            is 0.</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'constant'</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">'values'</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">'values'</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">():</span>
+                    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'edge'</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown mode'</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+
+        <span class="n">dwave</span> <span class="o">=</span> <span class="n">_sampling</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">,</span> <span class="n">sampling</span><span class="p">)</span>
+
+        <span class="n">minwave</span><span class="p">,</span> <span class="n">maxwave</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+        <span class="n">ends</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ends</span><span class="p">)</span>
+
+        <span class="n">nleft</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">minwave</span> <span class="o">-</span> <span class="n">ends</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">dwave</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">nright</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">ends</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">maxwave</span><span class="p">)</span><span class="o">/</span><span class="n">dwave</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="n">leftwave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">ends</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">minwave</span><span class="p">,</span> <span class="n">nleft</span><span class="p">)</span>
+        <span class="n">leftwave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">leftwave</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">leftvalue</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">leftwave</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="n">rightwave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">maxwave</span><span class="p">,</span> <span class="n">ends</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nright</span><span class="p">)</span>
+        <span class="n">rightwave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">rightwave</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">rightvalue</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">rightwave</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">leftwave</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">,</span> <span class="n">rightwave</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">leftvalue</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">rightvalue</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.asarray">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.asarray.html#lentil.radiometry.Spectrum.asarray">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">asarray</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return :attr:`wave` and :attr:`value` as an array.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        array : ndarray</span>
+<span class="sd">            Spectral data as an array with ``array[0] = wave`` and ``array[1] = value``.</span>
+
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">wave</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.to">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.to.html#lentil.radiometry.Spectrum.to">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Set new wavelength and/or value units. In addition to supporting</span>
+<span class="sd">        single ``wave`` or ``value`` unit conversion, this method accepts two</span>
+<span class="sd">        unit arguments to perform simultaneous ``wave`` and ``value`` unit</span>
+<span class="sd">        conversions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        unit : str</span>
+<span class="sd">            Unit to convert to, as accepted by :func:`Unit`.</span>
+
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">unit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'m'</span><span class="p">,</span> <span class="s1">'um'</span><span class="p">,</span> <span class="s1">'nm'</span><span class="p">,</span> <span class="s1">'angstrom'</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">valueunit</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'photlam'</span><span class="p">,</span> <span class="s1">'flam'</span><span class="p">,</span> <span class="s1">'wlam'</span><span class="p">]:</span>
+                    <span class="c1"># if the current valueunit are relative to waveunit, we</span>
+                    <span class="c1"># need to convert to the requested waveunit and update the</span>
+                    <span class="c1"># valueunit appropriately</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waveunit</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waveunit</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">valueunit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># the current valueunit is None, so we assume it is</span>
+                    <span class="c1"># independent of waveunit and only convert to the</span>
+                    <span class="c1"># requested waveunit</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waveunit</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span>
+                <span class="c1"># Update waveunit</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">waveunit</span> <span class="o">=</span> <span class="n">unit</span>
+
+            <span class="k">elif</span> <span class="n">unit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'photlam'</span><span class="p">,</span> <span class="s1">'flam'</span><span class="p">,</span> <span class="s1">'wlam'</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">valueunit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Can't convert from None valueunit to "</span> <span class="o">+</span> <span class="n">unit</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># All conversions are done with wavelength in terms of meters</span>
+                    <span class="n">wave</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waveunit</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">'meter'</span><span class="p">)</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waveunit</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">'meter'</span><span class="p">)</span>
+
+                    <span class="c1"># Do the value conversion</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_valueunit</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">wave</span><span class="p">)</span> <span class="o">/</span> <span class="n">Meter</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waveunit</span><span class="p">)</span>
+
+                    <span class="c1"># Update fluxunit</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">valueunit</span> <span class="o">=</span> <span class="n">unit</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown unit'</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Spectrum.from_csv">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Spectrum.from_csv.html#lentil.radiometry.Spectrum.from_csv">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_csv</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">,</span> <span class="n">valueunit</span><span class="p">,</span> <span class="n">zero_negatives</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">header_rows</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Create a :class:`Spectrum` from a csv file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str</span>
+<span class="sd">            csv file to load</span>
+<span class="sd">        waveunit : str</span>
+<span class="sd">            Wavelength units, as accepted by :func:`Unit`.</span>
+<span class="sd">        valueunit : str</span>
+<span class="sd">            Value units, as accepted by :func:`Unit`.</span>
+<span class="sd">        zero_negatives : bool, optional</span>
+<span class="sd">            If true (default), negative values are replaced with zeros.</span>
+<span class="sd">        header_rows : int, optional</span>
+<span class="sd">            Number of header rows in csv file to ignore. Default is 1.</span>
+
+<span class="sd">        """</span>
+
+        <span class="n">dat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">','</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="n">header_rows</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">zero_negatives</span><span class="p">:</span>
+            <span class="n">dat</span><span class="p">[</span><span class="n">dat</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">dat</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dat</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">waveunit</span><span class="p">,</span> <span class="n">valueunit</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_sampling</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'min'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Compute wave sampling using to specified method.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    wave : array_like</span>
+<span class="sd">        Single wavelength array or 2D collection of wavelength arrays</span>
+<span class="sd">    method: {'min', 'left', 'right'} or float</span>
+<span class="sd">        Method used for computing wavelength sampling when Spectrum resampling</span>
+<span class="sd">        is required prior to adding</span>
+
+<span class="sd">        * 'min' uses the minimum sampling in wave</span>
+<span class="sd">        * 'left' uses the minimum sampling in the left Spectrum</span>
+<span class="sd">        * 'right' uses the minimum sampling in the right Spectrum</span>
+<span class="sd">        * &lt;float&gt; uses the float value specified</span>
+
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">'min'</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">dwave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+            <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">wave</span><span class="p">:</span>
+                <span class="n">dwave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dwave</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+
+            <span class="k">return</span> <span class="n">dwave</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">'left'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">_sampling</span><span class="p">(</span><span class="n">wave</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">'min'</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">'right'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">_sampling</span><span class="p">(</span><span class="n">wave</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">'min'</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">method</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown sampling method'</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_intersect</span><span class="p">(</span><span class="n">subset</span><span class="p">,</span> <span class="n">superset</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return the superset indices where the subset overlaps based on its</span>
+<span class="sd">    subset.min() and subset.max().</span>
+
+<span class="sd">    Both subset and superset are assumed to be monotonically increasing</span>
+
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">superset</span> <span class="o">&gt;=</span> <span class="n">subset</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">superset</span> <span class="o">&lt;=</span> <span class="n">subset</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_interp_common</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">sampling</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">fill_value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return a common wavelength basis with appropriately interpolated and</span>
+<span class="sd">    padded value arrays for s1 and s2.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    s1, s2 : Spectrum objects</span>
+
+<span class="sd">    sampling : {'min', 'left', 'right'} or float</span>
+<span class="sd">        Method used for computing wavelength sampling when Spectrum resampling</span>
+<span class="sd">        is required prior to adding</span>
+
+<span class="sd">        * 'min' uses the minimum sampling in either Spectrum</span>
+<span class="sd">        * 'left' uses the minimum sampling in the left Spectrum</span>
+<span class="sd">        * 'right' uses the minimum sampling in the right Spectrum</span>
+<span class="sd">        * &lt;float&gt; uses the float value specified</span>
+
+<span class="sd">    method : {'linear', 'quadratic', 'cubic'}</span>
+<span class="sd">        Interpolation method used for sampling Spectrum values.</span>
+
+<span class="sd">        * 'linear' uses linear interpolation</span>
+<span class="sd">        * 'quadratic' uses second-order spline interpolation</span>
+<span class="sd">        * 'cubic' uses third-order spline interpolation</span>
+
+<span class="sd">    fill_value : float</span>
+<span class="sd">        Value used to fill in requested points outside of the data range.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    commonwave : ndarray</span>
+
+<span class="sd">    s1_value : ndarray</span>
+
+<span class="sd">    s2_value : ndarray</span>
+
+<span class="sd">    """</span>
+    <span class="c1"># compute a common wavelength array that spans both spectrum and has the</span>
+    <span class="c1"># desired sampling</span>
+    <span class="n">minwave</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">s1</span><span class="o">.</span><span class="n">wave</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">s2</span><span class="o">.</span><span class="n">wave</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+    <span class="n">maxwave</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">s1</span><span class="o">.</span><span class="n">wave</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">s2</span><span class="o">.</span><span class="n">wave</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+
+    <span class="n">dwave</span> <span class="o">=</span> <span class="n">_sampling</span><span class="p">((</span><span class="n">s1</span><span class="o">.</span><span class="n">wave</span><span class="p">,</span> <span class="n">s2</span><span class="o">.</span><span class="n">wave</span><span class="p">),</span> <span class="n">sampling</span><span class="p">)</span>
+
+    <span class="n">num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">maxwave</span> <span class="o">-</span> <span class="n">minwave</span><span class="p">)</span><span class="o">/</span><span class="n">dwave</span><span class="p">))</span>
+    <span class="n">commonwave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minwave</span><span class="p">,</span> <span class="n">maxwave</span><span class="p">,</span> <span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># get the portion of commonwave that corresponds to the two spectrum objects</span>
+    <span class="n">s1_index</span> <span class="o">=</span> <span class="n">_intersect</span><span class="p">(</span><span class="n">s1</span><span class="o">.</span><span class="n">wave</span><span class="p">,</span> <span class="n">commonwave</span><span class="p">)</span>
+    <span class="n">s1_wave</span> <span class="o">=</span> <span class="n">commonwave</span><span class="p">[</span><span class="n">s1_index</span><span class="p">]</span>
+
+    <span class="n">s2_index</span> <span class="o">=</span> <span class="n">_intersect</span><span class="p">(</span><span class="n">s2</span><span class="o">.</span><span class="n">wave</span><span class="p">,</span> <span class="n">commonwave</span><span class="p">)</span>
+    <span class="n">s2_wave</span> <span class="o">=</span> <span class="n">commonwave</span><span class="p">[</span><span class="n">s2_index</span><span class="p">]</span>
+
+    <span class="c1"># sample each Spectrum at the requested sampling</span>
+    <span class="n">s1_samplevalue</span> <span class="o">=</span> <span class="n">s1</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">s1_wave</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">fill_value</span><span class="p">)</span>
+    <span class="n">s2_samplevalue</span> <span class="o">=</span> <span class="n">s2</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">s2_wave</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">fill_value</span><span class="p">)</span>
+
+    <span class="c1"># create nominal value arrays</span>
+    <span class="n">s1_value</span> <span class="o">=</span> <span class="n">fill_value</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">commonwave</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">s2_value</span> <span class="o">=</span> <span class="n">fill_value</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">commonwave</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="c1"># insert the sampled values into the appropriate slots</span>
+    <span class="n">s1_value</span><span class="p">[</span><span class="n">s1_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">s1_samplevalue</span>
+    <span class="n">s2_value</span><span class="p">[</span><span class="n">s2_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">s2_samplevalue</span>
+
+    <span class="k">return</span> <span class="n">commonwave</span><span class="p">,</span> <span class="n">s1_value</span><span class="p">,</span> <span class="n">s2_value</span>
+
+
+<div class="viewcode-block" id="Blackbody">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Blackbody.html#lentil.radiometry.Blackbody">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Blackbody</span><span class="p">(</span><span class="n">Spectrum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Class for representing a blackbody emitter.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    wave : array_like</span>
+<span class="sd">        Array of wavelengths or wavenumbers</span>
+<span class="sd">    temp : float</span>
+<span class="sd">        Temperature in K</span>
+<span class="sd">    waveunit : str</span>
+<span class="sd">        Wavelength units, as accepted by :func:`Unit`. Default is ``nm``.</span>
+<span class="sd">    valueunit : str</span>
+<span class="sd">        Flux units, as accepted by :func:`Unit`. Default is ``photlam``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Create a Blackbody object with wavelength range 400-4000 nm and a temperature of</span>
+<span class="sd">    4000K:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">        :include-source:</span>
+<span class="sd">        :scale: 50</span>
+
+<span class="sd">        &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; import lentil</span>
+<span class="sd">        &gt;&gt;&gt; wave = np.arange(400,4000)</span>
+<span class="sd">        &gt;&gt;&gt; temp = 5000</span>
+<span class="sd">        &gt;&gt;&gt; src = lentil.radiometry.Blackbody(wave,temp,waveunit='nm')</span>
+<span class="sd">        &gt;&gt;&gt; plt.plot(src.wave, src.value), plt.grid()</span>
+<span class="sd">        &gt;&gt;&gt; plt.xlabel('Wavelength [nm]'), plt.ylabel('Flux [photons/sec/m^2]')</span>
+
+<span class="sd">    """</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">waveunit</span><span class="o">=</span><span class="s1">'nm'</span><span class="p">,</span> <span class="n">valueunit</span><span class="o">=</span><span class="s1">'photlam'</span><span class="p">):</span>
+        <span class="n">wave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
+        <span class="n">flux</span> <span class="o">=</span> <span class="n">planck_radiance</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">,</span> <span class="n">valueunit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_fn</span> <span class="o">=</span> <span class="n">planck_radiance</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">,</span> <span class="n">valueunit</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Blackbody.sample">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Blackbody.sample.html#lentil.radiometry.Blackbody.sample">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">waveunit</span><span class="o">=</span><span class="s1">'nm'</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># sample_fn will be planck_radiance if the Blackbody was created from its</span>
+        <span class="c1"># standard constructor. If instead, Blackbody was created from the vegamag</span>
+        <span class="c1"># classmethod, sample_fn will be planck_exitance</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_fn</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">,</span> <span class="n">valueunit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">valueunit</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Blackbody.sample_vegamag">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Blackbody.sample_vegamag.html#lentil.radiometry.Blackbody.sample_vegamag">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_vegamag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">,</span> <span class="n">valueunit</span><span class="p">):</span>
+        <span class="c1"># Get Vega zero point data for requested band</span>
+        <span class="n">E0</span><span class="p">,</span> <span class="n">wave0</span> <span class="o">=</span> <span class="n">vegaflux</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">band</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">)</span>
+
+        <span class="c1"># Compute exitance of Vega at equivalent wavelength in the observing</span>
+        <span class="c1"># band</span>
+        <span class="n">M0</span> <span class="o">=</span> <span class="n">planck_exitance</span><span class="p">(</span><span class="n">wave0</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">,</span> <span class="n">valueunit</span><span class="p">)</span>
+
+        <span class="c1"># Compute the source exitance over the desired wavelengths</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">planck_exitance</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">,</span> <span class="n">valueunit</span><span class="p">)</span>
+
+        <span class="c1"># Scale the source irradiance by the requested magnitude</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="n">E0</span> <span class="o">*</span> <span class="p">(</span><span class="n">M</span><span class="o">/</span><span class="n">M0</span><span class="p">)</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">mag</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">E</span></div>
+
+
+    <span class="c1"># TODO: this should really return a different type. when that is done, remove</span>
+    <span class="c1"># the sample_fn garbage and move sample_vegamag to the new object's sample</span>
+    <span class="c1"># method (should actually create a flux method that takes band, mag, temp,</span>
+    <span class="c1"># etc and call that in both the constructor and the sample method)</span>
+<div class="viewcode-block" id="Blackbody.vegamag">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Blackbody.vegamag.html#lentil.radiometry.Blackbody.vegamag">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">vegamag</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">mag</span><span class="p">,</span> <span class="n">band</span><span class="p">,</span> <span class="n">waveunit</span><span class="o">=</span><span class="s1">'nm'</span><span class="p">,</span> <span class="n">valueunit</span><span class="o">=</span><span class="s1">'photlam'</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">""" Create a :class:`Blackbody` with its irradiance scaled to an</span>
+<span class="sd">        apparent magnitude.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        wave : array_like</span>
+<span class="sd">            Array of wavelengths or wavenumbers</span>
+<span class="sd">        temp : float</span>
+<span class="sd">            Temperature in K</span>
+<span class="sd">        mag : float</span>
+<span class="sd">            Apparent magnitude</span>
+<span class="sd">        band : str</span>
+<span class="sd">            Observing band closest to the wavelengths in :attr:`wave`. See</span>
+<span class="sd">            :func:`vegaflux` for supported bands.</span>
+<span class="sd">        waveunit : str</span>
+<span class="sd">            Wavelength units, as accepted by :func:`Unit`. Default is ``nm``.</span>
+<span class="sd">        valueunit : str</span>
+<span class="sd">            Flux units, as accepted by :func:`Unit`. Default is ``photlam``.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        Create a Blackbody object with wavelength range 400-900 nm, a temperature of</span>
+<span class="sd">        4000K, and a visible magnitude of 2:</span>
+
+<span class="sd">        .. plot::</span>
+<span class="sd">            :scale: 50</span>
+<span class="sd">            :include-source:</span>
+
+<span class="sd">            &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">            &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">            &gt;&gt;&gt; import lentil</span>
+<span class="sd">            &gt;&gt;&gt; wave = np.arange(400,900)</span>
+<span class="sd">            &gt;&gt;&gt; temp = 5000</span>
+<span class="sd">            &gt;&gt;&gt; mag = 2</span>
+<span class="sd">            &gt;&gt;&gt; band = 'V'  # Chosen for best overlap with wavelength range</span>
+<span class="sd">            &gt;&gt;&gt; src = lentil.radiometry.Blackbody.vegamag(wave,temp,mag,band,waveunit='nm')</span>
+<span class="sd">            &gt;&gt;&gt; plt.plot(src.wave, src.value), plt.grid()</span>
+<span class="sd">            &gt;&gt;&gt; plt.xlabel('Wavelength [nm]'), plt.ylabel('Flux [photons/sec/m^2]')</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This class implements a special formulation of a :class:`Blackbody`</span>
+<span class="sd">        which computes irradiance for a star given a magnitude :math:`mag` in</span>
+<span class="sd">        an observing band chosen from :func:`vegaflux`. The general calculation</span>
+<span class="sd">        performed here is as follows:</span>
+
+<span class="sd">        1. Look up zero point irradiance :math:`E_{\mbox{Vega}}` and central</span>
+<span class="sd">           wavelength :math:`\lambda_{0,\mbox{Vega}}` in the desired observing</span>
+<span class="sd">           band</span>
+<span class="sd">        2. Compute exitance :math:`M_0` for the desired star at</span>
+<span class="sd">           :math:`\lambda_{0,\mbox{Vega}}`</span>
+<span class="sd">        3. Compute exitance :math:`M` for the desired star over the requested</span>
+<span class="sd">           wavelength range</span>
+<span class="sd">        4. Compute apparent magnitude scaling factor</span>
+<span class="sd">           :math:`f = 10^{-0.4\mbox{mag}}`</span>
+<span class="sd">        5. Compute star irradiance as</span>
+<span class="sd">           :math:`E = E_{\mbox{Vega}} \ f \left(\frac{M}{M_0}\right)`</span>
+
+<span class="sd">        """</span>
+        <span class="n">wave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
+
+        <span class="c1"># Get Vega zero point data for requested band</span>
+        <span class="n">E0</span><span class="p">,</span> <span class="n">wave0</span> <span class="o">=</span> <span class="n">vegaflux</span><span class="p">(</span><span class="n">band</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">)</span>
+
+        <span class="c1"># Compute exitance of Vega at equivalent wavelength in the observing</span>
+        <span class="c1"># band</span>
+        <span class="n">M0</span> <span class="o">=</span> <span class="n">planck_exitance</span><span class="p">(</span><span class="n">wave0</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">,</span> <span class="n">valueunit</span><span class="o">=</span><span class="s1">'photlam'</span><span class="p">)</span>
+
+        <span class="c1"># Compute the source exitance over the desired wavelengths</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">planck_exitance</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">,</span> <span class="n">valueunit</span><span class="o">=</span><span class="s1">'photlam'</span><span class="p">)</span>
+
+        <span class="c1"># Scale the source irradiance by the requested magnitude</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="n">E0</span> <span class="o">*</span> <span class="p">(</span><span class="n">M</span><span class="o">/</span><span class="n">M0</span><span class="p">)</span><span class="o">*</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="n">mag</span><span class="p">)</span>
+
+        <span class="c1"># Construct a blackbody object</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">,</span> <span class="n">valueunit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">E</span>
+
+        <span class="c1"># Populate this object with additional attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mag</span> <span class="o">=</span> <span class="n">mag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">band</span> <span class="o">=</span> <span class="n">band</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_vegamag</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Material">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.Material.html#lentil.radiometry.Material">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Material</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Class for representing a material with radiometric properties.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    transmission : :class:`~lentil.radiometry.Spectrum` or float, optional</span>
+<span class="sd">        Spectral transmission. If not specified, a default transmission is</span>
+<span class="sd">        created which has no radiometric effect.</span>
+<span class="sd">    emission : :class:`~lentil.radiometry.Spectrum` or float, optional</span>
+<span class="sd">        Spectral thermal emission of the element. If not specified, a default</span>
+<span class="sd">        emission is created which has no radiometric contribution.</span>
+<span class="sd">    contam : float or :class:`~lentil.radiometry.Spectrum`, optional</span>
+<span class="sd">        Material contamination factor. Can be used for representing EOL/BOL</span>
+<span class="sd">        optical properties. Should be within [0,1]. Both</span>
+<span class="sd">        :attr:`~lentil.radiometry.Material.transmission` and</span>
+<span class="sd">        :attr:`~lentil.radiometry.Material.emission` are multiplied by contam</span>
+<span class="sd">        before being returned.</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    There is no explicit reflection attribute. Reflective optics should use the</span>
+<span class="sd">    :attr:`~lentil.radiometry.Material.transmission` attribute to represent</span>
+<span class="sd">    reflectivity.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    * :func:`lentil.radiometry.path_transmission`</span>
+<span class="sd">    * :func:`lentil.radiometry.path_emission`</span>
+
+<span class="sd">    """</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transmission</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">emission</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">contam</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transmission</span> <span class="o">=</span> <span class="n">transmission</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emission</span> <span class="o">=</span> <span class="n">emission</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">contam</span> <span class="o">=</span> <span class="n">contam</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transmission</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">contam</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transmission</span>
+
+    <span class="nd">@transmission</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transmission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_transmission</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">emission</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># TODO: make sure this is correct</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">contam</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_emission</span>
+
+    <span class="nd">@emission</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">emission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_emission</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+
+<div class="viewcode-block" id="path_transmission">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.path_transmission.html#lentil.radiometry.path_transmission">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">path_transmission</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Construct a common transmission from an iterable of :class:`Spectrum` or</span>
+<span class="sd">    :class:`Material` objects or numeric types</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    iterable: list_like</span>
+<span class="sd">        List of :class:`Spectrum` or :class:`Material` objects or numeric types</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    transmission: :class:`~lentil.radiometry.Spectrum`</span>
+
+<span class="sd">    """</span>
+    <span class="n">transmission</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">iterable</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Material</span><span class="p">):</span>
+            <span class="n">transmission</span> <span class="o">=</span> <span class="n">transmission</span> <span class="o">*</span> <span class="n">item</span><span class="o">.</span><span class="n">transmission</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">transmission</span> <span class="o">=</span> <span class="n">transmission</span> <span class="o">*</span> <span class="n">item</span>
+    <span class="k">return</span> <span class="n">transmission</span></div>
+
+
+
+<div class="viewcode-block" id="path_emission">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.path_emission.html#lentil.radiometry.path_emission">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">path_emission</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">emission</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Construct a common emission from an iterable of :class:`Material` objects</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    iterable: list_like</span>
+<span class="sd">        List of :class:`Material` objects</span>
+
+<span class="sd">    emission: scalar or :class:`~lentil.radiometry.Spectrum`, optional</span>
+<span class="sd">        Emission collected upstream of the iterable path. This could be used to</span>
+<span class="sd">        represent things like zodiacal background or warm cavities emitting</span>
+<span class="sd">        into the first element of a path.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    emission: :class:`~lentil.radiometry.Spectrum`</span>
+
+<span class="sd">    """</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">iterable</span><span class="p">:</span>
+        <span class="n">emission</span> <span class="o">=</span> <span class="p">(</span><span class="n">emission</span> <span class="o">*</span> <span class="n">item</span><span class="o">.</span><span class="n">transmission</span><span class="p">)</span> <span class="o">+</span> <span class="n">item</span><span class="o">.</span><span class="n">emission</span>
+    <span class="k">return</span> <span class="n">emission</span></div>
+
+
+
+<div class="viewcode-block" id="planck_exitance">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.planck_exitance.html#lentil.radiometry.planck_exitance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">planck_exitance</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">waveunit</span><span class="o">=</span><span class="s1">'nm'</span><span class="p">,</span> <span class="n">valueunit</span><span class="o">=</span><span class="s1">'wlam'</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Compute the Planck law spectral exitance from a blackbody radiator at</span>
+<span class="sd">    the given temperature.</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        M_{\lambda}(T) = \frac{2\pi hc^2}{\lambda^5 \exp \left(\frac{hc}{\lambda k T}\right)-1}</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    wave : array_like or float</span>
+<span class="sd">        Wavelength or array of wavelengths</span>
+<span class="sd">    temp : float</span>
+<span class="sd">        Blackbody temperature in K</span>
+<span class="sd">    waveunit : str</span>
+<span class="sd">        Wavelength units, as accepted by :func:`Unit`.</span>
+<span class="sd">    valueunit : str</span>
+<span class="sd">        Flux units, as accepted by :func:`Unit`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        Spectral exitance in ``valueunit``.</span>
+
+<span class="sd">    """</span>
+    <span class="c1"># convert wave to meters</span>
+    <span class="n">wave</span> <span class="o">=</span> <span class="n">wave</span> <span class="o">*</span> <span class="n">Unit</span><span class="p">(</span><span class="n">waveunit</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">'meter'</span><span class="p">)</span>
+
+    <span class="c1"># compute flux in W m^-2 sr^-1 m^-1</span>
+    <span class="n">flux</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">H</span><span class="o">*</span><span class="n">C</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="n">wave</span><span class="o">**</span><span class="mi">5</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">H</span><span class="o">*</span><span class="n">C</span><span class="o">/</span><span class="p">(</span><span class="n">wave</span><span class="o">*</span><span class="n">K</span><span class="o">*</span><span class="n">temp</span><span class="p">))</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># do flux conversion (if necessary)</span>
+    <span class="k">if</span> <span class="n">valueunit</span> <span class="o">==</span> <span class="s1">'wlam'</span><span class="p">:</span>
+        <span class="c1"># just convert flux back to W m^-2 sr^-1 &lt;waveunit&gt;^-1</span>
+        <span class="k">return</span> <span class="n">flux</span> <span class="o">/</span> <span class="n">Meter</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">waveunit</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># convert to desired fluxunit and back to waveunit</span>
+        <span class="k">return</span> <span class="n">Wlam</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">flux</span><span class="p">,</span> <span class="n">valueunit</span><span class="p">,</span> <span class="n">wave</span><span class="p">)</span> <span class="o">/</span> <span class="n">Meter</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">waveunit</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="planck_radiance">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.planck_radiance.html#lentil.radiometry.planck_radiance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">planck_radiance</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">waveunit</span><span class="o">=</span><span class="s1">'nm'</span><span class="p">,</span> <span class="n">valueunit</span><span class="o">=</span><span class="s1">'wlam'</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Compute the Planck law spectral radiance from a blackbody radiator at</span>
+<span class="sd">    the given temperature.</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        M_{\lambda}(T) = \frac{2hc^2}{\lambda^5 \exp \left(\frac{hc}{\lambda k T}\right)-1}</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    wave : array_like or float</span>
+<span class="sd">        Wavelength or array of wavelengths</span>
+<span class="sd">    temp : float</span>
+<span class="sd">        Blackbody temperature in K</span>
+<span class="sd">    waveunit : str</span>
+<span class="sd">        Wavelength units, as accepted by :func:`Unit`. Default is ``nm``.</span>
+<span class="sd">    valueunit : str</span>
+<span class="sd">        Flux units, as accepted by :func:`Unit`. Default is ``wlam``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        Spectral radiance in ``valueunit sr^-1``.</span>
+
+<span class="sd">    """</span>
+    <span class="c1"># convert wave to meters</span>
+    <span class="n">wave</span> <span class="o">=</span> <span class="n">wave</span> <span class="o">*</span> <span class="n">Unit</span><span class="p">(</span><span class="n">waveunit</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">'meter'</span><span class="p">)</span>
+
+    <span class="c1"># compute flux in W m^-2 m^-1</span>
+    <span class="n">flux</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">H</span><span class="o">*</span><span class="n">C</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="n">wave</span><span class="o">**</span><span class="mi">5</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">H</span><span class="o">*</span><span class="n">C</span><span class="o">/</span><span class="p">(</span><span class="n">wave</span><span class="o">*</span><span class="n">K</span><span class="o">*</span><span class="n">temp</span><span class="p">))</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># do flux conversion (if necessary)</span>
+    <span class="k">if</span> <span class="n">valueunit</span> <span class="o">==</span> <span class="s1">'wlam'</span><span class="p">:</span>
+        <span class="c1"># just convert flux back to W m^-2 &lt;waveunit&gt;^-1</span>
+        <span class="k">return</span> <span class="n">flux</span> <span class="o">/</span> <span class="n">Meter</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">waveunit</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># convert to desired valueunit and back to waveunit</span>
+        <span class="k">return</span> <span class="n">Wlam</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">flux</span><span class="p">,</span> <span class="n">valueunit</span><span class="p">,</span> <span class="n">wave</span><span class="p">)</span> <span class="o">/</span> <span class="n">Meter</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">waveunit</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="vegaflux">
+<a class="viewcode-back" href="../../generated/lentil.radiometry.vegaflux.html#lentil.radiometry.vegaflux">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">vegaflux</span><span class="p">(</span><span class="n">band</span><span class="p">,</span> <span class="n">waveunit</span><span class="o">=</span><span class="s1">'nm'</span><span class="p">,</span> <span class="n">valueunit</span><span class="o">=</span><span class="s1">'photlam'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Get the flux of Vega in a desired observing band.</span>
+
+<span class="sd">    ====== ================== =======</span>
+<span class="sd">    Band   Central Wavelength Flux</span>
+<span class="sd">    ====== ================== =======</span>
+<span class="sd">    ``U``  360 nm             1790 Jy</span>
+<span class="sd">    ``B``  438 nm             4036 Jy</span>
+<span class="sd">    ``V``  545 nm             3636 Jy</span>
+<span class="sd">    ``R``  641 nm             3064 Jy</span>
+<span class="sd">    ``I``  798 nm             2416 Jy</span>
+<span class="sd">    ``J``  1220 nm            1589 Jy</span>
+<span class="sd">    ``H``  1630 nm            1021 Jy</span>
+<span class="sd">    ``K``  2190 nm            640 Jy</span>
+<span class="sd">    ``W1`` 3353 nm            310 Jy</span>
+<span class="sd">    ``W2`` 4603 nm            172 Jy</span>
+<span class="sd">    ``W3`` 11561 nm           31.7 Jy</span>
+<span class="sd">    ``W4`` 22088 nm           8.36 Jy</span>
+<span class="sd">    ====== ================== =======</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    band : str</span>
+<span class="sd">        Observing band.</span>
+<span class="sd">    waveunit : str</span>
+<span class="sd">        Wavelength units, as accepted by :func:`Unit`. Default is ``nm``.</span>
+<span class="sd">    valueunit : str</span>
+<span class="sd">        Flux units, as accepted by :func:`Unit`. Default is ``photlam``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    flux : float</span>
+<span class="sd">        Vega flux in :attr:`band` expressed in :attr:`valueunit`</span>
+
+<span class="sd">    wave : float</span>
+<span class="sd">        Central wavelength in :attr:`band` expressed in :attr:`waveunit`</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    [1] Bessell et al. (1998) Johnson-Cousins-Class System</span>
+
+<span class="sd">    [2] Wright et al. (2010) Wide-Field Infrared Survey Explorer</span>
+
+<span class="sd">    """</span>
+    <span class="n">vega</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="c1"># band    nm                   Jy</span>
+        <span class="s1">'U'</span><span class="p">:</span>  <span class="p">{</span><span class="s1">'wave'</span><span class="p">:</span> <span class="mf">360e-9</span><span class="p">,</span>   <span class="s1">'flux'</span><span class="p">:</span> <span class="mi">1790</span><span class="p">},</span>
+        <span class="s1">'B'</span><span class="p">:</span>  <span class="p">{</span><span class="s1">'wave'</span><span class="p">:</span> <span class="mf">438e-9</span><span class="p">,</span>   <span class="s1">'flux'</span><span class="p">:</span> <span class="mi">4036</span><span class="p">},</span>
+        <span class="s1">'V'</span><span class="p">:</span>  <span class="p">{</span><span class="s1">'wave'</span><span class="p">:</span> <span class="mf">545e-9</span><span class="p">,</span>   <span class="s1">'flux'</span><span class="p">:</span> <span class="mi">3636</span><span class="p">},</span>
+        <span class="s1">'R'</span><span class="p">:</span>  <span class="p">{</span><span class="s1">'wave'</span><span class="p">:</span> <span class="mf">641e-9</span><span class="p">,</span>   <span class="s1">'flux'</span><span class="p">:</span> <span class="mi">3064</span><span class="p">},</span>
+        <span class="s1">'I'</span><span class="p">:</span>  <span class="p">{</span><span class="s1">'wave'</span><span class="p">:</span> <span class="mf">798e-9</span><span class="p">,</span>   <span class="s1">'flux'</span><span class="p">:</span> <span class="mi">2416</span><span class="p">},</span>
+        <span class="s1">'J'</span><span class="p">:</span>  <span class="p">{</span><span class="s1">'wave'</span><span class="p">:</span> <span class="mf">1220e-9</span><span class="p">,</span>  <span class="s1">'flux'</span><span class="p">:</span> <span class="mi">1589</span><span class="p">},</span>
+        <span class="s1">'H'</span><span class="p">:</span>  <span class="p">{</span><span class="s1">'wave'</span><span class="p">:</span> <span class="mf">1630e-9</span><span class="p">,</span>  <span class="s1">'flux'</span><span class="p">:</span> <span class="mi">1021</span><span class="p">},</span>
+        <span class="s1">'K'</span><span class="p">:</span>  <span class="p">{</span><span class="s1">'wave'</span><span class="p">:</span> <span class="mf">2190e-9</span><span class="p">,</span>  <span class="s1">'flux'</span><span class="p">:</span> <span class="mi">640</span><span class="p">},</span>
+        <span class="s1">'W1'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'wave'</span><span class="p">:</span> <span class="mf">3353e-9</span><span class="p">,</span>  <span class="s1">'flux'</span><span class="p">:</span> <span class="mi">310</span><span class="p">},</span>
+        <span class="s1">'W2'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'wave'</span><span class="p">:</span> <span class="mf">4603e-9</span><span class="p">,</span>  <span class="s1">'flux'</span><span class="p">:</span> <span class="mi">172</span><span class="p">},</span>
+        <span class="s1">'W3'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'wave'</span><span class="p">:</span> <span class="mf">11561e-9</span><span class="p">,</span> <span class="s1">'flux'</span><span class="p">:</span> <span class="mf">31.7</span><span class="p">},</span>
+        <span class="s1">'W4'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'wave'</span><span class="p">:</span> <span class="mf">22088e-9</span><span class="p">,</span> <span class="s1">'flux'</span><span class="p">:</span> <span class="mf">8.36</span><span class="p">}</span>
+        <span class="p">}</span>
+
+    <span class="n">band</span> <span class="o">=</span> <span class="n">band</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">band</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">vega</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown band: '</span> <span class="o">+</span> <span class="n">band</span><span class="p">)</span>
+
+    <span class="n">wave</span> <span class="o">=</span> <span class="n">vega</span><span class="p">[</span><span class="n">band</span><span class="p">][</span><span class="s1">'wave'</span><span class="p">]</span>
+    <span class="n">flux</span> <span class="o">=</span> <span class="n">vega</span><span class="p">[</span><span class="n">band</span><span class="p">][</span><span class="s1">'flux'</span><span class="p">]</span>
+
+    <span class="n">flux</span> <span class="o">=</span> <span class="n">flux</span> <span class="o">*</span> <span class="mf">1e-26</span>                 <span class="c1"># Jy         -&gt; W/m^2 Hz</span>
+    <span class="n">flux</span> <span class="o">=</span> <span class="n">flux</span> <span class="o">*</span> <span class="n">C</span><span class="o">/</span><span class="p">(</span><span class="n">wave</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>           <span class="c1"># W/m^2 Hz   -&gt; W/m^2 m</span>
+    <span class="n">flux</span> <span class="o">=</span> <span class="n">flux</span> <span class="o">*</span> <span class="n">wave</span><span class="o">/</span><span class="p">(</span><span class="n">H</span><span class="o">*</span><span class="n">C</span><span class="p">)</span>            <span class="c1"># W/m^2 m    -&gt; ph/s m^2 m</span>
+
+    <span class="c1"># do flux conversion (if necessary)</span>
+    <span class="k">if</span> <span class="n">valueunit</span> <span class="o">==</span> <span class="s1">'photlam'</span><span class="p">:</span>
+        <span class="c1"># just convert ph/s m^2 m^-1 -&gt; ph/sm^-2 &lt;waveunit&gt;^-1</span>
+        <span class="n">flux</span> <span class="o">=</span> <span class="n">flux</span> <span class="o">/</span> <span class="n">Meter</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">waveunit</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># convert to desired valueunit and back to waveunit. Note that wave</span>
+        <span class="c1"># is still in terms of meters here.</span>
+        <span class="n">flux</span> <span class="o">=</span> <span class="n">Photlam</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">flux</span><span class="p">,</span> <span class="n">valueunit</span><span class="p">,</span> <span class="n">wave</span><span class="p">)</span> <span class="o">/</span> <span class="n">Meter</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">waveunit</span><span class="p">)</span>
+
+    <span class="n">wave</span> <span class="o">=</span> <span class="n">wave</span> <span class="o">*</span> <span class="n">Meter</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">waveunit</span><span class="p">)</span>  <span class="c1"># m -&gt; &lt;waveunit&gt;</span>
+
+    <span class="k">return</span> <span class="n">flux</span><span class="p">,</span> <span class="n">wave</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">Unit</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Generate a Unit object.</span>
+
+<span class="sd">    **Wavelength Units**</span>
+
+<span class="sd">    ===================== ================== ==========================</span>
+<span class="sd">    Name                  Class Object       Units</span>
+<span class="sd">    ===================== ================== ==========================</span>
+<span class="sd">    ``m``, ``meter``      :class:`Meter`     SI base unit</span>
+<span class="sd">    ``um``, ``micron``    :class:`Micron`    :math:`10^{-6}\ \mbox{m}`</span>
+<span class="sd">    ``nm``, ``nanometer`` :class:`Nanometer` :math:`10^{-9}\ \mbox{m}`</span>
+<span class="sd">    ``angstrom``          :class:`Angstrom`  :math:`10^{-10}\ \mbox{m}`</span>
+<span class="sd">    ===================== ================== ==========================</span>
+
+<span class="sd">    **Flux Units**</span>
+
+<span class="sd">    =========== ================= ===========================================</span>
+<span class="sd">    Name        Class Object      Units</span>
+<span class="sd">    =========== ================= ===========================================</span>
+<span class="sd">    ``photlam`` :class:`Photlam`  :math:`\mbox{photons s}^{-1} \mbox{m}^{-2}`</span>
+<span class="sd">    ``wlam``    :class:`Wlam`     :math:`\mbox{W m}^{-2}`</span>
+<span class="sd">    ``flam``    :class:`Flam`     :math:`\mbox{erg s}^{-1} \mbox{cm}^{-2}`</span>
+<span class="sd">    =========== ================= ===========================================</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Wavelength or flux units as accpeted by :func:`Unit`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Unit or ``None``</span>
+<span class="sd">        Unit object. ``None`` means unitless.</span>
+
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'meter'</span><span class="p">,</span> <span class="s1">'m'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">Meter</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'um'</span><span class="p">,</span> <span class="s1">'micron'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">Micron</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'nm'</span><span class="p">,</span> <span class="s1">'nanometer'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">Nanometer</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'angstrom'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Angstrom</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'photlam'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Photlam</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'flam'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Flam</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'wlam'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Wlam</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid unit: '</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_Unit</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Meter</span><span class="p">(</span><span class="n">_Unit</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Meter waveunit."""</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">'m'</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="n">waveunit</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Convert waveunit.</span>
+
+<span class="sd">        ===== ============ ======================</span>
+<span class="sd">        From  To           Conversion</span>
+<span class="sd">        ===== ============ ======================</span>
+<span class="sd">        ``m`` ``m``        :math:`1`</span>
+<span class="sd">        ``m`` ``um``       :math:`10^{-6}` ``m``</span>
+<span class="sd">        ``m`` ``nm``       :math:`10^{-9}` ``m``</span>
+<span class="sd">        ``m`` ``angstrom`` :math:`10^{-10}` ``m``</span>
+<span class="sd">        ===== ============ ======================</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        waveunit : str</span>
+<span class="sd">            Wavelength units, as accpeted by :func:`Unit`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            :attr:`wave` scaling factor</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'m'</span><span class="p">,</span> <span class="s1">'meter'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'um'</span><span class="p">,</span> <span class="s1">'micron'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mf">1e6</span>
+        <span class="k">elif</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'nm'</span><span class="p">,</span> <span class="s1">'nanometer'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mf">1e9</span>
+        <span class="k">elif</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'angstrom'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">1e10</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown waveunit: '</span> <span class="o">+</span> <span class="n">waveunit</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Micron</span><span class="p">(</span><span class="n">_Unit</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Micron waveunit."""</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">'um'</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="n">waveunit</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Convert waveunit.</span>
+
+<span class="sd">        ====== ============ ======================</span>
+<span class="sd">        From   To           Conversion</span>
+<span class="sd">        ====== ============ ======================</span>
+<span class="sd">        ``um`` ``m``        :math:`10^{-6}` ``um``</span>
+<span class="sd">        ``um`` ``um``       :math:`1`</span>
+<span class="sd">        ``um`` ``nm``       :math:`10^{3}` ``um``</span>
+<span class="sd">        ``um`` ``angstrom`` :math:`10^{4}` ``um``</span>
+<span class="sd">        ====== ============ ======================</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        waveunit : str</span>
+<span class="sd">            Wavelength units, as accepted by :func:`Unit`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            :attr:`wave` scaling factor</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'m'</span><span class="p">,</span> <span class="s1">'meter'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mf">1e-6</span>
+        <span class="k">elif</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'um'</span><span class="p">,</span> <span class="s1">'micron'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'nm'</span><span class="p">,</span> <span class="s1">'nanometer'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mf">1e3</span>
+        <span class="k">elif</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'angstrom'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">1e4</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown waveunit: '</span> <span class="o">+</span> <span class="n">waveunit</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Nanometer</span><span class="p">(</span><span class="n">_Unit</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">'nm'</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="n">waveunit</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'m'</span><span class="p">,</span> <span class="s1">'meter'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mf">1e-9</span>
+        <span class="k">elif</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'um'</span><span class="p">,</span> <span class="s1">'micron'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mf">1e-3</span>
+        <span class="k">elif</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'nm'</span><span class="p">,</span> <span class="s1">'nanometer'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'angstrom'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">1e1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown waveunit: '</span> <span class="o">+</span> <span class="n">waveunit</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Angstrom</span><span class="p">(</span><span class="n">_Unit</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">'angstrom'</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="n">waveunit</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'m'</span><span class="p">,</span> <span class="s1">'meter'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mf">1e-10</span>
+        <span class="k">elif</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'um'</span><span class="p">,</span> <span class="s1">'micron'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mf">1e-4</span>
+        <span class="k">elif</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'nm'</span><span class="p">,</span> <span class="s1">'nanometer'</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mf">1e-1</span>
+        <span class="k">elif</span> <span class="n">waveunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'angstrom'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown waveunit: '</span> <span class="o">+</span> <span class="n">waveunit</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Photlam</span><span class="p">(</span><span class="n">_Unit</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">'photlam'</span>
+    <span class="n">longname</span> <span class="o">=</span> <span class="s1">'photons s^-1 m^-2'</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="n">flux</span><span class="p">,</span> <span class="n">fluxunit</span><span class="p">,</span> <span class="n">wave</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">fluxunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'wlam'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">flux</span> <span class="o">*</span> <span class="p">(</span><span class="n">H</span><span class="o">*</span><span class="n">C</span><span class="p">)</span><span class="o">/</span><span class="n">wave</span>
+        <span class="k">elif</span> <span class="n">fluxunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'flam'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">flux</span> <span class="o">*</span> <span class="p">(</span><span class="n">H</span><span class="o">*</span><span class="n">C</span><span class="p">)</span><span class="o">/</span><span class="n">wave</span> <span class="o">*</span> <span class="mf">1e7</span> <span class="o">*</span> <span class="mf">1e-4</span>
+        <span class="k">elif</span> <span class="n">fluxunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'photlam'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">flux</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown fluxunit: '</span> <span class="o">+</span> <span class="n">fluxunit</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Flam</span><span class="p">(</span><span class="n">_Unit</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">'flam'</span>
+    <span class="n">longname</span> <span class="o">=</span> <span class="s1">'erg s^-1 cm^-2'</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="n">flux</span><span class="p">,</span> <span class="n">fluxunit</span><span class="p">,</span> <span class="n">wave</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">fluxunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'photlam'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">flux</span> <span class="o">*</span> <span class="n">wave</span><span class="o">/</span><span class="p">(</span><span class="n">H</span> <span class="o">*</span> <span class="n">C</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-7</span> <span class="o">*</span> <span class="mf">1e4</span>
+        <span class="k">elif</span> <span class="n">fluxunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'wlam'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">flux</span> <span class="o">*</span> <span class="mf">1e-7</span> <span class="o">*</span> <span class="mf">1e4</span>
+        <span class="k">elif</span> <span class="n">fluxunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'flam'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">flux</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown fluxunit: '</span> <span class="o">+</span> <span class="n">fluxunit</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Wlam</span><span class="p">(</span><span class="n">_Unit</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">'wlam'</span>
+    <span class="n">longname</span> <span class="o">=</span> <span class="s1">'W m^-2'</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="n">flux</span><span class="p">,</span> <span class="n">fluxunit</span><span class="p">,</span> <span class="n">wave</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">fluxunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'photlam'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">flux</span> <span class="o">*</span> <span class="n">wave</span><span class="o">/</span><span class="p">(</span><span class="n">H</span><span class="o">*</span><span class="n">C</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">fluxunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'flam'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">flux</span> <span class="o">*</span> <span class="mf">1e7</span> <span class="o">*</span> <span class="mf">1e-4</span>
+        <span class="k">elif</span> <span class="n">fluxunit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'wlam'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">flux</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unknown fluxunit: '</span> <span class="o">+</span> <span class="n">fluxunit</span><span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026 California Institute of Technology.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

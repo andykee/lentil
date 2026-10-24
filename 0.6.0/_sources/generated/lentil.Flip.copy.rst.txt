@@ -1,0 +1,6 @@
+lentil.Flip.copy
+================
+
+.. currentmodule:: lentil
+
+.. automethod:: Flip.copy

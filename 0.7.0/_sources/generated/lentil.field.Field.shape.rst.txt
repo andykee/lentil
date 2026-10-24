@@ -1,0 +1,6 @@
+lentil.field.Field.shape
+========================
+
+.. currentmodule:: lentil.field
+
+.. autoproperty:: Field.shape

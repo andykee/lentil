@@ -1,0 +1,6 @@
+lentil.Image.tilt
+=================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Image.tilt

@@ -1,0 +1,6 @@
+lentil.Image.global\_mask
+=========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Image.global_mask

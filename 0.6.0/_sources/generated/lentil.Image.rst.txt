@@ -1,0 +1,39 @@
+﻿lentil.Image
+============
+
+.. currentmodule:: lentil
+
+.. autoclass:: Image
+
+
+
+**Attributes**
+
+.. autosummary::
+    :toctree:
+    
+    ~Image.amplitude
+    ~Image.depth
+    ~Image.global_mask
+    ~Image.mask
+    ~Image.phase
+    ~Image.pixelscale
+    ~Image.ptt_vector
+    ~Image.shape
+    ~Image.slice
+    ~Image.tilt
+
+
+
+
+**Methods**
+
+.. autosummary::
+    :toctree:
+    
+    ~Image.copy
+    ~Image.fit_tilt
+    ~Image.multiply
+    ~Image.resample
+    ~Image.rescale
+

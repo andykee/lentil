@@ -1,0 +1,6 @@
+lentil.Pupil.mask
+=================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Pupil.mask

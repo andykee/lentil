@@ -1,0 +1,6 @@
+lentil.Grism.shift
+==================
+
+.. currentmodule:: lentil
+
+.. automethod:: Grism.shift

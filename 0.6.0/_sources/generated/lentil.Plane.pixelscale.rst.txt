@@ -1,0 +1,6 @@
+lentil.Plane.pixelscale
+=======================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Plane.pixelscale

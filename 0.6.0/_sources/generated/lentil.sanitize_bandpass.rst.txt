@@ -1,0 +1,6 @@
+﻿lentil.sanitize\_bandpass
+=========================
+
+.. currentmodule:: lentil
+
+.. autofunction:: sanitize_bandpass

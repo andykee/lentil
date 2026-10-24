@@ -1,0 +1,6 @@
+lentil.field.Field.data
+=======================
+
+.. currentmodule:: lentil.field
+
+.. autoattribute:: Field.data

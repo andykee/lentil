@@ -1,0 +1,6 @@
+lentil.Flip.ptt\_vector
+=======================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Flip.ptt_vector

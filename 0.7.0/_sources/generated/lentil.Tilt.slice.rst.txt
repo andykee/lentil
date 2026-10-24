@@ -1,0 +1,6 @@
+lentil.Tilt.slice
+=================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Tilt.slice

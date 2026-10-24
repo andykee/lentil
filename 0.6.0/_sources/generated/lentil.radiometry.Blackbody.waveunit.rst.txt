@@ -1,0 +1,6 @@
+lentil.radiometry.Blackbody.waveunit
+====================================
+
+.. currentmodule:: lentil.radiometry
+
+.. autoproperty:: Blackbody.waveunit

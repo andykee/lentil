@@ -1,0 +1,6 @@
+lentil.Pupil.copy
+=================
+
+.. currentmodule:: lentil
+
+.. automethod:: Pupil.copy

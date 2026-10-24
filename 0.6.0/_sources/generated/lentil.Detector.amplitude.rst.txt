@@ -1,0 +1,6 @@
+lentil.Detector.amplitude
+=========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Detector.amplitude

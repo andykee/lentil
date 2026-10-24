@@ -1,0 +1,6 @@
+lentil.Flip.slice
+=================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Flip.slice

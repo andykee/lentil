@@ -1,0 +1,6 @@
+lentil.Flip.amplitude
+=====================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Flip.amplitude

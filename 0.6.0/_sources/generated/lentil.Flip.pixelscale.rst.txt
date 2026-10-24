@@ -1,0 +1,6 @@
+lentil.Flip.pixelscale
+======================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Flip.pixelscale

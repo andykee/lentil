@@ -1,0 +1,40 @@
+﻿lentil.Tilt
+===========
+
+.. currentmodule:: lentil
+
+.. autoclass:: Tilt
+
+
+
+**Attributes**
+
+.. autosummary::
+    :toctree:
+    
+    ~Tilt.amplitude
+    ~Tilt.depth
+    ~Tilt.global_mask
+    ~Tilt.mask
+    ~Tilt.phase
+    ~Tilt.pixelscale
+    ~Tilt.ptt_vector
+    ~Tilt.shape
+    ~Tilt.slice
+    ~Tilt.tilt
+
+
+
+
+**Methods**
+
+.. autosummary::
+    :toctree:
+    
+    ~Tilt.copy
+    ~Tilt.fit_tilt
+    ~Tilt.multiply
+    ~Tilt.resample
+    ~Tilt.rescale
+    ~Tilt.shift
+

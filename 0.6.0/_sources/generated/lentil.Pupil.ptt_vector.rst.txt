@@ -1,0 +1,6 @@
+lentil.Pupil.ptt\_vector
+========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Pupil.ptt_vector

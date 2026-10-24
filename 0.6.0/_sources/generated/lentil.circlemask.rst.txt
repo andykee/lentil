@@ -1,0 +1,6 @@
+﻿lentil.circlemask
+=================
+
+.. currentmodule:: lentil
+
+.. autofunction:: circlemask

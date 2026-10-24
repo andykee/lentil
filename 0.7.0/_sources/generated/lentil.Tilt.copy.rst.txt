@@ -1,0 +1,6 @@
+lentil.Tilt.copy
+================
+
+.. currentmodule:: lentil
+
+.. automethod:: Tilt.copy

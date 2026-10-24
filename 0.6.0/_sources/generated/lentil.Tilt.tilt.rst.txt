@@ -1,0 +1,6 @@
+lentil.Tilt.tilt
+================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Tilt.tilt

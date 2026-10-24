@@ -1,0 +1,6 @@
+lentil.Image.phase
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Image.phase

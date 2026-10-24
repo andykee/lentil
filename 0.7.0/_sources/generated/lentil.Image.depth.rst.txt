@@ -1,0 +1,6 @@
+lentil.Image.depth
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Image.depth

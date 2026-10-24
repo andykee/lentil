@@ -1,0 +1,6 @@
+lentil.Rotate.pixelscale
+========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Rotate.pixelscale

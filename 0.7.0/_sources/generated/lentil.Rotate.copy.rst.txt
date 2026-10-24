@@ -1,0 +1,6 @@
+lentil.Rotate.copy
+==================
+
+.. currentmodule:: lentil
+
+.. automethod:: Rotate.copy

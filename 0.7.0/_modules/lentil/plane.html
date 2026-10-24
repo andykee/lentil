@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>lentil.plane &#8212; Lentil 0.7.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/lentil.css?v=5019c365" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/syntax-highlighting.css?v=2676ebba" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../../_static/documentation_options.js?v=fe7df9b0"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/lentil/plane';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../../_static/js/copybutton.js?v=fdf1d7ba"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.7.0" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/lentil.png" class="logo__image only-light" alt="Lentil 0.7.0 documentation - Home"/>
+    <img src="../../_static/lentil.png" class="logo__image only-dark pst-js-only" alt="Lentil 0.7.0 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">lentil.plane</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for lentil.plane</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ndimage</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.integrate</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.optimize</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lentil.field</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lentil.helper</span>
+
+
+<div class="viewcode-block" id="Plane">
+<a class="viewcode-back" href="../../generated/lentil.Plane.html#lentil.Plane">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Plane</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Base class for representing a finite geometric plane.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    amplitude : array_like, optional</span>
+<span class="sd">        Electric field amplitude transmission. Amplitude should be normalized</span>
+<span class="sd">        with :func:`~lentil.normalize_power` if conservation of power</span>
+<span class="sd">        through diffraction propagation is required. If not specified (default),</span>
+<span class="sd">        amplitude is created which has no effect on wavefront propagation.</span>
+<span class="sd">    phase : array_like, optional</span>
+<span class="sd">        Phase change caused by plane. If not specified (default), phase is</span>
+<span class="sd">        created which has no effect on wavefront propagation.</span>
+<span class="sd">    mask : array_like, optional</span>
+<span class="sd">        Binary mask. If not specified, a mask is created from the amplitude.</span>
+<span class="sd">        If ``mask`` has 2 dimensions, the plane is assumed to be monolithic. If</span>
+<span class="sd">        ``mask`` has 3 dimensions, the plane is assumed to be segmented with the</span>
+<span class="sd">        individual segment masks inserted along the first dimension.</span>
+
+<span class="sd">        .. plot:: _img/python/segmask.py</span>
+<span class="sd">            :scale: 50</span>
+
+<span class="sd">    pixelscale : float or (2,) array_like, optional</span>
+<span class="sd">        Physical sampling of each pixel in the plane. If ``pixelscale`` is a</span>
+<span class="sd">        scalar, uniform sampling in x and y is assumed. If None (default),</span>
+<span class="sd">        ``pixelscale`` is undefined.</span>
+<span class="sd">    """</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pixelscale</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># We directly set the local attributes here in case a subclass has redefined</span>
+        <span class="c1"># the property (which could cause an weird behavior and will throw an</span>
+        <span class="c1"># AttributeError if the subclass hasn't defined an accompanying getter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pixelscale</span> <span class="o">=</span> <span class="p">()</span> <span class="k">if</span> <span class="n">pixelscale</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">lentil</span><span class="o">.</span><span class="n">sanitize_shape</span><span class="p">(</span><span class="n">pixelscale</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">amplitude</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_slice</span> <span class="o">=</span> <span class="n">_plane_slice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mask</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tilt</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="c1"># we have to define default values to avoid AttributeErrors in case</span>
+        <span class="c1"># subclasses don't call super().__init__ and don't explicitly define</span>
+        <span class="c1"># an attribute</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_pixelscale</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_amplitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_mask</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_tilt</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">()'</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">amplitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Electric field amplitude transmission</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        amplitude : ndarray</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span>
+
+    <span class="nd">@amplitude</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">amplitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_amplitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Electric field phase shift</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        phase : ndarray</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phase</span>
+
+    <span class="nd">@phase</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Binary mask</span>
+
+<span class="sd">        If ``mask`` has 2 dimensions, the plane is assumed to be monolithic. If</span>
+<span class="sd">        ``mask`` has 3 dimensions, the plane is assumed to be segmented with the</span>
+<span class="sd">        individual segment masks inserted along the first dimension.</span>
+
+<span class="sd">        .. plot:: _img/python/segmask.py</span>
+<span class="sd">            :scale: 50</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        mask : ndarray</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mask</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="p">)</span>
+            <span class="n">mask</span><span class="p">[</span><span class="n">mask</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="n">mask</span>
+
+    <span class="nd">@mask</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mask</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_slice</span> <span class="o">=</span> <span class="n">_plane_slice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mask</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">global_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Flattened view of :attr:`mask`</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        mask : ndarray</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pixelscale</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Physical (row, col) sampling of each pixel in the Plane. If plane does</span>
+<span class="sd">        not have a pixelscale, an empty tuple is returned.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pixelscale : tuple</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pixelscale</span>
+
+    <span class="nd">@pixelscale</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pixelscale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pixelscale</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">sanitize_shape</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tilt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        List of additional :class:`~lentil.Tilt` terms associated wirth this Plane</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        tilt : list</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        Tilt : Tilt object</span>
+<span class="sd">        Plane.fit_tilt : Method for fitting and removing tilt</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tilt</span>
+
+    <span class="nd">@tilt</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tilt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tilt</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">slice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slice</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Plane dimensions computed from :attr:`mask`.</span>
+
+<span class="sd">        Returns (mask.shape[1], mask.shape[2]) if mask has ``ndim == 3``. Returns</span>
+<span class="sd">        None if :attr:`mask` is None.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">depth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Number of independent masks (segments) in :attr:`mask`</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        depth : int</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ptt_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        2D vector representing piston and tilt in x and y.</span>
+
+<span class="sd">        Planes with no mask have ``ptt_vector = None``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ptt_vector : ndarray or None</span>
+<span class="sd">        """</span>
+
+        <span class="c1"># if there's no mask, we just set ptt_vector to None and move on</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ptt_vector</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixelscale</span> <span class="o">==</span> <span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"can't create ptt_vector with pixelscale = ()"</span><span class="p">)</span>
+
+            <span class="c1"># compute unmasked piston, x-tilt, y-tilt vector</span>
+            <span class="n">r</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="c1"># note c is negative here. this is done to match Lentil's</span>
+            <span class="c1"># definition of what +x tilt and +y tilt look like. The columns of</span>
+            <span class="c1"># unmasked_ptt_vector should match the shapes returned by lentil.zernike for</span>
+            <span class="c1"># modes 1:3</span>
+            <span class="n">unmasked_ptt_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ij,i-&gt;ij'</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="n">r</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="o">-</span><span class="n">c</span><span class="o">.</span><span class="n">ravel</span><span class="p">()],</span>
+                                            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">ptt_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ij,j-&gt;ij'</span><span class="p">,</span> <span class="n">unmasked_ptt_vector</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># prepare empty ptt_vector</span>
+                <span class="n">ptt_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)))</span>
+
+                <span class="c1"># loop over the masks and fill in the masked ptt_vectors</span>
+                <span class="k">for</span> <span class="n">mask</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">):</span>
+                    <span class="n">ptt_vector</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">mask</span><span class="p">:</span><span class="mi">3</span><span class="o">*</span><span class="n">mask</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">unmasked_ptt_vector</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">ptt_vector</span>
+
+<div class="viewcode-block" id="Plane.copy">
+<a class="viewcode-back" href="../../generated/lentil.Plane.copy.html#lentil.Plane.copy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Make a copy of this object.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        copy : :class:`~lentil.Plane`</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Plane.fit_tilt">
+<a class="viewcode-back" href="../../generated/lentil.Plane.fit_tilt.html#lentil.Plane.fit_tilt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit_tilt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Fit and remove tilt from Plane :attr:`phase` via least squares. The</span>
+<span class="sd">        equivalent angular tilt is bookkept in Plane :attr:`tilt`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inplace : bool, optional</span>
+<span class="sd">            Modify the original object in place (True) or create a copy (False,</span>
+<span class="sd">            default).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        plane : :class:`~lentil.Plane`</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="n">plane</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plane</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="n">ptt_vector</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">ptt_vector</span>
+
+        <span class="c1"># There are a couple of cases where we don't have enough information to remove the</span>
+        <span class="c1"># tilt, so we just return the Plane as-is</span>
+        <span class="k">if</span> <span class="n">ptt_vector</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">plane</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">plane</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">ptt_vector</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">plane</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">phase_tilt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ij,i-&gt;j'</span><span class="p">,</span> <span class="n">ptt_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">plane</span><span class="o">.</span><span class="n">phase</span> <span class="o">-=</span> <span class="n">phase_tilt</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="n">plane</span><span class="o">.</span><span class="n">tilt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Tilt</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+            <span class="n">phase_no_tilt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="n">plane</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">plane</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+            <span class="c1"># iterate over the segments and compute the tilt term</span>
+            <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">):</span>
+                <span class="n">t</span><span class="p">[</span><span class="n">seg</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">ptt_vector</span><span class="p">[</span><span class="mi">3</span> <span class="o">*</span> <span class="n">seg</span><span class="p">:</span><span class="mi">3</span> <span class="o">*</span> <span class="n">seg</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">plane</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+                                         <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">seg_tilt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ij,i-&gt;j'</span><span class="p">,</span> <span class="n">ptt_vector</span><span class="p">[</span><span class="mi">3</span> <span class="o">*</span> <span class="n">seg</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span><span class="mi">3</span> <span class="o">*</span> <span class="n">seg</span> <span class="o">+</span> <span class="mi">3</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="n">seg</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+                <span class="n">phase_no_tilt</span><span class="p">[</span><span class="n">seg</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">phase</span> <span class="o">-</span> <span class="n">seg_tilt</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">[</span><span class="n">seg</span><span class="p">]</span>
+
+            <span class="n">plane</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">phase_no_tilt</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">plane</span><span class="o">.</span><span class="n">tilt</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">Tilt</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="n">seg</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="n">seg</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)])</span>
+
+        <span class="k">return</span> <span class="n">plane</span></div>
+
+
+<div class="viewcode-block" id="Plane.rescale">
+<a class="viewcode-back" href="../../generated/lentil.Plane.rescale.html#lentil.Plane.rescale">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rescale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Rescale a plane via interpolation.</span>
+
+<span class="sd">        The following Plane attributes are resampled:</span>
+
+<span class="sd">        * `Plane.amplitude` is rescaled via 3rd order spline interpolation. The</span>
+<span class="sd">            result is scaled to preserve total power.</span>
+<span class="sd">        * `Plane.phase` is rescaled via 3rd order spline interpolation.</span>
+<span class="sd">        * `Plane.mask` is rescaled via 0-order nearest neighbor interpolation.</span>
+<span class="sd">        * `Plane.pixelscale` is adjusted appropriately.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        scale : float</span>
+<span class="sd">            Scale factor for interpolation. Scale factors less than 1 shrink the</span>
+<span class="sd">            Plane while scale factors greater than 1 grow it.</span>
+<span class="sd">        inplace : bool, optional</span>
+<span class="sd">            Modify the original object in place (True) or create a copy (False,</span>
+<span class="sd">            default)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        plane : :class:`Plane`</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        All interpolation is performed via `scipy.ndimage.map_coordinates`</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        Plane.resample</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="n">plane</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plane</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">plane</span><span class="o">.</span><span class="n">amplitude</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">plane</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">rescale</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                                <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">,</span>
+                                                <span class="n">unitary</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">/</span><span class="n">scale</span>
+
+        <span class="k">if</span> <span class="n">plane</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">plane</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">rescale</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                         <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">,</span> <span class="n">unitary</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># because plane.mask is automatically computed from amplitude if it is not</span>
+        <span class="c1"># provided, we really only want to reinterpolate if a mask was provided (stored</span>
+        <span class="c1"># in plane._mask) vs computed on the fly (by the plane.mask property)</span>
+        <span class="k">if</span> <span class="n">plane</span><span class="o">.</span><span class="n">_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">plane</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">plane</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">rescale</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                            <span class="n">mode</span><span class="o">=</span><span class="s1">'constant'</span><span class="p">,</span> <span class="n">unitary</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plane</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">lentil</span><span class="o">.</span><span class="n">rescale</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                                        <span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'constant'</span><span class="p">,</span> <span class="n">unitary</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                                         <span class="k">for</span> <span class="n">mask</span> <span class="ow">in</span> <span class="n">plane</span><span class="o">.</span><span class="n">mask</span><span class="p">])</span>
+            <span class="c1"># mask[mask &lt; np.finfo(mask.dtype).eps] = 0</span>
+            <span class="n">plane</span><span class="o">.</span><span class="n">mask</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">mask</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">plane</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">plane</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">:</span>
+            <span class="n">plane</span><span class="o">.</span><span class="n">pixelscale</span> <span class="o">=</span> <span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">scale</span><span class="p">,</span> <span class="n">plane</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">scale</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">plane</span></div>
+
+
+<div class="viewcode-block" id="Plane.resample">
+<a class="viewcode-back" href="../../generated/lentil.Plane.resample.html#lentil.Plane.resample">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pixelscale</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Resample a plane via interpolation.</span>
+
+<span class="sd">        The following Plane attributes are resampled:</span>
+
+<span class="sd">        * `Plane.amplitude` is resampled via 3rd order spline interpolation. The</span>
+<span class="sd">          result is scaled to preserve total power.</span>
+<span class="sd">        * `Plane.phase` is resampled via 3rd order spline interpolation.</span>
+<span class="sd">        * `Plane.mask` is resampled via 0-order nearest neighbor interpolation.</span>
+<span class="sd">        * `Plane.pixelscale` is adjusted appropriately.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pixelscale : float</span>
+<span class="sd">            Desired Plane pixelscale.</span>
+<span class="sd">        inplace : bool, optional</span>
+<span class="sd">            Modify the original object in place (True) or create a copy (False,</span>
+<span class="sd">            default)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        plane : :class:`Plane`</span>
+<span class="sd">            Resampled Plane.</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        All interpolation is performed via `scipy.ndimage.map_coordinates`</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        * :func:`Plane.rescale`</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"can't resample Plane with pixelscale = ()"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Can't resample non-uniformly sampled Plane"</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rescale</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">pixelscale</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="n">inplace</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Plane.multiply">
+<a class="viewcode-back" href="../../generated/lentil.Plane.multiply.html#lentil.Plane.multiply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavefront</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Multiply with a wavefront</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        wavefront : :class:`~lentil.wavefront.Wavefront` object</span>
+<span class="sd">            Wavefront to be multiplied</span>
+<span class="sd">        inplace : bool, optional</span>
+<span class="sd">            If True, the wavefront object is multiplied in-place, otherwise a</span>
+<span class="sd">            copy is created before performing the multiplication. Default is</span>
+<span class="sd">            False.</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        It is possible to customize the way multiplication is performed by</span>
+<span class="sd">        creating a subclass and overloading its ``multiply`` method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        wavefront : :class:`~lentil.wavefront.Wavefront` object</span>
+<span class="sd">            Updated wavefront</span>
+
+<span class="sd">        """</span>
+        <span class="n">pixelscale</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">multiply_pixelscale</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">,</span> <span class="n">wavefront</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">)</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">wavefront</span><span class="o">.</span><span class="n">shape</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">()</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">wavefront</span><span class="o">.</span><span class="n">data</span>
+
+        <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">wavefront</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">pixelscale</span> <span class="o">=</span> <span class="n">pixelscale</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">Wavefront</span><span class="p">(</span><span class="n">wavelength</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span>
+                                   <span class="n">pixelscale</span><span class="o">=</span><span class="n">pixelscale</span><span class="p">,</span>
+                                   <span class="n">planetype</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">planetype</span><span class="p">,</span>
+                                   <span class="n">focal_length</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">focal_length</span><span class="p">,</span>
+                                   <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span>
+                                   <span class="n">data</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">slice</span><span class="p">):</span>
+                <span class="c1"># We have to multiply amplitude[s] by mask[n][s] because the requested</span>
+                <span class="c1"># slice of the amplitude array may contain parts of adjacent segments</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+                <span class="n">amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">*</span> <span class="n">mask</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+                <span class="n">phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+
+                <span class="c1"># construct complex phasor</span>
+                <span class="n">phasor</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">amp</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">phase</span><span class="o">/</span><span class="n">wavefront</span><span class="o">.</span><span class="n">wavelength</span><span class="p">),</span>
+                               <span class="n">pixelscale</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">,</span>
+                               <span class="n">offset</span><span class="o">=</span><span class="n">lentil</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">slice_offset</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+                               <span class="n">tilt</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tilt</span><span class="p">[</span><span class="n">n</span><span class="p">]]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tilt</span> <span class="k">else</span> <span class="p">[])</span>
+
+                <span class="n">out</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span> <span class="o">*</span> <span class="n">phasor</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_plane_slice</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Compute slices defined by the data extent in ``mask``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mask : array_like or None, optional</span>
+<span class="sd">        Mask to use for identifying data extents. If None, the Plane's</span>
+<span class="sd">        :attr:`mask` is used. If :attr:`mask` is None, ``Ellipsis`` is</span>
+<span class="sd">        returned (slice returns all data).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    slices : list</span>
+<span class="sd">        List of slices corresponding to the data extent defined by ``mask``.</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    * :func:`~lentil.helper.boundary_slice`</span>
+<span class="sd">    * :func:`~lentil.Plane.slice_offset`</span>
+<span class="sd">     """</span>
+
+    <span class="c1"># self.mask may still return None so we catch that here</span>
+    <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="bp">Ellipsis</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">mask</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># np.s_[...] = Ellipsis -&gt; returns the whole array</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">s_</span><span class="p">[</span><span class="o">...</span><span class="p">]]</span>
+    <span class="k">elif</span> <span class="n">mask</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">lentil</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">boundary_slice</span><span class="p">(</span><span class="n">mask</span><span class="p">)]</span>
+    <span class="k">elif</span> <span class="n">mask</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="n">lentil</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">boundary_slice</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mask</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'mask has invalid dimensions'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+
+<div class="viewcode-block" id="Pupil">
+<a class="viewcode-back" href="../../generated/lentil.Pupil.html#lentil.Pupil">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pupil</span><span class="p">(</span><span class="n">Plane</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Class for representing a pupil plane.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    focal_length : float</span>
+<span class="sd">        Focal length</span>
+<span class="sd">    pixelscale : float</span>
+<span class="sd">        Physical sampling of each pixel in the pupil</span>
+<span class="sd">    amplitude : array_like, optional</span>
+<span class="sd">        Electric field amplitude transmission. Amplitude should be normalized</span>
+<span class="sd">        with :func:`~lentil.normalize_power` if conservation of power</span>
+<span class="sd">        through a diffraction propagation is required. If not specified, a</span>
+<span class="sd">        default amplitude is created which has no effect on wavefront</span>
+<span class="sd">        propagation.</span>
+<span class="sd">    phase : array_like, optional</span>
+<span class="sd">        Phase change caused by plane. If not specified, a default phase is</span>
+<span class="sd">        created which has no effect on wavefront propagation.</span>
+<span class="sd">    mask : array_like, optional</span>
+<span class="sd">        Binary mask. If not specified, a mask is created from the amplitude.</span>
+<span class="sd">        If ``mask`` has 2 dimensions, the plane is assumed to be monolithic. If</span>
+<span class="sd">        ``mask`` has 3 dimensions, the plane is assumed to be segmented with the</span>
+<span class="sd">        individual segment masks inserted along the first dimension.</span>
+
+<span class="sd">        .. plot:: _img/python/segmask.py</span>
+<span class="sd">            :scale: 50</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    By definition, a pupil is represented by a spherical wavefront. Any</span>
+<span class="sd">    aberrations in the optical system appear as deviations from this perfect</span>
+<span class="sd">    sphere. The primary use of :class:`Pupil` is to represent these aberrations</span>
+
+<span class="sd">    """</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">focal_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pixelscale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">phase</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">pixelscale</span><span class="o">=</span><span class="n">pixelscale</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">phase</span><span class="p">,</span>
+                         <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
+
+        <span class="c1"># We directly set the local attributes here in case a subclass has redefined</span>
+        <span class="c1"># the property (which could cause an weird behavior and will throw an</span>
+        <span class="c1"># AttributeError if the subclass hasn't defined an accompanying getter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_focal_length</span> <span class="o">=</span> <span class="n">focal_length</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_focal_length</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">focal_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Pupil focal length"""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_focal_length</span>
+
+    <span class="nd">@focal_length</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">focal_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_focal_length</span> <span class="o">=</span> <span class="n">value</span>
+
+<div class="viewcode-block" id="Pupil.multiply">
+<a class="viewcode-back" href="../../generated/lentil.Pupil.multiply.html#lentil.Pupil.multiply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavefront</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="n">wavefront</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">wavefront</span><span class="p">,</span> <span class="n">inplace</span><span class="p">)</span>
+
+        <span class="c1"># we inherit the plane's focal length as the wavefront's focal length</span>
+        <span class="n">wavefront</span><span class="o">.</span><span class="n">focal_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">focal_length</span>
+        <span class="n">wavefront</span><span class="o">.</span><span class="n">planetype</span> <span class="o">=</span> <span class="s1">'pupil'</span>
+
+        <span class="k">return</span> <span class="n">wavefront</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Image">
+<a class="viewcode-back" href="../../generated/lentil.Image.html#lentil.Image">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">Plane</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Class for representing an image plane.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pixelscale : float, optional</span>
+<span class="sd">        Pixel size in meters. Pixels are assumed to be square. Default is None.</span>
+<span class="sd">    shape : {int, (2,) array_like}, optional</span>
+<span class="sd">        Number of pixels as (rows, cols). If a single value is provided,</span>
+<span class="sd">        :class:`Image` is assumed to be square with nrows = ncols = shape.</span>
+<span class="sd">        Default is None.</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    If image plane intensity is desired, significant performance improvements</span>
+<span class="sd">    can be realized by using a :class:`Detector` plane instead.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    Detector</span>
+
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="Image.fit_tilt">
+<a class="viewcode-back" href="../../generated/lentil.Image.fit_tilt.html#lentil.Image.fit_tilt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit_tilt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+    <span class="c1"># def slice(self, *args, **kwargs):</span>
+    <span class="c1">#     # np.s_[...] = Ellipsis -&gt; returns the whole array</span>
+    <span class="c1">#     return [np.s_[...]]</span>
+
+<div class="viewcode-block" id="Image.multiply">
+<a class="viewcode-back" href="../../generated/lentil.Image.multiply.html#lentil.Image.multiply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavefront</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">wavefront</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">wavefront</span><span class="p">,</span> <span class="n">inplace</span><span class="p">)</span>
+        <span class="n">wavefront</span><span class="o">.</span><span class="n">planetype</span> <span class="o">=</span> <span class="s1">'image'</span>
+        <span class="k">return</span> <span class="n">wavefront</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Detector">
+<a class="viewcode-back" href="../../generated/lentil.Detector.html#lentil.Detector">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Detector</span><span class="p">(</span><span class="n">Image</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Class for representing an image plane that returns intensity.</span>
+
+<span class="sd">    The Detector should only be used as the last plane in a propagation. If</span>
+<span class="sd">    individual wavelength results or access to the complex field is required, an</span>
+<span class="sd">    :class:`Image` plane should be used instead.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pixelscale : float, optional</span>
+<span class="sd">        Pixel size in meters. Pixels are assumed to be square. Default is None.</span>
+<span class="sd">    shape : {int, (2,) array_like}, optional</span>
+<span class="sd">        Number of pixels as (rows, cols). If a single value is provided,</span>
+<span class="sd">        :class:`Image` is assumed to be square with nrows = ncols = shape.</span>
+<span class="sd">        Default is None.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    Image</span>
+
+<span class="sd">    """</span>
+    <span class="k">pass</span></div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DispersivePhase</span><span class="p">(</span><span class="n">Plane</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavefront</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># NOTE: we can handle wavelength-dependent phase terms here (e.g. chromatic</span>
+        <span class="c1"># aberrations). Since the phase will vary by wavelength, we can't fit out the</span>
+        <span class="c1"># tilt pre-propagation and apply the same tilt for each wavelength like we can</span>
+        <span class="c1"># with run of the mill tilt</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DispersiveShift</span><span class="p">(</span><span class="n">Plane</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">shift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavefront</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">wavefront</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">wavefront</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">wavefront</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="n">field</span><span class="o">.</span><span class="n">tilt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">wavefront</span>
+
+
+<div class="viewcode-block" id="Grism">
+<a class="viewcode-back" href="../../generated/lentil.Grism.html#lentil.Grism">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Grism</span><span class="p">(</span><span class="n">DispersiveShift</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Class for representing a grism.</span>
+
+<span class="sd">    A grism is an optical element that can be inserted into a collimated beam</span>
+<span class="sd">    to disperse incoming light according to its wavelength.</span>
+
+<span class="sd">    Light is dispersed along a line called the the spectral trace. The position</span>
+<span class="sd">    along the trace is determined by the dispersion function of the grism. The</span>
+<span class="sd">    local origin of the spectral trace is anchored relative to the undispersed</span>
+<span class="sd">    position of the source. This basic geometry is illustrated in the figure</span>
+<span class="sd">    below:</span>
+
+<span class="sd">    .. image:: /_static/img/grism_geometry.png</span>
+<span class="sd">        :align: center</span>
+<span class="sd">        :width: 400px</span>
+
+<span class="sd">    The spectral trace is parameterized by a polynomial of the form</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        y = a_n x^n + \cdots + a_2 x^2 + a_1 x + a_0</span>
+
+<span class="sd">    and should return units of meters on the focal plane provided an input</span>
+<span class="sd">    in meters on the focal plane.</span>
+
+<span class="sd">    Similarly, the wavelength along the trace is parameterized by a</span>
+<span class="sd">    polynomial of the form</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \lambda = a_n d^n + \cdots + a_2 d^2 + a_1 d + a_0</span>
+
+<span class="sd">    and should return units of meters of wavelength provided an input distance</span>
+<span class="sd">    along the spectral trace.</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    Lentil supports trace and dispersion functions with any arbitrary polynomial</span>
+<span class="sd">    order. While a simple analytic solution exists for modeling first-order trace</span>
+<span class="sd">    and/or dispersion, there is no general solution for higher order functions.</span>
+
+<span class="sd">    As a result, trace and/or dispersion polynomials with order &gt; 1 are evaluated</span>
+<span class="sd">    numerically. Although the effects are small, this approach impacts both the</span>
+<span class="sd">    speed and precision of modeling grisms with higher order trace and/or</span>
+<span class="sd">    dispersion functions. In cases where speed or accuracy are extremely important,</span>
+<span class="sd">    a custom solution may be required.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trace : array_like</span>
+<span class="sd">        Polynomial coefficients describing the spectral trace produced by the</span>
+<span class="sd">        grism in decreasing powers (i.e. trace[0] represents the highest order</span>
+<span class="sd">        coefficient and trace[-1] represents the lowest).</span>
+<span class="sd">    dispersion : array_like</span>
+<span class="sd">        Polynomial coefficients describing the dispersion produced by the grism</span>
+<span class="sd">        in decreasing powers (i.e. dispersion[0] represents the highest order</span>
+<span class="sd">        coefficient and dispersion[-1] represents the lowest.)</span>
+
+<span class="sd">    """</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trace</span><span class="p">,</span> <span class="n">dispersion</span><span class="p">,</span> <span class="n">pixelscale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">phase</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">pixelscale</span><span class="o">=</span><span class="n">pixelscale</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">phase</span><span class="p">,</span>
+                         <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trace_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trace_order</span> <span class="o">&gt;=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dispersion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dispersion</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dispersion_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispersion</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dispersion_order</span> <span class="o">&gt;=</span> <span class="mi">1</span>
+
+<div class="viewcode-block" id="Grism.shift">
+<a class="viewcode-back" href="../../generated/lentil.Grism.shift.html#lentil.Grism.shift">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">,</span> <span class="n">xs</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">ys</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dispersion</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trace</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+
+        <span class="c1"># Include any incoming shift</span>
+        <span class="n">x</span> <span class="o">+=</span> <span class="n">xs</span>
+        <span class="n">y</span> <span class="o">+=</span> <span class="n">ys</span>
+
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_dispersion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Compute distance along spectral trace given wavelength.</span>
+
+<span class="sd">        This method automatically selects the optimal computation stragegy</span>
+<span class="sd">        depending on the dispersion model order.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        wavelength: float</span>
+<span class="sd">            Wavelength to compute dispersed distance in meters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        distance: float</span>
+<span class="sd">            Distance along spectral trace relative to self.dispersion[-1]</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dispersion_order</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># For a first order polynomial we have lambda = dispersion[0] * dist + dispersion[1]</span>
+            <span class="c1"># Solving for distance gives dist = (lambda - dispersion[1])/dispersion[0]</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">wavelength</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispersion</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispersion</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Compute the arc length by numerically integrating from lambda_ref (dispersion[-1])</span>
+            <span class="c1"># to wavelength</span>
+            <span class="c1">#return self._arc_len(self._dispersion_dist_func, self.dispersion[-1], wavelength)</span>
+            <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">leastsq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dist_cost_func</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,))[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_trace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dist</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trace_order</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># https://www.physicsforums.com/threads/formula-for-finding-point-on-a-line-given-distance-along-a-line.419561/</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">dist</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Find x by matching the observed distance along the trace computed by</span>
+            <span class="c1"># self._arc_len(self._trace_dist_func(x), 0, x) with the known distance</span>
+            <span class="c1"># along the trace dist as provided from the wavelength (via self._dispersion)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">leastsq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_trace_cost_func</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">dist</span><span class="p">,))[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_dispersion_wavelength_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dist</span><span class="p">):</span>
+        <span class="c1"># Integrand for computing wavelength (via numerical integration of arc length formula)</span>
+        <span class="c1"># along the polynomial defined by coefficients in self.dispersion</span>
+        <span class="c1">#return np.sqrt(1 + np.polyval(np.polyder(self.dispersion), dist)**2)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dispersion</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_dist_cost_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">wavelength</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dispersion_wavelength_func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_trace_dist_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># Integrand for computing distance along the trace (via numerical integration  of arc</span>
+        <span class="c1"># length formula) along the polynomial defined by coefficients in self.trace</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">polyder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_trace_cost_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">dist</span><span class="p">):</span>
+        <span class="c1"># Compute difference between dist and distance computed along trace given x</span>
+        <span class="k">return</span> <span class="n">dist</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arc_len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_trace_dist_func</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_arc_len</span><span class="p">(</span><span class="n">dist_func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Compute arc length by numerically evaluating the following expression for arc length:</span>
+
+<span class="sd">        s = integrate sqrt(1+f'(x)^2) dx = integrate dist_func dx</span>
+
+<span class="sd">        where dist_func is either _dispersion_dist_func or _trace_dist_func and f(x) is the</span>
+<span class="sd">        polynomial defining either the trace or dispersion.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dist_func: func</span>
+<span class="sd">            Function defining the integrand to be numerically integrated</span>
+<span class="sd">        a, b: float</span>
+<span class="sd">            Lower and upper integration bounds</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        https://en.wikipedia.org/wiki/Arc_length#Finding_arc_lengths_by_integrating</span>
+
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="n">dist_func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">LensletArray</span><span class="p">(</span><span class="n">Plane</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Tilt">
+<a class="viewcode-back" href="../../generated/lentil.Tilt.html#lentil.Tilt">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Tilt</span><span class="p">(</span><span class="n">Plane</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Object for representing tilt in terms of an angle</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : float</span>
+<span class="sd">        Radians of tilt about the x-axis</span>
+<span class="sd">    y : float</span>
+<span class="sd">        Radians of tilt about the y-axis</span>
+
+<span class="sd">    """</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">y</span>  <span class="c1"># y tilt is about the x-axis.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span>  <span class="c1"># x tilt is about the y-axis.</span>
+
+<div class="viewcode-block" id="Tilt.multiply">
+<a class="viewcode-back" href="../../generated/lentil.Tilt.multiply.html#lentil.Tilt.multiply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavefront</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">wavefront</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">wavefront</span><span class="p">,</span> <span class="n">inplace</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">wavefront</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="n">field</span><span class="o">.</span><span class="n">tilt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">wavefront</span></div>
+
+
+<div class="viewcode-block" id="Tilt.shift">
+<a class="viewcode-back" href="../../generated/lentil.Tilt.shift.html#lentil.Tilt.shift">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ys</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Compute image plane shift due to this angular tilt</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xs : float</span>
+<span class="sd">            Incoming x shift distance. Default is 0.</span>
+<span class="sd">        ys : float</span>
+<span class="sd">            Incoming y shift distance. Default is 0.</span>
+<span class="sd">        z : float</span>
+<span class="sd">            Propagation distance</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        shift : tuple</span>
+<span class="sd">            Updated x and y shift terms</span>
+
+<span class="sd">        """</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">xs</span> <span class="o">-</span> <span class="p">(</span><span class="n">z</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">ys</span> <span class="o">-</span> <span class="p">(</span><span class="n">z</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Rotate">
+<a class="viewcode-back" href="../../generated/lentil.Rotate.html#lentil.Rotate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Rotate</span><span class="p">(</span><span class="n">Plane</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Rotate a Wavefront by a specified angle</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    angle : float</span>
+<span class="sd">        Rotation angle counterclockwise from the horizontal.</span>
+<span class="sd">    unit : {'degrees', 'radians'}, optional</span>
+<span class="sd">        Units of angle. Default is 'degrees'.</span>
+<span class="sd">    order : int</span>
+<span class="sd">        The order of the spline interpolation (if needed), default is 3. The</span>
+<span class="sd">        order has to be in the range 0-5.</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    If the angle is an even multiple of 90 degrees, ``numpy.rot90`` is used to</span>
+<span class="sd">    perform the rotation rather than ``scipy.ndimage.rotate``. In this case,</span>
+<span class="sd">    the order parameter is irrelevant because no interpolation occurs.</span>
+
+<span class="sd">    """</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">'degrees'</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">'radians'</span><span class="p">:</span>
+            <span class="n">angle</span> <span class="o">*=</span> <span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="o">-</span><span class="n">angle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="n">order</span>
+
+<div class="viewcode-block" id="Rotate.multiply">
+<a class="viewcode-back" href="../../generated/lentil.Rotate.multiply.html#lentil.Rotate.multiply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavefront</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Multiply with a wavefront</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        wavefront : :class:`~lentil.wavefront.Wavefront` object</span>
+<span class="sd">            Wavefront to be multiplied</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        wavefront : :class:`~lentil.wavefront.Wavefront` object</span>
+<span class="sd">            Updated wavefront</span>
+
+<span class="sd">        """</span>
+
+        <span class="n">pixelscale</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">multiply_pixelscale</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">,</span> <span class="n">wavefront</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">Wavefront</span><span class="p">(</span><span class="n">wavelength</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span>
+                               <span class="n">pixelscale</span><span class="o">=</span><span class="n">pixelscale</span><span class="p">,</span>
+                               <span class="n">planetype</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">planetype</span><span class="p">,</span>
+                               <span class="n">focal_length</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">focal_length</span><span class="p">,</span>
+                               <span class="n">shape</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+                               <span class="n">data</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="n">field</span> <span class="o">=</span> <span class="n">wavefront</span><span class="o">.</span><span class="n">field</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">%</span> <span class="mi">90</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="o">/</span><span class="mi">90</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">,</span> <span class="n">reshape</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">)</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">,</span> <span class="n">reshape</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">real</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">imag</span>
+
+            <span class="n">out</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Field</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">pixelscale</span><span class="o">=</span><span class="n">field</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">,</span>
+                                  <span class="n">offset</span><span class="o">=</span><span class="n">field</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">tilt</span><span class="o">=</span><span class="n">field</span><span class="o">.</span><span class="n">tilt</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Flip">
+<a class="viewcode-back" href="../../generated/lentil.Flip.html#lentil.Flip">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Flip</span><span class="p">(</span><span class="n">Plane</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Flip a wavefront along specified axis</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    axis : {int, tuple of ints, None}, optional</span>
+<span class="sd">        Axis or axes along which to flip over. The default, axis=None, will</span>
+<span class="sd">        flip over all of the axes of the input array. If axis is negative it</span>
+<span class="sd">        counts from the last to the first axis.</span>
+
+<span class="sd">    """</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span>
+
+<div class="viewcode-block" id="Flip.multiply">
+<a class="viewcode-back" href="../../generated/lentil.Flip.multiply.html#lentil.Flip.multiply">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavefront</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Multiply with a wavefront</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        wavefront : :class:`~lentil.wavefront.Wavefront` object</span>
+<span class="sd">            Wavefront to be multiplied</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        wavefront : :class:`~lentil.wavefront.Wavefront` object</span>
+<span class="sd">            Updated wavefront</span>
+
+<span class="sd">        """</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">wavefront</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="n">field</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+</div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Quadratic</span><span class="p">(</span><span class="n">Plane</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Base class for representing an optical plane with a quadratic phase</span>
+<span class="sd">    term.</span>
+
+<span class="sd">    """</span>
+    <span class="k">pass</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Conic</span><span class="p">(</span><span class="n">Plane</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Base class for representing an optical plane with a conic phase term.</span>
+
+<span class="sd">    """</span>
+    <span class="k">pass</span>
+
+
+<span class="c1">#    def Q(self, wave, pixelscale, oversample=1):</span>
+<span class="c1">#        return (self.f_number*wave*oversample)/pixelscale</span>
+<span class="c1">#</span>
+<span class="c1">#    def alpha(self, wave, pixelscale, oversample=1):</span>
+<span class="c1">#        return (self.pixelscale * pixelscale)/(self.focal_length * wave * oversample)</span>
+<span class="c1">#</span>
+<span class="c1">#    def q(self, wave, pixelscale, npix, oversample=1):</span>
+<span class="c1">#        alpha = self.alpha(wave, pixelscale, oversample)</span>
+<span class="c1">#        return 1/(alpha * npix)</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026 California Institute of Technology.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

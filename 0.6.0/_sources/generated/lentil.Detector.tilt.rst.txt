@@ -1,0 +1,6 @@
+lentil.Detector.tilt
+====================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Detector.tilt

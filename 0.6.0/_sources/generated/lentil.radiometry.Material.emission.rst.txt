@@ -1,0 +1,6 @@
+lentil.radiometry.Material.emission
+===================================
+
+.. currentmodule:: lentil.radiometry
+
+.. autoproperty:: Material.emission

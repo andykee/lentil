@@ -1,0 +1,6 @@
+lentil.Flip.global\_mask
+========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Flip.global_mask

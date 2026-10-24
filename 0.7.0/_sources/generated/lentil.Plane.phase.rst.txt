@@ -1,0 +1,6 @@
+lentil.Plane.phase
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Plane.phase

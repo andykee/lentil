@@ -1,0 +1,6 @@
+lentil.field.NDField.offset
+===========================
+
+.. currentmodule:: lentil.field
+
+.. autoproperty:: NDField.offset

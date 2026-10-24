@@ -1,0 +1,6 @@
+lentil.Grism.ptt\_vector
+========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Grism.ptt_vector

@@ -1,0 +1,6 @@
+lentil.Detector.depth
+=====================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Detector.depth

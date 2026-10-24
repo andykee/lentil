@@ -1,0 +1,6 @@
+lentil.Tilt.mask
+================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Tilt.mask

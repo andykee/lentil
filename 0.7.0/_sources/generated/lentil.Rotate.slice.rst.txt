@@ -1,0 +1,6 @@
+lentil.Rotate.slice
+===================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Rotate.slice

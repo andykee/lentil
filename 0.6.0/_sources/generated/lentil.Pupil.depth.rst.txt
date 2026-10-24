@@ -1,0 +1,6 @@
+lentil.Pupil.depth
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Pupil.depth

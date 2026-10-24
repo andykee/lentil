@@ -1,0 +1,6 @@
+﻿lentil.helper.slice\_offset
+===========================
+
+.. currentmodule:: lentil.helper
+
+.. autofunction:: slice_offset

@@ -1,0 +1,6 @@
+lentil.Tilt.global\_mask
+========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Tilt.global_mask

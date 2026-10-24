@@ -1,0 +1,809 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>lentil.Detector.ptt_vector &#8212; Lentil 0.6.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/lentil.css?v=03c9bbe5" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/syntax-highlighting.css?v=2676ebba" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=8fa8b3e9"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/lentil.Detector.ptt_vector';</script>
+    <script src="../_static/js/copybutton.js?v=fdf1d7ba"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lentil.Detector.shape" href="lentil.Detector.shape.html" />
+    <link rel="prev" title="lentil.Detector.pixelscale" href="lentil.Detector.pixelscale.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.6.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/lentil.png" class="logo__image only-light" alt="Lentil 0.6.0 documentation - Home"/>
+    <img src="../_static/lentil.png" class="logo__image only-dark pst-js-only" alt="Lentil 0.6.0 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../reference.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../reference.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="lentil.Plane.html">lentil.Plane</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.amplitude.html">lentil.Plane.amplitude</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.depth.html">lentil.Plane.depth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.global_mask.html">lentil.Plane.global_mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.mask.html">lentil.Plane.mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.phase.html">lentil.Plane.phase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.pixelscale.html">lentil.Plane.pixelscale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.ptt_vector.html">lentil.Plane.ptt_vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.shape.html">lentil.Plane.shape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.slice.html">lentil.Plane.slice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.tilt.html">lentil.Plane.tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.copy.html">lentil.Plane.copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.fit_tilt.html">lentil.Plane.fit_tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.multiply.html">lentil.Plane.multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.resample.html">lentil.Plane.resample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Plane.rescale.html">lentil.Plane.rescale</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="lentil.Pupil.html">lentil.Pupil</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.amplitude.html">lentil.Pupil.amplitude</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.depth.html">lentil.Pupil.depth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.focal_length.html">lentil.Pupil.focal_length</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.global_mask.html">lentil.Pupil.global_mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.mask.html">lentil.Pupil.mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.phase.html">lentil.Pupil.phase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.pixelscale.html">lentil.Pupil.pixelscale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.ptt_vector.html">lentil.Pupil.ptt_vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.shape.html">lentil.Pupil.shape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.slice.html">lentil.Pupil.slice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.tilt.html">lentil.Pupil.tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.copy.html">lentil.Pupil.copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.fit_tilt.html">lentil.Pupil.fit_tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.multiply.html">lentil.Pupil.multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.resample.html">lentil.Pupil.resample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Pupil.rescale.html">lentil.Pupil.rescale</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="lentil.Image.html">lentil.Image</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.amplitude.html">lentil.Image.amplitude</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.depth.html">lentil.Image.depth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.global_mask.html">lentil.Image.global_mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.mask.html">lentil.Image.mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.phase.html">lentil.Image.phase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.pixelscale.html">lentil.Image.pixelscale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.ptt_vector.html">lentil.Image.ptt_vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.shape.html">lentil.Image.shape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.slice.html">lentil.Image.slice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.tilt.html">lentil.Image.tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.copy.html">lentil.Image.copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.fit_tilt.html">lentil.Image.fit_tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.multiply.html">lentil.Image.multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.resample.html">lentil.Image.resample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Image.rescale.html">lentil.Image.rescale</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="lentil.Detector.html">lentil.Detector</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lentil.Detector.amplitude.html">lentil.Detector.amplitude</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Detector.depth.html">lentil.Detector.depth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Detector.global_mask.html">lentil.Detector.global_mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Detector.mask.html">lentil.Detector.mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Detector.phase.html">lentil.Detector.phase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Detector.pixelscale.html">lentil.Detector.pixelscale</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">lentil.Detector.ptt_vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Detector.shape.html">lentil.Detector.shape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Detector.slice.html">lentil.Detector.slice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Detector.tilt.html">lentil.Detector.tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Detector.copy.html">lentil.Detector.copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Detector.fit_tilt.html">lentil.Detector.fit_tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Detector.multiply.html">lentil.Detector.multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Detector.resample.html">lentil.Detector.resample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Detector.rescale.html">lentil.Detector.rescale</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="lentil.Grism.html">lentil.Grism</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.amplitude.html">lentil.Grism.amplitude</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.depth.html">lentil.Grism.depth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.global_mask.html">lentil.Grism.global_mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.mask.html">lentil.Grism.mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.phase.html">lentil.Grism.phase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.pixelscale.html">lentil.Grism.pixelscale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.ptt_vector.html">lentil.Grism.ptt_vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.shape.html">lentil.Grism.shape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.slice.html">lentil.Grism.slice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.tilt.html">lentil.Grism.tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.copy.html">lentil.Grism.copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.fit_tilt.html">lentil.Grism.fit_tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.multiply.html">lentil.Grism.multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.resample.html">lentil.Grism.resample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.rescale.html">lentil.Grism.rescale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Grism.shift.html">lentil.Grism.shift</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="lentil.Tilt.html">lentil.Tilt</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.amplitude.html">lentil.Tilt.amplitude</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.depth.html">lentil.Tilt.depth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.global_mask.html">lentil.Tilt.global_mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.mask.html">lentil.Tilt.mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.phase.html">lentil.Tilt.phase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.pixelscale.html">lentil.Tilt.pixelscale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.ptt_vector.html">lentil.Tilt.ptt_vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.shape.html">lentil.Tilt.shape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.slice.html">lentil.Tilt.slice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.tilt.html">lentil.Tilt.tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.copy.html">lentil.Tilt.copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.fit_tilt.html">lentil.Tilt.fit_tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.multiply.html">lentil.Tilt.multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.resample.html">lentil.Tilt.resample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.rescale.html">lentil.Tilt.rescale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Tilt.shift.html">lentil.Tilt.shift</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="lentil.Rotate.html">lentil.Rotate</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.amplitude.html">lentil.Rotate.amplitude</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.depth.html">lentil.Rotate.depth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.global_mask.html">lentil.Rotate.global_mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.mask.html">lentil.Rotate.mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.phase.html">lentil.Rotate.phase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.pixelscale.html">lentil.Rotate.pixelscale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.ptt_vector.html">lentil.Rotate.ptt_vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.shape.html">lentil.Rotate.shape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.slice.html">lentil.Rotate.slice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.tilt.html">lentil.Rotate.tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.copy.html">lentil.Rotate.copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.fit_tilt.html">lentil.Rotate.fit_tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.multiply.html">lentil.Rotate.multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.resample.html">lentil.Rotate.resample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Rotate.rescale.html">lentil.Rotate.rescale</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="lentil.Flip.html">lentil.Flip</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.amplitude.html">lentil.Flip.amplitude</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.depth.html">lentil.Flip.depth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.global_mask.html">lentil.Flip.global_mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.mask.html">lentil.Flip.mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.phase.html">lentil.Flip.phase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.pixelscale.html">lentil.Flip.pixelscale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.ptt_vector.html">lentil.Flip.ptt_vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.shape.html">lentil.Flip.shape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.slice.html">lentil.Flip.slice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.tilt.html">lentil.Flip.tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.copy.html">lentil.Flip.copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.fit_tilt.html">lentil.Flip.fit_tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.multiply.html">lentil.Flip.multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.resample.html">lentil.Flip.resample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Flip.rescale.html">lentil.Flip.rescale</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="lentil.Wavefront.html">lentil.Wavefront</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Wavefront.wavelength.html">lentil.Wavefront.wavelength</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Wavefront.focal_length.html">lentil.Wavefront.focal_length</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Wavefront.data.html">lentil.Wavefront.data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Wavefront.shape.html">lentil.Wavefront.shape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Wavefront.planetype.html">lentil.Wavefront.planetype</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Wavefront.field.html">lentil.Wavefront.field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Wavefront.intensity.html">lentil.Wavefront.intensity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Wavefront.pixelscale.html">lentil.Wavefront.pixelscale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Wavefront.copy.html">lentil.Wavefront.copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Wavefront.insert.html">lentil.Wavefront.insert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.Wavefront.propagate_image.html">lentil.Wavefront.propagate_image</a></li>
+</ul>
+</details></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lentil.zernike.html">lentil.zernike</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.zernike_basis.html">lentil.zernike_basis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.zernike_compose.html">lentil.zernike_compose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.zernike_coordinates.html">lentil.zernike_coordinates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.zernike_fit.html">lentil.zernike_fit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.zernike_remove.html">lentil.zernike_remove</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lentil.power_spectrum.html">lentil.power_spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.translation_defocus.html">lentil.translation_defocus</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lentil.jitter.html">lentil.jitter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.smear.html">lentil.smear</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lentil.circle.html">lentil.circle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.circlemask.html">lentil.circlemask</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.hexagon.html">lentil.hexagon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.slit.html">lentil.slit</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lentil.boundary.html">lentil.boundary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.centroid.html">lentil.centroid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.pad.html">lentil.pad</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.window.html">lentil.window</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.rebin.html">lentil.rebin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.rescale.html">lentil.rescale</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lentil.min_sampling.html">lentil.min_sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.pixelscale_nyquist.html">lentil.pixelscale_nyquist</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.normalize_power.html">lentil.normalize_power</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.sanitize_shape.html">lentil.sanitize_shape</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.sanitize_bandpass.html">lentil.sanitize_bandpass</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lentil.detector.collect_charge.html">lentil.detector.collect_charge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.detector.collect_charge_bayer.html">lentil.detector.collect_charge_bayer</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lentil.detector.pixel.html">lentil.detector.pixel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.detector.pixelate.html">lentil.detector.pixelate</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lentil.detector.shot_noise.html">lentil.detector.shot_noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.detector.read_noise.html">lentil.detector.read_noise</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.detector.charge_diffusion.html">lentil.detector.charge_diffusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.detector.dark_current.html">lentil.detector.dark_current</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.detector.rule07_dark_current.html">lentil.detector.rule07_dark_current</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lentil.detector.adc.html">lentil.detector.adc</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lentil.detector.cosmic_rays.html">lentil.detector.cosmic_rays</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="lentil.radiometry.Spectrum.html">lentil.radiometry.Spectrum</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.value.html">lentil.radiometry.Spectrum.value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.valueunit.html">lentil.radiometry.Spectrum.valueunit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.wave.html">lentil.radiometry.Spectrum.wave</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.waveunit.html">lentil.radiometry.Spectrum.waveunit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.add.html">lentil.radiometry.Spectrum.add</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.append.html">lentil.radiometry.Spectrum.append</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.asarray.html">lentil.radiometry.Spectrum.asarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.bin.html">lentil.radiometry.Spectrum.bin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.copy.html">lentil.radiometry.Spectrum.copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.crop.html">lentil.radiometry.Spectrum.crop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.divide.html">lentil.radiometry.Spectrum.divide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.ends.html">lentil.radiometry.Spectrum.ends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.from_csv.html">lentil.radiometry.Spectrum.from_csv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.integrate.html">lentil.radiometry.Spectrum.integrate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.multiply.html">lentil.radiometry.Spectrum.multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.pad.html">lentil.radiometry.Spectrum.pad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.power.html">lentil.radiometry.Spectrum.power</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.resample.html">lentil.radiometry.Spectrum.resample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.sample.html">lentil.radiometry.Spectrum.sample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.subtract.html">lentil.radiometry.Spectrum.subtract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.to.html">lentil.radiometry.Spectrum.to</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Spectrum.trim.html">lentil.radiometry.Spectrum.trim</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="lentil.radiometry.Blackbody.html">lentil.radiometry.Blackbody</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.value.html">lentil.radiometry.Blackbody.value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.valueunit.html">lentil.radiometry.Blackbody.valueunit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.wave.html">lentil.radiometry.Blackbody.wave</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.waveunit.html">lentil.radiometry.Blackbody.waveunit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.add.html">lentil.radiometry.Blackbody.add</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.append.html">lentil.radiometry.Blackbody.append</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.asarray.html">lentil.radiometry.Blackbody.asarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.bin.html">lentil.radiometry.Blackbody.bin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.copy.html">lentil.radiometry.Blackbody.copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.crop.html">lentil.radiometry.Blackbody.crop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.divide.html">lentil.radiometry.Blackbody.divide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.ends.html">lentil.radiometry.Blackbody.ends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.from_csv.html">lentil.radiometry.Blackbody.from_csv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.integrate.html">lentil.radiometry.Blackbody.integrate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.multiply.html">lentil.radiometry.Blackbody.multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.pad.html">lentil.radiometry.Blackbody.pad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.power.html">lentil.radiometry.Blackbody.power</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.resample.html">lentil.radiometry.Blackbody.resample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.sample.html">lentil.radiometry.Blackbody.sample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.sample_vegamag.html">lentil.radiometry.Blackbody.sample_vegamag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.subtract.html">lentil.radiometry.Blackbody.subtract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.to.html">lentil.radiometry.Blackbody.to</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.trim.html">lentil.radiometry.Blackbody.trim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Blackbody.vegamag.html">lentil.radiometry.Blackbody.vegamag</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="lentil.radiometry.Material.html">lentil.radiometry.Material</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Material.emission.html">lentil.radiometry.Material.emission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.radiometry.Material.transmission.html">lentil.radiometry.Material.transmission</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.radiometry.planck_radiance.html">lentil.radiometry.planck_radiance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.radiometry.planck_exitance.html">lentil.radiometry.planck_exitance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.radiometry.vegaflux.html">lentil.radiometry.vegaflux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.radiometry.path_transmission.html">lentil.radiometry.path_transmission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.radiometry.path_emission.html">lentil.radiometry.path_emission</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="lentil.field.Field.html">lentil.field.Field</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.Field.data.html">lentil.field.Field.data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.Field.offset.html">lentil.field.Field.offset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.Field.tilt.html">lentil.field.Field.tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.Field.extent.html">lentil.field.Field.extent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.Field.ndim.html">lentil.field.Field.ndim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.Field.pixelscale.html">lentil.field.Field.pixelscale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.Field.shape.html">lentil.field.Field.shape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.Field.size.html">lentil.field.Field.size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.Field.overlap.html">lentil.field.Field.overlap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.Field.shift.html">lentil.field.Field.shift</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="lentil.field.NDField.html">lentil.field.NDField</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.NDField.fields.html">lentil.field.NDField.fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.NDField.data.html">lentil.field.NDField.data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.NDField.extent.html">lentil.field.NDField.extent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.NDField.offset.html">lentil.field.NDField.offset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.NDField.shape.html">lentil.field.NDField.shape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.NDField.append.html">lentil.field.NDField.append</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.field.NDField.overlap.html">lentil.field.NDField.overlap</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.field.extent.html">lentil.field.extent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.field.overlap.html">lentil.field.overlap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.field.boundary.html">lentil.field.boundary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.field.insert.html">lentil.field.insert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.field.merge.html">lentil.field.merge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.field.multiply.html">lentil.field.multiply</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.field.reduce.html">lentil.field.reduce</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lentil.fourier.dft2.html">lentil.fourier.dft2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.fourier.idft2.html">lentil.fourier.idft2</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="lentil.helper.boundary_slice.html">lentil.helper.boundary_slice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.helper.gaussian2d.html">lentil.helper.gaussian2d</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.helper.mesh.html">lentil.helper.mesh</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lentil.helper.slice_offset.html">lentil.helper.slice_offset</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../reference.html" class="nav-link">API reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="lentil.Detector.html" class="nav-link">lentil.Detector</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">lentil.Detector.ptt_vector</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="lentil-detector-ptt-vector">
+<h1>lentil.Detector.ptt_vector<a class="headerlink" href="#lentil-detector-ptt-vector" title="Link to this heading">#</a></h1>
+<dl class="py property">
+<dt class="sig sig-object py" id="lentil.Detector.ptt_vector">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Detector.</span></span><span class="sig-name descname"><span class="pre">ptt_vector</span></span><a class="headerlink" href="#lentil.Detector.ptt_vector" title="Link to this definition">#</a></dt>
+<dd><p>2D vector representing piston and tilt in x and y.</p>
+<p>Planes with no mask have <code class="docutils literal notranslate"><span class="pre">ptt_vector</span> <span class="pre">=</span> <span class="pre">None</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ptt_vector</strong></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ndarray or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lentil.Detector.ptt_vector"><code class="docutils literal notranslate"><span class="pre">Detector.ptt_vector</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026 California Institute of Technology.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

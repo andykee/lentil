@@ -1,0 +1,6 @@
+lentil.radiometry.Spectrum.sample
+=================================
+
+.. currentmodule:: lentil.radiometry
+
+.. automethod:: Spectrum.sample

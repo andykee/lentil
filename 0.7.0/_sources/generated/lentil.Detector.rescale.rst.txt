@@ -1,0 +1,6 @@
+lentil.Detector.rescale
+=======================
+
+.. currentmodule:: lentil
+
+.. automethod:: Detector.rescale

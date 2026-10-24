@@ -1,0 +1,31 @@
+﻿lentil.field.NDField
+====================
+
+.. currentmodule:: lentil.field
+
+.. autoclass:: NDField
+
+
+
+**Attributes**
+
+.. autosummary::
+    :toctree:
+    
+    ~NDField.fields
+    ~NDField.data
+    ~NDField.extent
+    ~NDField.offset
+    ~NDField.shape
+
+
+
+
+**Methods**
+
+.. autosummary::
+    :toctree:
+    
+    ~NDField.append
+    ~NDField.overlap
+

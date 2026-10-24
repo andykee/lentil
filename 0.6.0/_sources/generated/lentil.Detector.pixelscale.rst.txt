@@ -1,0 +1,6 @@
+lentil.Detector.pixelscale
+==========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Detector.pixelscale

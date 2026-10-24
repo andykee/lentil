@@ -1,0 +1,6 @@
+lentil.Rotate.tilt
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Rotate.tilt

@@ -1,0 +1,6 @@
+lentil.Detector.ptt\_vector
+===========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Detector.ptt_vector

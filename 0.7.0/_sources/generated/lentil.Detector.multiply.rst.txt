@@ -1,0 +1,6 @@
+lentil.Detector.multiply
+========================
+
+.. currentmodule:: lentil
+
+.. automethod:: Detector.multiply

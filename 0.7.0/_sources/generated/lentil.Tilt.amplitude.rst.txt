@@ -1,0 +1,6 @@
+lentil.Tilt.amplitude
+=====================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Tilt.amplitude

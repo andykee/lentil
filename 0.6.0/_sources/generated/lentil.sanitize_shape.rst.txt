@@ -1,0 +1,6 @@
+﻿lentil.sanitize\_shape
+======================
+
+.. currentmodule:: lentil
+
+.. autofunction:: sanitize_shape

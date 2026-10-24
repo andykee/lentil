@@ -1,0 +1,6 @@
+lentil.Grism.pixelscale
+=======================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Grism.pixelscale

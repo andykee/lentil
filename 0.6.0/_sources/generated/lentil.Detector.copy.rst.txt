@@ -1,0 +1,6 @@
+lentil.Detector.copy
+====================
+
+.. currentmodule:: lentil
+
+.. automethod:: Detector.copy

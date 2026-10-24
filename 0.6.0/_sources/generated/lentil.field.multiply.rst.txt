@@ -1,0 +1,6 @@
+﻿lentil.field.multiply
+=====================
+
+.. currentmodule:: lentil.field
+
+.. autofunction:: multiply

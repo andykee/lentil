@@ -1,0 +1,6 @@
+lentil.Image.ptt\_vector
+========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Image.ptt_vector

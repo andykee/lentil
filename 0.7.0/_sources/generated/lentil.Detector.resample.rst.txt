@@ -1,0 +1,6 @@
+lentil.Detector.resample
+========================
+
+.. currentmodule:: lentil
+
+.. automethod:: Detector.resample

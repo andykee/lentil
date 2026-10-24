@@ -1,0 +1,6 @@
+lentil.Plane.mask
+=================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Plane.mask

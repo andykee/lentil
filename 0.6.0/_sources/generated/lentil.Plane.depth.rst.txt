@@ -1,0 +1,6 @@
+lentil.Plane.depth
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Plane.depth

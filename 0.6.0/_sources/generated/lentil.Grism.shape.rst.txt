@@ -1,0 +1,6 @@
+lentil.Grism.shape
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Grism.shape

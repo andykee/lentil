@@ -1,0 +1,6 @@
+lentil.Pupil.pixelscale
+=======================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Pupil.pixelscale

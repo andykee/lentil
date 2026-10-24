@@ -1,0 +1,6 @@
+lentil.Wavefront.planetype
+==========================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: Wavefront.planetype

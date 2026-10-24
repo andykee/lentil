@@ -1,0 +1,1342 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>lentil.detector &#8212; Lentil 0.6.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/lentil.css?v=03c9bbe5" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/syntax-highlighting.css?v=2676ebba" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=8fa8b3e9"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/lentil/detector';</script>
+    <script src="../../_static/js/copybutton.js?v=fdf1d7ba"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.6.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/lentil.png" class="logo__image only-light" alt="Lentil 0.6.0 documentation - Home"/>
+    <img src="../../_static/lentil.png" class="logo__image only-dark pst-js-only" alt="Lentil 0.6.0 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">lentil.detector</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for lentil.detector</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.signal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.ndimage</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+
+
+<div class="viewcode-block" id="collect_charge">
+<a class="viewcode-back" href="../../generated/lentil.detector.collect_charge.html#lentil.detector.collect_charge">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">collect_charge</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">qe</span><span class="p">,</span> <span class="n">waveunit</span><span class="o">=</span><span class="s1">'nm'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert photon count (or flux) to electron count (or flux) by</span>
+<span class="sd">    applying the detector's wavelength-dependent quantum efficiency.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : array_like</span>
+<span class="sd">        The photons presented to the sensor. Should have shape (nwave,</span>
+<span class="sd">        nrows, ncols)</span>
+<span class="sd">    wave : array_like</span>
+<span class="sd">        Wavelengths corresponding to each slice in ``count``. The length of</span>
+<span class="sd">        ``wave`` must be equal to the number of samples ``nwave`` in ``count``.</span>
+<span class="sd">    qe : {:class:`lentil.radiometry.Spectrum` array_like, or scalar}</span>
+<span class="sd">        Quantum efficiency used to convert detected photons to electrons.</span>
+<span class="sd">    waveunit : str, optional</span>
+<span class="sd">        Units of ``wave``. Defaults is ``nm``</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Electron count or flux</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The units of ``count`` don't really matter, as long as the user is aware</span>
+<span class="sd">    that this method converts photons per whatever to electrons per</span>
+<span class="sd">    whatever. Whatever is nothing for counts and seconds for flux.</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+    <span class="n">qe</span> <span class="o">=</span> <span class="n">qe_asarray</span><span class="p">(</span><span class="n">qe</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ijk,i-&gt;jk'</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">qe</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="collect_charge_bayer">
+<a class="viewcode-back" href="../../generated/lentil.detector.collect_charge_bayer.html#lentil.detector.collect_charge_bayer">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">collect_charge_bayer</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">qe_red</span><span class="p">,</span> <span class="n">qe_green</span><span class="p">,</span> <span class="n">qe_blue</span><span class="p">,</span> <span class="n">bayer_pattern</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">waveunit</span><span class="o">=</span><span class="s1">'nm'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert photon count (or flux) to electron count (or flux) by</span>
+<span class="sd">    applying the detector's wavelength-dependent quantum efficiency.</span>
+<span class="sd">    Additional processing is performed to apply separate QE curves and</span>
+<span class="sd">    location masks for the separate red, green, and blue channels.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : array_like</span>
+<span class="sd">        The photons presented to the sensor. Should have shape (nwave,</span>
+<span class="sd">        nrows, ncols)</span>
+<span class="sd">    wave : array_like</span>
+<span class="sd">        Wavelengths corresponding to each slice in ``count``. The length of</span>
+<span class="sd">        ``wave`` must be equal to the first dimension in ``count``.</span>
+<span class="sd">    qe_red : {:class:`lentil.radiometry.Spectrum`, array_like, scalar}</span>
+<span class="sd">        Red channel quantum efficiency</span>
+<span class="sd">    qe_green : {:class:`lentil.radiometry.Spectrum`, array_like, scalar}</span>
+<span class="sd">        Green channel quantum efficiency</span>
+<span class="sd">    qe_blue : {:class:`lentil.radiometry.Spectrum`, array_like, scalar}</span>
+<span class="sd">        Blue channel quantum efficiency</span>
+<span class="sd">    bayer_pattern : array_like</span>
+<span class="sd">        Layout of the detector's Bayer pattern. For example, [['B','G'],['G','R']]</span>
+<span class="sd">        describes a BGGR pattern.</span>
+<span class="sd">    oversample : int, optional</span>
+<span class="sd">        Oversampling factor present in ``count``. Default is 1.</span>
+<span class="sd">    waveunit : str, optional</span>
+<span class="sd">        Units of ``wave``. Defaults is ``nm``</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Electron count or flux</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The units of ``count`` don't really matter, as long as the user is aware</span>
+<span class="sd">    that this method converts photons per whatever to electrons per</span>
+<span class="sd">    whatever. Whatever is nothing for counts and seconds for flux.</span>
+
+<span class="sd">    """</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+    <span class="n">qe_red</span> <span class="o">=</span> <span class="n">qe_asarray</span><span class="p">(</span><span class="n">qe_red</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">)</span>
+    <span class="n">qe_green</span> <span class="o">=</span> <span class="n">qe_asarray</span><span class="p">(</span><span class="n">qe_green</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">)</span>
+    <span class="n">qe_blue</span> <span class="o">=</span> <span class="n">qe_asarray</span><span class="p">(</span><span class="n">qe_blue</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">)</span>
+
+    <span class="n">bayer_pattern</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">upper</span><span class="p">(</span><span class="n">bayer_pattern</span><span class="p">)</span>
+    <span class="n">red_kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bayer_pattern</span> <span class="o">==</span> <span class="s1">'R'</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">green_kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bayer_pattern</span> <span class="o">==</span> <span class="s1">'G'</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">blue_kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bayer_pattern</span> <span class="o">==</span> <span class="s1">'B'</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">nrow</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="n">oversample</span>
+    <span class="n">ncol</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">//</span> <span class="n">oversample</span>
+
+    <span class="c1"># build up the bayer image. we do this one channel at a time, and then</span>
+    <span class="c1"># accumulate the individual channels into one final frame</span>
+    <span class="n">red_mosaic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">red_kernel</span><span class="p">,</span> <span class="p">(</span><span class="n">nrow</span> <span class="o">//</span> <span class="n">red_kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ncol</span> <span class="o">//</span> <span class="n">red_kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">red_mosaic</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">red_mosaic</span><span class="p">,</span> <span class="n">oversample</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'wrap'</span><span class="p">)</span>
+    <span class="n">red_e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ijk,i-&gt;jk'</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">qe_red</span><span class="p">)</span> <span class="o">*</span> <span class="n">red_mosaic</span>
+
+    <span class="n">green_mosaic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">green_kernel</span><span class="p">,</span> <span class="p">(</span><span class="n">nrow</span> <span class="o">//</span> <span class="n">green_kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ncol</span> <span class="o">//</span> <span class="n">green_kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">green_mosaic</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">green_mosaic</span><span class="p">,</span> <span class="n">oversample</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'wrap'</span><span class="p">)</span>
+    <span class="n">green_e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ijk,i-&gt;jk'</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">qe_green</span><span class="p">)</span> <span class="o">*</span> <span class="n">green_mosaic</span>
+
+    <span class="n">blue_mosaic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">blue_kernel</span><span class="p">,</span> <span class="p">(</span><span class="n">nrow</span> <span class="o">//</span> <span class="n">blue_kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ncol</span> <span class="o">//</span> <span class="n">blue_kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">blue_mosaic</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">blue_mosaic</span><span class="p">,</span> <span class="n">oversample</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'wrap'</span><span class="p">)</span>
+    <span class="n">blue_e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ijk,i-&gt;jk'</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">qe_blue</span><span class="p">)</span> <span class="o">*</span> <span class="n">blue_mosaic</span>
+
+    <span class="k">return</span> <span class="n">red_e</span> <span class="o">+</span> <span class="n">green_e</span> <span class="o">+</span> <span class="n">blue_e</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">qe_asarray</span><span class="p">(</span><span class="n">qe</span><span class="p">,</span> <span class="n">wave</span><span class="p">,</span> <span class="n">waveunit</span><span class="p">):</span>
+    <span class="c1"># Ensure qe is well-formed</span>
+    <span class="n">wave</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">qe</span><span class="p">,</span> <span class="n">lentil</span><span class="o">.</span><span class="n">radiometry</span><span class="o">.</span><span class="n">Spectrum</span><span class="p">):</span>
+        <span class="n">qe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">qe</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">qe</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">():</span>
+            <span class="n">qe</span> <span class="o">=</span> <span class="n">qe</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">wave</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">qe</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="n">wave</span><span class="o">.</span><span class="n">size</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">qe</span> <span class="o">=</span> <span class="n">qe</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">waveunit</span><span class="o">=</span><span class="n">waveunit</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">qe</span>
+
+
+<div class="viewcode-block" id="pixel">
+<a class="viewcode-back" href="../../generated/lentil.detector.pixel.html#lentil.detector.pixel">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pixel</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Apply the aperture effects of a square pixel on a discretely sampled</span>
+<span class="sd">    image.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : array_like</span>
+<span class="sd">        Input image</span>
+<span class="sd">    oversample : int, optional</span>
+<span class="sd">        Oversampling factor of img. Default is 1.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out : ndarray</span>
+<span class="sd">        Image with pixel sampling effects applied.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    Apply pixel MTF to a 3x oversampled PSF:</span>
+
+<span class="sd">    .. code:: pycon</span>
+
+<span class="sd">        &gt;&gt;&gt; import lentil</span>
+<span class="sd">        &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">        &gt;&gt;&gt; psf = ...  # PSF calculation details omitted</span>
+<span class="sd">        &gt;&gt;&gt; psf_mtf = lentil.pixel(psf, oversample=3)</span>
+<span class="sd">        &gt;&gt;&gt; psf_detector = lentil.rescale(psf_mtf, 1/3)</span>
+
+<span class="sd">    Note that both the pixel MTF and detector resampling operations preserve</span>
+<span class="sd">    radiometry:</span>
+
+<span class="sd">    .. code:: pycon</span>
+
+<span class="sd">        &gt;&gt;&gt; print(np.sum(psf), np.sum(psf_mtf), np.sum(psf_detector))</span>
+<span class="sd">        50398.80556524441 50398.80556524441 50398.80556524441</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    lentil.detector.pixelate : Apply pixel MTF effect before rescaling to native sampling</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    [1] https://en.wikipedia.org/wiki/Convolution_theorem</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">mtf_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sinc</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">oversample</span><span class="p">)</span>
+    <span class="n">mtf_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sinc</span><span class="p">(</span><span class="n">y</span><span class="o">*</span><span class="n">oversample</span><span class="p">)</span>
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mtf_x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">mtf_y</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:])</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft2</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">*</span><span class="n">kernel</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="pixelate">
+<a class="viewcode-back" href="../../generated/lentil.detector.pixelate.html#lentil.detector.pixelate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pixelate</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">oversample</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Convolve an image with the pixel MTF and rescale the result to native sampling</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : array_like</span>
+<span class="sd">        Input image</span>
+<span class="sd">    oversample : int</span>
+<span class="sd">        Number of times ``img`` is oversampled</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Rescaled image with pixel MTF applied</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    ``pixelate`` should only be used if ``oversample`` &gt; 2</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    lentil.detector.pixel : Apply pixel MTF effect without rescaling the result</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">pixel</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">oversample</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lentil</span><span class="o">.</span><span class="n">rescale</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">oversample</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">,</span> <span class="n">unitary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="adc">
+<a class="viewcode-back" href="../../generated/lentil.detector.adc.html#lentil.detector.adc">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">adc</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">gain</span><span class="p">,</span> <span class="n">saturation_capacity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">warn_saturate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Analog to digital conversion</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Array of electron counts</span>
+<span class="sd">    gain : saclar or array_like</span>
+<span class="sd">        Conversion gain in DN/e-. Can be specified in multiple ways:</span>
+
+<span class="sd">            * As a scalar term applied globally to each pixel</span>
+
+<span class="sd">            * As a one-dimensional array of polynomial coefficients applied</span>
+<span class="sd">              globally to each pixel</span>
+
+<span class="sd">            * As a two-dimensional array of pixel-by-pixel scalar gain applied</span>
+<span class="sd">              individually to each pixel</span>
+
+<span class="sd">            * As a three-dimensional array of pixel-by-pixel gain where the</span>
+<span class="sd">              first dimension gives polynomial coefficients of each pixel</span>
+<span class="sd">    saturation_capacity : int or None</span>
+<span class="sd">        Electron count resulting in pixel saturation. If None, pixels will not</span>
+<span class="sd">        saturate. This is obviously nonphysical, but can be useful for testing</span>
+<span class="sd">        or debugging.</span>
+<span class="sd">    warn_saturate : bool, optional</span>
+<span class="sd">        Raise a warning when pixels saturate. Default is False.</span>
+<span class="sd">    dtype : data-type or None, optional</span>
+<span class="sd">        Output data-type. If None (default), no data-type casting is performed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Array of DN</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    The saturation capacity should not be confused with the full-well capacity.</span>
+<span class="sd">    Saturation capacity is typically smaller than the full well capacity because</span>
+<span class="sd">    the signal is clipped before the physical saturation of the pixel is</span>
+<span class="sd">    reached.</span>
+
+<span class="sd">    """</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+    <span class="c1"># Enforce saturation capacity</span>
+    <span class="k">if</span> <span class="n">saturation_capacity</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">warn_saturate</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">img</span> <span class="o">&gt;</span> <span class="n">saturation_capacity</span><span class="p">):</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'Frame has saturated pixels.'</span><span class="p">)</span>
+
+        <span class="c1"># Apply the saturation limit</span>
+        <span class="n">img</span><span class="p">[</span><span class="n">img</span> <span class="o">&gt;</span> <span class="n">saturation_capacity</span><span class="p">]</span> <span class="o">=</span> <span class="n">saturation_capacity</span>
+
+    <span class="c1"># Determine the polynomial order</span>
+    <span class="n">gain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">gain</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gain</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">gain</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">gain</span> <span class="o">=</span> <span class="n">gain</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="n">model_order</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">gain</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+        <span class="n">model_order</span> <span class="o">=</span> <span class="n">gain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span>
+
+    <span class="c1"># Prepare a cube of electron counts to apply the polynomial gain to</span>
+    <span class="n">img_cube</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">model_order</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">model_order</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">model_order</span> <span class="o">-</span> <span class="n">order</span>
+        <span class="n">img_cube</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">img_cube</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="o">**</span><span class="n">order</span>
+
+    <span class="c1"># Apply the gain model and convert to DN</span>
+    <span class="k">if</span> <span class="n">gain</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ijk,i-&gt;jk'</span><span class="p">,</span> <span class="n">img_cube</span><span class="p">,</span> <span class="n">gain</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">gain</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ijk,jk-&gt;jk'</span><span class="p">,</span> <span class="n">img_cube</span><span class="p">,</span> <span class="n">gain</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># gain.ndim == 3</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ijk,ijk-&gt;jk'</span><span class="p">,</span> <span class="n">img_cube</span><span class="p">,</span> <span class="n">gain</span><span class="p">)</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">img</span><span class="p">[</span><span class="n">img</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">img</span></div>
+
+
+
+<div class="viewcode-block" id="shot_noise">
+<a class="viewcode-back" href="../../generated/lentil.detector.shot_noise.html#lentil.detector.shot_noise">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">shot_noise</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'poisson'</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
+<span class="sd">    Apply shot noise to an image</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : array_like</span>
+<span class="sd">        Array of counts. All values must be &gt;= 0.</span>
+<span class="sd">    method : 'poisson' or 'gaussian'</span>
+<span class="sd">        Noise method.</span>
+<span class="sd">    seed : None, int, or array_like, optional</span>
+<span class="sd">        Random seed used to initialize ``numpy.random.RandomState``. If</span>
+<span class="sd">        ``None``, then ``RandomState`` will try to read data from /dev/urandom</span>
+<span class="sd">        (or the Windows analogue) if available or seed from the clock otherwise.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Array of noisy counts</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The output of the Poisson distribution is limited to the range of the C</span>
+<span class="sd">    int64 type. A ValueError is raised when img contains values within 10 sigma</span>
+<span class="sd">    of the maximum representable value (lam &gt; 9.223372006484771e+18).</span>
+
+<span class="sd">    For sufficiently large values of :math:`\lambda`,  (say :math:`\lambda &gt;</span>
+<span class="sd">    1000`), the Normal(:math:`\mu = \lambda`, :math:`\sigma^2 = \lambda`)</span>
+<span class="sd">    distribution is an excellent approximation to the Poisson(:math:`\lambda`)</span>
+<span class="sd">    distribution and is about 25% faster to compute.</span>
+
+<span class="sd">    """</span>
+    <span class="k">assert</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">'poisson'</span><span class="p">,</span> <span class="s1">'gaussian'</span><span class="p">}</span>
+
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">'poisson'</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">img</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Counts must be positive'</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">img</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">9.223372006484771e+18</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Counts exceed max representable value'</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">e</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># REF: https://stackoverflow.com/a/33701974</span>
+        <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">'raise'</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">img</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">img</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FloatingPointError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Counts must be positive'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">img</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="read_noise">
+<a class="viewcode-back" href="../../generated/lentil.detector.read_noise.html#lentil.detector.read_noise">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_noise</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">electrons</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Apply read noise to a frame</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : array_like</span>
+<span class="sd">        Array of electrons</span>
+<span class="sd">    electrons : int</span>
+<span class="sd">        Read noise per frame</span>
+<span class="sd">    seed : None, int, or array_like, optional</span>
+<span class="sd">        Random seed used to initialize ``numpy.random.RandomState``. If</span>
+<span class="sd">        ``None``, then ``RandomState`` will try to read data from /dev/urandom</span>
+<span class="sd">        (or the Windows analogue) if available or seed from the clock otherwise.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Input image with read noise applied</span>
+
+<span class="sd">    """</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">noise</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">electrons</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img</span> <span class="o">+</span> <span class="n">noise</span></div>
+
+
+
+<div class="viewcode-block" id="charge_diffusion">
+<a class="viewcode-back" href="../../generated/lentil.detector.charge_diffusion.html#lentil.detector.charge_diffusion">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">charge_diffusion</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Apply charge diffusion represented by a Gaussian blur</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : array_like</span>
+<span class="sd">        Frame to apply charge diffusion to</span>
+<span class="sd">    sigma : float</span>
+<span class="sd">        Diffusion sigma</span>
+<span class="sd">    oversample : int</span>
+<span class="sd">        Oversample factor in img</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Input frame blurred by charge diffusion</span>
+
+<span class="sd">    """</span>
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">gaussian2d</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">oversample</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">convolve2d</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'same'</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="dark_current">
+<a class="viewcode-back" href="../../generated/lentil.detector.dark_current.html#lentil.detector.dark_current">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">dark_current</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fpn_factor</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Create dark current frame</span>
+
+<span class="sd">    If applied, dark current fixed pattern noise (FPN) is modeled by a</span>
+<span class="sd">    log-normal distribution [1], [2] with mean = 1.0 and sigma = fpn_factor</span>
+<span class="sd">    where rate = rate * FPN.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rate : int</span>
+<span class="sd">        Dark current rate in electrons/second/pixel</span>
+<span class="sd">    shape : array_like or 1</span>
+<span class="sd">        Output shape. If not specified, a scalar is returned.</span>
+<span class="sd">    fpn_factor : float</span>
+<span class="sd">        Dark current FPN factor. Should be between 0.1 and 0.4 for CCD and CMOS</span>
+<span class="sd">        sensors [1].</span>
+<span class="sd">    seed : None, int, or array_like, optional</span>
+<span class="sd">        Random seed used to initialize ``numpy.random.RandomState``. If</span>
+<span class="sd">        ``None``, then ``RandomState`` will try to read data from /dev/urandom</span>
+<span class="sd">        (or the Windows analogue) if available or seed from the clock otherwise.</span>
+
+<span class="sd">        .. warning::</span>
+<span class="sd">            Be aware that if fpn_factor is nonzero and a seed is not provided,</span>
+<span class="sd">            the fixed pattern noise will be different each time dark_current is</span>
+<span class="sd">            called.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dark : ndarray</span>
+<span class="sd">        Dark current frame</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    [1] `Log-normal distribution - Wikipedia &lt;https://en.wikipedia.org/wiki/Log-normal_distribution&gt;`_</span>
+
+<span class="sd">    [2] Janesick, J. R., Photon Transfer, Vol. PM170, SPIE (2007)</span>
+
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">fpn_factor</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">fpn</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">lognormal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">fpn_factor</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fpn</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">dark</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">rate</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span><span class="o">*</span><span class="n">fpn</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dark</span></div>
+
+
+
+<div class="viewcode-block" id="rule07_dark_current">
+<a class="viewcode-back" href="../../generated/lentil.detector.rule07_dark_current.html#lentil.detector.rule07_dark_current">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rule07_dark_current</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="n">cutoff_wavelength</span><span class="p">,</span> <span class="n">pixelscale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">fpn_factor</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Create dark current frame for HgCdTe infrared detectors using Rule 07</span>
+
+<span class="sd">    If applied, dark current fixed pattern noise (FPN) is modeled by a</span>
+<span class="sd">    log-normal distribution with mean = 1.0 and sigma = fpn_factor</span>
+<span class="sd">    where rate = rate * FPN.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    temperature : float</span>
+<span class="sd">        Focal plane temperature in K</span>
+<span class="sd">    cutoff_wavelength : float</span>
+<span class="sd">        Focal plane cutoff wavelength in m</span>
+<span class="sd">    pixelscale : float</span>
+<span class="sd">        Size of one pixel in m</span>
+<span class="sd">    shape : array_like or 1</span>
+<span class="sd">        Output shape. If not specified, a scalar is returned.</span>
+<span class="sd">    fpn_factor : float</span>
+<span class="sd">        Dark current FPN factor. Should be between 0.1 and 0.4 for CCD and CMOS</span>
+<span class="sd">        sensors [2]. When fpn_factor is nonzero, seed must be provided. When</span>
+<span class="sd">        fpn_factor is 0 (default), dark current FPN is not applied.</span>
+<span class="sd">    seed : None, int, or array_like, optional</span>
+<span class="sd">        Random seed used to initialize ``numpy.random.RandomState``. If</span>
+<span class="sd">        ``None``, then ``RandomState`` will try to read data from /dev/urandom</span>
+<span class="sd">        (or the Windows analogue) if available or seed from the clock otherwise.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dark_current  : ndarray</span>
+<span class="sd">        Dark current</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    [1] Tennant, W.E. et al. MBE HgCdTe Technology: A Very General Solution to IR</span>
+<span class="sd">    Detection, Described by "Rule 07", a Very Convenient Heuristic. Journal of</span>
+<span class="sd">    Electronic Materials (2008).</span>
+
+<span class="sd">    [2] `Log-normal distribution - Wikipedia &lt;https://en.wikipedia.org/wiki/Log-normal_distribution&gt;`_</span>
+
+<span class="sd">    [3] Janesick, J. R., Photon Transfer, Vol. PM170, SPIE (2007)</span>
+
+<span class="sd">    """</span>
+    <span class="n">J0</span> <span class="o">=</span> <span class="mf">8367.00001853855</span>  <span class="c1"># A/cm^2</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.16239134096245</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mf">1.3802e-23</span>  <span class="c1"># J/K - Boltzmanns' constant</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="mf">1.6021e-19</span>  <span class="c1"># C - electron charge</span>
+
+    <span class="n">lambda_threshold</span> <span class="o">=</span> <span class="mf">4.63513642316149</span>
+    <span class="n">lambda_scale</span> <span class="o">=</span> <span class="mf">0.200847413564122</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="mf">0.544071281108481</span>
+
+    <span class="c1"># compute lambda_e</span>
+    <span class="n">lambda_cutoff</span> <span class="o">=</span> <span class="n">cutoff_wavelength</span> <span class="o">*</span> <span class="mf">1e6</span>  <span class="c1"># meters to microns</span>
+    <span class="k">if</span> <span class="n">lambda_cutoff</span> <span class="o">&gt;=</span> <span class="n">lambda_threshold</span><span class="p">:</span>
+        <span class="n">lambda_e</span> <span class="o">=</span> <span class="n">lambda_cutoff</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lambda_e</span> <span class="o">=</span> <span class="n">lambda_cutoff</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">((</span><span class="n">lambda_scale</span><span class="o">/</span><span class="n">lambda_cutoff</span><span class="p">)</span> <span class="o">-</span>
+                                     <span class="p">(</span><span class="n">lambda_scale</span><span class="o">/</span><span class="n">lambda_threshold</span><span class="p">))</span><span class="o">**</span><span class="n">P</span><span class="p">)</span>
+
+    <span class="c1"># apply Rule 07 to compute the dark flux in A/cm^2</span>
+    <span class="n">J</span> <span class="o">=</span> <span class="n">J0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">C</span><span class="o">*</span><span class="p">(</span><span class="mf">1.24</span><span class="o">*</span><span class="n">q</span><span class="o">/</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="n">lambda_e</span><span class="o">*</span><span class="n">temperature</span><span class="p">)))</span>
+
+    <span class="c1"># convert J in A/cm^2 to J in e-/px/s</span>
+    <span class="n">px_area</span> <span class="o">=</span> <span class="p">(</span><span class="n">pixelscale</span><span class="o">*</span><span class="mf">1e2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>  <span class="c1"># pixel area in cm^2</span>
+    <span class="n">rate</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">q</span> <span class="o">*</span> <span class="n">px_area</span> <span class="o">*</span> <span class="n">J</span>
+
+    <span class="k">return</span> <span class="n">dark_current</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">fpn_factor</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="cosmic_rays">
+<a class="viewcode-back" href="../../generated/lentil.detector.cosmic_rays.html#lentil.detector.cosmic_rays">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cosmic_rays</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">pixelscale</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mf">4e4</span><span class="p">,</span> <span class="n">proton_flux</span><span class="o">=</span><span class="mf">1e9</span><span class="p">,</span> <span class="n">alpha_flux</span><span class="o">=</span><span class="mf">4e9</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Cosmic ray generator for simulating cosmic ray hits on a detector.</span>
+
+<span class="sd">    The default values for cosmic ray rates and electron fluxes are taken from</span>
+<span class="sd">    [1]. It is commonly accepted at about 90% of cosmic rays are protons and the</span>
+<span class="sd">    majority of the remaining 10% are alpha particles [1], [2].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    shape : array_like</span>
+<span class="sd">        Frame size defined as (rows, cols)</span>
+<span class="sd">    pixelscale : array_like</span>
+<span class="sd">        Pixel dimensions as (y,x,z) where z is the pixel depth</span>
+<span class="sd">    ts : float</span>
+<span class="sd">        Integration time in seconds</span>
+<span class="sd">    rate : float, optional</span>
+<span class="sd">        Cosmic ray rate expressed as number of events per square meter of</span>
+<span class="sd">        detector area. Default is 40000 hits/m^2.</span>
+<span class="sd">    proton_flux : float, optional</span>
+<span class="sd">        Number of electrons liberated per meter of travel for a proton. Default</span>
+<span class="sd">        is 1e9 e-/m.</span>
+<span class="sd">    alpha_flux : float, optional</span>
+<span class="sd">        Number of electrons liberated per meter of travel for an alpha particle.</span>
+<span class="sd">        By definition, alpha particles have four times the energy of protons.</span>
+<span class="sd">        Default is 4e9 e-/m.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cosmic_e : ndarray</span>
+<span class="sd">        Array representing the number of electrons in a detector image due</span>
+<span class="sd">        to cosmic ray hits</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    Simulate the cosmic ray hits for a 2000 second exposure over a 256 x 256 detector</span>
+<span class="sd">    patch with 5 um x 5 um x 3 um pixels:</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">        :scale: 50</span>
+<span class="sd">        :include-source:</span>
+
+<span class="sd">        &gt;&gt;&gt; import matplotlib.pyplot as plt</span>
+<span class="sd">        &gt;&gt;&gt; import lentil</span>
+<span class="sd">        &gt;&gt;&gt; cosmic_frame = lentil.detector.cosmic_rays((256,256), (5e-6, 5e-6, 3e-6), 2000)</span>
+<span class="sd">        &gt;&gt;&gt; plt.imshow(cosmic_frame, origin='lower')</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    [1] Offenberg, J.D. et. al.  Multi-Read Out Data Simulator. (2000).</span>
+
+<span class="sd">    [2] `Cosmic ray - Wikipedia &lt;https://en.wikipedia.org/wiki/Cosmic_ray&gt;`_</span>
+
+<span class="sd">    """</span>
+    <span class="c1"># compute the number of rays that strike the detector during the</span>
+    <span class="c1"># integration time</span>
+    <span class="n">nrays</span> <span class="o">=</span> <span class="n">_nrays</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">pixelscale</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nrays</span><span class="p">):</span>
+        <span class="n">img</span> <span class="o">+=</span> <span class="n">_cosmic_ray</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">pixelscale</span><span class="p">,</span> <span class="n">alpha_flux</span><span class="p">,</span> <span class="n">proton_flux</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_nrays</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">pixelscale</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">rate</span><span class="p">):</span>
+    <span class="n">area</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">pixelscale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">pixelscale</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">nrays</span> <span class="o">=</span> <span class="n">area</span> <span class="o">*</span> <span class="n">rate</span> <span class="o">*</span> <span class="n">ts</span>
+
+    <span class="c1"># even if we don't have any events as defined by the rate, there is</span>
+    <span class="c1"># still a chance we will see an event</span>
+    <span class="k">if</span> <span class="n">nrays</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">nrays</span><span class="p">:</span>
+            <span class="n">nrays</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nrays</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">nrays</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_cosmic_ray</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">pixelscale</span><span class="p">,</span> <span class="n">alpha_flux</span><span class="p">,</span> <span class="n">proton_flux</span><span class="p">):</span>
+
+    <span class="c1"># randomly choose which type of particle we have</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.9</span><span class="p">:</span>
+        <span class="c1"># alpha particle</span>
+        <span class="n">electron_flux</span> <span class="o">=</span> <span class="n">alpha_flux</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># proton</span>
+        <span class="n">electron_flux</span> <span class="o">=</span> <span class="n">proton_flux</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="c1"># random position</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span>
+
+    <span class="c1"># give the cosmic ray a random direction (theta) and angle of incidence</span>
+    <span class="c1"># (phi) and compute a unit vector representing the ray's direction of</span>
+    <span class="c1"># travel. we can make things slightly easier on ourselves by limiting</span>
+    <span class="c1"># phi to the interval 0 &lt; phi &lt; pi. this is assumed to be valid because</span>
+    <span class="c1"># a cosmic ray striking the detector from behind will have essentially</span>
+    <span class="c1"># the same effect as one striking it from the front. phi is negative to</span>
+    <span class="c1"># force the z-direction of v to be negative (traveling into the detector</span>
+    <span class="c1"># from above)</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span>
+                          <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)])</span>
+
+    <span class="c1"># scale the direction vector so that we can use ray_box_exit() assuming</span>
+    <span class="c1"># a cube instead of a potentially rectangular pixel size</span>
+    <span class="n">pixelscale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">pixelscale</span><span class="p">)</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="n">pixelscale</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">pixelscale</span><span class="p">)</span>
+    <span class="n">direction</span> <span class="o">/=</span> <span class="n">scale</span>
+    <span class="n">direction</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>
+
+    <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># propagate the ray</span>
+    <span class="n">ray</span> <span class="o">=</span> <span class="n">_propagate_ray</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">extent</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="c1"># compute the distance the ray traveled in pixel space</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="p">(</span><span class="n">ray</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">ray</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">pixelscale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="p">(</span><span class="n">ray</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">ray</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="n">pixelscale</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">dz</span> <span class="o">=</span> <span class="p">(</span><span class="n">ray</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">ray</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span><span class="o">*</span><span class="n">pixelscale</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dr</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">dc</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">dz</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">ray</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">ray</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">img</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">+=</span> <span class="n">electron_flux</span><span class="o">*</span><span class="n">dist</span>
+
+    <span class="k">return</span> <span class="n">img</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_propagate_ray</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">extent</span><span class="p">):</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="n">position</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">direction</span> <span class="o">=</span> <span class="n">direction</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+    <span class="n">intersections</span> <span class="o">=</span> <span class="n">_cubeplane_ray_intersection</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">extent</span><span class="p">)</span>
+    <span class="n">raw_ray_data</span> <span class="o">=</span> <span class="n">_process_cube_intersections</span><span class="p">(</span><span class="n">intersections</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">direction</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">raw_ray_data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_cubeplane_ray_intersection</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">dxdydz</span><span class="p">,</span> <span class="n">extent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Intersects rays with a plane of cubes and returns data about</span>
+<span class="sd">    intersections</span>
+
+<span class="sd">    Suppose the walls of the cube are on integer boundaries in the space of</span>
+<span class="sd">    extent[0] &lt;= x &lt;= extent[1], extent[2] &lt;= y &lt;= extent[3], extent[4] &lt;= z &lt;=</span>
+<span class="sd">    extent[5]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    xyz : ndarray, ndim=2</span>
+<span class="sd">        xyz[:, 0] is the x coordinate of the starting point of the ray,</span>
+<span class="sd">        xyz[:, 1] is the y coordinate of the starting point of the ray.</span>
+<span class="sd">        xyz[:, 2] is the z coordinate of the starting point.</span>
+<span class="sd">    dxdydz : double ndim=2</span>
+<span class="sd">        Unit vector representing the direction of travel of the ray.</span>
+<span class="sd">    extent : tuple of int</span>
+<span class="sd">        Integer address for the detector edge on the -x, +x, -y,</span>
+<span class="sd">        +y, -z and +z edges. Should be representable as an int16.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    inter : structured ndarray</span>
+<span class="sd">        This is an array of structures with the dtype ('raylength', 'f4'),</span>
+<span class="sd">        ('indx', 'u8'), ('facedirection', 'u1') where indx is the number of the</span>
+<span class="sd">        row for the ray in xyz/dxdydz, raylength is the distance along the ray</span>
+<span class="sd">        of the intersection and facedirection is an indicator of the ray</span>
+<span class="sd">        direction. If face_direction = 0, 2, 4, the ray passed through the</span>
+<span class="sd">        constant X, Y or Z planes, respectively, going from positive to</span>
+<span class="sd">        negative. If face_direction = 1, 3, 5, the ray was going from negative</span>
+<span class="sd">        to positive X, Y or Z through a surface.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    If you don't like the output of this function, feed it into</span>
+<span class="sd">    _process_cube_intersections().</span>
+
+<span class="sd">    This code has been tested when the rays start outside the cube volume. Would</span>
+<span class="sd">    recommend not starting rays inside cube or within 2e-7 of a cube boundary.</span>
+
+<span class="sd">    Very very very slightly adapted from code kindly developed by Dustin Moore.</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">dxdydz</span> <span class="o">=</span> <span class="n">dxdydz</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="n">indx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">xyz</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">)</span>
+
+    <span class="n">extent_shaped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">extent</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+    <span class="c1"># CUBE INTERSECTION</span>
+    <span class="c1"># distance along ray before it penetrates outer CCD grid on xyz, -/+ side</span>
+    <span class="n">max_Ls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">true_divide</span><span class="p">(</span><span class="n">extent_shaped</span> <span class="o">-</span> <span class="n">xyz</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">dxdydz</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">])</span>
+    <span class="n">max_Ls</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">max_Ls</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="c1"># Find length of ray to point where it enters cube array</span>
+    <span class="n">min_L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">max_Ls</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Find total length of ray to point as it exits cube array</span>
+    <span class="n">max_L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">max_Ls</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">max_Ls</span>
+
+    <span class="c1"># Find rays that never intersect cube or only intersect if the ray traced</span>
+    <span class="c1"># backward</span>
+    <span class="n">no_intersection_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">max_L</span> <span class="o">&lt;</span> <span class="n">min_L</span><span class="p">,</span> <span class="n">max_L</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="c1"># ... and chuck them from the calculation</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">no_intersection_mask</span><span class="p">):</span>
+        <span class="n">keep_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="n">no_intersection_mask</span><span class="p">)</span>
+        <span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span><span class="p">[</span><span class="n">keep_mask</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">dxdydz</span> <span class="o">=</span> <span class="n">dxdydz</span><span class="p">[</span><span class="n">keep_mask</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">indx</span> <span class="o">=</span> <span class="n">indx</span><span class="p">[</span><span class="n">keep_mask</span><span class="p">]</span>
+        <span class="n">min_L</span> <span class="o">=</span> <span class="n">min_L</span><span class="p">[</span><span class="n">keep_mask</span><span class="p">]</span>
+        <span class="n">max_L</span> <span class="o">=</span> <span class="n">max_L</span><span class="p">[</span><span class="n">keep_mask</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">keep_mask</span>
+    <span class="k">del</span> <span class="n">no_intersection_mask</span>
+
+    <span class="c1"># CUBE EDGE INTERSECTIONS</span>
+    <span class="c1"># Shortest travel along each axis before ray exits cube array bounding</span>
+    <span class="c1"># extent</span>
+    <span class="n">min_L</span><span class="p">[</span><span class="n">min_L</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Rays can not go backward</span>
+    <span class="n">nearest</span> <span class="o">=</span> <span class="n">xyz</span> <span class="o">+</span> <span class="p">(</span><span class="n">min_L</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="mf">1e-5</span><span class="p">)</span> <span class="o">*</span> <span class="n">dxdydz</span>
+    <span class="k">del</span> <span class="n">min_L</span>
+    <span class="c1"># Furthest travel along each axis before ray exits cube array bounding</span>
+    <span class="c1"># extent</span>
+    <span class="n">furthest</span> <span class="o">=</span> <span class="n">xyz</span> <span class="o">+</span> <span class="p">(</span><span class="n">max_L</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1e-5</span><span class="p">)</span> <span class="o">*</span> <span class="n">dxdydz</span>
+    <span class="k">del</span> <span class="n">max_L</span>
+
+    <span class="n">d_pos</span> <span class="o">=</span> <span class="n">dxdydz</span> <span class="o">&gt;=</span> <span class="mf">0.0</span>
+    <span class="n">least</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">d_pos</span><span class="p">,</span> <span class="n">nearest</span><span class="p">,</span> <span class="n">furthest</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+    <span class="n">great</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">d_pos</span><span class="p">,</span> <span class="n">furthest</span><span class="p">,</span> <span class="n">nearest</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">d_pos</span> <span class="o">=</span> <span class="n">d_pos</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">d_pos</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">2</span>
+    <span class="n">d_pos</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">4</span>
+
+    <span class="c1"># No iterate when intersection impossible</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">putmask</span><span class="p">(</span><span class="n">great</span><span class="p">,</span> <span class="n">dxdydz</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">32768</span><span class="p">)</span>
+
+    <span class="n">intersections</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># O(1) appends for the win.</span>
+
+    <span class="k">for</span> <span class="n">xy</span><span class="p">,</span> <span class="n">dxd</span><span class="p">,</span> <span class="n">lea</span><span class="p">,</span> <span class="n">grea</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">dp</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">dxdydz</span><span class="p">,</span> <span class="n">least</span><span class="p">,</span> <span class="n">great</span><span class="p">,</span> <span class="n">indx</span><span class="p">,</span> <span class="n">d_pos</span><span class="p">):</span>
+        <span class="c1"># algorithm-limiting performance here</span>
+        <span class="n">this_ints</span> <span class="o">=</span> <span class="p">[((</span><span class="n">q</span> <span class="o">-</span> <span class="n">xy</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">dxd</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">id</span><span class="p">,</span> <span class="n">dp</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lea</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">grea</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+
+        <span class="n">this_ints</span> <span class="o">+=</span> <span class="p">[((</span><span class="n">q</span> <span class="o">-</span> <span class="n">xy</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">dxd</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">id</span><span class="p">,</span> <span class="n">dp</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lea</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">grea</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+
+        <span class="n">this_ints</span> <span class="o">+=</span> <span class="p">[((</span><span class="n">q</span> <span class="o">-</span> <span class="n">xy</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">dxd</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nb">id</span><span class="p">,</span> <span class="n">dp</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lea</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">grea</span><span class="p">[</span><span class="mi">2</span><span class="p">])]</span>
+
+        <span class="n">intersections</span> <span class="o">+=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">this_ints</span><span class="p">)</span>
+
+    <span class="c1"># We repack the list into a numpy object for ease of conveyence back to the</span>
+    <span class="c1"># mother process and later numpy computations</span>
+    <span class="n">fancy_dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">([(</span><span class="s1">'raylength'</span><span class="p">,</span> <span class="s1">'f4'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'indx'</span><span class="p">,</span> <span class="s1">'u8'</span><span class="p">),</span>
+                            <span class="p">(</span><span class="s1">'facedirection'</span><span class="p">,</span> <span class="s1">'u1'</span><span class="p">)],</span> <span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">inter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">intersections</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">fancy_dtype</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">inter</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_process_cube_intersections</span><span class="p">(</span><span class="n">inter</span><span class="p">,</span> <span class="n">xyz</span><span class="p">,</span> <span class="n">dxdydz</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Intersects rays with a plane of cubes and returns data about</span>
+<span class="sd">    intersections</span>
+
+<span class="sd">    Suppose the walls of the cube are on integer boundaries in the space of</span>
+<span class="sd">    extent[0] &lt;= x &lt;= extent[1], extent[2] &lt;= y &lt;= extent[3], extent[4] &lt;= z</span>
+<span class="sd">    &lt;= extent[5]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inter : list of tuple</span>
+<span class="sd">        Output of _cubeplane_ray_intersection() or _cubeplane_ray_intersection()</span>
+<span class="sd">    xyz : ndarray, ndim=2</span>
+<span class="sd">        xyz[:, 0] is the x coordinate of the starting point of the ray,</span>
+<span class="sd">        xyz[:, 1] is the y coordinate of the starting point of the ray.</span>
+<span class="sd">        xyz[:, 2] is the z coordinate of the starting point.</span>
+<span class="sd">    dxdydz : double ndim=2</span>
+<span class="sd">        Unit vector representing the direction of travel of the ray.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    indx : ndarray of np.uint64</span>
+<span class="sd">        Index of the ray for each ray intersection</span>
+<span class="sd">    raylength : ndarray of np.float32</span>
+<span class="sd">        Length along each ray that the intersection happened</span>
+<span class="sd">    draylength : ndarray of np.float32</span>
+<span class="sd">        Length along ray travsersed since ray was born or last intersection,</span>
+<span class="sd">        which ever came most recently</span>
+<span class="sd">    interpoint : ndarray of np.float32</span>
+<span class="sd">        One row for each ray intersection, values are x,y,z of intersection</span>
+<span class="sd">        point</span>
+<span class="sd">    last_coord : ndarray of np.int16</span>
+<span class="sd">        One row for each ray intersection, values are the x,y,z coordinate of</span>
+<span class="sd">        the cube that the ray is leaving. (May not be inside extent, you should</span>
+<span class="sd">        check if you care.)</span>
+<span class="sd">    next_coord : ndarray of np.int16</span>
+<span class="sd">        One row for each ray intersection, values are the x,y,z coordinate of</span>
+<span class="sd">        the cube that the ray is entering. (May not be inside extent, you should</span>
+<span class="sd">        check if you care.)</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This code has been tested when the rays start outside the cube</span>
+<span class="sd">    volume. Would recommend not starting rays inside cube or within 2e-7 of a</span>
+<span class="sd">    cube boundary.</span>
+
+<span class="sd">    Originally developed by Dustin Moore.</span>
+
+<span class="sd">    """</span>
+    <span class="n">_xyz</span> <span class="o">=</span> <span class="n">xyz</span><span class="p">[</span><span class="n">inter</span><span class="p">[</span><span class="s1">'indx'</span><span class="p">],</span> <span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">_dxdydz</span> <span class="o">=</span> <span class="n">dxdydz</span><span class="p">[</span><span class="n">inter</span><span class="p">[</span><span class="s1">'indx'</span><span class="p">],</span> <span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="n">draylength</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ediff1d</span><span class="p">(</span><span class="n">inter</span><span class="p">[</span><span class="s1">'raylength'</span><span class="p">],</span> <span class="n">to_begin</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,))</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">putmask</span><span class="p">(</span><span class="n">draylength</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ediff1d</span><span class="p">(</span><span class="n">inter</span><span class="p">[</span><span class="s1">'indx'</span><span class="p">],</span> <span class="n">to_begin</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint64</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span>
+               <span class="n">inter</span><span class="p">[</span><span class="s1">'raylength'</span><span class="p">])</span>
+
+    <span class="n">inter_point</span> <span class="o">=</span> <span class="n">_xyz</span> <span class="o">+</span> <span class="n">inter</span><span class="p">[</span><span class="s1">'raylength'</span><span class="p">][:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">_dxdydz</span>
+
+    <span class="n">next_pixel_bias</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mf">1e-2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1e-2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-2</span><span class="p">],</span>  <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">]])</span>
+
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">choose</span><span class="p">(</span><span class="n">inter</span><span class="p">[</span><span class="s1">'facedirection'</span><span class="p">][:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">next_pixel_bias</span><span class="p">)</span>
+    <span class="n">next_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">_xyz</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">inter_point</span> <span class="o">+</span> <span class="n">w</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">next_coord</span><span class="p">,</span> <span class="n">casting</span><span class="o">=</span><span class="s1">'unsafe'</span><span class="p">)</span>
+
+    <span class="n">last_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">_xyz</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">inter_point</span> <span class="o">-</span> <span class="n">w</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">last_coord</span><span class="p">,</span> <span class="n">casting</span><span class="o">=</span><span class="s1">'unsafe'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">inter</span><span class="p">[</span><span class="s1">'indx'</span><span class="p">],</span> <span class="n">inter</span><span class="p">[</span><span class="s1">'raylength'</span><span class="p">],</span> <span class="n">draylength</span><span class="p">,</span> <span class="n">inter_point</span><span class="p">,</span>
+            <span class="n">last_coord</span><span class="p">,</span> <span class="n">next_coord</span><span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026 California Institute of Technology.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

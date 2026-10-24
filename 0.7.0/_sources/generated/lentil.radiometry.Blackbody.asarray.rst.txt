@@ -1,0 +1,6 @@
+lentil.radiometry.Blackbody.asarray
+===================================
+
+.. currentmodule:: lentil.radiometry
+
+.. automethod:: Blackbody.asarray

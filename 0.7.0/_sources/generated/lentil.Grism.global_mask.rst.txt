@@ -1,0 +1,6 @@
+lentil.Grism.global\_mask
+=========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Grism.global_mask

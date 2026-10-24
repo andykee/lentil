@@ -1,0 +1,6 @@
+lentil.Rotate.ptt\_vector
+=========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Rotate.ptt_vector

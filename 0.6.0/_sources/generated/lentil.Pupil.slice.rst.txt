@@ -1,0 +1,6 @@
+lentil.Pupil.slice
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Pupil.slice

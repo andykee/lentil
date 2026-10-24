@@ -1,0 +1,6 @@
+lentil.Rotate.depth
+===================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Rotate.depth

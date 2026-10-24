@@ -1,0 +1,35 @@
+﻿lentil.Wavefront
+================
+
+.. currentmodule:: lentil
+
+.. autoclass:: Wavefront
+
+
+
+**Attributes**
+
+.. autosummary::
+    :toctree:
+    
+    ~Wavefront.wavelength
+    ~Wavefront.focal_length
+    ~Wavefront.data
+    ~Wavefront.shape
+    ~Wavefront.planetype
+    ~Wavefront.field
+    ~Wavefront.intensity
+    ~Wavefront.pixelscale
+
+
+
+
+**Methods**
+
+.. autosummary::
+    :toctree:
+    
+    ~Wavefront.copy
+    ~Wavefront.insert
+    ~Wavefront.propagate_image
+

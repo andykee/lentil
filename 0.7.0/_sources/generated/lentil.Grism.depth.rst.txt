@@ -1,0 +1,6 @@
+lentil.Grism.depth
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Grism.depth

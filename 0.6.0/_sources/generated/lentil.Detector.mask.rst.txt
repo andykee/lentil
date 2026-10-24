@@ -1,0 +1,6 @@
+lentil.Detector.mask
+====================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Detector.mask

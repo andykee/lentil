@@ -1,0 +1,40 @@
+﻿lentil.Grism
+============
+
+.. currentmodule:: lentil
+
+.. autoclass:: Grism
+
+
+
+**Attributes**
+
+.. autosummary::
+    :toctree:
+    
+    ~Grism.amplitude
+    ~Grism.depth
+    ~Grism.global_mask
+    ~Grism.mask
+    ~Grism.phase
+    ~Grism.pixelscale
+    ~Grism.ptt_vector
+    ~Grism.shape
+    ~Grism.slice
+    ~Grism.tilt
+
+
+
+
+**Methods**
+
+.. autosummary::
+    :toctree:
+    
+    ~Grism.copy
+    ~Grism.fit_tilt
+    ~Grism.multiply
+    ~Grism.resample
+    ~Grism.rescale
+    ~Grism.shift
+

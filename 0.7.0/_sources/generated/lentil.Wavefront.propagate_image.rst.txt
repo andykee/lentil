@@ -1,0 +1,6 @@
+lentil.Wavefront.propagate\_image
+=================================
+
+.. currentmodule:: lentil
+
+.. automethod:: Wavefront.propagate_image

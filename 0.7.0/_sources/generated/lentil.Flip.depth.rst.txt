@@ -1,0 +1,6 @@
+lentil.Flip.depth
+=================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Flip.depth

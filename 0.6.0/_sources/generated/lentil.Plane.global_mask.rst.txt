@@ -1,0 +1,6 @@
+lentil.Plane.global\_mask
+=========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Plane.global_mask

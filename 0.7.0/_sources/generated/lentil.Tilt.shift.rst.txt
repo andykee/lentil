@@ -1,0 +1,6 @@
+lentil.Tilt.shift
+=================
+
+.. currentmodule:: lentil
+
+.. automethod:: Tilt.shift

@@ -1,0 +1,6 @@
+lentil.Pupil.shape
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Pupil.shape

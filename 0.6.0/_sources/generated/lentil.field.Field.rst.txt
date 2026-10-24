@@ -1,0 +1,34 @@
+﻿lentil.field.Field
+==================
+
+.. currentmodule:: lentil.field
+
+.. autoclass:: Field
+
+
+
+**Attributes**
+
+.. autosummary::
+    :toctree:
+    
+    ~Field.data
+    ~Field.offset
+    ~Field.tilt
+    ~Field.extent
+    ~Field.ndim
+    ~Field.pixelscale
+    ~Field.shape
+    ~Field.size
+
+
+
+
+**Methods**
+
+.. autosummary::
+    :toctree:
+    
+    ~Field.overlap
+    ~Field.shift
+

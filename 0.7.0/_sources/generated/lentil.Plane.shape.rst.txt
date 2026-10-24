@@ -1,0 +1,6 @@
+lentil.Plane.shape
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Plane.shape

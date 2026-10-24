@@ -1,0 +1,39 @@
+﻿lentil.Rotate
+=============
+
+.. currentmodule:: lentil
+
+.. autoclass:: Rotate
+
+
+
+**Attributes**
+
+.. autosummary::
+    :toctree:
+    
+    ~Rotate.amplitude
+    ~Rotate.depth
+    ~Rotate.global_mask
+    ~Rotate.mask
+    ~Rotate.phase
+    ~Rotate.pixelscale
+    ~Rotate.ptt_vector
+    ~Rotate.shape
+    ~Rotate.slice
+    ~Rotate.tilt
+
+
+
+
+**Methods**
+
+.. autosummary::
+    :toctree:
+    
+    ~Rotate.copy
+    ~Rotate.fit_tilt
+    ~Rotate.multiply
+    ~Rotate.resample
+    ~Rotate.rescale
+

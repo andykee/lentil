@@ -1,0 +1,6 @@
+lentil.Wavefront.shape
+======================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: Wavefront.shape

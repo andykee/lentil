@@ -1,0 +1,6 @@
+﻿lentil.slit
+===========
+
+.. currentmodule:: lentil
+
+.. autofunction:: slit

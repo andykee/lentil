@@ -1,0 +1,6 @@
+lentil.Rotate.mask
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Rotate.mask

@@ -1,0 +1,6 @@
+lentil.Detector.fit\_tilt
+=========================
+
+.. currentmodule:: lentil
+
+.. automethod:: Detector.fit_tilt

@@ -1,0 +1,6 @@
+lentil.radiometry.Spectrum.crop
+===============================
+
+.. currentmodule:: lentil.radiometry
+
+.. automethod:: Spectrum.crop

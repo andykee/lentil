@@ -1,0 +1,39 @@
+﻿lentil.Plane
+============
+
+.. currentmodule:: lentil
+
+.. autoclass:: Plane
+
+
+
+**Attributes**
+
+.. autosummary::
+    :toctree:
+    
+    ~Plane.amplitude
+    ~Plane.depth
+    ~Plane.global_mask
+    ~Plane.mask
+    ~Plane.phase
+    ~Plane.pixelscale
+    ~Plane.ptt_vector
+    ~Plane.shape
+    ~Plane.slice
+    ~Plane.tilt
+
+
+
+
+**Methods**
+
+.. autosummary::
+    :toctree:
+    
+    ~Plane.copy
+    ~Plane.fit_tilt
+    ~Plane.multiply
+    ~Plane.resample
+    ~Plane.rescale
+

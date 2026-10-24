@@ -1,0 +1,6 @@
+lentil.Pupil.tilt
+=================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Pupil.tilt

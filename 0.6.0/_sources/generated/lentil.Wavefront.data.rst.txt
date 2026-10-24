@@ -1,0 +1,6 @@
+lentil.Wavefront.data
+=====================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: Wavefront.data

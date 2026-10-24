@@ -1,0 +1,6 @@
+lentil.Flip.shape
+=================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Flip.shape

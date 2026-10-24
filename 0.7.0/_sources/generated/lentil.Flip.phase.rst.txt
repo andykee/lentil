@@ -1,0 +1,6 @@
+lentil.Flip.phase
+=================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Flip.phase

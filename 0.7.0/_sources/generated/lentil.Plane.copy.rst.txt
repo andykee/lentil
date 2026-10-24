@@ -1,0 +1,6 @@
+lentil.Plane.copy
+=================
+
+.. currentmodule:: lentil
+
+.. automethod:: Plane.copy

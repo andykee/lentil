@@ -1,0 +1,6 @@
+lentil.radiometry.Blackbody.valueunit
+=====================================
+
+.. currentmodule:: lentil.radiometry
+
+.. autoproperty:: Blackbody.valueunit

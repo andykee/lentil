@@ -1,0 +1,6 @@
+lentil.Wavefront.field
+======================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Wavefront.field

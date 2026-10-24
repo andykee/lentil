@@ -1,0 +1,6 @@
+lentil.Rotate.amplitude
+=======================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Rotate.amplitude

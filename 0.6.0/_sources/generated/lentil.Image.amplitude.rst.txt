@@ -1,0 +1,6 @@
+lentil.Image.amplitude
+======================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Image.amplitude

@@ -1,0 +1,6 @@
+lentil.Wavefront.pixelscale
+===========================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Wavefront.pixelscale

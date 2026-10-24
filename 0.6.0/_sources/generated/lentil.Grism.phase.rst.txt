@@ -1,0 +1,6 @@
+lentil.Grism.phase
+==================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Grism.phase

@@ -1,0 +1,6 @@
+lentil.Pupil.amplitude
+======================
+
+.. currentmodule:: lentil
+
+.. autoproperty:: Pupil.amplitude
