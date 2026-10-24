@@ -6,6 +6,20 @@ import numpy as np
 import lentil
 import lentil._mesh
 
+
+def _warn_legacy(legacy):
+    # Called once at the top of each public function. stacklevel=3 skips this
+    # helper and the public function so the warning points at the caller.
+    if legacy:
+        warnings.warn(
+            'legacy=True reproduces the Zernike orientation convention of '
+            'lentil 0.8.10 and earlier. Support for it may be removed in a '
+            'future release.',
+            FutureWarning,
+            stacklevel=3
+        )
+
+
 def zernike(mask, index, normalize=True, order='noll', rho=None, theta=None,
             legacy=False):
     """Compute the circular Zernike polynomial for a given mask.
@@ -28,8 +42,9 @@ def zernike(mask, index, normalize=True, order='noll', rho=None, theta=None,
     theta : array_like, optional
         Angular coordinates of the mask array in radians.
     legacy : bool, optional
-        If True, legacy ordering of Zernike modes is used. Default is False.
-        See warning below for more details.
+        If True, use the legacy Zernike mode orientation convention of Lentil
+        v0.8.10 or earlier. Default is False. See warning below for more
+        details.
 
     Returns
     -------
@@ -61,6 +76,11 @@ def zernike(mask, index, normalize=True, order='noll', rho=None, theta=None,
     [1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).
 
     """
+    _warn_legacy(legacy)
+    return _zernike(mask, index, normalize, order, rho, theta, legacy)
+
+
+def _zernike(mask, index, normalize, order, rho, theta, legacy):
     mask = np.asarray(mask, dtype=bool)
 
     if order == 'noll':
@@ -71,9 +91,12 @@ def zernike(mask, index, normalize=True, order='noll', rho=None, theta=None,
         n, m = ansi_to_nm(index)
     else:
         raise ValueError('Unknown order', order)
-    
+
     if rho is None:
-        rho, theta = zernike_coordinates(mask)
+        if legacy:
+            rho, theta = _zernike_coordinates_legacy(mask)
+        else:
+            rho, theta = zernike_coordinates(mask)
     else:
         if theta is None:
             raise ValueError("Both rho and theta must be specified")
@@ -95,14 +118,6 @@ def zernike(mask, index, normalize=True, order='noll', rho=None, theta=None,
 
     else:
         if legacy:
-            warnings.warn(
-                """
-                Support for creating legacy Zernike modes may be removed in
-                the future.
-                """,
-                FutureWarning,
-                stacklevel=2
-            )
             sin_m_theta = np.sin(m*theta)
         else:
             sin_m_theta = np.sin(np.abs(m)*theta)
@@ -154,8 +169,9 @@ def zernike_compose(mask, coeffs, normalize=True, order='noll', rho=None,
     theta : array_like, optional
         Angular coordinates of the mask array in radians.
     legacy : bool, optional
-        If True, legacy ordering of Zernike modes is used. Default is False.
-        See warning below for more details.
+        If True, use the legacy Zernike mode orientation convention of Lentil
+        v0.8.10 or earlier. Default is False. See warning below for more
+        details.
 
     Returns
     -------
@@ -201,14 +217,22 @@ def zernike_compose(mask, coeffs, normalize=True, order='noll', rho=None,
     [1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).
 
     """
+    _warn_legacy(legacy)
+    return _zernike_compose(mask, coeffs, normalize, order, rho, theta,
+                            legacy)
+
+
+def _zernike_compose(mask, coeffs, normalize, order, rho, theta,
+                            legacy):
     mask = np.asarray(mask)
     coeffs = np.asarray(coeffs)
     opd = np.zeros(mask.shape)
 
     for index, coeff in enumerate(coeffs):
-        opd += coeff * zernike(mask, index+1, normalize, order, rho, theta, legacy)
+        opd += coeff * _zernike(mask, index+1, normalize, order, rho, theta, legacy)
 
     return opd
+
 
 def zernike_basis(mask, modes, vectorize=False, normalize=True, order='noll',
                   rho=None, theta=None, legacy=False):
@@ -236,8 +260,9 @@ def zernike_basis(mask, modes, vectorize=False, normalize=True, order='noll',
     theta : array_like, optional
         Angular coordinates of the mask array in radians.
     legacy : bool, optional
-        If True, legacy ordering of Zernike modes is used. Default is False.
-        See warning below for more details.
+        If True, use the legacy Zernike mode orientation convention of Lentil
+        v0.8.10 or earlier. Default is False. See warning below for more
+        details.
 
     Returns
     -------
@@ -258,6 +283,13 @@ def zernike_basis(mask, modes, vectorize=False, normalize=True, order='noll',
     [1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).
 
     """
+    _warn_legacy(legacy)
+    return _zernike_basis(mask, modes, vectorize, normalize, order, rho,
+                          theta, legacy)
+
+
+def _zernike_basis(mask, modes, vectorize=False, normalize=True, order='noll',
+                  rho=None, theta=None, legacy=False):
     modes = np.asarray(modes)
     if modes.shape == ():
         modes = modes[..., np.newaxis]
@@ -266,7 +298,7 @@ def zernike_basis(mask, modes, vectorize=False, normalize=True, order='noll',
 
     basis = []
     for index, mode in enumerate(modes):
-        basis.append(zernike(mask, mode, normalize, order, rho, theta, legacy))
+        basis.append(_zernike(mask, mode, normalize, order, rho, theta, legacy))
     basis = np.asarray(basis)
 
     if vectorize:
@@ -299,8 +331,9 @@ def zernike_fit(opd, mask, modes, normalize=True, order='noll', rho=None,
     theta : array_like, optional
         Angular coordinates of the mask array in radians.
     legacy : bool, optional
-        If True, legacy ordering of Zernike modes is used. Default is False.
-        See warning below for more details.
+        If True, use the legacy Zernike mode orientation convention of Lentil
+        v0.8.10 or earlier. Default is False. See warning below for more
+        details.
 
     Returns
     -------
@@ -339,9 +372,16 @@ def zernike_fit(opd, mask, modes, normalize=True, order='noll', rho=None,
     [1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).
 
     """
+    _warn_legacy(legacy)
+    return _zernike_fit(opd, mask, modes, normalize, order, rho, theta,
+                        legacy)
+
+
+def _zernike_fit(opd, mask, modes, normalize, order, rho, theta,
+                        legacy):
     opd = np.asarray(opd).ravel()
     mask = np.asarray(mask)
-    basis = zernike_basis(mask, modes, True, normalize, order, rho, theta, legacy)
+    basis = _zernike_basis(mask, modes, True, normalize, order, rho, theta, legacy)
     
     # valid data includes all non-NaN values inside the mask
     valid = np.isfinite(opd) & mask.ravel().astype(bool)
@@ -371,8 +411,9 @@ def zernike_remove(opd, mask, modes, order='noll', rho=None, theta=None,
     theta : array_like, optional
         Angular coordinates of the mask array in radians.
     legacy : bool, optional
-        If True, legacy ordering of Zernike modes is used. Default is False.
-        See warning below for more details.
+        If True, use the legacy Zernike mode orientation convention of Lentil
+        v0.8.10 or earlier. Default is False. See warning below for more
+        details.
 
     Returns
     -------
@@ -397,11 +438,12 @@ def zernike_remove(opd, mask, modes, order='noll', rho=None, theta=None,
     [1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).
 
     """
+    _warn_legacy(legacy)
     opd = np.asarray(opd)
     mask = np.asarray(mask)
 
-    coeffs = zernike_fit(opd, mask, modes, True, order, rho, theta)
-    fit_opd = zernike_compose(mask, coeffs, True, order, rho, theta)
+    coeffs = zernike_fit(opd, mask, modes, True, order, rho, theta, legacy)
+    fit_opd = zernike_compose(mask, coeffs, True, order, rho, theta, legacy)
 
     residual = opd - fit_opd
 
@@ -549,7 +591,19 @@ def zernike_coordinates(mask, shift=None, angle=0, indexing='xy'):
     return rho, theta
 
 
-def zernike_legacy_coeffs(coeffs, modes=None, order='noll'):
+def _zernike_coordinates_legacy(mask):
+    # Reproduces zernike_coordinates(mask) from lentil 0.8.10 and earlier:
+    mask = np.asarray(mask, dtype=bool)
+    center = np.asarray(mask.shape)/2
+    centroid = np.asarray(lentil.centroid(mask, indexing='ij'))
+    rr, cc = lentil._mesh.mesh(mask.shape, shift=centroid-center, indexing='ij')
+    r = np.abs(rr + 1j*cc)
+    rho = r/np.max(r*mask)
+    theta = np.angle(-cc - 1j*rr)
+    return rho, theta
+
+
+def zernike_coeff_legacy(coeffs, modes=None, order='noll'):
     """Convert Zernike coefficients between legacy and current
     orientation conventions.
 
