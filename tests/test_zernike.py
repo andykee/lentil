@@ -89,3 +89,41 @@ def test_zernike_coordinates_shift_indexing():
 
     assert _same_coordinates(xy, auto)
     assert _same_coordinates(ij, auto)
+
+
+def test_zernike_legacy_coeffs_noll_signs():
+    # odd |m| (tilt, coma, trefoil) flip; even |m| unchanged
+    expected = [1, -1, -1, 1, 1, 1, -1, -1, -1, -1, 1]
+    assert np.array_equal(lentil.zernike_legacy_coeffs(np.ones(11)), expected)
+
+
+def test_zernike_legacy_coeffs_involution():
+    coeffs = np.random.default_rng(0).normal(size=15)
+    assert np.array_equal(
+        lentil.zernike_legacy_coeffs(lentil.zernike_legacy_coeffs(coeffs)), coeffs)
+
+
+@pytest.mark.parametrize('order, modes', [
+    ('noll', range(1, 16)),
+    ('fringe', range(1, 17)),
+    ('ansi', range(0, 15)),
+])
+def test_zernike_legacy_coeffs_matches_180_rotation(order, modes):
+    # legacy convention == current convention evaluated at theta + pi
+    mask = lentil.circle((128, 128), 60, antialias=False)
+    rho, theta = lentil.zernike_coordinates(mask)
+    for j in modes:
+        rotated = lentil.zernike(mask, j, order=order, rho=rho, theta=theta + np.pi)
+        sign = lentil.zernike_legacy_coeffs([1.0], modes=[j], order=order)[0]
+        assert np.allclose(rotated, sign * lentil.zernike(mask, j, order=order))
+
+
+def test_zernike_legacy_coeffs_stacked():
+    out = lentil.zernike_legacy_coeffs(np.ones((5, 11)))
+    assert out.shape == (5, 11)
+    assert np.array_equal(out[0], out[-1])
+
+
+def test_zernike_legacy_coeffs_modes_length_mismatch():
+    with pytest.raises(ValueError):
+        lentil.zernike_legacy_coeffs([1, 2], modes=[1])

@@ -1,11 +1,13 @@
 from math import factorial
+import warnings
 
 import numpy as np
 
 import lentil
 import lentil._mesh
 
-def zernike(mask, index, normalize=True, order='noll', rho=None, theta=None):
+def zernike(mask, index, normalize=True, order='noll', rho=None, theta=None,
+            legacy=False):
     """Compute the circular Zernike polynomial for a given mask.
 
     Parameters
@@ -25,10 +27,23 @@ def zernike(mask, index, normalize=True, order='noll', rho=None, theta=None):
         origin and 1 at the edge of the circle.
     theta : array_like, optional
         Angular coordinates of the mask array in radians.
+    legacy : bool, optional
+        If True, legacy ordering of Zernike modes is used. Default is False.
+        See warning below for more details.
 
     Returns
     -------
     ndarray
+
+    Warnings
+    --------
+    Lentil 0.8.10 and earlier computed Zernike polynomials in a coordinate
+    system rotated 180 degrees from the standard definition in [1]. This
+    results in modes with odd azimuthal order (tilt, coma, trefoil, ...)
+    having a flipped sign. Modes with even azimuthal order (piston, focus,
+    astigmatism, spherical, ...) are unaffected. The 
+    :func:`zernike_coeff_legacy` function converts between current and legacy
+    conventions.
 
     Notes
     -----
@@ -79,10 +94,23 @@ def zernike(mask, index, normalize=True, order='noll', rho=None, theta=None):
             Z = R(m, n, rho) * np.cos(m*theta) * mask
 
     else:
-        if normalize:
-            Z = np.sqrt(2) * np.sqrt(n+1) * R(m, n, rho) * np.sin(np.abs(m)*theta) * mask
+        if legacy:
+            warnings.warn(
+                """
+                Support for creating legacy Zernike modes may be removed in
+                the future.
+                """,
+                FutureWarning,
+                stacklevel=2
+            )
+            sin_m_theta = np.sin(m*theta)
         else:
-            Z = R(m, n, rho) * np.sin(np.abs(m)*theta) * mask
+            sin_m_theta = np.sin(np.abs(m)*theta)
+        
+        if normalize:
+            Z = np.sqrt(2) * np.sqrt(n+1) * R(m, n, rho) * sin_m_theta * mask
+        else:
+            Z = R(m, n, rho) * sin_m_theta * mask
 
     #out[mask_slice] = Z
     out = Z
@@ -104,7 +132,8 @@ def R(m, n, rho):
         return R
     
 
-def zernike_compose(mask, coeffs, normalize=True, order='noll', rho=None, theta=None):
+def zernike_compose(mask, coeffs, normalize=True, order='noll', rho=None,
+                    theta=None, legacy=False):
     """Create an OPD based on the supplied Zernike coefficients.
 
     Parameters
@@ -124,10 +153,23 @@ def zernike_compose(mask, coeffs, normalize=True, order='noll', rho=None, theta=
         origin and 1 at the edge of the circle.
     theta : array_like, optional
         Angular coordinates of the mask array in radians.
+    legacy : bool, optional
+        If True, legacy ordering of Zernike modes is used. Default is False.
+        See warning below for more details.
 
     Returns
     -------
     ndarray
+
+    Warnings
+    --------
+    Lentil 0.8.10 and earlier computed Zernike polynomials in a coordinate
+    system rotated 180 degrees from the standard definition in [1]. This
+    results in modes with odd azimuthal order (tilt, coma, trefoil, ...)
+    having a flipped sign. Modes with even azimuthal order (piston, focus,
+    astigmatism, spherical, ...) are unaffected. The 
+    :func:`zernike_coeff_legacy` function converts between current and legacy
+    conventions.    
 
     Examples
     --------
@@ -164,12 +206,12 @@ def zernike_compose(mask, coeffs, normalize=True, order='noll', rho=None, theta=
     opd = np.zeros(mask.shape)
 
     for index, coeff in enumerate(coeffs):
-        opd += coeff * zernike(mask, index+1, normalize, order, rho, theta)
+        opd += coeff * zernike(mask, index+1, normalize, order, rho, theta, legacy)
 
     return opd
 
 def zernike_basis(mask, modes, vectorize=False, normalize=True, order='noll',
-                  rho=None, theta=None):
+                  rho=None, theta=None, legacy=False):
     """Compute a Zernike basis set for a given mask.
 
     Parameters
@@ -193,10 +235,23 @@ def zernike_basis(mask, modes, vectorize=False, normalize=True, order='noll',
         origin and 1 at the edge of the circle.
     theta : array_like, optional
         Angular coordinates of the mask array in radians.
+    legacy : bool, optional
+        If True, legacy ordering of Zernike modes is used. Default is False.
+        See warning below for more details.
 
     Returns
     -------
     ndarray
+
+    Warnings
+    --------
+    Lentil 0.8.10 and earlier computed Zernike polynomials in a coordinate
+    system rotated 180 degrees from the standard definition in [1]. This
+    results in modes with odd azimuthal order (tilt, coma, trefoil, ...)
+    having a flipped sign. Modes with even azimuthal order (piston, focus,
+    astigmatism, spherical, ...) are unaffected. The 
+    :func:`zernike_coeff_legacy` function converts between current and legacy
+    conventions.    
 
     References
     ----------
@@ -211,7 +266,7 @@ def zernike_basis(mask, modes, vectorize=False, normalize=True, order='noll',
 
     basis = []
     for index, mode in enumerate(modes):
-        basis.append(zernike(mask, mode, normalize, order, rho, theta))
+        basis.append(zernike(mask, mode, normalize, order, rho, theta, legacy))
     basis = np.asarray(basis)
 
     if vectorize:
@@ -222,7 +277,7 @@ def zernike_basis(mask, modes, vectorize=False, normalize=True, order='noll',
 
 
 def zernike_fit(opd, mask, modes, normalize=True, order='noll', rho=None,
-                theta=None):
+                theta=None, legacy=False):
     """Fit a Zernike basis set to an OPD.
 
     Parameters
@@ -243,10 +298,23 @@ def zernike_fit(opd, mask, modes, normalize=True, order='noll', rho=None,
         origin and 1 at the edge of the circle.
     theta : array_like, optional
         Angular coordinates of the mask array in radians.
+    legacy : bool, optional
+        If True, legacy ordering of Zernike modes is used. Default is False.
+        See warning below for more details.
 
     Returns
     -------
     ndarray
+
+    Warnings
+    --------
+    Lentil 0.8.10 and earlier computed Zernike polynomials in a coordinate
+    system rotated 180 degrees from the standard definition in [1]. This
+    results in modes with odd azimuthal order (tilt, coma, trefoil, ...)
+    having a flipped sign. Modes with even azimuthal order (piston, focus,
+    astigmatism, spherical, ...) are unaffected. The 
+    :func:`zernike_coeff_legacy` function converts between current and legacy
+    conventions.
 
     Example
     -------
@@ -273,7 +341,7 @@ def zernike_fit(opd, mask, modes, normalize=True, order='noll', rho=None,
     """
     opd = np.asarray(opd).ravel()
     mask = np.asarray(mask)
-    basis = zernike_basis(mask, modes, True, normalize, order, rho, theta)
+    basis = zernike_basis(mask, modes, True, normalize, order, rho, theta, legacy)
     
     # valid data includes all non-NaN values inside the mask
     valid = np.isfinite(opd) & mask.ravel().astype(bool)
@@ -283,7 +351,8 @@ def zernike_fit(opd, mask, modes, normalize=True, order='noll', rho=None,
     return coeff
 
 
-def zernike_remove(opd, mask, modes, order='noll', rho=None, theta=None):
+def zernike_remove(opd, mask, modes, order='noll', rho=None, theta=None,
+                   legacy=False):
     """Fit and remove a Zernike basis set from an OPD.
 
     Parameters
@@ -301,10 +370,23 @@ def zernike_remove(opd, mask, modes, order='noll', rho=None, theta=None):
         origin and 1 at the edge of the circle.
     theta : array_like, optional
         Angular coordinates of the mask array in radians.
+    legacy : bool, optional
+        If True, legacy ordering of Zernike modes is used. Default is False.
+        See warning below for more details.
 
     Returns
     -------
     ndarray
+
+    Warnings
+    --------
+    Lentil 0.8.10 and earlier computed Zernike polynomials in a coordinate
+    system rotated 180 degrees from the standard definition in [1]. This
+    results in modes with odd azimuthal order (tilt, coma, trefoil, ...)
+    having a flipped sign. Modes with even azimuthal order (piston, focus,
+    astigmatism, spherical, ...) are unaffected. The 
+    :func:`zernike_coeff_legacy` function converts between current and legacy
+    conventions.
 
     See Also
     --------
@@ -465,3 +547,96 @@ def zernike_coordinates(mask, shift=None, angle=0, indexing='xy'):
     theta[np.where(theta==0)] = 1e-99
 
     return rho, theta
+
+
+def zernike_legacy_coeffs(coeffs, modes=None, order='noll'):
+    """Convert Zernike coefficients between legacy and current
+    orientation conventions.
+
+    Lentil 0.8.10 and earlier computed Zernike polynomials in a coordinate
+    system rotated 180 degrees from the standard definition in [1]. This
+    results in modes with odd azimuthal order (tilt, coma, trefoil, ...)
+    having a flipped sign. Modes with even azimuthal order (piston, focus,
+    astigmatism, spherical, ...) are unaffected.
+    
+    This conversion is involutory so it converts legacy coefficients to the
+    correct convention and correct coefficients to the legacy convention.
+
+    Parameters
+    ----------
+    coeffs : array_like
+        Zernike coefficients. The last axis indexes Zernike modes, so a
+        stack of coefficient vectors (e.g. a time series) can be converted
+        in a single call.
+    modes : array_like, optional
+        Zernike mode indices corresponding to the last axis of ``coeffs``,
+        e.g. the ``modes`` passed to :func:`zernike_fit`. If None
+        (default), ``coeffs[..., k]`` is taken to be the coefficient for
+        mode index ``k + 1``, matching :func:`zernike_compose`.
+    order : {'noll', 'fringe', 'ansi'}, optional
+        Zernike ordering scheme. Default is 'noll'.
+
+    Returns
+    -------
+    ndarray
+        Converted coefficients with the same shape as ``coeffs``.
+
+    Notes
+    -----
+    The conversion is exact for masks with an even number of pixels in each
+    dimension. Along any dimension with an odd number of pixels, the legacy
+    coordinate origin was also offset half a pixel from the mask centroid.
+    The effect of that offset on fitted coefficients is small but is not a
+    sign change, so it is not undone by this function.
+
+    Examples
+    --------
+    Convert tip, tilt, and focus coefficients fit with lentil 0.8:
+
+    .. code:: pycon
+
+        >>> lentil.zernike_legacy_coeffs([1e-8, 2e-8, 3e-8], modes=[2, 3, 4])
+        array([-1.e-08, -2.e-08,  3.e-08])
+
+    Convert a full coefficient vector as used by :func:`zernike_compose`:
+
+    .. code:: pycon
+
+        >>> coeffs = lentil.zernike_legacy_coeffs(legacy_coeffs)
+        >>> opd = lentil.zernike_compose(mask, coeffs)
+
+    See Also
+    --------
+    :func:`zernike_compose`
+    :func:`zernike_fit`
+
+    References
+    ----------
+    [1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).
+
+    """
+    coeffs = np.asarray(coeffs)
+    if coeffs.ndim == 0:
+        raise ValueError('coeffs must have at least one dimension')
+
+    if order == 'noll':
+        to_nm = noll_to_nm
+    elif order == 'fringe':
+        to_nm = fringe_to_nm
+    elif order == 'ansi':
+        to_nm = ansi_to_nm
+    else:
+        raise ValueError('Unknown order', order)
+
+    if modes is None:
+        modes = np.arange(1, coeffs.shape[-1] + 1)
+    else:
+        modes = np.atleast_1d(np.asarray(modes))
+        if modes.ndim != 1 or modes.shape[0] != coeffs.shape[-1]:
+            raise ValueError(
+                f'modes has {modes.size} entries but the last axis of '
+                f'coeffs has length {coeffs.shape[-1]}')
+
+    sign = np.array([-1 if to_nm(int(j))[1] % 2 else 1 for j in modes])
+
+    return coeffs * sign
