@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index &#8212; Lentil 0.8.10 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/css/lentil.css?v=4b1efdef" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="_static/documentation_options.js?v=3e0d02fa"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.23.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://andykee.github.io/lentil/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'latest';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.8.10" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="docs.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo-light.svg" class="logo__image only-light" alt="Lentil 0.8.10 documentation - Home"/>
+    <img src="_static/logo-dark.svg" class="logo__image only-dark pst-js-only" alt="Lentil 0.8.10 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="user/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="ref/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="resources/index.html">
+    Resources
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="user/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="ref/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="resources/index.html">
+    Resources
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ | <a href="#Z"><strong>Z</strong></a>
+ 
+</div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.plane._TiltBase.html#lentil.plane._TiltBase">_TiltBase (class in lentil.plane)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.detector.adc.html#lentil.detector.adc">adc() (in module lentil.detector)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.add.html#lentil.radiometry.Blackbody.add">add() (lentil.radiometry.Blackbody method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.add.html#lentil.radiometry.Spectrum.add">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.DispersiveTilt.amplitude.html#lentil.DispersiveTilt.amplitude">amplitude (lentil.DispersiveTilt attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Flip.amplitude.html#lentil.Flip.amplitude">(lentil.Flip attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.amplitude.html#lentil.Grism.amplitude">(lentil.Grism attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.amplitude.html#lentil.Image.amplitude">(lentil.Image attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.amplitude.html#lentil.Plane.amplitude">(lentil.Plane attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.amplitude.html#lentil.plane._TiltBase.amplitude">(lentil.plane._TiltBase attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.amplitude.html#lentil.Pupil.amplitude">(lentil.Pupil attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.amplitude.html#lentil.Rotate.amplitude">(lentil.Rotate attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.amplitude.html#lentil.Tilt.amplitude">(lentil.Tilt attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.append.html#lentil.radiometry.Blackbody.append">append() (lentil.radiometry.Blackbody method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.append.html#lentil.radiometry.Spectrum.append">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.extent.array_center.html#lentil.extent.array_center">array_center() (in module lentil.extent)</a>
+</li>
+      <li><a href="ref/generated/lentil.extent.array_extent.html#lentil.extent.array_extent">array_extent() (in module lentil.extent)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.asarray.html#lentil.radiometry.Blackbody.asarray">asarray() (lentil.radiometry.Blackbody method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.asarray.html#lentil.radiometry.Spectrum.asarray">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.bin.html#lentil.radiometry.Blackbody.bin">bin() (lentil.radiometry.Blackbody method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.bin.html#lentil.radiometry.Spectrum.bin">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.html#lentil.radiometry.Blackbody">Blackbody (class in lentil.radiometry)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.boundary.html#lentil.boundary">boundary() (in module lentil)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.field.boundary.html#lentil.field.boundary">(in module lentil.field)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.helper.boundary_slice.html#lentil.helper.boundary_slice">boundary_slice() (in module lentil.helper)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.centroid.html#lentil.centroid">centroid() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.detector.charge_diffusion.html#lentil.detector.charge_diffusion">charge_diffusion() (in module lentil.detector)</a>
+</li>
+      <li><a href="ref/generated/lentil.circle.html#lentil.circle">circle() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.detector.collect_charge.html#lentil.detector.collect_charge">collect_charge() (in module lentil.detector)</a>
+</li>
+      <li><a href="ref/generated/lentil.detector.collect_charge_bayer.html#lentil.detector.collect_charge_bayer">collect_charge_bayer() (in module lentil.detector)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.copy.html#lentil.radiometry.Blackbody.copy">copy() (lentil.radiometry.Blackbody method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.copy.html#lentil.radiometry.Spectrum.copy">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.detector.cosmic_rays.html#lentil.detector.cosmic_rays">cosmic_rays() (in module lentil.detector)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.crop.html#lentil.radiometry.Blackbody.crop">crop() (lentil.radiometry.Blackbody method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.crop.html#lentil.radiometry.Spectrum.crop">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.detector.dark_current.html#lentil.detector.dark_current">dark_current() (in module lentil.detector)</a>
+</li>
+      <li><a href="ref/generated/lentil.field.Field.data.html#lentil.field.Field.data">data (lentil.field.Field attribute)</a>
+</li>
+      <li><a href="ref/generated/lentil.fourier.dft2.html#lentil.fourier.dft2">dft2() (in module lentil.fourier)</a>
+</li>
+      <li><a href="ref/generated/lentil.DispersiveTilt.diameter.html#lentil.DispersiveTilt.diameter">diameter (lentil.DispersiveTilt attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Flip.diameter.html#lentil.Flip.diameter">(lentil.Flip attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.diameter.html#lentil.Grism.diameter">(lentil.Grism attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.diameter.html#lentil.Image.diameter">(lentil.Image attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.diameter.html#lentil.Plane.diameter">(lentil.Plane attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.diameter.html#lentil.plane._TiltBase.diameter">(lentil.plane._TiltBase attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.diameter.html#lentil.Pupil.diameter">(lentil.Pupil attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.diameter.html#lentil.Rotate.diameter">(lentil.Rotate attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.diameter.html#lentil.Tilt.diameter">(lentil.Tilt attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Wavefront.diameter.html#lentil.Wavefront.diameter">(lentil.Wavefront attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.DispersiveTilt.html#lentil.DispersiveTilt">DispersiveTilt (class in lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.divide.html#lentil.radiometry.Blackbody.divide">divide() (lentil.radiometry.Blackbody method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.divide.html#lentil.radiometry.Spectrum.divide">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.radiometry.Material.emission.html#lentil.radiometry.Material.emission">emission (lentil.radiometry.Material attribute)</a>
+</li>
+      <li><a href="ref/generated/lentil.Wavefront.empty.html#lentil.Wavefront.empty">empty() (lentil.Wavefront class method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.ends.html#lentil.radiometry.Blackbody.ends">ends() (lentil.radiometry.Blackbody method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.ends.html#lentil.radiometry.Spectrum.ends">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.field.Field.extent.html#lentil.field.Field.extent">extent (lentil.field.Field attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.field.Field.html#lentil.field.Field">Field (class in lentil.field)</a>
+</li>
+      <li><a href="ref/generated/lentil.Wavefront.field.html#lentil.Wavefront.field">field (lentil.Wavefront attribute)</a>
+</li>
+      <li><a href="ref/generated/lentil.DispersiveTilt.fit_tilt.html#lentil.DispersiveTilt.fit_tilt">fit_tilt() (lentil.DispersiveTilt method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Flip.fit_tilt.html#lentil.Flip.fit_tilt">(lentil.Flip method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.fit_tilt.html#lentil.Grism.fit_tilt">(lentil.Grism method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.fit_tilt.html#lentil.Image.fit_tilt">(lentil.Image method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.fit_tilt.html#lentil.Plane.fit_tilt">(lentil.Plane method)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.fit_tilt.html#lentil.plane._TiltBase.fit_tilt">(lentil.plane._TiltBase method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.fit_tilt.html#lentil.Pupil.fit_tilt">(lentil.Pupil method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.fit_tilt.html#lentil.Rotate.fit_tilt">(lentil.Rotate method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.fit_tilt.html#lentil.Tilt.fit_tilt">(lentil.Tilt method)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.Flip.html#lentil.Flip">Flip (class in lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.Pupil.focal_length.html#lentil.Pupil.focal_length">focal_length (lentil.Pupil attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Wavefront.focal_length.html#lentil.Wavefront.focal_length">(lentil.Wavefront attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.DispersiveTilt.freeze.html#lentil.DispersiveTilt.freeze">freeze() (lentil.DispersiveTilt method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Flip.freeze.html#lentil.Flip.freeze">(lentil.Flip method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.freeze.html#lentil.Grism.freeze">(lentil.Grism method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.freeze.html#lentil.Image.freeze">(lentil.Image method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.freeze.html#lentil.Plane.freeze">(lentil.Plane method)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.freeze.html#lentil.plane._TiltBase.freeze">(lentil.plane._TiltBase method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.freeze.html#lentil.Pupil.freeze">(lentil.Pupil method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.freeze.html#lentil.Rotate.freeze">(lentil.Rotate method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.freeze.html#lentil.Tilt.freeze">(lentil.Tilt method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.from_csv.html#lentil.radiometry.Blackbody.from_csv">from_csv() (lentil.radiometry.Blackbody class method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.from_csv.html#lentil.radiometry.Spectrum.from_csv">(lentil.radiometry.Spectrum class method)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.DispersiveTilt.frozen.html#lentil.DispersiveTilt.frozen">frozen (lentil.DispersiveTilt attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Flip.frozen.html#lentil.Flip.frozen">(lentil.Flip attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.frozen.html#lentil.Grism.frozen">(lentil.Grism attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.frozen.html#lentil.Image.frozen">(lentil.Image attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.frozen.html#lentil.Plane.frozen">(lentil.Plane attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.frozen.html#lentil.plane._TiltBase.frozen">(lentil.plane._TiltBase attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.frozen.html#lentil.Pupil.frozen">(lentil.Pupil attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.frozen.html#lentil.Rotate.frozen">(lentil.Rotate attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.frozen.html#lentil.Tilt.frozen">(lentil.Tilt attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.helper.gaussian2d.html#lentil.helper.gaussian2d">gaussian2d() (in module lentil.helper)</a>
+</li>
+      <li><a href="ref/generated/lentil.helper.get_rng.html#lentil.helper.get_rng">get_rng() (in module lentil.helper)</a>
+</li>
+      <li><a href="ref/generated/lentil.DispersiveTilt.global_mask.html#lentil.DispersiveTilt.global_mask">global_mask (lentil.DispersiveTilt attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Flip.global_mask.html#lentil.Flip.global_mask">(lentil.Flip attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.global_mask.html#lentil.Grism.global_mask">(lentil.Grism attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.global_mask.html#lentil.Image.global_mask">(lentil.Image attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.global_mask.html#lentil.Plane.global_mask">(lentil.Plane attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.global_mask.html#lentil.plane._TiltBase.global_mask">(lentil.plane._TiltBase attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.global_mask.html#lentil.Pupil.global_mask">(lentil.Pupil attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.global_mask.html#lentil.Rotate.global_mask">(lentil.Rotate attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.global_mask.html#lentil.Tilt.global_mask">(lentil.Tilt attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.Grism.html#lentil.Grism">Grism (class in lentil)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.hex_segments.html#lentil.hex_segments">hex_segments() (in module lentil)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.hexagon.html#lentil.hexagon">hexagon() (in module lentil)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.Image.html#lentil.Image">Image (class in lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.field.insert.html#lentil.field.insert">insert() (in module lentil.field)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Wavefront.insert.html#lentil.Wavefront.insert">(lentil.Wavefront method)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.integrate.html#lentil.radiometry.Blackbody.integrate">integrate() (lentil.radiometry.Blackbody method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.integrate.html#lentil.radiometry.Spectrum.integrate">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.Wavefront.intensity.html#lentil.Wavefront.intensity">intensity (lentil.Wavefront attribute)</a>
+</li>
+      <li><a href="ref/generated/lentil.extent.intersect.html#lentil.extent.intersect">intersect() (in module lentil.extent)</a>
+</li>
+      <li><a href="ref/generated/lentil.extent.intersection_extent.html#lentil.extent.intersection_extent">intersection_extent() (in module lentil.extent)</a>
+</li>
+      <li><a href="ref/generated/lentil.extent.intersection_shape.html#lentil.extent.intersection_shape">intersection_shape() (in module lentil.extent)</a>
+</li>
+      <li><a href="ref/generated/lentil.extent.intersection_shift.html#lentil.extent.intersection_shift">intersection_shift() (in module lentil.extent)</a>
+</li>
+      <li><a href="ref/generated/lentil.extent.intersection_slices.html#lentil.extent.intersection_slices">intersection_slices() (in module lentil.extent)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.jitter.html#lentil.jitter">jitter() (in module lentil)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    lentil
+
+      <ul>
+        <li><a href="ref/index.html#module-lentil">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.DispersiveTilt.mask.html#lentil.DispersiveTilt.mask">mask (lentil.DispersiveTilt attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Flip.mask.html#lentil.Flip.mask">(lentil.Flip attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.mask.html#lentil.Grism.mask">(lentil.Grism attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.mask.html#lentil.Image.mask">(lentil.Image attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.mask.html#lentil.Plane.mask">(lentil.Plane attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.mask.html#lentil.plane._TiltBase.mask">(lentil.plane._TiltBase attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.mask.html#lentil.Pupil.mask">(lentil.Pupil attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.mask.html#lentil.Rotate.mask">(lentil.Rotate attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.mask.html#lentil.Tilt.mask">(lentil.Tilt attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.radiometry.Material.html#lentil.radiometry.Material">Material (class in lentil.radiometry)</a>
+</li>
+      <li><a href="ref/generated/lentil.field.merge.html#lentil.field.merge">merge() (in module lentil.field)</a>
+</li>
+      <li><a href="ref/generated/lentil.helper.mesh.html#lentil.helper.mesh">mesh() (in module lentil.helper)</a>
+</li>
+      <li><a href="ref/generated/lentil.min_sampling.html#lentil.min_sampling">min_sampling() (in module lentil)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    module
+
+      <ul>
+        <li><a href="ref/index.html#module-lentil">lentil</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.DispersiveTilt.multiply.html#lentil.DispersiveTilt.multiply">multiply() (lentil.DispersiveTilt method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Flip.multiply.html#lentil.Flip.multiply">(lentil.Flip method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.multiply.html#lentil.Grism.multiply">(lentil.Grism method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.multiply.html#lentil.Image.multiply">(lentil.Image method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.multiply.html#lentil.Plane.multiply">(lentil.Plane method)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.multiply.html#lentil.plane._TiltBase.multiply">(lentil.plane._TiltBase method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.multiply.html#lentil.Pupil.multiply">(lentil.Pupil method)</a>
+</li>
+        <li><a href="ref/generated/lentil.radiometry.Blackbody.multiply.html#lentil.radiometry.Blackbody.multiply">(lentil.radiometry.Blackbody method)</a>
+</li>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.multiply.html#lentil.radiometry.Spectrum.multiply">(lentil.radiometry.Spectrum method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.multiply.html#lentil.Rotate.multiply">(lentil.Rotate method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.multiply.html#lentil.Tilt.multiply">(lentil.Tilt method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.normalize_power.html#lentil.normalize_power">normalize_power() (in module lentil)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="user/extend.html#lentil.object.__amp__">object.__amp__() (in module lentil)</a>
+</li>
+      <li><a href="user/extend.html#lentil.object.__mask__">object.__mask__() (in module lentil)</a>
+</li>
+      <li><a href="user/extend.html#lentil.object.__mul__">object.__mul__() (in module lentil)</a>
+</li>
+      <li><a href="user/extend.html#lentil.object.__opd__">object.__opd__() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.field.Field.offset.html#lentil.field.Field.offset">offset (lentil.field.Field attribute)</a>
+</li>
+      <li><a href="ref/generated/lentil.DispersiveTilt.opd.html#lentil.DispersiveTilt.opd">opd (lentil.DispersiveTilt attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Flip.opd.html#lentil.Flip.opd">(lentil.Flip attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.opd.html#lentil.Grism.opd">(lentil.Grism attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.opd.html#lentil.Image.opd">(lentil.Image attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.opd.html#lentil.Plane.opd">(lentil.Plane attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.opd.html#lentil.plane._TiltBase.opd">(lentil.plane._TiltBase attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.opd.html#lentil.Pupil.opd">(lentil.Pupil attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.opd.html#lentil.Rotate.opd">(lentil.Rotate attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.opd.html#lentil.Tilt.opd">(lentil.Tilt attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.field.overlap.html#lentil.field.overlap">overlap() (in module lentil.field)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.pad.html#lentil.pad">pad() (in module lentil)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Blackbody.pad.html#lentil.radiometry.Blackbody.pad">(lentil.radiometry.Blackbody method)</a>
+</li>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.pad.html#lentil.radiometry.Spectrum.pad">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.radiometry.path_emission.html#lentil.radiometry.path_emission">path_emission() (in module lentil.radiometry)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.path_transmission.html#lentil.radiometry.path_transmission">path_transmission() (in module lentil.radiometry)</a>
+</li>
+      <li><a href="ref/generated/lentil.detector.pixel.html#lentil.detector.pixel">pixel() (in module lentil.detector)</a>
+</li>
+      <li><a href="ref/generated/lentil.detector.pixelate.html#lentil.detector.pixelate">pixelate() (in module lentil.detector)</a>
+</li>
+      <li><a href="ref/generated/lentil.DispersiveTilt.pixelscale.html#lentil.DispersiveTilt.pixelscale">pixelscale (lentil.DispersiveTilt attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.field.Field.pixelscale.html#lentil.field.Field.pixelscale">(lentil.field.Field attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Flip.pixelscale.html#lentil.Flip.pixelscale">(lentil.Flip attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.pixelscale.html#lentil.Grism.pixelscale">(lentil.Grism attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.pixelscale.html#lentil.Image.pixelscale">(lentil.Image attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.pixelscale.html#lentil.Plane.pixelscale">(lentil.Plane attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.pixelscale.html#lentil.plane._TiltBase.pixelscale">(lentil.plane._TiltBase attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.pixelscale.html#lentil.Pupil.pixelscale">(lentil.Pupil attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.pixelscale.html#lentil.Rotate.pixelscale">(lentil.Rotate attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.pixelscale.html#lentil.Tilt.pixelscale">(lentil.Tilt attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Wavefront.pixelscale.html#lentil.Wavefront.pixelscale">(lentil.Wavefront attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.pixelscale_nyquist.html#lentil.pixelscale_nyquist">pixelscale_nyquist() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.planck_exitance.html#lentil.radiometry.planck_exitance">planck_exitance() (in module lentil.radiometry)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.planck_radiance.html#lentil.radiometry.planck_radiance">planck_radiance() (in module lentil.radiometry)</a>
+</li>
+      <li><a href="ref/generated/lentil.Plane.html#lentil.Plane">Plane (class in lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.power.html#lentil.radiometry.Blackbody.power">power() (lentil.radiometry.Blackbody method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.power.html#lentil.radiometry.Spectrum.power">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.power_spectrum.html#lentil.power_spectrum">power_spectrum() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.propagate_dft.html#lentil.propagate_dft">propagate_dft() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.propagate_fft.html#lentil.propagate_fft">propagate_fft() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.DispersiveTilt.ptt_vector.html#lentil.DispersiveTilt.ptt_vector">ptt_vector (lentil.DispersiveTilt attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Flip.ptt_vector.html#lentil.Flip.ptt_vector">(lentil.Flip attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.ptt_vector.html#lentil.Grism.ptt_vector">(lentil.Grism attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.ptt_vector.html#lentil.Image.ptt_vector">(lentil.Image attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.ptt_vector.html#lentil.Plane.ptt_vector">(lentil.Plane attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.ptt_vector.html#lentil.plane._TiltBase.ptt_vector">(lentil.plane._TiltBase attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.ptt_vector.html#lentil.Pupil.ptt_vector">(lentil.Pupil attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.ptt_vector.html#lentil.Rotate.ptt_vector">(lentil.Rotate attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.ptt_vector.html#lentil.Tilt.ptt_vector">(lentil.Tilt attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.ptype.PType_cls.rst.html#lentil.ptype.PType">PType (class in lentil.ptype)</a>
+</li>
+      <li><a href="ref/generated/lentil.DispersiveTilt.ptype.html#lentil.DispersiveTilt.ptype">ptype (lentil.DispersiveTilt attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Flip.ptype.html#lentil.Flip.ptype">(lentil.Flip attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.ptype.html#lentil.Grism.ptype">(lentil.Grism attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.ptype.html#lentil.Image.ptype">(lentil.Image attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.ptype.html#lentil.Plane.ptype">(lentil.Plane attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.ptype.html#lentil.plane._TiltBase.ptype">(lentil.plane._TiltBase attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.ptype.html#lentil.Pupil.ptype">(lentil.Pupil attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.ptype.html#lentil.Rotate.ptype">(lentil.Rotate attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.ptype.html#lentil.Tilt.ptype">(lentil.Tilt attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Wavefront.ptype.html#lentil.Wavefront.ptype">(lentil.Wavefront attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.ptype.ptype.html#lentil.ptype.ptype">ptype() (in module lentil.ptype)</a>
+</li>
+      <li><a href="ref/generated/lentil.Pupil.html#lentil.Pupil">Pupil (class in lentil)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.detector.read_noise.html#lentil.detector.read_noise">read_noise() (in module lentil.detector)</a>
+</li>
+      <li><a href="ref/generated/lentil.rebin.html#lentil.rebin">rebin() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.rectangle.html#lentil.rectangle">rectangle() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.field.reduce.html#lentil.field.reduce">reduce() (in module lentil.field)</a>
+</li>
+      <li><a href="ref/generated/lentil.DispersiveTilt.resample.html#lentil.DispersiveTilt.resample">resample() (lentil.DispersiveTilt method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Flip.resample.html#lentil.Flip.resample">(lentil.Flip method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.resample.html#lentil.Grism.resample">(lentil.Grism method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.resample.html#lentil.Image.resample">(lentil.Image method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.resample.html#lentil.Plane.resample">(lentil.Plane method)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.resample.html#lentil.plane._TiltBase.resample">(lentil.plane._TiltBase method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.resample.html#lentil.Pupil.resample">(lentil.Pupil method)</a>
+</li>
+        <li><a href="ref/generated/lentil.radiometry.Blackbody.resample.html#lentil.radiometry.Blackbody.resample">(lentil.radiometry.Blackbody method)</a>
+</li>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.resample.html#lentil.radiometry.Spectrum.resample">(lentil.radiometry.Spectrum method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.resample.html#lentil.Rotate.resample">(lentil.Rotate method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.resample.html#lentil.Tilt.resample">(lentil.Tilt method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.rescale.html#lentil.rescale">rescale() (in module lentil)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.DispersiveTilt.rescale.html#lentil.DispersiveTilt.rescale">(lentil.DispersiveTilt method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Flip.rescale.html#lentil.Flip.rescale">(lentil.Flip method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.rescale.html#lentil.Grism.rescale">(lentil.Grism method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.rescale.html#lentil.Image.rescale">(lentil.Image method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.rescale.html#lentil.Plane.rescale">(lentil.Plane method)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.rescale.html#lentil.plane._TiltBase.rescale">(lentil.plane._TiltBase method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.rescale.html#lentil.Pupil.rescale">(lentil.Pupil method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.rescale.html#lentil.Rotate.rescale">(lentil.Rotate method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.rescale.html#lentil.Tilt.rescale">(lentil.Tilt method)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.Rotate.html#lentil.Rotate">Rotate (class in lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.detector.rule07_dark_current.html#lentil.detector.rule07_dark_current">rule07_dark_current() (in module lentil.detector)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.sample.html#lentil.sample">sample() (in module lentil)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Blackbody.sample.html#lentil.radiometry.Blackbody.sample">(lentil.radiometry.Blackbody method)</a>
+</li>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.sample.html#lentil.radiometry.Spectrum.sample">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.sample_vegamag.html#lentil.radiometry.Blackbody.sample_vegamag">sample_vegamag() (lentil.radiometry.Blackbody method)</a>
+</li>
+      <li><a href="ref/generated/lentil.DispersiveTilt.shape.html#lentil.DispersiveTilt.shape">shape (lentil.DispersiveTilt attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.field.Field.shape.html#lentil.field.Field.shape">(lentil.field.Field attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Flip.shape.html#lentil.Flip.shape">(lentil.Flip attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.shape.html#lentil.Grism.shape">(lentil.Grism attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.shape.html#lentil.Image.shape">(lentil.Image attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.shape.html#lentil.Plane.shape">(lentil.Plane attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.shape.html#lentil.plane._TiltBase.shape">(lentil.plane._TiltBase attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.shape.html#lentil.Pupil.shape">(lentil.Pupil attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.shape.html#lentil.Rotate.shape">(lentil.Rotate attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.shape.html#lentil.Tilt.shape">(lentil.Tilt attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Wavefront.shape.html#lentil.Wavefront.shape">(lentil.Wavefront attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.field.Field.shift.html#lentil.field.Field.shift">shift() (lentil.field.Field method)</a>
+</li>
+      <li><a href="ref/generated/lentil.detector.shot_noise.html#lentil.detector.shot_noise">shot_noise() (in module lentil.detector)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.DispersiveTilt.size.html#lentil.DispersiveTilt.size">size (lentil.DispersiveTilt attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.field.Field.size.html#lentil.field.Field.size">(lentil.field.Field attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Flip.size.html#lentil.Flip.size">(lentil.Flip attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.size.html#lentil.Grism.size">(lentil.Grism attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.size.html#lentil.Image.size">(lentil.Image attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.size.html#lentil.Plane.size">(lentil.Plane attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.size.html#lentil.plane._TiltBase.size">(lentil.plane._TiltBase attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.size.html#lentil.Pupil.size">(lentil.Pupil attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.size.html#lentil.Rotate.size">(lentil.Rotate attribute)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.size.html#lentil.Tilt.size">(lentil.Tilt attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.helper.slice_offset.html#lentil.helper.slice_offset">slice_offset() (in module lentil.helper)</a>
+</li>
+      <li><a href="ref/generated/lentil.smear.html#lentil.smear">smear() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.Spectrum.html#lentil.radiometry.Spectrum">Spectrum (class in lentil.radiometry)</a>
+</li>
+      <li><a href="ref/generated/lentil.spider.html#lentil.spider">spider() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.subarray.html#lentil.subarray">subarray() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.subtract.html#lentil.radiometry.Blackbody.subtract">subtract() (lentil.radiometry.Blackbody method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.subtract.html#lentil.radiometry.Spectrum.subtract">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.DispersiveTilt.thaw.html#lentil.DispersiveTilt.thaw">thaw() (lentil.DispersiveTilt method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.Flip.thaw.html#lentil.Flip.thaw">(lentil.Flip method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Grism.thaw.html#lentil.Grism.thaw">(lentil.Grism method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Image.thaw.html#lentil.Image.thaw">(lentil.Image method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Plane.thaw.html#lentil.Plane.thaw">(lentil.Plane method)</a>
+</li>
+        <li><a href="ref/generated/lentil.plane._TiltBase.thaw.html#lentil.plane._TiltBase.thaw">(lentil.plane._TiltBase method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Pupil.thaw.html#lentil.Pupil.thaw">(lentil.Pupil method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Rotate.thaw.html#lentil.Rotate.thaw">(lentil.Rotate method)</a>
+</li>
+        <li><a href="ref/generated/lentil.Tilt.thaw.html#lentil.Tilt.thaw">(lentil.Tilt method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.Tilt.html#lentil.Tilt">Tilt (class in lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.field.Field.tilt.html#lentil.field.Field.tilt">tilt (lentil.field.Field attribute)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.to.html#lentil.radiometry.Blackbody.to">to() (lentil.radiometry.Blackbody method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.to.html#lentil.radiometry.Spectrum.to">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.translation_defocus.html#lentil.translation_defocus">translation_defocus() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.Material.transmission.html#lentil.radiometry.Material.transmission">transmission (lentil.radiometry.Material attribute)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.trim.html#lentil.radiometry.Blackbody.trim">trim() (lentil.radiometry.Blackbody method)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.trim.html#lentil.radiometry.Spectrum.trim">(lentil.radiometry.Spectrum method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.value.html#lentil.radiometry.Blackbody.value">value (lentil.radiometry.Blackbody attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.value.html#lentil.radiometry.Spectrum.value">(lentil.radiometry.Spectrum attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.valueunit.html#lentil.radiometry.Blackbody.valueunit">valueunit (lentil.radiometry.Blackbody attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.valueunit.html#lentil.radiometry.Spectrum.valueunit">(lentil.radiometry.Spectrum attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.radiometry.vegaflux.html#lentil.radiometry.vegaflux">vegaflux() (in module lentil.radiometry)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.vegamag.html#lentil.radiometry.Blackbody.vegamag">vegamag() (lentil.radiometry.Blackbody class method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.wave.html#lentil.radiometry.Blackbody.wave">wave (lentil.radiometry.Blackbody attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.wave.html#lentil.radiometry.Spectrum.wave">(lentil.radiometry.Spectrum attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.Wavefront.html#lentil.Wavefront">Wavefront (class in lentil)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.Wavefront.wavelength.html#lentil.Wavefront.wavelength">wavelength (lentil.Wavefront attribute)</a>
+</li>
+      <li><a href="ref/generated/lentil.radiometry.Blackbody.waveunit.html#lentil.radiometry.Blackbody.waveunit">waveunit (lentil.radiometry.Blackbody attribute)</a>
+
+      <ul>
+        <li><a href="ref/generated/lentil.radiometry.Spectrum.waveunit.html#lentil.radiometry.Spectrum.waveunit">(lentil.radiometry.Spectrum attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="ref/generated/lentil.window.html#lentil.window">window() (in module lentil)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Z">Z</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.zernike.html#lentil.zernike">zernike() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.zernike_basis.html#lentil.zernike_basis">zernike_basis() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.zernike_compose.html#lentil.zernike_compose">zernike_compose() (in module lentil)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ref/generated/lentil.zernike_coordinates.html#lentil.zernike_coordinates">zernike_coordinates() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.zernike_fit.html#lentil.zernike_fit">zernike_fit() (in module lentil)</a>
+</li>
+      <li><a href="ref/generated/lentil.zernike_remove.html#lentil.zernike_remove">zernike_remove() (in module lentil)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2017-2026 California Institute of Technology.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

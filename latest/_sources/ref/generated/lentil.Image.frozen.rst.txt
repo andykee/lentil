@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Image.frozen
+===================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Image.frozen
+

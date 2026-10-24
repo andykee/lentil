@@ -1,0 +1,6 @@
+﻿lentil.zernike\_compose
+=======================
+
+.. currentmodule:: lentil
+
+.. autofunction:: zernike_compose

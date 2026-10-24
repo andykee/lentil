@@ -1,0 +1,6 @@
+lentil.Tilt.resample
+====================
+
+.. currentmodule:: lentil
+
+.. automethod:: Tilt.resample

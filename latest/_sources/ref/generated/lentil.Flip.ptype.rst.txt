@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Flip.ptype
+=================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Flip.ptype
+

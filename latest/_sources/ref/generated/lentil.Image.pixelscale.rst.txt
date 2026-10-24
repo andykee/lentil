@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Image.pixelscale
+=======================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Image.pixelscale
+

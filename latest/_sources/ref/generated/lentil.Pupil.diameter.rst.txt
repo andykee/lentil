@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Pupil.diameter
+=====================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Pupil.diameter
+

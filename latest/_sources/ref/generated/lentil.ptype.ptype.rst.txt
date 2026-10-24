@@ -1,0 +1,6 @@
+﻿lentil.ptype.ptype
+==================
+
+.. currentmodule:: lentil.ptype
+
+.. autofunction:: ptype

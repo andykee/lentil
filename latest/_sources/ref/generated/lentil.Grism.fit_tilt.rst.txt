@@ -1,0 +1,6 @@
+lentil.Grism.fit\_tilt
+======================
+
+.. currentmodule:: lentil
+
+.. automethod:: Grism.fit_tilt

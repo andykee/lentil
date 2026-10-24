@@ -1,0 +1,6 @@
+lentil.plane.\_TiltBase.multiply
+================================
+
+.. currentmodule:: lentil.plane
+
+.. automethod:: _TiltBase.multiply

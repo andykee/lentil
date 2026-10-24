@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Wavefront.field
+======================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Wavefront.field
+

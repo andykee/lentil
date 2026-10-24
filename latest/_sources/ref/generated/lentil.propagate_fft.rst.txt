@@ -1,0 +1,6 @@
+﻿lentil.propagate\_fft
+=====================
+
+.. currentmodule:: lentil
+
+.. autofunction:: propagate_fft

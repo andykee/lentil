@@ -1,0 +1,6 @@
+lentil.radiometry.Blackbody.from\_csv
+=====================================
+
+.. currentmodule:: lentil.radiometry
+
+.. automethod:: Blackbody.from_csv

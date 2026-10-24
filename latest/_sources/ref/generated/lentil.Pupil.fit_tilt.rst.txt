@@ -1,0 +1,6 @@
+lentil.Pupil.fit\_tilt
+======================
+
+.. currentmodule:: lentil
+
+.. automethod:: Pupil.fit_tilt

@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Grism.diameter
+=====================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Grism.diameter
+

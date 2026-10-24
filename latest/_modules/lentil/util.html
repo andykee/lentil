@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>lentil.util &#8212; Lentil 0.8.10 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/lentil.css?v=4b1efdef" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../../_static/documentation_options.js?v=3e0d02fa"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/lentil/util';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.23.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://andykee.github.io/lentil/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'latest';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.8.10" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="../../docs.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo-light.svg" class="logo__image only-light" alt="Lentil 0.8.10 documentation - Home"/>
+    <img src="../../_static/logo-dark.svg" class="logo__image only-dark pst-js-only" alt="Lentil 0.8.10 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../ref/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../resources/index.html">
+    Resources
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../ref/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../resources/index.html">
+    Resources
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../docs.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">lentil.util</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for lentil.util</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">map_coordinates</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+
+
+<div class="viewcode-block" id="centroid">
+<a class="viewcode-back" href="../../ref/generated/lentil.centroid.html#lentil.centroid">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">centroid</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Compute image centroid location.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : array_like</span>
+<span class="sd">        Input array.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        ``(r,c)`` centroid location.</span>
+<span class="sd">    """</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">nr</span><span class="p">,</span> <span class="n">nc</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">nr</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">nc</span><span class="p">]</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rr</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">img</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">img</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">c</span></div>
+
+
+
+<div class="viewcode-block" id="pad">
+<a class="viewcode-back" href="../../ref/generated/lentil.pad.html#lentil.pad">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pad</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Zero-pad an array.</span>
+
+<span class="sd">    Note that pad works for both two and three dimensional arrays.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    array : array_like</span>
+<span class="sd">        Array to be padded.</span>
+
+<span class="sd">    shape : tuple of ints</span>
+<span class="sd">        Shape of output array in ``(nrows, ncols)``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    padded : ndarray</span>
+<span class="sd">        Zero-padded array with shape ``(nrows, ncols)``. If ``array`` has a</span>
+<span class="sd">        third dimension, the return shape will be ``(nrows, ncols, depth)``.</span>
+<span class="sd">    """</span>
+
+    <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+
+    <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span>
+
+
+    <span class="n">dr</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="o">+</span><span class="n">offset</span><span class="p">]</span>
+    <span class="n">dc</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">offset</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">dr</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">rmin0</span> <span class="o">=</span> <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="o">+</span><span class="n">offset</span><span class="p">]</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">//</span><span class="mi">2</span>
+        <span class="n">rmax0</span> <span class="o">=</span> <span class="n">rmin0</span> <span class="o">+</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">rmin1</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">rmax1</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rmin0</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">rmax0</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="o">+</span><span class="n">offset</span><span class="p">]</span>
+        <span class="n">rmin1</span> <span class="o">=</span> <span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="o">+</span><span class="n">offset</span><span class="p">])</span><span class="o">//</span><span class="mi">2</span>
+        <span class="n">rmax1</span> <span class="o">=</span> <span class="n">rmin1</span> <span class="o">+</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="o">+</span><span class="n">offset</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">dc</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">cmin0</span> <span class="o">=</span> <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">offset</span><span class="p">]</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">//</span><span class="mi">2</span>
+        <span class="n">cmax0</span> <span class="o">=</span> <span class="n">cmin0</span> <span class="o">+</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">cmin1</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">cmax1</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cmin0</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">cmax0</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">cmin1</span> <span class="o">=</span> <span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">offset</span><span class="p">])</span><span class="o">//</span><span class="mi">2</span>
+        <span class="n">cmax1</span> <span class="o">=</span> <span class="n">cmin1</span> <span class="o">+</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">offset</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">padded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">padded</span><span class="p">[</span><span class="n">rmin1</span><span class="p">:</span><span class="n">rmax1</span><span class="p">,</span> <span class="n">cmin1</span><span class="p">:</span><span class="n">cmax1</span><span class="p">]</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">rmin0</span><span class="p">:</span><span class="n">rmax0</span><span class="p">,</span> <span class="n">cmin0</span><span class="p">:</span><span class="n">cmax0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">padded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">padded</span><span class="p">[:,</span> <span class="n">rmin1</span><span class="p">:</span><span class="n">rmax1</span><span class="p">,</span> <span class="n">cmin1</span><span class="p">:</span><span class="n">cmax1</span><span class="p">]</span> <span class="o">=</span> <span class="n">array</span><span class="p">[:,</span> <span class="n">rmin0</span><span class="p">:</span><span class="n">rmax0</span><span class="p">,</span> <span class="n">cmin0</span><span class="p">:</span><span class="n">cmax0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">padded</span></div>
+
+
+
+<div class="viewcode-block" id="subarray">
+<a class="viewcode-back" href="../../ref/generated/lentil.subarray.html#lentil.subarray">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">subarray</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">"""Extract a contiguous subarray from a larger array.</span>
+
+<span class="sd">    The subarray is extracted about the center of the source array unless</span>
+<span class="sd">    a shift is specified.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : array_like</span>
+<span class="sd">        Source array</span>
+<span class="sd">    shape : array_like of ints</span>
+<span class="sd">        Shape of subarray array in ``(nrows, ncols)``.</span>
+<span class="sd">    shift : array_like of ints</span>
+<span class="sd">        Relative shift of the center of the subarray in ``(row, col)``.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out : ndarray</span>
+<span class="sd">        Subarray extracted from the source array.</span>
+<span class="sd">    """</span>
+
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">rmin</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">cmin</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">rmax</span> <span class="o">=</span> <span class="n">rmin</span> <span class="o">+</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">cmax</span> <span class="o">=</span> <span class="n">cmin</span> <span class="o">+</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">any</span><span class="p">((</span><span class="n">rmin</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmin</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">rmax</span><span class="o">&gt;</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cmax</span><span class="o">&gt;</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'window lies outside of array'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="n">rmin</span><span class="p">:</span><span class="n">rmax</span><span class="p">,</span> <span class="n">cmin</span><span class="p">:</span><span class="n">cmax</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="window">
+<a class="viewcode-back" href="../../ref/generated/lentil.window.html#lentil.window">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">window</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">slice</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Extract an appropriately sized, potentially windowed array</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : array_like</span>
+<span class="sd">        Data to window</span>
+
+<span class="sd">    shape : array_like or None, optional</span>
+<span class="sd">        Output shape given as (nrows, ncols). If ``None`` (default), an</span>
+<span class="sd">        uncropped array is returned.</span>
+
+<span class="sd">    slice : array_like or None, optional</span>
+<span class="sd">        Indices of ``img`` array to return given as (r_start, r_end, c_start,</span>
+<span class="sd">        c_end). This definition follows standard numpy indexing.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    data : ndarray</span>
+<span class="sd">        Trimmed and windowed ``img`` array</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    * If ``img`` is a single value (img.size == 1), self.data is returned</span>
+<span class="sd">      regardless of what ``shape`` and ``slice`` are.</span>
+<span class="sd">    * If ``shape`` is given but ``slice`` is ``None``, the returned ndarray</span>
+<span class="sd">      is trimmed about the center of the array using :func:`lentil.pad`.</span>
+<span class="sd">    * If ``slice`` is given but ``shape`` is ``None``, the returned ndarray</span>
+<span class="sd">      is extracted from ``img`` according to the indices in ``slice``</span>
+<span class="sd">    * If both ``shape`` and ``slice`` are given, the returned ndarray is</span>
+<span class="sd">      extracted from ``img`` according to the indices in ``slice`` and the</span>
+<span class="sd">      following expressions must also be true:</span>
+
+<span class="sd">    .. code::</span>
+
+<span class="sd">        shape[0] = (slice[1] - slice[0]) = (r_end - r_start)</span>
+<span class="sd">        shape[1] = (slice[3] - slice[2]) = (c_end - c_start)</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">img</span>
+
+    <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">slice</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">img</span>
+    <span class="k">elif</span> <span class="nb">slice</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># ensure size consistency</span>
+            <span class="k">assert</span><span class="p">(</span><span class="nb">slice</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nb">slice</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">assert</span><span class="p">(</span><span class="nb">slice</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="nb">slice</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># return the requested view. Note that numpy will implicitly handle a</span>
+        <span class="c1"># third dimension if one is present</span>
+        <span class="k">return</span> <span class="n">img</span><span class="p">[</span><span class="nb">slice</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="nb">slice</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">slice</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="nb">slice</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># return the padded array. Note that pad will handle a third dimension</span>
+        <span class="c1"># if one exists</span>
+        <span class="k">return</span> <span class="n">lentil</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="boundary">
+<a class="viewcode-back" href="../../ref/generated/lentil.boundary.html#lentil.boundary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">boundary</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Find bounding row and column indices of data within an array.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : array_like</span>
+<span class="sd">        Input array</span>
+
+<span class="sd">    threshold : float, optional</span>
+<span class="sd">        Masking threshold to apply before boundary finding. Only values</span>
+<span class="sd">        in x that are larger than threshold are considered in the boundary</span>
+<span class="sd">        finding operation. Default is 0.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    rmin, rmax, cmin, cmax : ints</span>
+<span class="sd">        Boundary indices</span>
+
+<span class="sd">    """</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)</span>
+
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">rows</span><span class="p">)[</span><span class="mi">0</span><span class="p">][[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">cmin</span><span class="p">,</span> <span class="n">cmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cols</span><span class="p">)[</span><span class="mi">0</span><span class="p">][[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+
+    <span class="k">return</span> <span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span><span class="p">,</span> <span class="n">cmin</span><span class="p">,</span> <span class="n">cmax</span></div>
+
+
+
+<div class="viewcode-block" id="sample">
+<a class="viewcode-back" href="../../ref/generated/lentil.sample.html#lentil.sample">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">oversample</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">'ij'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Extract samples from an oversampled array.</span>
+
+<span class="sd">    The sampled axes are tiled into contiguous blocks of ``oversample``</span>
+<span class="sd">    samples, with one sample being taken from each block. No averaging or</span>
+<span class="sd">    filtering is performed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : array_like</span>
+<span class="sd">        Array to sample</span>
+<span class="sd">    oversample : int or tuple of ints</span>
+<span class="sd">        Decimation factor. Providing two values defines asymmetric</span>
+<span class="sd">        oversampling with ordering interpreted according to ``indexing``.</span>
+<span class="sd">    offset : int or tuple of ints, optional</span>
+<span class="sd">        Position of the sample with each block, measured from</span>
+<span class="sd">        ``oversample//2``. The sub-sampled position reachable by ``offset`` is</span>
+<span class="sd">        quantized to ``1/oversample``. Default is 0. If two values are</span>
+<span class="sd">        provided, their ordering is interpreted according to ``indexing``.</span>
+<span class="sd">    axes : (2,) sequence of ints, optional</span>
+<span class="sd">        Axes over which to sample. If not provided, the last two axes are</span>
+<span class="sd">        used.</span>
+<span class="sd">    indexing : {'ij', 'xy'}, optional</span>
+<span class="sd">        Matrix (‘ij’, default) or cartesian (‘xy’) indexing of ``x`` grid.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x : ndarray</span>
+<span class="sd">        Each sampled axis has length ``x.shape[axis]//oversample``. If axis</span>
+<span class="sd">        length is not a multiple of ``oversample``, samples taken beyond the</span>
+<span class="sd">        last whole block are ignored.</span>
+
+<span class="sd">    """</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">indexing</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'ij'</span><span class="p">,</span> <span class="s1">'xy'</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Valid values for indexing are 'xy' and 'ij'."</span><span class="p">)</span>
+
+    <span class="n">oversample</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">oversample</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,)))</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,)))</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">%</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">indexing</span> <span class="o">==</span> <span class="s1">'xy'</span><span class="p">:</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">offset</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">offset</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">oversample</span> <span class="o">=</span> <span class="p">(</span><span class="n">oversample</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">oversample</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span> <span class="o">*</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span>
+
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">oversample</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+
+        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">m</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">m</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">lo</span> <span class="o">&lt;=</span> <span class="n">o</span> <span class="o">&lt;=</span> <span class="n">hi</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'offset </span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s1"> lies outside one pixel for oversample '</span>
+                             <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s1"> on axis </span><span class="si">{</span><span class="n">ax</span><span class="si">}</span><span class="s1">; require </span><span class="si">{</span><span class="n">lo</span><span class="si">}</span><span class="s1"> &lt;= offset &lt;= </span><span class="si">{</span><span class="n">hi</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+        <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="o">//</span> <span class="n">m</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">m</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">o</span>
+        <span class="n">stop</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">m</span> <span class="o">*</span> <span class="n">n</span>
+
+        <span class="n">idx</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span></div>
+
+
+
+<div class="viewcode-block" id="rebin">
+<a class="viewcode-back" href="../../ref/generated/lentil.rebin.html#lentil.rebin">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rebin</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Rebin an image by an integer factor.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : array_like</span>
+<span class="sd">        Array or cube of arrays to rebin. If a cube is provided, the first dimension</span>
+<span class="sd">        should index the image slices.</span>
+
+<span class="sd">    factor : int</span>
+<span class="sd">        Rebinning factor</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Rebinned image</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`rescale`</span>
+
+<span class="sd">    """</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">iscomplexobj</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'rebin is not defined for complex data'</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">rebinned_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="n">factor</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">//</span><span class="n">factor</span><span class="p">)</span>
+        <span class="n">img_rebinned</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">rebinned_shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">img_rebinned</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rebinned_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">factor</span><span class="p">,</span>
+                                             <span class="n">rebinned_shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">factor</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">img_rebinned</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="n">factor</span><span class="p">,</span> <span class="n">factor</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="n">factor</span><span class="p">,</span>
+                                   <span class="n">factor</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">img_rebinned</span></div>
+
+
+
+<div class="viewcode-block" id="rescale">
+<a class="viewcode-back" href="../../ref/generated/lentil.rescale.html#lentil.rescale">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rescale</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">,</span>
+            <span class="n">unitary</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Rescale an image by interpolation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img : array_like</span>
+<span class="sd">        Image to rescale</span>
+
+<span class="sd">    scale : float</span>
+<span class="sd">        Scaling factor. Scale factors less than 1 will shrink the image. Scale</span>
+<span class="sd">        factors greater than 1 will grow the image.</span>
+
+<span class="sd">    shape : array_like or int, optional</span>
+<span class="sd">        Output shape. If None (default), the output shape will be the input img</span>
+<span class="sd">        shape multiplied by the scale factor.</span>
+
+<span class="sd">    mask : array_like, optional</span>
+<span class="sd">        Binary mask applied after rescaling. If None (default), a mask is</span>
+<span class="sd">        created from the nonzero portions of img. To skip masking operation,</span>
+<span class="sd">        set ``mask = np.ones_like(img)``</span>
+
+<span class="sd">    order : int, optional</span>
+<span class="sd">        Order of spline interpolation used for rescaling operation. Default is</span>
+<span class="sd">        3. Order must be in the range 0-5.</span>
+
+<span class="sd">    mode : {'constant', 'nearest', 'reflect', 'wrap'}, optional</span>
+<span class="sd">        Points outside the boundaries of the input are filled according to the</span>
+<span class="sd">        given mode. Default is 'constant'.</span>
+
+<span class="sd">    unitary : bool, optional</span>
+<span class="sd">        Normalization flag. If True (default), a normalization is performed on</span>
+<span class="sd">        the output such that the rescaling operation is unitary and image power</span>
+<span class="sd">        (if complex) or intensity (if real) is conserved.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    img : ndarray</span>
+<span class="sd">        Rescaled image.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The post-rescale masking operation should have no real effect on the</span>
+<span class="sd">    resulting image but is included to eliminate interpolation artifacts that</span>
+<span class="sd">    sometimes appear in large clusters of zeros in rescaled images.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`rebin`</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># take the real portion to ensure that even if img is complex, mask will</span>
+        <span class="c1"># be real</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+        <span class="n">mask</span><span class="p">[</span><span class="n">img</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">scale</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">scale</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">shape</span><span class="o">*</span><span class="n">scale</span><span class="p">,</span> <span class="n">shape</span><span class="o">*</span><span class="n">scale</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">((</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">scale</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">scale</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span><span class="o">/</span><span class="n">scale</span> <span class="o">+</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mf">2.</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span><span class="o">/</span><span class="n">scale</span> <span class="o">+</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">2.</span>
+
+    <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">map_coordinates</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="p">[</span><span class="n">yy</span><span class="p">,</span> <span class="n">xx</span><span class="p">],</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">)</span>
+    <span class="n">mask</span><span class="p">[</span><span class="n">mask</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">iscomplexobj</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="n">map_coordinates</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="p">[</span><span class="n">yy</span><span class="p">,</span> <span class="n">xx</span><span class="p">],</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">imag</span> <span class="o">=</span> <span class="n">map_coordinates</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="p">[</span><span class="n">yy</span><span class="p">,</span> <span class="n">xx</span><span class="p">],</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">map_coordinates</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">[</span><span class="n">yy</span><span class="p">,</span> <span class="n">xx</span><span class="p">],</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">unitary</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+    <span class="n">out</span> <span class="o">*=</span> <span class="n">mask</span>
+
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="pixelscale_nyquist">
+<a class="viewcode-back" href="../../ref/generated/lentil.pixelscale_nyquist.html#lentil.pixelscale_nyquist">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pixelscale_nyquist</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">f_number</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Compute the output plane sampling which is Nyquist sampled for</span>
+<span class="sd">    intensity.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    wave : float</span>
+<span class="sd">        Wavelength in meters</span>
+
+<span class="sd">    f_number : float</span>
+<span class="sd">        Optical system F/#</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Sampling in meters</span>
+
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">f_number</span> <span class="o">*</span> <span class="n">wave</span> <span class="o">/</span> <span class="mi">2</span></div>
+
+
+
+<div class="viewcode-block" id="min_sampling">
+<a class="viewcode-back" href="../../ref/generated/lentil.min_sampling.html#lentil.min_sampling">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">min_sampling</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">du</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">min_q</span><span class="p">):</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span> <span class="o">*</span> <span class="n">z</span>
+    <span class="k">return</span> <span class="n">num</span><span class="o">/</span><span class="p">(</span><span class="n">min_q</span> <span class="o">*</span> <span class="n">du</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">num</span><span class="o">/</span><span class="p">(</span><span class="n">min_q</span> <span class="o">*</span> <span class="n">du</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="normalize_power">
+<a class="viewcode-back" href="../../ref/generated/lentil.normalize_power.html#lentil.normalize_power">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">normalize_power</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Normalizie the power in an array.</span>
+
+<span class="sd">    The total power in an array is given by</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        P = \sum{\left|\mbox{array}\right|^2}</span>
+
+<span class="sd">    A normalization coefficient is computed as</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        c = \sqrt{\frac{p}{\sum{\left|\mbox{array}\right|^2}}}</span>
+
+<span class="sd">    The array returned by a will be scaled by the normalization coefficient so</span>
+<span class="sd">    that its power is equal to :math:`p`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    array : array_like</span>
+<span class="sd">        Array to be normalized</span>
+
+<span class="sd">    power : float, optional</span>
+<span class="sd">        Desired power in normalized array. Default is 1.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array : ndarray</span>
+<span class="sd">        Normalized array</span>
+
+<span class="sd">    """</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">array</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">power</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">array</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sanitize_shape</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">shape</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">shape</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">():</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sanitize_bandpass</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">vec</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">():</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="n">vec</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">vec</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2017-2026 California Institute of Technology.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
