@@ -223,7 +223,7 @@ def zernike_compose(mask, coeffs, normalize=True, order='noll', rho=None,
 
 
 def _zernike_compose(mask, coeffs, normalize, order, rho, theta,
-                            legacy):
+                     legacy):
     mask = np.asarray(mask)
     coeffs = np.asarray(coeffs)
     opd = np.zeros(mask.shape)
@@ -288,8 +288,8 @@ def zernike_basis(mask, modes, vectorize=False, normalize=True, order='noll',
                           theta, legacy)
 
 
-def _zernike_basis(mask, modes, vectorize=False, normalize=True, order='noll',
-                  rho=None, theta=None, legacy=False):
+def _zernike_basis(mask, modes, vectorize, normalize, order, rho, theta,
+                   legacy):
     modes = np.asarray(modes)
     if modes.shape == ():
         modes = modes[..., np.newaxis]
@@ -378,7 +378,7 @@ def zernike_fit(opd, mask, modes, normalize=True, order='noll', rho=None,
 
 
 def _zernike_fit(opd, mask, modes, normalize, order, rho, theta,
-                        legacy):
+                 legacy):
     opd = np.asarray(opd).ravel()
     mask = np.asarray(mask)
     basis = _zernike_basis(mask, modes, True, normalize, order, rho, theta, legacy)
@@ -442,8 +442,8 @@ def zernike_remove(opd, mask, modes, order='noll', rho=None, theta=None,
     opd = np.asarray(opd)
     mask = np.asarray(mask)
 
-    coeffs = zernike_fit(opd, mask, modes, True, order, rho, theta, legacy)
-    fit_opd = zernike_compose(mask, coeffs, True, order, rho, theta, legacy)
+    coeffs = _zernike_fit(opd, mask, modes, True, order, rho, theta, legacy)
+    fit_opd = _zernike_compose(mask, coeffs, True, order, rho, theta, legacy)
 
     residual = opd - fit_opd
 
@@ -592,7 +592,7 @@ def zernike_coordinates(mask, shift=None, angle=0, indexing='xy'):
 
 
 def _zernike_coordinates_legacy(mask):
-    # Reproduces zernike_coordinates(mask) from lentil 0.8.10 and earlier:
+    # Reproduces zernike_coordinates(mask) from lentil 0.8.10 and earlier.
     mask = np.asarray(mask, dtype=bool)
     center = np.asarray(mask.shape)/2
     centroid = np.asarray(lentil.centroid(mask, indexing='ij'))
@@ -649,14 +649,14 @@ def zernike_coeff_legacy(coeffs, modes=None, order='noll'):
 
     .. code:: pycon
 
-        >>> lentil.zernike_legacy_coeffs([1e-8, 2e-8, 3e-8], modes=[2, 3, 4])
+        >>> lentil.zernike_coeff_legacy([1e-8, 2e-8, 3e-8], modes=[2, 3, 4])
         array([-1.e-08, -2.e-08,  3.e-08])
 
     Convert a full coefficient vector as used by :func:`zernike_compose`:
 
     .. code:: pycon
 
-        >>> coeffs = lentil.zernike_legacy_coeffs(legacy_coeffs)
+        >>> coeffs = lentil.zernike_coeff_legacy(legacy_coeffs)
         >>> opd = lentil.zernike_compose(mask, coeffs)
 
     See Also
