@@ -75,5 +75,5 @@ from lentil.zernike import (
 	zernike_remove,
 	zernike_basis,
 	zernike_coordinates,
-    zernike_legacy_coeffs
+    zernike_coeff_legacy
 )
