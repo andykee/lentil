@@ -23,6 +23,10 @@ with open(os.path.normpath(os.path.join(path, '..', 'lentil', '__init__.py'))) a
 
 today_fmt = '%B %d, %Y'
 
+# Set by the docs workflow to the directory being published ('latest' or a
+# release number like '0.8.10') so the version switcher selects the right entry
+docs_version = os.environ.get('DOCS_VERSION', 'latest')
+
 # -- General configuration ---------------------------------------------------
 
 extensions = ['sphinx.ext.autodoc',
@@ -51,13 +55,18 @@ html_theme_options = {
         "link": "docs",
         "image_light": "_static/logo-light.svg",
         "image_dark": "_static/logo-dark.svg",
-   },
-   "collapse_navigation": True,
-   "navbar_persistent": ["search-button"],
-   "article_header_start": [],
-   "pygments_light_style": "tango",
-   "pygments_dark_style": "nord",
-   "secondary_sidebar_items": ["page-toc"],
+    },
+    "collapse_navigation": True,
+    "navbar_persistent": ["search-button"],
+    "navbar_end": ["version-switcher", "theme-switcher", "navbar-icon-links"],
+    "article_header_start": [],
+    "secondary_sidebar_items": ["page-toc"],
+    "switcher": {
+       "json_url": "https://andykee.github.io/lentil/versions.json",
+       "version_match": docs_version,
+    },
+    "pygments_light_style": "tango",
+    "pygments_dark_style": "nord",
 }
 
 #html_additional_pages = {
@@ -113,10 +122,10 @@ autodoc_default_options = {
 
 autosummary_generate = True
 
-# Some class/function names differ only in their capitalisation. Since these 
-# resolve to autosummary filenames that also differ only in capitalisation, 
-# this causes problems when the documentation is built on an OS/filesystem 
-# that is enforcing case-insensitive semantics.  This setting defines some 
+# Some class/function names differ only in their capitalisation. Since these
+# resolve to autosummary filenames that also differ only in capitalisation,
+# this causes problems when the documentation is built on an OS/filesystem
+# that is enforcing case-insensitive semantics.  This setting defines some
 # custom names to prevent the clash from happening.
 autosummary_filename_map = {
     "lentil.ptype.PType": "lentil.ptype.PType_cls.rst"
@@ -127,11 +136,13 @@ autosummary_filename_map = {
 # https://github.com/sphinx-doc/sphinx/issues/13257#issuecomment-4182037875
 import inspect
 
+
 def _fix_class_signature(app, what, name, obj, options, signature, return_annotation):
     if what == 'class' and '__init__' in obj.__dict__:
         sig = inspect.signature(obj.__init__)
         params = [p for p in sig.parameters.values() if p.name != 'self']
         return (str(inspect.Signature(params)), None)
+
 
 # Hide the secondary sidebar (page TOC) on generated API pages. This can't be
 # done with a secondary_sidebar_items dict without pydata-sphinx-theme warning
@@ -141,10 +152,10 @@ def _remove_api_secondary_sidebar(app, pagename, templatename, context, doctree)
     if pagename.startswith('api/generated/'):
         context['secondary_sidebar_items'] = []
 
+
 def setup(app):
     app.connect('autodoc-process-signature', _fix_class_signature)
     app.connect('html-page-context', _remove_api_secondary_sidebar, priority=501)
-
 
 
 rst_prolog = """
