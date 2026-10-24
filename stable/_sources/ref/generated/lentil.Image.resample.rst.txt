@@ -1,0 +1,6 @@
+lentil.Image.resample
+=====================
+
+.. currentmodule:: lentil
+
+.. automethod:: Image.resample

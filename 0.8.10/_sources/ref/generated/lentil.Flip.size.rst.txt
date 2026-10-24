@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Flip.size
+================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Flip.size
+

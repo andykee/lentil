@@ -1,0 +1,6 @@
+﻿lentil.min\_sampling
+====================
+
+.. currentmodule:: lentil
+
+.. autofunction:: min_sampling

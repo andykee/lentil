@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Rotate.ptt\_vector
+=========================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Rotate.ptt_vector
+

@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.plane.\_TiltBase.opd
+===========================
+
+.. currentmodule:: lentil.plane
+
+.. autoattribute:: lentil::plane._TiltBase.opd
+

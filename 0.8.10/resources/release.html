@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" sizes="16x16" href="../_static/favicon/favicon-16x16.png" type="image/png">
+    <link rel="icon" sizes="32x32" href="../_static/favicon/favicon-32x32.png" type="image/png">
+    <link rel="icon" sizes="48x48" href="../_static/favicon/favicon-48x48.png" type="image/png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../_static/favicon/apple-touch-icon-180x180.png" color="#000000" type="image/png">
+    <title>Release notes &#8212; Lentil 0.8.10 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/lentil.css?v=4b1efdef" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../_static/documentation_options.js?v=3e0d02fa"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'resources/release';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Citing Lentil" href="cite.html" />
+    <link rel="prev" title="Pixel MTF" href="verification/pixel_mtf.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.8.10" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="../docs.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo-light.svg" class="logo__image only-light" alt="Lentil 0.8.10 documentation - Home"/>
+    <img src="../_static/logo-dark.svg" class="logo__image only-dark pst-js-only" alt="Lentil 0.8.10 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../ref/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Resources
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../examples/index.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../ref/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Resources
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Developer resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install Lentil for development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publishing.html">Publishing to PyPi</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/andykee/lentil">GitHub repo</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/andykee/lentil/issues">GitHub issues</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Algorithm verification</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="verification/dft.html">Discrete Fourier Transform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="verification/pixel_mtf.html">Pixel MTF</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Extras</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cite.html">Citing Lentil</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../docs.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Resources</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Release notes</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="release-notes">
+<span id="release"></span><h1>Release notes<a class="headerlink" href="#release-notes" title="Link to this heading">#</a></h1>
+<section id="v0-8-10">
+<h2>v0.8.10<a class="headerlink" href="#v0-8-10" title="Link to this heading">#</a></h2>
+<p>Released October 15, 2026</p>
+<ul class="simple">
+<li><p>New <code class="docutils literal notranslate"><span class="pre">sample()</span></code> function for taking values from an oversampled array</p></li>
+</ul>
+</section>
+<section id="v0-8-9">
+<h2>v0.8.9<a class="headerlink" href="#v0-8-9" title="Link to this heading">#</a></h2>
+<p>Released July 16, 2026</p>
+<ul class="simple">
+<li><p>Fix bug that caused incorrect behavior when calling <code class="docutils literal notranslate"><span class="pre">fit_tilt()</span></code> on a
+plane that defines a custom <code class="docutils literal notranslate"><span class="pre">__opd__()</span></code> method</p></li>
+</ul>
+</section>
+<section id="v0-8-8">
+<h2>v0.8.8<a class="headerlink" href="#v0-8-8" title="Link to this heading">#</a></h2>
+<p>Released April 8, 2026</p>
+<ul class="simple">
+<li><p>Include support for alternate Zernike ordering schemes (Noll, Fringe, or
+ANSI)</p></li>
+<li><p>Expanded support for providing a single pixelscale value to represent equal
+sampling in (r,c)</p></li>
+<li><p>Minor restructuring of the functionality split betwen <code class="docutils literal notranslate"><span class="pre">Plane</span></code> and
+<code class="docutils literal notranslate"><span class="pre">_PlaneBase</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Plane.multiply()</span></code> is now deprecated</p></li>
+<li><p>Plane waves now have <code class="docutils literal notranslate"><span class="pre">None</span></code> focal length <a class="reference external" href="https://github.com/andykee/lentil/issues/62">#62</a></p></li>
+<li><p>Resolve <code class="docutils literal notranslate"><span class="pre">Plane._slice</span></code> attribute access error <a class="reference external" href="https://github.com/andykee/lentil/issues/64">#64</a></p></li>
+<li><p>Documentation updates</p></li>
+<li><p>Expanded unit test coverage</p></li>
+</ul>
+</section>
+<section id="v0-8-7">
+<h2>v0.8.7<a class="headerlink" href="#v0-8-7" title="Link to this heading">#</a></h2>
+<p>Released September 10, 2025</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">detector.*</span></code> methods that use randomness now optionally accept a
+numpy rng Generator object</p></li>
+<li><p>New helper function <code class="docutils literal notranslate"><span class="pre">helper.get_rng()</span></code> for standardizing numpy rng
+construction and access</p></li>
+</ul>
+</section>
+<section id="v0-8-6">
+<h2>v0.8.6<a class="headerlink" href="#v0-8-6" title="Link to this heading">#</a></h2>
+<p>Released June 20, 2025</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">detector.cosmic_rays()</span></code> now accepts a seed parameter</p></li>
+<li><p>Minor updates to documentation and unit tests</p></li>
+</ul>
+</section>
+<section id="v0-8-5">
+<h2>v0.8.5<a class="headerlink" href="#v0-8-5" title="Link to this heading">#</a></h2>
+<p>Released May 5, 2025</p>
+<ul class="simple">
+<li><p>New <code class="docutils literal notranslate"><span class="pre">Plane.freeze()</span></code> method</p></li>
+<li><p>Documentation updates</p></li>
+<li><p>Updates to GitHub Actions</p></li>
+<li><p>Add support for NumPy versions &gt;= 2.0</p></li>
+</ul>
+</section>
+<section id="v0-8-4">
+<h2>v0.8.4<a class="headerlink" href="#v0-8-4" title="Link to this heading">#</a></h2>
+<p>Released December 2, 2024</p>
+<ul class="simple">
+<li><p>New subarray() function</p></li>
+<li><p>Minor bugfixes and documentation updates</p></li>
+</ul>
+</section>
+<section id="v0-8-3">
+<h2>v0.8.3<a class="headerlink" href="#v0-8-3" title="Link to this heading">#</a></h2>
+<p>Released June 15, 2024</p>
+<ul class="simple">
+<li><p>Minor bugfix and documentation updates</p></li>
+</ul>
+</section>
+<section id="v0-8-2">
+<h2>v0.8.2<a class="headerlink" href="#v0-8-2" title="Link to this heading">#</a></h2>
+<p>Released April 20, 2024</p>
+<ul class="simple">
+<li><p>New propagate_dft() functionality for performing propagations
+in areas limited by a mask</p></li>
+<li><p>Plane directly sets its own internal attribues <a class="reference external" href="https://github.com/andykee/lentil/issues/53">#53</a></p></li>
+<li><p>Migrate to numpy random.default_rng() for random numbers</p></li>
+<li><p>Backend enhancements and bugfixes</p></li>
+</ul>
+</section>
+<section id="v0-8-1">
+<h2>v0.8.1<a class="headerlink" href="#v0-8-1" title="Link to this heading">#</a></h2>
+<p>Released February 27, 2024</p>
+<ul class="simple">
+<li><p>Deprecate <a class="reference internal" href="../ref/generated/lentil.Image.html#lentil.Image" title="lentil.Image"><code class="xref py py-class docutils literal notranslate"><span class="pre">Image</span></code></a> <code class="docutils literal notranslate"><span class="pre">shape</span></code> parameter <a class="reference external" href="https://github.com/andykee/lentil/issues/50">#50</a></p></li>
+<li><p><a class="reference internal" href="../ref/generated/lentil.Plane.html#lentil.Plane" title="lentil.Plane"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plane</span></code></a> <code class="docutils literal notranslate"><span class="pre">mask</span></code>, <code class="docutils literal notranslate"><span class="pre">pixelscale</span></code>, <code class="docutils literal notranslate"><span class="pre">diameter</span></code>, and <code class="docutils literal notranslate"><span class="pre">ptype</span></code> are
+now immutable</p></li>
+<li><p>Fix bugs in creation and handling of <a class="reference internal" href="../ref/generated/lentil.Plane.html#lentil.Plane" title="lentil.Plane"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plane</span></code></a> <code class="docutils literal notranslate"><span class="pre">mask</span></code> and
+<code class="docutils literal notranslate"><span class="pre">slice</span></code></p></li>
+<li><p>Fix scipy deprecation warnings</p></li>
+<li><p>Update GitHub actions <a class="reference external" href="https://github.com/andykee/lentil/issues/51">#51</a> <a class="reference external" href="https://github.com/andykee/lentil/issues/52">#52</a></p></li>
+<li><p>Update docs <a class="reference external" href="https://github.com/andykee/lentil/issues/49">#49</a></p></li>
+</ul>
+</section>
+<section id="v0-8-0">
+<h2>v0.8.0<a class="headerlink" href="#v0-8-0" title="Link to this heading">#</a></h2>
+<p>Released February 2, 2024</p>
+<ul class="simple">
+<li><p>New <a class="reference internal" href="../ref/generated/lentil.propagate_dft.html#lentil.propagate_dft" title="lentil.propagate_dft"><code class="xref py py-func docutils literal notranslate"><span class="pre">propagate_dft()</span></code></a> method for performing far-field
+propagations using the matrix triple product DFT</p></li>
+<li><p>New <a class="reference internal" href="../ref/generated/lentil.propagate_fft.html#lentil.propagate_fft" title="lentil.propagate_fft"><code class="xref py py-func docutils literal notranslate"><span class="pre">propagate_fft()</span></code></a> method for performing far-field
+propagations using the FFT <a class="reference external" href="https://github.com/andykee/lentil/issues/46">#46</a></p></li>
+<li><p>Deprecate <code class="docutils literal notranslate"><span class="pre">Wavefront.propagate_image()</span></code></p></li>
+<li><p>Propagation backend updates and enhancements</p></li>
+<li><p>DFT implementation improvements</p></li>
+<li><p>Plane <code class="docutils literal notranslate"><span class="pre">phase</span></code> attribute renamed to <code class="docutils literal notranslate"><span class="pre">opd</span></code></p></li>
+<li><p>Allow <code class="docutils literal notranslate"><span class="pre">amp</span></code> as an alias for <code class="docutils literal notranslate"><span class="pre">amplitude</span></code> in Plane constructor</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">ptype</span></code> object for managing plane and wavefront types</p></li>
+<li><p>Enforce <code class="docutils literal notranslate"><span class="pre">ptype</span></code>-based rules in <a class="reference internal" href="../ref/generated/lentil.Plane.multiply.html#lentil.Plane.multiply" title="lentil.Plane.multiply"><code class="xref py py-func docutils literal notranslate"><span class="pre">Plane.multiply()</span></code></a></p></li>
+<li><p>Streamline <a class="reference internal" href="../ref/generated/lentil.Wavefront.html#lentil.Wavefront" title="lentil.Wavefront"><code class="xref py py-class docutils literal notranslate"><span class="pre">Wavefront</span></code></a> constructor</p></li>
+<li><p>New <a class="reference internal" href="../ref/generated/lentil.DispersiveTilt.html#lentil.DispersiveTilt" title="lentil.DispersiveTilt"><code class="xref py py-class docutils literal notranslate"><span class="pre">DispersiveTilt</span></code></a> object</p></li>
+<li><p>Deprecate <a class="reference internal" href="../ref/generated/lentil.Grism.html#lentil.Grism" title="lentil.Grism"><code class="xref py py-class docutils literal notranslate"><span class="pre">Grism</span></code></a> – <a class="reference internal" href="../ref/generated/lentil.DispersiveTilt.html#lentil.DispersiveTilt" title="lentil.DispersiveTilt"><code class="xref py py-class docutils literal notranslate"><span class="pre">DispersiveTilt</span></code></a> should be used instead</p></li>
+<li><p>Utility shapes now accept an <code class="docutils literal notranslate"><span class="pre">antialias</span></code> argument</p></li>
+<li><p>New <a class="reference internal" href="../ref/generated/lentil.spider.html#lentil.spider" title="lentil.spider"><code class="xref py py-func docutils literal notranslate"><span class="pre">spider()</span></code></a> method for drawing spiders</p></li>
+<li><p>New <a class="reference internal" href="../ref/generated/lentil.hex_segments.html#lentil.hex_segments" title="lentil.hex_segments"><code class="xref py py-func docutils literal notranslate"><span class="pre">hex_segments()</span></code></a> method for drawing segmented apertures made
+of rings of hexagonal segments</p></li>
+<li><p>Standardize shape naming</p></li>
+<li><p>Deprecate in-place operations <a class="reference external" href="https://github.com/andykee/lentil/issues/43">#43</a></p></li>
+<li><p>Many documentation updates and improvements</p></li>
+</ul>
+</section>
+<section id="v0-7-0">
+<h2>v0.7.0<a class="headerlink" href="#v0-7-0" title="Link to this heading">#</a></h2>
+<p>Released March 7, 2022</p>
+<ul class="simple">
+<li><p>Fix complex amplitude sign flip introduced in <a class="reference internal" href="#v0-6-0">v0.6.0</a></p></li>
+<li><p>Remove unused parameter from <code class="docutils literal notranslate"><span class="pre">Wavefront.insert()</span></code> function
+signature <a class="reference external" href="https://github.com/andykee/lentil/issues/42">#42</a></p></li>
+<li><p>Scipy compatibility - Fix Scipy map_coordinates import <a class="reference external" href="https://github.com/andykee/lentil/issues/40">#40</a></p></li>
+<li><p>Python 3.9 compatibility - Ensure <code class="docutils literal notranslate"><span class="pre">math.factorial()</span></code> always
+receives an int</p></li>
+</ul>
+</section>
+<section id="v0-6-0">
+<h2>v0.6.0<a class="headerlink" href="#v0-6-0" title="Link to this heading">#</a></h2>
+<p>Released January 21, 2022</p>
+<ul class="simple">
+<li><p>Entirely new approach to how diffraction propagations are performed:</p>
+<ul>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">propagate_image()</span></code> method for propagating between Pupil and
+Image planes</p></li>
+<li><p>Deprecate core <code class="docutils literal notranslate"><span class="pre">propagate()</span></code> method</p></li>
+<li><p>Include negative sign in complex phasor complex exponential</p></li>
+</ul>
+</li>
+<li><p>Wavefront complex field data is now managed using a new internal Field
+class</p></li>
+<li><p>Standardize around (row, col) aka. ij indexing</p></li>
+<li><p>New methods for Plane resampling (<code class="docutils literal notranslate"><span class="pre">Plane.resample()</span></code>) and rescaling
+(<code class="docutils literal notranslate"><span class="pre">Plane.rescale()</span></code>)</p></li>
+<li><p>Collapse Plane segmask and mask functionality <a class="reference external" href="https://github.com/andykee/lentil/issues/24">#24</a></p></li>
+<li><p>Allow in-place operations on Wavefront <a class="reference external" href="https://github.com/andykee/lentil/issues/38">#38</a></p></li>
+<li><p>Relocate contents of <code class="docutils literal notranslate"><span class="pre">zerenike</span></code>, <code class="docutils literal notranslate"><span class="pre">wfe</span></code>, <code class="docutils literal notranslate"><span class="pre">convolvable</span></code>, and <code class="docutils literal notranslate"><span class="pre">util</span></code>
+modules to the core <code class="docutils literal notranslate"><span class="pre">lentil</span></code> namespace</p></li>
+<li><p>Allow floating point plane masks, which are automatically cast to bool</p></li>
+<li><p>Documentation updates</p></li>
+<li><p>Extend unit test coverage slightly</p></li>
+<li><p>Switch to GitHub Actions for unit testing and code coverage</p></li>
+</ul>
+</section>
+<section id="v0-5-0">
+<h2>v0.5.0<a class="headerlink" href="#v0-5-0" title="Link to this heading">#</a></h2>
+<p>Released August 13, 2021</p>
+<ul class="simple">
+<li><p>Propagations with <code class="docutils literal notranslate"><span class="pre">tilt='angle'</span></code> have tilt projected out of each
+plane once before the entire propagation rather than at each monochromatic
+propagation</p></li>
+<li><p>Rework <code class="docutils literal notranslate"><span class="pre">Plane.pixelscale</span></code> to always store (r,c) pixelscale</p></li>
+<li><p>Fix bug in <code class="docutils literal notranslate"><span class="pre">Plane.mask</span></code> on the fly calculation that was overwriting
+<code class="docutils literal notranslate"><span class="pre">Plane.amplitude</span></code> with a binary mask</p></li>
+<li><p>No longer cache <code class="docutils literal notranslate"><span class="pre">Plane.ptt_vector</span></code></p></li>
+<li><p>Deprecate <code class="docutils literal notranslate"><span class="pre">Plane.cache_propagate()</span></code> and <code class="docutils literal notranslate"><span class="pre">Plane.clear_cache_propagate()</span></code>.
+This functionality has been migrated to <code class="docutils literal notranslate"><span class="pre">propagate._prepare_planes()</span></code>
+and <code class="docutils literal notranslate"><span class="pre">propagate._cleanup_planes()</span></code></p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">Plane.rescale()</span></code> method to rescale Plane pixelscale</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">util.rescale()</span></code> to choose a more conservative (better sampled)
+result when having to choose an integer output shape</p></li>
+<li><p>Define <code class="docutils literal notranslate"><span class="pre">Wavefront.__slots__</span></code> to increase attribute access speed and reduce
+memory footprint</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">util.circle()</span></code> <cite>center</cite> parameter is now called <cite>shift</cite></p></li>
+<li><p>Deprecate <code class="docutils literal notranslate"><span class="pre">cache.Cache</span></code> in favor of a simple dictionary</p></li>
+<li><p>New function <code class="docutils literal notranslate"><span class="pre">fourier.expc()</span></code> to more quickly compute a complex exponential</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fourier.dft2()</span></code> now accepts an offset parameter</p></li>
+<li><p>New function <code class="docutils literal notranslate"><span class="pre">Plane.fit_tilt()</span></code> to handle tilt fitting and removal of in the
+Plane’s <code class="docutils literal notranslate"><span class="pre">phase</span></code> attribute. This is now called once</p></li>
+<li><p>New function <code class="docutils literal notranslate"><span class="pre">Plane.slice()</span></code> for computing avaliable slices from the plane
+attributes to speed up propagation performance</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">Detector()</span></code> plane that returns intensity</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">zernike.zernike_coordinates()</span></code> to automatically compute shift that
+locates the origin at the mask centroid if no shift is provided.</p></li>
+</ul>
+</section>
+<section id="v0-4-1">
+<h2>v0.4.1<a class="headerlink" href="#v0-4-1" title="Link to this heading">#</a></h2>
+<p>Released October 7, 2020</p>
+<ul class="simple">
+<li><p>Fix implementation error in Grism model dispersion calculations</p></li>
+</ul>
+</section>
+<section id="v0-4-0">
+<h2>v0.4.0<a class="headerlink" href="#v0-4-0" title="Link to this heading">#</a></h2>
+<p>Released October 6, 2020</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Grism model updates are broken in this release. It has been yanked from
+PyPi. The issue is fixed in v0.4.1.</p>
+</div>
+<ul class="simple">
+<li><p>Update Grism model to use correct definition of dispersion, accomodate
+trace and dispersion models with polynomial order &gt; 1</p></li>
+<li><p>Establish coordinate system <a class="reference external" href="https://github.com/andykee/lentil/issues/12">#12</a></p></li>
+<li><p>Fix direction and orientation of Tilt <a class="reference external" href="https://github.com/andykee/lentil/issues/12">#12</a></p></li>
+<li><p>Allow spectral inputs to radiometry.path_emission</p></li>
+</ul>
+</section>
+<section id="v0-3-4">
+<h2>v0.3.4<a class="headerlink" href="#v0-3-4" title="Link to this heading">#</a></h2>
+<p>Released September 8, 2020</p>
+<ul class="simple">
+<li><p>Fix implementation error in Gaussian detector.shot_noise</p></li>
+<li><p>Add better exception handling for detector.shot_noise <a class="reference external" href="https://github.com/andykee/lentil/issues/10">#10</a></p></li>
+<li><p>No longer check Python version on import</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">np.ediff1d</span></code> usage to be compatible with Numpy 1.19</p></li>
+</ul>
+</section>
+<section id="v0-3-3">
+<h2>v0.3.3<a class="headerlink" href="#v0-3-3" title="Link to this heading">#</a></h2>
+<p>Released August 17, 2020</p>
+<ul class="simple">
+<li><p>Make FPN seed optional in <code class="docutils literal notranslate"><span class="pre">detector.dark_current</span></code></p></li>
+</ul>
+</section>
+<section id="v0-3-2">
+<h2>v0.3.2<a class="headerlink" href="#v0-3-2" title="Link to this heading">#</a></h2>
+<p>Released July 20, 2020</p>
+<ul class="simple">
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">detector.adc</span></code> to prevent negative values from being returned.</p></li>
+</ul>
+</section>
+<section id="v0-3-1">
+<h2>v0.3.1<a class="headerlink" href="#v0-3-1" title="Link to this heading">#</a></h2>
+<p>Released July 16, 2020</p>
+<ul class="simple">
+<li><p>Imaging artifact classes have been rearchitected as functions.</p></li>
+<li><p>Legacy functionality from the <code class="docutils literal notranslate"><span class="pre">detector.Windowable</span></code> class has been resurrected into
+<code class="xref py py-func docutils literal notranslate"><span class="pre">lentil.util.window()</span></code></p></li>
+<li><p>Deprecate <code class="docutils literal notranslate"><span class="pre">util.col_major_to_util_major()</span></code></p></li>
+<li><p>Lentil is now compatible with Python 3.6 and newer. <a class="reference external" href="https://github.com/andykee/lentil/issues/9">#9</a></p></li>
+</ul>
+</section>
+<section id="v0-3-0">
+<h2>v0.3.0<a class="headerlink" href="#v0-3-0" title="Link to this heading">#</a></h2>
+<p>Released July 8, 2020</p>
+<ul class="simple">
+<li><p>The Plane attribute caching approach has been entirely reworked, eliminating the need
+for end-users to explicitly decorate attributes defined in subclasses:</p>
+<ul>
+<li><p>Users are now able to explicitly choose which attributes are cached when
+<code class="docutils literal notranslate"><span class="pre">cache_propagate()</span></code> is called by specifying them in <code class="docutils literal notranslate"><span class="pre">Plane.cache_attrs</span></code>. The
+only accepted values right now are <code class="docutils literal notranslate"><span class="pre">amplitude</span></code> and <code class="docutils literal notranslate"><span class="pre">phase</span></code>. Note that
+<code class="docutils literal notranslate"><span class="pre">ptt_vector</span></code> is always cached and is not allowed to be specified in
+<code class="docutils literal notranslate"><span class="pre">cache_attrs</span></code>.</p></li>
+<li><p>Rather than checking for and returning cached values at the attribute getter level,
+it is now done inside <code class="docutils literal notranslate"><span class="pre">Plane.multiply()</span></code>. This change streamlines both the plane
+attribute getter code and the creation of planes with phase attributes that should
+be random with each access.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">cache_propagate</span></code> decorator has been deprecated, and the documentation and
+tests have been updated to reflect the changes in functionality. <a class="reference external" href="https://github.com/andykee/lentil/issues/7">#7</a></p></li>
+</ul>
+</li>
+<li><p>Fix bug in <code class="docutils literal notranslate"><span class="pre">zernike_coordinates</span></code> that was causing modes over off-centered masks to
+be incorrectly computed. <a class="reference external" href="https://github.com/andykee/lentil/issues/8">#8</a></p></li>
+<li><p>Change default behavior of <code class="docutils literal notranslate"><span class="pre">zernike_basis</span></code> to return a stack of matrices rather than
+a single vectorized matrix.</p></li>
+</ul>
+</section>
+<section id="v0-2-0">
+<h2>v0.2.0<a class="headerlink" href="#v0-2-0" title="Link to this heading">#</a></h2>
+<p>Released June 29, 2020</p>
+<ul class="simple">
+<li><p>Collapse <code class="docutils literal notranslate"><span class="pre">Detector</span></code> and <code class="docutils literal notranslate"><span class="pre">Image</span></code> planes into single <code class="docutils literal notranslate"><span class="pre">Image</span></code> plane. The pupil to
+image plane propagation method is now chosen based on whether the <code class="docutils literal notranslate"><span class="pre">Image</span></code> plane has
+a defined <code class="docutils literal notranslate"><span class="pre">pixelscale</span></code> (propagate via matrix triple product DFT) or if
+<code class="docutils literal notranslate"><span class="pre">pixelscale</span></code> is None (propagate via FFT - eventually). <code class="docutils literal notranslate"><span class="pre">Detector</span></code> class has been
+deprecated. <a class="reference external" href="https://github.com/andykee/lentil/issues/5">#5</a></p></li>
+<li><p>Deprecate <code class="docutils literal notranslate"><span class="pre">FPA</span></code> and <code class="docutils literal notranslate"><span class="pre">BayerFPA</span></code>. Some functionality has been retained but converted
+to atomic functions in the <a class="reference internal" href="../ref/detector.html#api-detector"><span class="std std-ref">detector</span></a> module. <a class="reference external" href="https://github.com/andykee/lentil/issues/6">#6</a></p></li>
+<li><p>Completely rework the contents of the <a class="reference internal" href="../ref/detector.html#api-detector"><span class="std std-ref">detector</span></a> module. All
+objects have been deprecated. Some functionality has been retained but converted to
+atomic functions instead. <a class="reference external" href="https://github.com/andykee/lentil/issues/6">#6</a></p></li>
+<li><p>Deprecate <code class="docutils literal notranslate"><span class="pre">util.coordinates</span></code></p></li>
+<li><p>Change the way <code class="docutils literal notranslate"><span class="pre">Rotate</span></code> angle is interpreted to behave more intuitively</p></li>
+<li><p>A number of small bugfixes and enhancements</p></li>
+<li><p>Updated documentation</p></li>
+<li><p>More unit tests</p></li>
+</ul>
+</section>
+<section id="v0-1-1">
+<h2>v0.1.1<a class="headerlink" href="#v0-1-1" title="Link to this heading">#</a></h2>
+<p>Released June 21, 2020</p>
+<ul class="simple">
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">propagate</span></code> to support <a class="reference internal" href="../ref/generated/lentil.Tilt.html#lentil.Tilt" title="lentil.Tilt"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tilt</span></code></a> planes <a class="reference external" href="https://github.com/andykee/lentil/issues/1">#1</a></p></li>
+<li><p>Streamline the innards of <code class="xref py py-func docutils literal notranslate"><span class="pre">propagate()</span></code></p></li>
+<li><p>Update <code class="xref py py-func docutils literal notranslate"><span class="pre">lentil.wfe.power_spectrum()</span></code> to return phases with a slightly more correct
+RMS</p></li>
+<li><p>Remove unused code</p></li>
+<li><p>Increase unit testing coverage</p></li>
+<li><p>Set up Travis CI, Coveralls</p></li>
+</ul>
+</section>
+<section id="v0-1-0">
+<h2>v0.1.0<a class="headerlink" href="#v0-1-0" title="Link to this heading">#</a></h2>
+<p>Released June 12, 2020</p>
+<ul class="simple">
+<li><p>Initial public release</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-10">v0.8.10</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-9">v0.8.9</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-8">v0.8.8</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-7">v0.8.7</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-6">v0.8.6</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-5">v0.8.5</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-4">v0.8.4</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-3">v0.8.3</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-2">v0.8.2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-1">v0.8.1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-0">v0.8.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-7-0">v0.7.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-6-0">v0.6.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-5-0">v0.5.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-4-1">v0.4.1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-4-0">v0.4.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-3-4">v0.3.4</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-3-3">v0.3.3</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-3-2">v0.3.2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-3-1">v0.3.1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-3-0">v0.3.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-2-0">v0.2.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-1-1">v0.1.1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-1-0">v0.1.0</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2017-2026 California Institute of Technology.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

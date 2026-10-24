@@ -1,0 +1,6 @@
+﻿lentil.detector.pixel
+=====================
+
+.. currentmodule:: lentil.detector
+
+.. autofunction:: pixel

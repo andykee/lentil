@@ -1,0 +1,40 @@
+﻿lentil.Grism
+============
+
+.. currentmodule:: lentil
+
+.. autoclass:: Grism
+
+
+.. rubric:: Attributes
+
+.. autosummary::
+    :toctree:
+    
+    ~Grism.amplitude
+    ~Grism.diameter
+    ~Grism.frozen
+    ~Grism.global_mask
+    ~Grism.mask
+    ~Grism.opd
+    ~Grism.pixelscale
+    ~Grism.ptt_vector
+    ~Grism.ptype
+    ~Grism.shape
+    ~Grism.size
+
+
+
+
+.. rubric:: Methods
+
+.. autosummary::
+    :toctree:
+    
+    ~Grism.fit_tilt
+    ~Grism.freeze
+    ~Grism.multiply
+    ~Grism.resample
+    ~Grism.rescale
+    ~Grism.thaw
+

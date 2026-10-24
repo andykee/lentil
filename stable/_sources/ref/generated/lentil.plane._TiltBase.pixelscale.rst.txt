@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.plane.\_TiltBase.pixelscale
+==================================
+
+.. currentmodule:: lentil.plane
+
+.. autoattribute:: lentil::plane._TiltBase.pixelscale
+

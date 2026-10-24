@@ -1,0 +1,6 @@
+lentil.Pupil.rescale
+====================
+
+.. currentmodule:: lentil
+
+.. automethod:: Pupil.rescale

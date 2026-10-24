@@ -1,0 +1,52 @@
+.bd-main .bd-content .bd-article-container {
+    max-width: 80em;
+}
+
+.biglinks {
+    --pst-color-link: var(--pst-color-text-base);
+    --pst-color-link-hover: var(--pst-color-text-base);
+}
+
+.biglinks img {
+    width: 5em;
+    height: 5em;
+}
+
+.bd-footer {
+    background-color: #3B4252;
+    color: white;
+}
+
+.bd-footer a {
+    color: white;
+}
+
+.bd-footer a:hover {
+    color: #ee9040;
+}
+
+.bd-footer h2 {
+    color: white;
+    margin: 0;
+}
+
+.bd-footer ul {
+    list-style-type: none;
+}
+
+.bd-footer ul li {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.bd-footer dt {
+    text-transform: uppercase;
+    color: #E5E9F0;
+}
+
+
+.sd-btn-primary:hover, .sd-btn-primary:focus {
+    color: red !important;
+    background-color: blue !important;
+    border-color: green !important;
+  }

@@ -1,0 +1,6 @@
+lentil.Image.freeze
+===================
+
+.. currentmodule:: lentil
+
+.. automethod:: Image.freeze

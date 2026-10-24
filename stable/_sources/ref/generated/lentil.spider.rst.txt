@@ -1,0 +1,6 @@
+﻿lentil.spider
+=============
+
+.. currentmodule:: lentil
+
+.. autofunction:: spider

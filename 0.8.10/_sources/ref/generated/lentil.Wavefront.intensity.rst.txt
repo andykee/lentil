@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Wavefront.intensity
+==========================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Wavefront.intensity
+

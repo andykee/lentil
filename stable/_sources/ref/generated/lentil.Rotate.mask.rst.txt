@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Rotate.mask
+==================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Rotate.mask
+

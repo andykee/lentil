@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.plane.\_TiltBase.frozen
+==============================
+
+.. currentmodule:: lentil.plane
+
+.. autoattribute:: lentil::plane._TiltBase.frozen
+

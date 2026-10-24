@@ -1,0 +1,6 @@
+﻿lentil.window
+=============
+
+.. currentmodule:: lentil
+
+.. autofunction:: window

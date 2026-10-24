@@ -1,0 +1,6 @@
+lentil.Grism.rescale
+====================
+
+.. currentmodule:: lentil
+
+.. automethod:: Grism.rescale

@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.DispersiveTilt.size
+==========================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::DispersiveTilt.size
+

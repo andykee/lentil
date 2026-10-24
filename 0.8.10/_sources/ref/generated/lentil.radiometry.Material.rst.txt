@@ -1,0 +1,25 @@
+﻿lentil.radiometry.Material
+==========================
+
+.. currentmodule:: lentil.radiometry
+
+.. autoclass:: Material
+
+
+.. rubric:: Attributes
+
+.. autosummary::
+    :toctree:
+    
+    ~Material.emission
+    ~Material.transmission
+
+
+
+
+.. rubric:: Methods
+
+.. autosummary::
+    :toctree:
+    
+

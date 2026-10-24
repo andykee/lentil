@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.radiometry.Material.transmission
+=======================================
+
+.. currentmodule:: lentil.radiometry
+
+.. autoattribute:: lentil::radiometry.Material.transmission
+

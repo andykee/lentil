@@ -1,0 +1,6 @@
+lentil.DispersiveTilt.fit\_tilt
+===============================
+
+.. currentmodule:: lentil
+
+.. automethod:: DispersiveTilt.fit_tilt

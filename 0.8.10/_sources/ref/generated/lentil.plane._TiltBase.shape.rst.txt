@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.plane.\_TiltBase.shape
+=============================
+
+.. currentmodule:: lentil.plane
+
+.. autoattribute:: lentil::plane._TiltBase.shape
+

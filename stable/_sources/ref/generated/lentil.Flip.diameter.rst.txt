@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Flip.diameter
+====================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Flip.diameter
+

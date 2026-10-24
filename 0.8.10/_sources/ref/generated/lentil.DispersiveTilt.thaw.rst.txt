@@ -1,0 +1,6 @@
+lentil.DispersiveTilt.thaw
+==========================
+
+.. currentmodule:: lentil
+
+.. automethod:: DispersiveTilt.thaw

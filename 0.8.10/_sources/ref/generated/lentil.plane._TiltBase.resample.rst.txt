@@ -1,0 +1,6 @@
+lentil.plane.\_TiltBase.resample
+================================
+
+.. currentmodule:: lentil.plane
+
+.. automethod:: _TiltBase.resample

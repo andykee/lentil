@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Image.mask
+=================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Image.mask
+
