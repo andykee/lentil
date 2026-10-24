@@ -1,51 +1,150 @@
-# Simple workflow for deploying static content to GitHub Pages
+# Builds the docs and publishes them to a subdirectory of the gh-pages branch:
+#
+#   push to master   -> latest/
+#   push a v* tag    -> <version>/ (and stable/ if it's the newest final release)
+#   manual run       -> <version>/ for the given tag, or latest/ if left blank
+#
+# Each run only replaces its own subdirectory, so previously published
+# versions are left in place. docs/versions.json (read by the version
+# switcher) and the site-wide files in docs/_gh-pages (root redirect, 404
+# page) are copied to the branch root on every run.
 name: Publish docs
 
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches: ["master"]
+    tags: ["v*"]
 
-  # Allows you to run this workflow manually from the Actions tab
+  # Allows you to run this workflow manually from the Actions tab, e.g. to
+  # publish docs for an existing release
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to publish (e.g. v0.8.9). Leave blank to publish latest from the selected branch."
+        required: false
+        default: ""
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Only one deployment at a time so concurrent pushes to gh-pages don't race
 concurrency:
-  group: "pages"
+  group: "docs-deploy"
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      # The workflow ref provides versions.json and docs/_gh-pages. Full
+      # history is needed to list tags when deciding whether this build is the
+      # stable release.
+      - name: Checkout workflow ref
         uses: actions/checkout@v4
-      - name: Install Dependencies
+        with:
+          path: meta
+          fetch-depth: 0
+
+      - name: Determine target
+        id: target
+        working-directory: meta
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if [ -n "${INPUT_TAG}" ]; then
+            tag="${INPUT_TAG}"
+          elif [ "${REF_TYPE}" = "tag" ]; then
+            tag="${REF_NAME}"
+          else
+            tag=""
+          fi
+
+          if [ -z "${tag}" ]; then
+            ref="${GITHUB_SHA}"
+            target="latest"
+            stable="false"
+          else
+            if ! [[ "${tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+[0-9a-z.]*$ ]]; then
+              echo "::error::'${tag}' is not a release tag like v1.2.3"
+              exit 1
+            fi
+            if ! git rev-parse -q --verify "refs/tags/${tag}" > /dev/null; then
+              echo "::error::Tag '${tag}' does not exist"
+              exit 1
+            fi
+            ref="${tag}"
+            target="${tag#v}"
+            newest=$(git tag --list 'v*' | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
+            if [ "${tag}" = "${newest}" ]; then stable="true"; else stable="false"; fi
+          fi
+
+          echo "Publishing ${ref} to ${target}/ (stable: ${stable})"
+          echo "ref=${ref}" >> "$GITHUB_OUTPUT"
+          echo "target=${target}" >> "$GITHUB_OUTPUT"
+          echo "stable=${stable}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout docs source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.target.outputs.ref }}
+          path: src
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        working-directory: src
         run: |
           pip install -e .
           pip install -r docs/requirements.txt
+
       - name: Build
+        working-directory: src/docs
+        env:
+          DOCS_VERSION: ${{ steps.target.outputs.target }}
+        run: make clean && make html
+
+      - name: Deploy to gh-pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REF: ${{ steps.target.outputs.ref }}
+          TARGET: ${{ steps.target.outputs.target }}
+          STABLE: ${{ steps.target.outputs.stable }}
         run: |
-          cd docs
-          make clean && make html
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Upload entire repository
-          path: 'docs/_build/html'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          set -euo pipefail
+          : "${TARGET:?TARGET must be set}"
+
+          remote="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads "${remote}" gh-pages > /dev/null; then
+            git clone --depth 1 --branch gh-pages "${remote}" site
+          else
+            git init --initial-branch gh-pages site
+            git -C site remote add origin "${remote}"
+          fi
+
+          rm -rf "site/${TARGET}"
+          cp -R src/docs/_build/html "site/${TARGET}"
+          if [ "${STABLE}" = "true" ]; then
+            rm -rf site/stable
+            cp -R src/docs/_build/html site/stable
+          fi
+
+          # Site-wide files (root redirect, 404 page, .nojekyll)
+          cp -R meta/docs/_gh-pages/. site/
+          cp meta/docs/versions.json site/versions.json
+
+          cd site
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to deploy"
+            exit 0
+          fi
+          git commit -m "Publish ${TARGET} docs from ${REF}"
+          git push origin gh-pages
