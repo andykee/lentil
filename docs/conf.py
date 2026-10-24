@@ -60,6 +60,7 @@ html_theme_options = {
     "navbar_persistent": ["search-button"],
     "navbar_end": ["version-switcher", "theme-switcher", "navbar-icon-links"],
     "article_header_start": [],
+    "secondary_sidebar_items": ["page-toc"],
     "switcher": {
        "json_url": "https://andykee.github.io/lentil/versions.json",
        "version_match": docs_version,
@@ -142,6 +143,7 @@ def _fix_class_signature(app, what, name, obj, options, signature, return_annota
         params = [p for p in sig.parameters.values() if p.name != 'self']
         return (str(inspect.Signature(params)), None)
 
+
 # Hide the secondary sidebar (page TOC) on generated API pages. This can't be
 # done with a secondary_sidebar_items dict without pydata-sphinx-theme warning
 # that each page matches two wildcard patterns. Runs after the theme's own
@@ -149,6 +151,7 @@ def _fix_class_signature(app, what, name, obj, options, signature, return_annota
 def _remove_api_secondary_sidebar(app, pagename, templatename, context, doctree):
     if pagename.startswith('api/generated/'):
         context['secondary_sidebar_items'] = []
+
 
 def setup(app):
     app.connect('autodoc-process-signature', _fix_class_signature)
