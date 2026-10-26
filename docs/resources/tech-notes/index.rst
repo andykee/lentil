@@ -6,3 +6,4 @@ Technical notes
 
     coords
     resampling
+    fourier

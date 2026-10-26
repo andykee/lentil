@@ -7,8 +7,7 @@ Resampling oversampled images to native detector sampling
     :scale: 50
 
     amp = lentil.circle((256,256), 120)
-    opd = lentil.zernike_compose(amp, [0,0,0,10e-9,-45e-9,12e-9,75e-9,-8e-9,0,16e-9])
-
+    opd = lentil.zernike_compose(amp, [0,0,0,10e-9,-45e-9,12e-9,-75e-9,8e-9,0,-16e-9])
     p = lentil.Pupil(amplitude=amp, opd=opd, mask=amp, pixelscale=1/240,
                      focal_length=9, diameter=1)
     shape = (12,12)

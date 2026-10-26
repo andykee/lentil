@@ -21,5 +21,5 @@ Read the concept documents to learn more about Lentil's core features:
 * :doc:`radiometry`
 * :doc:`image-sensors`
 
-Looking for how to use Lentil? See the :doc:`guides <../guides/index>`
+Looking for info on how to use Lentil? See the :doc:`guides <../guides/index>`
 instead.

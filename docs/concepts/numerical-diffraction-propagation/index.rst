@@ -2,8 +2,21 @@ Numerical Diffraction Propagation
 =================================
 
 .. toctree::
+    :hidden:
 
-    Basics <basics>
-    Propagation with large tilts <tilt-propagation>
-    Segmented apertures <segmented-propagation>
-    Near Field Propagation <near-field>
+    basics
+    sampling
+    tilt-propagation
+    segmented-propagation
+    near-field
+
+
+:doc:`basics`: blah
+
+:doc:`sampling`: blah
+
+:doc:`tilt-propagation`
+
+:doc:`segmented-propagation`
+
+:doc:`near-field`

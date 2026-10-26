@@ -8,9 +8,6 @@ Wavefront error is represented in a :class:`~lentil.Plane` by specifying its
 error map is sufficient. For more complicated errors that are random or
 time-varying in nature, a more dynamic and/or state-based approach is
 required.
-
-Any Python type that is array-like can be provided and will be converted by
-Lentil to a Numpy array.
  
 .. note::
 
