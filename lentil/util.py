@@ -79,8 +79,7 @@ def centroid(x, where=None, mode='absolute', indexing='xy'):
 
     if indexing == 'xy':
         if mode == 'center':
-            # Cartesian offset from center: +x right, +y up
-            r, c = c, -r
+            r, c = c, r
         else:
             # absolute pixel coordinates (col, row); +y down
             r, c = c, r
@@ -313,8 +312,7 @@ def crop(x, shape, shift=None, mode='absolute', indexing='xy',
         shift = np.round(shift).astype(int)
         if indexing == 'xy':
             if mode == 'center':
-                # Cartesian offset from center: +x right, +y up
-                shift = (-shift[1], shift[0])
+                shift = (shift[1], shift[0])
             else:
                 # absolute pixel coordinates (col, row)
                 shift = (shift[1], shift[0])
@@ -417,7 +415,7 @@ def sample(x, oversample, offset=0, axes=(-2, -1), indexing='xy'):
     axes = tuple(int(a) % x.ndim for a in axes)
 
     if indexing == 'xy':
-        offset = (-offset[1], offset[0])
+        offset = (offset[1], offset[0])
         oversample = (oversample[1], oversample[0])
 
     idx = [slice(None)] * x.ndim

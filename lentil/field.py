@@ -189,7 +189,7 @@ class Field:
         out = x/pixelscale[0] * oversample, y/pixelscale[1] * oversample
 
         if indexing == 'ij':
-            out = -out[1], out[0]
+            out = out[1], out[0]
 
         return out
 

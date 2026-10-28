@@ -155,7 +155,7 @@ def spider(shape, width, angle=0, shift=(0,0), antialias=True,
     shift_row = -shift_dist * np.sin(np.deg2rad(angle))
     shift_col = shift_dist * np.cos(np.deg2rad(angle))
     if indexing == 'xy':
-        shift = [-shift[1], shift[0]]
+        shift = [shift[1], shift[0]]
     shift = (shift[0] + shift_row, shift[1] + shift_col)
     return 1 - lentil.rectangle(shape, width=len, height=width, shift=shift,
                                 angle=angle, antialias=antialias, 

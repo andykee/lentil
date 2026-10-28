@@ -127,7 +127,7 @@ def test_normalize_power_2():
     ('absolute', 'ij', (44, 94)),
     ('absolute', 'xy', (94, 44)),
     ('center', 'ij', (-20, 30)),
-    ('center', 'xy', (30, 20)),
+    ('center', 'xy', (30, -20)),
 ])
 def test_centroid(mode, indexing, result):
     # circle shifted 20 rows up and 30 columns right of center
