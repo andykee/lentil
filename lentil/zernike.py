@@ -53,10 +53,10 @@ def zernike(mask, index, normalize=True, order='noll', rho=None, theta=None,
     Warnings
     --------
     Lentil 0.8.10 and earlier computed Zernike polynomials in a coordinate
-    system rotated 180 degrees from the standard definition in [1]. This
-    results in modes with odd azimuthal order (tilt, coma, trefoil, ...)
-    having a flipped sign. Modes with even azimuthal order (piston, focus,
-    astigmatism, spherical, ...) are unaffected. The 
+    system mirrored left-to-right (x -> -x) relative to the current one.
+    This results in cosine modes with odd azimuthal order (x tilt, x coma,
+    ...) and sine modes with even azimuthal order (45 degree astigmatism,
+    ...) having a flipped sign. All other modes are unaffected. The 
     :func:`zernike_coeff_legacy` function converts between current and legacy
     conventions.
 
@@ -180,10 +180,10 @@ def zernike_compose(mask, coeffs, normalize=True, order='noll', rho=None,
     Warnings
     --------
     Lentil 0.8.10 and earlier computed Zernike polynomials in a coordinate
-    system rotated 180 degrees from the standard definition in [1]. This
-    results in modes with odd azimuthal order (tilt, coma, trefoil, ...)
-    having a flipped sign. Modes with even azimuthal order (piston, focus,
-    astigmatism, spherical, ...) are unaffected. The 
+    system mirrored left-to-right (x -> -x) relative to the current one.
+    This results in cosine modes with odd azimuthal order (x tilt, x coma,
+    ...) and sine modes with even azimuthal order (45 degree astigmatism,
+    ...) having a flipped sign. All other modes are unaffected. The 
     :func:`zernike_coeff_legacy` function converts between current and legacy
     conventions.    
 
@@ -271,10 +271,10 @@ def zernike_basis(mask, modes, vectorize=False, normalize=True, order='noll',
     Warnings
     --------
     Lentil 0.8.10 and earlier computed Zernike polynomials in a coordinate
-    system rotated 180 degrees from the standard definition in [1]. This
-    results in modes with odd azimuthal order (tilt, coma, trefoil, ...)
-    having a flipped sign. Modes with even azimuthal order (piston, focus,
-    astigmatism, spherical, ...) are unaffected. The 
+    system mirrored left-to-right (x -> -x) relative to the current one.
+    This results in cosine modes with odd azimuthal order (x tilt, x coma,
+    ...) and sine modes with even azimuthal order (45 degree astigmatism,
+    ...) having a flipped sign. All other modes are unaffected. The 
     :func:`zernike_coeff_legacy` function converts between current and legacy
     conventions.    
 
@@ -342,10 +342,10 @@ def zernike_fit(opd, mask, modes, normalize=True, order='noll', rho=None,
     Warnings
     --------
     Lentil 0.8.10 and earlier computed Zernike polynomials in a coordinate
-    system rotated 180 degrees from the standard definition in [1]. This
-    results in modes with odd azimuthal order (tilt, coma, trefoil, ...)
-    having a flipped sign. Modes with even azimuthal order (piston, focus,
-    astigmatism, spherical, ...) are unaffected. The 
+    system mirrored left-to-right (x -> -x) relative to the current one.
+    This results in cosine modes with odd azimuthal order (x tilt, x coma,
+    ...) and sine modes with even azimuthal order (45 degree astigmatism,
+    ...) having a flipped sign. All other modes are unaffected. The 
     :func:`zernike_coeff_legacy` function converts between current and legacy
     conventions.
 
@@ -422,10 +422,10 @@ def zernike_remove(opd, mask, modes, order='noll', rho=None, theta=None,
     Warnings
     --------
     Lentil 0.8.10 and earlier computed Zernike polynomials in a coordinate
-    system rotated 180 degrees from the standard definition in [1]. This
-    results in modes with odd azimuthal order (tilt, coma, trefoil, ...)
-    having a flipped sign. Modes with even azimuthal order (piston, focus,
-    astigmatism, spherical, ...) are unaffected. The 
+    system mirrored left-to-right (x -> -x) relative to the current one.
+    This results in cosine modes with odd azimuthal order (x tilt, x coma,
+    ...) and sine modes with even azimuthal order (45 degree astigmatism,
+    ...) having a flipped sign. All other modes are unaffected. The 
     :func:`zernike_coeff_legacy` function converts between current and legacy
     conventions.
 
@@ -577,7 +577,7 @@ def zernike_coordinates(mask, shift=None, angle=0, indexing='xy'):
     # since the Zernike coordinates are always computed in xy indexing, we
     # need to transform shift into xy indexing if it was specified in ij
     if indexing == 'ij':
-        shift = (shift[1], -shift[0])
+        shift = (shift[1], shift[0])
 
     x1,x2 = lentil._mesh.mesh(shape=mask.shape, shift=shift, angle=angle, indexing='xy')
 
@@ -608,10 +608,10 @@ def zernike_coeff_legacy(coeffs, modes=None, order='noll'):
     orientation conventions.
 
     Lentil 0.8.10 and earlier computed Zernike polynomials in a coordinate
-    system rotated 180 degrees from the standard definition in [1]. This
-    results in modes with odd azimuthal order (tilt, coma, trefoil, ...)
-    having a flipped sign. Modes with even azimuthal order (piston, focus,
-    astigmatism, spherical, ...) are unaffected.
+    system mirrored left-to-right (x -> -x) relative to the current one.
+    This results in cosine modes with odd azimuthal order (x tilt, x coma,
+    ...) and sine modes with even azimuthal order (45 degree astigmatism,
+    ...) having a flipped sign. All other modes are unaffected.
     
     This conversion is involutory so it converts legacy coefficients to the
     correct convention and correct coefficients to the legacy convention.
@@ -691,6 +691,10 @@ def zernike_coeff_legacy(coeffs, modes=None, order='noll'):
                 f'modes has {modes.size} entries but the last axis of '
                 f'coeffs has length {coeffs.shape[-1]}')
 
-    sign = np.array([-1 if to_nm(int(j))[1] % 2 else 1 for j in modes])
+    # legacy coordinates are mirrored left-right (x -> -x) relative to the
+    # current ones: cos terms with odd m and sin terms with even m flip
+    def _sign(m):
+        return (-1)**abs(m) if m >= 0 else -(-1)**abs(m)
+    sign = np.array([_sign(to_nm(int(j))[1]) for j in modes])
 
     return coeffs * sign

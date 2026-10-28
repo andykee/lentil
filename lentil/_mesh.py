@@ -14,9 +14,10 @@ def mesh(shape, shift=(0, 0), angle=0, indexing='xy'):
         ``indexing`` scheme.
     angle : float, optional
         Mesh rotation in degrees. Default is 0. When ``indexing = 'xy'``,
-        the rotation is measured counterclockwise from the +x axis. When
-        ``indexing = ;ij'`, the rotation is measured counterclockwise from the
-        +i axis. Note that rotations occur about the shifted center if 
+        the rotation is measured from the +x axis toward the +y axis, which
+        appears counterclockwise when displayed with ``origin='lower'``.
+        When ``indexing = 'ij'``, the rotation is measured from the +i axis
+        toward the +j axis. Note that rotations occur about the shifted center if 
         ``shift`` is nonzero.
     indexing : {'xy', 'ij'}, optional
         Cartesian ('xy', default) or matrix ('ij') indexing of mesh.
@@ -40,16 +41,16 @@ def mesh(shape, shift=(0, 0), angle=0, indexing='xy'):
 
 def _meshxy(shape, shift, angle):
     # return x and y coordinate matrices where x increases as columns increase
-    # and y decreases as rows increase. angle specifies a CCW rotation from
+    # and y increases as rows increase. angle specifies a CCW rotation from
     # the +x axis
     nx = shape[1]
     ny = shape[0]
     xx, yy = np.meshgrid(np.arange(nx) - np.floor(nx/2.0) - shift[0],
-                         np.arange(ny) - np.floor(ny/2.0) + shift[1],
+                         np.arange(ny) - np.floor(ny/2.0) - shift[1],
                          indexing='xy')
-    x = xx * np.cos(-angle) + yy * np.sin(-angle)
-    y = xx * -np.sin(-angle) + yy * np.cos(-angle)
-    return x, -y
+    x = xx * np.cos(angle) + yy * np.sin(angle)
+    y = xx * -np.sin(angle) + yy * np.cos(angle)
+    return x, y
 
 
 def _meshij(shape, shift, angle):

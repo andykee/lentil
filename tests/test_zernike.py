@@ -40,21 +40,23 @@ def test_zernike_random_mask():
     assert np.array_equal(lentil.zernike(mask, 1), lentil.zernike(random_mask, 1))
 
 
-# Sample points on a 65x65 circular mask centered at (32, 32):
-# right edge, top edge, and upper-right diagonal (45 deg)
-RIGHT, TOP, UPPER_RIGHT = (32, 60), (4, 32), (12, 52)
+# Sample points on a 65x65 circular mask centered at (32, 32), as (row, col):
+# +x edge, +y edge, and the 45 deg diagonal between them. With xy indexing,
+# +x is increasing column and +y is increasing row, so +y is the top of the
+# image when displayed with origin='lower'
+PLUS_X, PLUS_Y, PLUS_XY = (32, 60), (60, 32), (52, 52)
 
 
 @pytest.mark.parametrize('index, positive_at', [
-    (2, RIGHT),         # x tilt
-    (3, TOP),           # y tilt
-    (5, UPPER_RIGHT),   # 45 deg astigmatism
-    (7, TOP),           # y coma
-    (8, RIGHT),         # x coma
+    (2, PLUS_X),     # x tilt
+    (3, PLUS_Y),     # y tilt
+    (5, PLUS_XY),    # 45 deg astigmatism
+    (7, PLUS_Y),     # y coma
+    (8, PLUS_X),     # x coma
 ])
 def test_zernike_orientation(index, positive_at):
-    # theta is measured CCW from +x (increasing column) toward +y
-    # (decreasing row)
+    # theta is measured from +x (increasing column) toward +y
+    # (increasing row)
     mask = lentil.circle((65, 65), 32, antialias=False)
     z = lentil.zernike(mask, index)
     assert z[positive_at] > 0.5
@@ -84,7 +86,7 @@ def test_zernike_coordinates_shift_indexing():
                          indexing='ij')
 
     auto = lentil.zernike_coordinates(mask)
-    xy = lentil.zernike_coordinates(mask, shift=(30, 20), indexing='xy')
+    xy = lentil.zernike_coordinates(mask, shift=(30, -20), indexing='xy')
     ij = lentil.zernike_coordinates(mask, shift=(-20, 30), indexing='ij')
 
     assert _same_coordinates(xy, auto)
@@ -92,8 +94,8 @@ def test_zernike_coordinates_shift_indexing():
 
 
 def test_zernike_coeff_legacy_noll_signs():
-    # odd |m| (tilt, coma, trefoil) flip; even |m| unchanged
-    expected = [1, -1, -1, 1, 1, 1, -1, -1, -1, -1, 1]
+    # cos terms with odd m and sin terms with even m flip
+    expected = [1, -1, 1, 1, -1, 1, 1, -1, 1, -1, 1]
     assert np.array_equal(lentil.zernike_coeff_legacy(np.ones(11)), expected)
 
 
@@ -108,14 +110,29 @@ def test_zernike_coeff_legacy_involution():
     ('fringe', range(1, 17)),
     ('ansi', range(0, 15)),
 ])
-def test_zernike_coeff_legacy_matches_180_rotation(order, modes):
-    # legacy convention == current convention evaluated at theta + pi
+def test_zernike_coeff_legacy_matches_mirror(order, modes):
+    # legacy convention == current convention mirrored left-right (x -> -x)
     mask = lentil.circle((128, 128), 60, antialias=False)
     rho, theta = lentil.zernike_coordinates(mask)
     for j in modes:
-        rotated = lentil.zernike(mask, j, order=order, rho=rho, theta=theta + np.pi)
+        mirrored = lentil.zernike(mask, j, order=order, rho=rho, theta=np.pi - theta)
         sign = lentil.zernike_coeff_legacy([1.0], modes=[j], order=order)[0]
-        assert np.allclose(rotated, sign * lentil.zernike(mask, j, order=order))
+        assert np.allclose(mirrored, sign * lentil.zernike(mask, j, order=order))
+
+
+@pytest.mark.filterwarnings('ignore::FutureWarning')
+@pytest.mark.parametrize('order, modes', [
+    ('noll', range(1, 16)),
+    ('fringe', range(1, 17)),
+    ('ansi', range(0, 15)),
+])
+def test_zernike_coeff_legacy_matches_legacy_flag(order, modes):
+    # exact on even-sized masks; odd sizes also had a half-pixel origin offset
+    mask = lentil.circle((128, 128), 60, antialias=False)
+    for j in modes:
+        legacy = lentil.zernike(mask, j, order=order, legacy=True)
+        sign = lentil.zernike_coeff_legacy([1.0], modes=[j], order=order)[0]
+        assert np.allclose(legacy, sign * lentil.zernike(mask, j, order=order))
 
 
 def test_zernike_coeff_legacy_stacked():
