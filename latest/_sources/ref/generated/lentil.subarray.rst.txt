@@ -1,6 +1,0 @@
-﻿lentil.subarray
-===============
-
-.. currentmodule:: lentil
-
-.. autofunction:: subarray

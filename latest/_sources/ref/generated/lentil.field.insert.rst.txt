@@ -1,6 +1,0 @@
-﻿lentil.field.insert
-===================
-
-.. currentmodule:: lentil.field
-
-.. autofunction:: insert

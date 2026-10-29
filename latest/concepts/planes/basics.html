@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" sizes="16x16" href="../../_static/favicon/favicon-16x16.png" type="image/png">
+    <link rel="icon" sizes="32x32" href="../../_static/favicon/favicon-32x32.png" type="image/png">
+    <link rel="icon" sizes="48x48" href="../../_static/favicon/favicon-48x48.png" type="image/png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../_static/favicon/apple-touch-icon-180x180.png" color="#000000" type="image/png">
+    <title>Plane basics &#8212; Lentil 0.8.10 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/lentil.css?v=4b1efdef" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../../_static/documentation_options.js?v=3e0d02fa"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'concepts/planes/basics';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.23.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://andykee.github.io/lentil/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'latest';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Available planes" href="types.html" />
+    <link rel="prev" title="Planes" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.8.10" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="docs">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo-light.svg" class="logo__image only-light" alt="Lentil 0.8.10 documentation - Home"/>
+    <img src="../../_static/logo-dark.svg" class="logo__image only-dark pst-js-only" alt="Lentil 0.8.10 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guides/index.html">
+    Guides
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../resources/index.html">
+    Resources
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guides/index.html">
+    Guides
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../resources/index.html">
+    Resources
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links" aria-label="Site Navigation">
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../getting-started/index.html">Getting Started</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/installation.html">Installation</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/first-steps.html">First Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/features.html">Features</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Concepts</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../coordinate-system.html">Coordinate System</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Planes</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active"><a aria-current="page" class="current reference internal" href="#">Plane basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="types.html">Available planes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transforms.html">Available plane transforms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="wavefront-error.html">Representing wavefront error</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../wavefront.html">Wavefront</a></li>
+
+
+
+
+<li class="toctree-l2 has-children"><a class="reference internal" href="../numerical-diffraction-propagation/index.html">Numerical Diffraction Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../numerical-diffraction-propagation/basics.html">Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../numerical-diffraction-propagation/sampling.html">Sampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../numerical-diffraction-propagation/tilt-propagation.html">Propagation with large tilts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../numerical-diffraction-propagation/segmented-propagation.html">Propagation with segmented apertures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../numerical-diffraction-propagation/near-field.html">Near-field Propagation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../radiometry.html">Radiometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image-sensors.html">Image Sensors</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../guides/index.html">Guides</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/numerical-diffraction-propagation/index.html">Numerical Diffraction Propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/focal-plane-modeling/index.html">Focal Plane Modeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/imaging-artifacts.html">Imaging Artifacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/patterns/index.html">Useful Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/performance.html">Optimizing Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/extending-lentil.html">Extending Lentil</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../guides/integrations/index.html">Integrations</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../guides/integrations/matlab.html">MATLAB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../guides/integrations/macos.html">MACOS</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../resources/index.html">Resources</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/internals/index.html">Internals</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../resources/tech-notes/index.html">Technical notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../resources/tech-notes/coords.html">A consistent coordinate system for wave optics simulations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../resources/tech-notes/resampling.html">Resampling oversampled images to native detector sampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../resources/tech-notes/fourier.html">Discrete Fourier transform algorithms</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/release.html">Release notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/contributing.html">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/cite.html">How to Cite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resources/license.html">License</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api/index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/planes.html">Planes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/generated/lentil.Plane.html">lentil.Plane</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/transforms.html">Plane transforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wavefront.html">Wavefront</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/propagate.html">Propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/zernike.html">Zernike polynomials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wavefront-error.html">Wavefront errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/imaging-artifacts.html">Imaging artifacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/util.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/radiometry.html">Radiometry (<code class="docutils literal notranslate"><span class="pre">lentil.radiometry</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/detector.html">Detector modeling (<code class="docutils literal notranslate"><span class="pre">lentil.detector</span></code>)</a></li>
+</ul>
+</details></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="plane-basics">
+<h1>Plane basics<a class="headerlink" href="#plane-basics" title="Link to this heading">#</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>Lentil represents optical systems using one or more planes that have some
+influence on a propagating wavefront. All planes in Lentil are described by a
+common set of attributes. The most commonly used attributes are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">amplitude</span></code> - defines the electric field amplitude transmission through
+the plane</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">opd</span></code> - defines the optical path difference that a wavefront experiences
+when propagating through the plane</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mask</span></code> - defines the binary mask over which the plane data is valid. If
+<code class="docutils literal notranslate"><span class="pre">mask</span></code> is 2-dimensional, the plane is assumed to be monolithic. If
+<code class="docutils literal notranslate"><span class="pre">mask</span></code> is 3-dimensional, the plane is assumed to be segmented with the
+individual segment masks provided along the first dimension. If mask is not
+provided, it is automatically created from the nonzero values in
+<code class="docutils literal notranslate"><span class="pre">amplitude</span></code>.</p></li>
+</ul>
+<figure class="align-default">
+<img alt="../../_images/segmask.png" class="plot-directive" height="196" src="../../_images/segmask.png" width="476" />
+</figure>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">pixelscale</span></code> - defines the physical sampling of the above attributes. A
+simple example of how to calculate the pixelscale for a discretely sampled
+circular aperture is given below:</p>
+<img alt="../../_images/pixelscale.png" class="align-center" src="../../_images/pixelscale.png" style="width: 450px;" />
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ptype</span></code> - specifies the plane type. Additional details are available in
+the sections describing <a class="reference internal" href="../wavefront.html#user-wavefront-plane-wavefront"><span class="std std-ref">How a plane affects a wavefront</span></a>
+and <a class="reference internal" href="../wavefront.html#user-wavefront-ptype-rules"><span class="std std-ref">Plane-wavefront multiplication rules</span></a></p>
+<p>Valid types are:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>ptype</p></th>
+<th class="head"><p>Planes with this type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">none</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Plane</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pupil</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Pupil</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">image</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Image</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+</ul>
+</section>
+<section id="plane-creation">
+<h2>Plane creation<a class="headerlink" href="#plane-creation" title="Link to this heading">#</a></h2>
+<p>Create a new plane with</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">Plane</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/basics-11.png" class="plot-directive" height="333" src="../../_images/basics-11.png" width="344" />
+</figure>
+<p>Once a plane is defined, its attributes can be modified at any time:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">Plane</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">))</span>
+<span class="n">p</span><span class="o">.</span><span class="n">opd</span> <span class="o">=</span> <span class="mf">2e-6</span> <span class="o">*</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">opd</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/basics-21.png" class="plot-directive" height="333" src="../../_images/basics-21.png" width="344" />
+</figure>
+</section>
+<section id="resampling-and-rescaling">
+<h2>Resampling and rescaling<a class="headerlink" href="#resampling-and-rescaling" title="Link to this heading">#</a></h2>
+<p>Plane sampling can be modified using the <a class="reference internal" href="../../api/generated/lentil.Plane.resample.html#lentil.Plane.resample" title="lentil.Plane.resample"><code class="xref py py-func docutils literal notranslate"><span class="pre">resample()</span></code></a> or
+<a class="reference internal" href="../../api/generated/lentil.Plane.rescale.html#lentil.Plane.rescale" title="lentil.Plane.rescale"><code class="xref py py-func docutils literal notranslate"><span class="pre">rescale()</span></code></a> methods:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../api/generated/lentil.Plane.resample.html#lentil.Plane.resample" title="lentil.Plane.resample"><code class="xref py py-func docutils literal notranslate"><span class="pre">resample()</span></code></a> modifies plane sampling to the provided
+<code class="docutils literal notranslate"><span class="pre">pixelscale</span></code></p></li>
+<li><p><a class="reference internal" href="../../api/generated/lentil.Plane.rescale.html#lentil.Plane.rescale" title="lentil.Plane.rescale"><code class="xref py py-func docutils literal notranslate"><span class="pre">rescale()</span></code></a> adjusts plane sampling by the given scale
+factor</p></li>
+</ul>
+<p>Both methods use intrepolation to resample the <code class="docutils literal notranslate"><span class="pre">amplitude</span></code>, <code class="docutils literal notranslate"><span class="pre">opd</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">mask</span></code> attributes and update the plane’s <code class="docutils literal notranslate"><span class="pre">pixelscale</span></code> accordingly.</p>
+</section>
+<section id="combining-planes">
+<h2>Combining planes<a class="headerlink" href="#combining-planes" title="Link to this heading">#</a></h2>
+</section>
+<section id="more-information">
+<h2>More information<a class="headerlink" href="#more-information" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Descriptions of <a class="reference internal" href="types.html"><span class="doc">available planes</span></a> and
+<a class="reference internal" href="transforms.html"><span class="doc">plane transforms</span></a></p></li>
+<li><p>Different approaches for
+<a class="reference internal" href="wavefront-error.html"><span class="doc">representing wavefront error</span></a></p></li>
+<li><p>Details of the Plane-Wavefront interaction model</p></li>
+<li><p>How to modify default plane behavior and develop custom planes</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plane-creation">Plane creation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resampling-and-rescaling">Resampling and rescaling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-planes">Combining planes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-information">More information</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2017-2026 California Institute of Technology.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

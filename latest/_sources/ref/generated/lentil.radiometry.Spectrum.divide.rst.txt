@@ -1,6 +1,0 @@
-lentil.radiometry.Spectrum.divide
-=================================
-
-.. currentmodule:: lentil.radiometry
-
-.. automethod:: Spectrum.divide

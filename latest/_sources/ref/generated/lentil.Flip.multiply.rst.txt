@@ -1,6 +1,0 @@
-lentil.Flip.multiply
-====================
-
-.. currentmodule:: lentil
-
-.. automethod:: Flip.multiply

@@ -5,9 +5,12 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Overview &#8212; Lentil 0.8.10 documentation</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" sizes="16x16" href="_static/favicon/favicon-16x16.png" type="image/png">
+    <link rel="icon" sizes="32x32" href="_static/favicon/favicon-32x32.png" type="image/png">
+    <link rel="icon" sizes="48x48" href="_static/favicon/favicon-48x48.png" type="image/png">
+    <link rel="apple-touch-icon" sizes="180x180" href="_static/favicon/apple-touch-icon-180x180.png" color="#000000" type="image/png">
+    <title>Lentil &#8212; Lentil 0.8.10 documentation</title>
   
   
   
@@ -41,8 +44,6 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <link rel="stylesheet" type="text/css" href="_static/css/lentil_index.css">
-  
     <script src="_static/documentation_options.js?v=3e0d02fa"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
@@ -60,6 +61,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting Started" href="getting-started/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
@@ -124,7 +126,7 @@
      
   
 
-<a class="navbar-brand logo" href="docs.html">
+<a class="navbar-brand logo" href="docs">
   
   
   
@@ -152,22 +154,22 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="user/index.html">
-    User Guide
+  <a class="nav-link nav-internal" href="getting-started/index.html">
+    Getting Started
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="examples/index.html">
-    Examples
+  <a class="nav-link nav-internal" href="concepts/index.html">
+    Concepts
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="ref/index.html">
-    API Reference
+  <a class="nav-link nav-internal" href="guides/index.html">
+    Guides
   </a>
 </li>
 
@@ -175,6 +177,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="resources/index.html">
     Resources
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api/index.html">
+    API Reference
   </a>
 </li>
 
@@ -259,6 +268,10 @@
   
 
   
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -272,7 +285,7 @@
         
       
       <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -288,22 +301,22 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="user/index.html">
-    User Guide
+  <a class="nav-link nav-internal" href="getting-started/index.html">
+    Getting Started
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="examples/index.html">
-    Examples
+  <a class="nav-link nav-internal" href="concepts/index.html">
+    Concepts
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="ref/index.html">
-    API Reference
+  <a class="nav-link nav-internal" href="guides/index.html">
+    Guides
   </a>
 </li>
 
@@ -311,6 +324,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="resources/index.html">
     Resources
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api/index.html">
+    API Reference
   </a>
 </li>
 
@@ -378,6 +398,94 @@
     
   </div>
   
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links" aria-label="Site Navigation">
+  <div class="bd-toc-item navbar-nav">
+    <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="getting-started/index.html">Getting Started</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting-started/installation.html">Installation</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="getting-started/first-steps.html">First Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started/features.html">Features</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="concepts/index.html">Concepts</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="concepts/coordinate-system.html">Coordinate System</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="concepts/planes/index.html">Planes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="concepts/planes/basics.html">Plane basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/planes/types.html">Available planes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/planes/transforms.html">Available plane transforms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/planes/wavefront-error.html">Representing wavefront error</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/wavefront.html">Wavefront</a></li>
+
+
+
+
+<li class="toctree-l2 has-children"><a class="reference internal" href="concepts/numerical-diffraction-propagation/index.html">Numerical Diffraction Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="concepts/numerical-diffraction-propagation/basics.html">Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/numerical-diffraction-propagation/sampling.html">Sampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/numerical-diffraction-propagation/tilt-propagation.html">Propagation with large tilts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/numerical-diffraction-propagation/segmented-propagation.html">Propagation with segmented apertures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="concepts/numerical-diffraction-propagation/near-field.html">Near-field Propagation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/radiometry.html">Radiometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/image-sensors.html">Image Sensors</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="guides/index.html">Guides</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/numerical-diffraction-propagation/index.html">Numerical Diffraction Propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/focal-plane-modeling/index.html">Focal Plane Modeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/imaging-artifacts.html">Imaging Artifacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/patterns/index.html">Useful Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/performance.html">Optimizing Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/extending-lentil.html">Extending Lentil</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="guides/integrations/index.html">Integrations</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="guides/integrations/matlab.html">MATLAB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guides/integrations/macos.html">MACOS</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="resources/index.html">Resources</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="resources/internals/index.html">Internals</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="resources/tech-notes/index.html">Technical notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="resources/tech-notes/coords.html">A consistent coordinate system for wave optics simulations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="resources/tech-notes/resampling.html">Resampling oversampled images to native detector sampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="resources/tech-notes/fourier.html">Discrete Fourier transform algorithms</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="resources/release.html">Release notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resources/contributing.html">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resources/cite.html">How to Cite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resources/license.html">License</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="api/planes.html">Planes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/generated/lentil.Plane.html">lentil.Plane</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="api/transforms.html">Plane transforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/wavefront.html">Wavefront</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/propagate.html">Propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/zernike.html">Zernike polynomials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/wavefront-error.html">Wavefront errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/imaging-artifacts.html">Imaging artifacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/util.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/radiometry.html">Radiometry (<code class="docutils literal notranslate"><span class="pre">lentil.radiometry</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/detector.html">Detector modeling (<code class="docutils literal notranslate"><span class="pre">lentil.detector</span></code>)</a></li>
+</ul>
+</details></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
       <div class="sidebar-primary-item">
@@ -406,68 +514,40 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-
-  <div class="container overflow-hidden">
-    <div class="row">
-      <div class="col-6">
-        <div class="p-1">
-        <h1>Lentil: Fast optical propagation</h1>
-
-        <p>
-            Lentil is an Python package for developing high-performance diffraction simulations. 
-            Lentil provides an easy to use framework for modeling optical systems and simulating 
-            the wave propagation of light through them. Lentil was originally developed at NASA's 
-            Jet Propulsion Library and is now available as open-source software.
-
-            <!--Lentil has the following features:
-                * Generalized propagation routines (near field/far field)
-
-            -->
-         </p>
-        </div>
-
-      </div>
-      <div class="col-6">
-        <!--<div class="px-5 pt-4 w-75 mx-auto">-->
-        <div class="pt-4 w-50 mx-auto">
-        <img src="_static/img/psf.png" class="img-fluid">
-        </div>
-      </div>
-    </div>
-
-    <div class="biglinks container py-5 text-center w-75">
-        <div class="row gx-5">
-            <div class="col-3">
-                <a href="user/getting_started/install.html">
-                    <img src="_static/installation.svg" class="dark-light"><br/>
-                    Installation
-                </a>
-            </div>
-            
-            <div class="col-3">
-                <a href="user/index.html">
-                    <img src="_static/documentation.svg" class="dark-light"><br/>
-                    Documentation
-                </a>
-            </div>
-            
-            <div class="col-3">
-                <a href="examples/index.html">
-                    <img src="_static/examples.svg" class="dark-light"><br/>
-                    Examples
-                </a>
-            </div>
-            
-            <div class="col-3">
-                <a href="ref/index.html">
-                    <img src="_static/reference.svg" class="dark-light"><br/>
-                    Reference
-                </a>
-            </div>
-        </div>
-    </div>
-
-  </div>
+  <div class="toctree-wrapper compound" id="docs">
+</div>
+<section id="lentil">
+<h1>Lentil<a class="headerlink" href="#lentil" title="Link to this heading">#</a></h1>
+<p>Lentil is an Python package for developing high-performance diffraction
+simulations. Lentil provides an easy to use framework for modeling optical
+systems and simulating the wave propagation of light through them. Lentil was
+originally developed at NASA’s Jet Propulsion Library and is now available as
+open-source software.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Lentil is under active development and new features continue to be added.
+Until Lentil reaches version 1.0, the API is not guaranteed to be stable, but
+changes breaking backwards compatibility will be noted in the
+<a class="reference internal" href="resources/release.html"><span class="doc">release notes</span></a>.</p>
+</div>
+<section id="highlights">
+<h2>Highlights<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<p>Install Lentil with pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>lentil
+</pre></div>
+</div>
+<p>Additional details are available on the
+<a class="reference internal" href="getting-started/installation.html"><span class="doc">installation</span></a> page.</p>
+</section>
+<section id="learn-more">
+<h2>Learn more<a class="headerlink" href="#learn-more" title="Link to this heading">#</a></h2>
+<p>See the <a class="reference internal" href="getting-started/first-steps.html"><span class="doc">first steps</span></a> or jump straight to
+the <a class="reference internal" href="guides/index.html"><span class="doc">guides</span></a> to start using Lentil.</p>
+</section>
+</section>
 
 
                 </article>
@@ -479,6 +559,26 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#highlights">Highlights</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learn-more">Learn more</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
@@ -494,45 +594,37 @@
   <script defer src="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
 <script defer src="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
 
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
 
-<div class="bd-footer">
+  <p class="copyright">
     
-    <div class="container px-5 pt-4 pb-3">
-        <div class="row">
-          <div class="col-sm-6 text-start">
-            <h2>Lentil</h2>
-          </div>
-          <div class="col-sm-3 text-end">
-            <ul>
-              <li><a href="dev/index.html">Contribute</a></li>
-              <li><a href="user/extra/cite.html">Citing Lentil</a></li>
-              <li><a href="user/extra/license.html">License</a></li>
-            </ul>
-          </div>
-          <div class="col-sm-3 text-end">
-            <dl class="release">
-              <dt>Latest Stable Release</dt>
-              <dd>
-                  <a href="">docs</a>
-                   |
-                  <a href="resources/release.html">changelog</a>
-              </dd>
-          </dl>
-          <dl class="release">
-              <dt>Development version</dt>
-              <dd>
-                  <a href="">docs</a>
-              </dd>
-          </dl>
-          </div>
-        </div>
-        <div class="row">
-          <span>© 2017-2026 California Institute of Technology</span>
-        </div>
-      </div>
-
+      © Copyright 2017-2026 California Institute of Technology.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
 </div>
 
-
+  </footer>
   </body>
 </html>

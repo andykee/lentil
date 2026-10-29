@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Grism.shape
-==================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Grism.shape
-

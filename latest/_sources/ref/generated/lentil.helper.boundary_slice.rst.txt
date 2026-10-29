@@ -1,6 +1,0 @@
-﻿lentil.helper.boundary\_slice
-=============================
-
-.. currentmodule:: lentil.helper
-
-.. autofunction:: boundary_slice

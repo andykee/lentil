@@ -1,6 +1,0 @@
-lentil.DispersiveTilt.rescale
-=============================
-
-.. currentmodule:: lentil
-
-.. automethod:: DispersiveTilt.rescale

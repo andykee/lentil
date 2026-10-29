@@ -1,6 +1,0 @@
-lentil.Pupil.thaw
-=================
-
-.. currentmodule:: lentil
-
-.. automethod:: Pupil.thaw

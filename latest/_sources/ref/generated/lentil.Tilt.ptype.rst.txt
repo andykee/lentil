@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Tilt.ptype
-=================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Tilt.ptype
-

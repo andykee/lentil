@@ -1,6 +1,0 @@
-lentil.radiometry.Blackbody.bin
-===============================
-
-.. currentmodule:: lentil.radiometry
-
-.. automethod:: Blackbody.bin

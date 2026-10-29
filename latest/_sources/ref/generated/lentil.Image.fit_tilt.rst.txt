@@ -1,6 +1,0 @@
-lentil.Image.fit\_tilt
-======================
-
-.. currentmodule:: lentil
-
-.. automethod:: Image.fit_tilt

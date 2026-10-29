@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Image.global\_mask
-=========================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Image.global_mask
-

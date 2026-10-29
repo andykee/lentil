@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Pupil.frozen
-===================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Pupil.frozen
-

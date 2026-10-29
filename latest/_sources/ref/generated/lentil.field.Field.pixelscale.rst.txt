@@ -1,8 +1,0 @@
-:orphan:
-
-lentil.field.Field.pixelscale
-=============================
-
-.. currentmodule:: lentil.field
-
-.. autoattribute:: lentil::field.Field.pixelscale

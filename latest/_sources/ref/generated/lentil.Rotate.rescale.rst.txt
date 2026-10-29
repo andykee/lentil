@@ -1,6 +1,0 @@
-lentil.Rotate.rescale
-=====================
-
-.. currentmodule:: lentil
-
-.. automethod:: Rotate.rescale

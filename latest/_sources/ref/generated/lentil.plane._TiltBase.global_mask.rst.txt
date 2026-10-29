@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.plane.\_TiltBase.global\_mask
-====================================
-
-.. currentmodule:: lentil.plane
-
-.. autoattribute:: lentil::plane._TiltBase.global_mask
-

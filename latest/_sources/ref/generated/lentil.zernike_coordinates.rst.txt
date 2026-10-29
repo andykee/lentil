@@ -1,6 +1,0 @@
-﻿lentil.zernike\_coordinates
-===========================
-
-.. currentmodule:: lentil
-
-.. autofunction:: zernike_coordinates

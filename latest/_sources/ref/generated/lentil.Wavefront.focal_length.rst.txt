@@ -1,8 +1,0 @@
-:orphan:
-
-lentil.Wavefront.focal\_length
-==============================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Wavefront.focal_length

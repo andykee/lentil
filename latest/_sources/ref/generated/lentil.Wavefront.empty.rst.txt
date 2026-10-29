@@ -1,6 +1,0 @@
-lentil.Wavefront.empty
-======================
-
-.. currentmodule:: lentil
-
-.. automethod:: Wavefront.empty

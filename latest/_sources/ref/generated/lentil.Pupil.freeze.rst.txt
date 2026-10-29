@@ -1,6 +1,0 @@
-lentil.Pupil.freeze
-===================
-
-.. currentmodule:: lentil
-
-.. automethod:: Pupil.freeze

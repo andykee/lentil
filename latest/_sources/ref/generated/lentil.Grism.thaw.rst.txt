@@ -1,6 +1,0 @@
-lentil.Grism.thaw
-=================
-
-.. currentmodule:: lentil
-
-.. automethod:: Grism.thaw

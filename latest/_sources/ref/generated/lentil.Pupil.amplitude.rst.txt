@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Pupil.amplitude
-======================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Pupil.amplitude
-

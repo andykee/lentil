@@ -1,6 +1,0 @@
-lentil.radiometry.Blackbody.copy
-================================
-
-.. currentmodule:: lentil.radiometry
-
-.. automethod:: Blackbody.copy

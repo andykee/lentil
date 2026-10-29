@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.radiometry.Material.emission
-===================================
-
-.. currentmodule:: lentil.radiometry
-
-.. autoattribute:: lentil::radiometry.Material.emission
-

@@ -1,6 +1,0 @@
-lentil.plane.\_TiltBase.freeze
-==============================
-
-.. currentmodule:: lentil.plane
-
-.. automethod:: _TiltBase.freeze

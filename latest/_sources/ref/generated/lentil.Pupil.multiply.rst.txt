@@ -1,6 +1,0 @@
-lentil.Pupil.multiply
-=====================
-
-.. currentmodule:: lentil
-
-.. automethod:: Pupil.multiply

@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.radiometry.Blackbody.wave
-================================
-
-.. currentmodule:: lentil.radiometry
-
-.. autoattribute:: lentil::radiometry.Blackbody.wave
-

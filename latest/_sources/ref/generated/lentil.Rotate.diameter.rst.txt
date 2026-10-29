@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Rotate.diameter
-======================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Rotate.diameter
-

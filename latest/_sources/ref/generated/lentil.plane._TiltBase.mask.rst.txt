@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.plane.\_TiltBase.mask
-============================
-
-.. currentmodule:: lentil.plane
-
-.. autoattribute:: lentil::plane._TiltBase.mask
-

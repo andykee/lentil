@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Tilt.frozen
-==================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Tilt.frozen
-

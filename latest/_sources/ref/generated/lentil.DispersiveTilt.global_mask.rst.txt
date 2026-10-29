@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.DispersiveTilt.global\_mask
-==================================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::DispersiveTilt.global_mask
-

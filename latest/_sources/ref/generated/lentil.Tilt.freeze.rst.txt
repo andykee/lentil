@@ -1,6 +1,0 @@
-lentil.Tilt.freeze
-==================
-
-.. currentmodule:: lentil
-
-.. automethod:: Tilt.freeze

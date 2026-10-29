@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.DispersiveTilt.amplitude
-===============================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::DispersiveTilt.amplitude
-

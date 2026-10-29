@@ -1,6 +1,0 @@
-lentil.radiometry.Spectrum.bin
-==============================
-
-.. currentmodule:: lentil.radiometry
-
-.. automethod:: Spectrum.bin

@@ -1,6 +1,0 @@
-lentil.Grism.resample
-=====================
-
-.. currentmodule:: lentil
-
-.. automethod:: Grism.resample

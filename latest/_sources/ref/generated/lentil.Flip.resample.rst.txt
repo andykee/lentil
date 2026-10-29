@@ -1,6 +1,0 @@
-lentil.Flip.resample
-====================
-
-.. currentmodule:: lentil
-
-.. automethod:: Flip.resample

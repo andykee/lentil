@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.radiometry.Spectrum.valueunit
-====================================
-
-.. currentmodule:: lentil.radiometry
-
-.. autoattribute:: lentil::radiometry.Spectrum.valueunit
-

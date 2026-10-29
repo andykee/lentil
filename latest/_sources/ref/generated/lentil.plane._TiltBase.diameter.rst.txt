@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.plane.\_TiltBase.diameter
-================================
-
-.. currentmodule:: lentil.plane
-
-.. autoattribute:: lentil::plane._TiltBase.diameter
-

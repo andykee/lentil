@@ -1,6 +1,0 @@
-﻿lentil.centroid
-===============
-
-.. currentmodule:: lentil
-
-.. autofunction:: centroid

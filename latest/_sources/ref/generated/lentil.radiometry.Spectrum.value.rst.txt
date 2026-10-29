@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.radiometry.Spectrum.value
-================================
-
-.. currentmodule:: lentil.radiometry
-
-.. autoattribute:: lentil::radiometry.Spectrum.value
-

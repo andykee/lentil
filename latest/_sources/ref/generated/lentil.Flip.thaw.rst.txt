@@ -1,6 +1,0 @@
-lentil.Flip.thaw
-================
-
-.. currentmodule:: lentil
-
-.. automethod:: Flip.thaw

@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Tilt.pixelscale
-======================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Tilt.pixelscale
-

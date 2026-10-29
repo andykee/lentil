@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Pupil.shape
-==================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Pupil.shape
-

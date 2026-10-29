@@ -1,8 +1,0 @@
-:orphan:
-
-lentil.Wavefront.shape
-======================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Wavefront.shape

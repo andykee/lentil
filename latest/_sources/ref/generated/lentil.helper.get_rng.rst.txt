@@ -1,6 +1,0 @@
-﻿lentil.helper.get\_rng
-======================
-
-.. currentmodule:: lentil.helper
-
-.. autofunction:: get_rng

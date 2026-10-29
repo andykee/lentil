@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Wavefront.pixelscale
-===========================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Wavefront.pixelscale
-

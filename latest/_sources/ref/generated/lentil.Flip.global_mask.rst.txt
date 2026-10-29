@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Flip.global\_mask
-========================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Flip.global_mask
-

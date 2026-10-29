@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Wavefront.ptype
-======================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Wavefront.ptype
-

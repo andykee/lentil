@@ -1,6 +1,0 @@
-﻿lentil.extent.intersection\_shift
-=================================
-
-.. currentmodule:: lentil.extent
-
-.. autofunction:: intersection_shift

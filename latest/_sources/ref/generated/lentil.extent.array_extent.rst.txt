@@ -1,6 +1,0 @@
-﻿lentil.extent.array\_extent
-===========================
-
-.. currentmodule:: lentil.extent
-
-.. autofunction:: array_extent

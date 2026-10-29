@@ -1,6 +1,0 @@
-﻿lentil.field.boundary
-=====================
-
-.. currentmodule:: lentil.field
-
-.. autofunction:: boundary

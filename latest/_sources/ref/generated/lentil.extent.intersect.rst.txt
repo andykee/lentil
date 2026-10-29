@@ -1,6 +1,0 @@
-﻿lentil.extent.intersect
-=======================
-
-.. currentmodule:: lentil.extent
-
-.. autofunction:: intersect

@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Rotate.amplitude
-=======================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Rotate.amplitude
-

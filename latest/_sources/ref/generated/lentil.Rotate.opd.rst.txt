@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Rotate.opd
-=================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Rotate.opd
-

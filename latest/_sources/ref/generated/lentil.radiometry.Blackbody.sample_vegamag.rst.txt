@@ -1,6 +1,0 @@
-lentil.radiometry.Blackbody.sample\_vegamag
-===========================================
-
-.. currentmodule:: lentil.radiometry
-
-.. automethod:: Blackbody.sample_vegamag

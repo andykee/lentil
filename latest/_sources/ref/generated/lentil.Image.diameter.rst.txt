@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Image.diameter
-=====================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Image.diameter
-

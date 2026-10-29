@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Grism.pixelscale
-=======================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Grism.pixelscale
-

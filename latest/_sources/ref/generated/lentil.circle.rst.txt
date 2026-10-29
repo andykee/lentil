@@ -1,6 +1,0 @@
-﻿lentil.circle
-=============
-
-.. currentmodule:: lentil
-
-.. autofunction:: circle

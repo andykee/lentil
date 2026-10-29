@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.DispersiveTilt.opd
-=========================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::DispersiveTilt.opd
-

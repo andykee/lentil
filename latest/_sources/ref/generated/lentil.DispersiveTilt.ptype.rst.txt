@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.DispersiveTilt.ptype
-===========================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::DispersiveTilt.ptype
-

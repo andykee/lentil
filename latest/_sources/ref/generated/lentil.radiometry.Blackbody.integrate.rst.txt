@@ -1,6 +1,0 @@
-lentil.radiometry.Blackbody.integrate
-=====================================
-
-.. currentmodule:: lentil.radiometry
-
-.. automethod:: Blackbody.integrate

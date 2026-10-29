@@ -1,6 +1,0 @@
-lentil.radiometry.Spectrum.power
-================================
-
-.. currentmodule:: lentil.radiometry
-
-.. automethod:: Spectrum.power

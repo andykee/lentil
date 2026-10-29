@@ -1,6 +1,0 @@
-lentil.Flip.rescale
-===================
-
-.. currentmodule:: lentil
-
-.. automethod:: Flip.rescale

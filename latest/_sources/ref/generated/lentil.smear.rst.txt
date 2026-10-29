@@ -1,6 +1,0 @@
-﻿lentil.smear
-============
-
-.. currentmodule:: lentil
-
-.. autofunction:: smear

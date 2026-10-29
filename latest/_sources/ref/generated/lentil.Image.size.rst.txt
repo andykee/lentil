@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Image.size
-=================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Image.size
-

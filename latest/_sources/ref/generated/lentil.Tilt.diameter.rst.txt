@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Tilt.diameter
-====================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Tilt.diameter
-

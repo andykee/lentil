@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.DispersiveTilt.shape
-===========================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::DispersiveTilt.shape
-

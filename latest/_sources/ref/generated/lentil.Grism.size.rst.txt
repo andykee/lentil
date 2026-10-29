@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Grism.size
-=================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Grism.size
-

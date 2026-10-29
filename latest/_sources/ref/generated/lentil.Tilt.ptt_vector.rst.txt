@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Tilt.ptt\_vector
-=======================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Tilt.ptt_vector
-

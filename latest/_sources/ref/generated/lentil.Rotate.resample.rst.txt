@@ -1,6 +1,0 @@
-lentil.Rotate.resample
-======================
-
-.. currentmodule:: lentil
-
-.. automethod:: Rotate.resample

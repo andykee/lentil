@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Tilt.mask
-================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Tilt.mask
-

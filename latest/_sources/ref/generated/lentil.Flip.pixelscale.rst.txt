@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Flip.pixelscale
-======================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Flip.pixelscale
-

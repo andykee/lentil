@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Image.ptype
-==================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Image.ptype
-

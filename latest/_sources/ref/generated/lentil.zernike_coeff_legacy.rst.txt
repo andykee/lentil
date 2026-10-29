@@ -1,6 +1,0 @@
-﻿lentil.zernike\_coeff\_legacy
-=============================
-
-.. currentmodule:: lentil
-
-.. autofunction:: zernike_coeff_legacy

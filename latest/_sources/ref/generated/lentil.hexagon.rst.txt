@@ -1,6 +1,0 @@
-﻿lentil.hexagon
-==============
-
-.. currentmodule:: lentil
-
-.. autofunction:: hexagon

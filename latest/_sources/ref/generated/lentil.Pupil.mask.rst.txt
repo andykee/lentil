@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Pupil.mask
-=================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Pupil.mask
-

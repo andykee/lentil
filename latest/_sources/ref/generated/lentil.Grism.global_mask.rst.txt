@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Grism.global\_mask
-=========================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Grism.global_mask
-

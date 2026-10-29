@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Flip.amplitude
-=====================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Flip.amplitude
-

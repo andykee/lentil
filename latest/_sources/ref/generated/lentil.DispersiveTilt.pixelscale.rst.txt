@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.DispersiveTilt.pixelscale
-================================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::DispersiveTilt.pixelscale
-

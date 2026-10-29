@@ -1,6 +1,0 @@
-lentil.radiometry.Blackbody.multiply
-====================================
-
-.. currentmodule:: lentil.radiometry
-
-.. automethod:: Blackbody.multiply

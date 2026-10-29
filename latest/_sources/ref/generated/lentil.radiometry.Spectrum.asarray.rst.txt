@@ -1,6 +1,0 @@
-lentil.radiometry.Spectrum.asarray
-==================================
-
-.. currentmodule:: lentil.radiometry
-
-.. automethod:: Spectrum.asarray

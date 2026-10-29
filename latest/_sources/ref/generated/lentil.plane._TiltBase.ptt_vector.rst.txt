@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.plane.\_TiltBase.ptt\_vector
-===================================
-
-.. currentmodule:: lentil.plane
-
-.. autoattribute:: lentil::plane._TiltBase.ptt_vector
-

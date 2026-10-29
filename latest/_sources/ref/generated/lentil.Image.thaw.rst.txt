@@ -1,6 +1,0 @@
-lentil.Image.thaw
-=================
-
-.. currentmodule:: lentil
-
-.. automethod:: Image.thaw

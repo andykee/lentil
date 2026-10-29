@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Grism.ptt\_vector
-========================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Grism.ptt_vector
-

@@ -1,8 +1,0 @@
-:orphan:
-
-lentil.field.Field.data
-=======================
-
-.. currentmodule:: lentil.field
-
-.. autoattribute:: lentil::field.Field.data

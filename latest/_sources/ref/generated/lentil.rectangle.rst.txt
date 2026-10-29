@@ -1,6 +1,0 @@
-﻿lentil.rectangle
-================
-
-.. currentmodule:: lentil
-
-.. autofunction:: rectangle

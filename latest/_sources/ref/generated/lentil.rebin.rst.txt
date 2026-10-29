@@ -1,6 +1,0 @@
-﻿lentil.rebin
-============
-
-.. currentmodule:: lentil
-
-.. autofunction:: rebin

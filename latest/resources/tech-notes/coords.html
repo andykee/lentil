@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" sizes="16x16" href="../../_static/favicon/favicon-16x16.png" type="image/png">
+    <link rel="icon" sizes="32x32" href="../../_static/favicon/favicon-32x32.png" type="image/png">
+    <link rel="icon" sizes="48x48" href="../../_static/favicon/favicon-48x48.png" type="image/png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../_static/favicon/apple-touch-icon-180x180.png" color="#000000" type="image/png">
+    <title>A consistent coordinate system for wave optics simulations &#8212; Lentil 0.8.10 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/lentil.css?v=4b1efdef" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../../_static/documentation_options.js?v=3e0d02fa"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'resources/tech-notes/coords';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.23.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://andykee.github.io/lentil/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'latest';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Resampling oversampled images to native detector sampling" href="resampling.html" />
+    <link rel="prev" title="Technical notes" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.8.10" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="docs">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo-light.svg" class="logo__image only-light" alt="Lentil 0.8.10 documentation - Home"/>
+    <img src="../../_static/logo-dark.svg" class="logo__image only-dark pst-js-only" alt="Lentil 0.8.10 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guides/index.html">
+    Guides
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Resources
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../concepts/index.html">
+    Concepts
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guides/index.html">
+    Guides
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Resources
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/andykee/lentil" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links" aria-label="Site Navigation">
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../getting-started/index.html">Getting Started</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/installation.html">Installation</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/first-steps.html">First Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/features.html">Features</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../concepts/index.html">Concepts</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/coordinate-system.html">Coordinate System</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../concepts/planes/index.html">Planes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/planes/basics.html">Plane basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/planes/types.html">Available planes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/planes/transforms.html">Available plane transforms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/planes/wavefront-error.html">Representing wavefront error</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/wavefront.html">Wavefront</a></li>
+
+
+
+
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../concepts/numerical-diffraction-propagation/index.html">Numerical Diffraction Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/numerical-diffraction-propagation/basics.html">Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/numerical-diffraction-propagation/sampling.html">Sampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/numerical-diffraction-propagation/tilt-propagation.html">Propagation with large tilts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/numerical-diffraction-propagation/segmented-propagation.html">Propagation with segmented apertures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/numerical-diffraction-propagation/near-field.html">Near-field Propagation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/radiometry.html">Radiometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/image-sensors.html">Image Sensors</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../guides/index.html">Guides</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/numerical-diffraction-propagation/index.html">Numerical Diffraction Propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/focal-plane-modeling/index.html">Focal Plane Modeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/imaging-artifacts.html">Imaging Artifacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/patterns/index.html">Useful Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/performance.html">Optimizing Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/extending-lentil.html">Extending Lentil</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../guides/integrations/index.html">Integrations</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../guides/integrations/matlab.html">MATLAB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../guides/integrations/macos.html">MACOS</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Resources</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../internals/index.html">Internals</a></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Technical notes</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active"><a aria-current="page" class="current reference internal" href="#">A consistent coordinate system for wave optics simulations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="resampling.html">Resampling oversampled images to native detector sampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fourier.html">Discrete Fourier transform algorithms</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../release.html">Release notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cite.html">How to Cite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api/index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/planes.html">Planes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/generated/lentil.Plane.html">lentil.Plane</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/transforms.html">Plane transforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wavefront.html">Wavefront</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/propagate.html">Propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/zernike.html">Zernike polynomials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/wavefront-error.html">Wavefront errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/imaging-artifacts.html">Imaging artifacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/util.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/radiometry.html">Radiometry (<code class="docutils literal notranslate"><span class="pre">lentil.radiometry</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/detector.html">Detector modeling (<code class="docutils literal notranslate"><span class="pre">lentil.detector</span></code>)</a></li>
+</ul>
+</details></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="a-consistent-coordinate-system-for-wave-optics-simulations">
+<h1>A consistent coordinate system for wave optics simulations<a class="headerlink" href="#a-consistent-coordinate-system-for-wave-optics-simulations" title="Link to this heading">#</a></h1>
+<p>A choice of harmonic time dependence fixes the sign of all phase factors throughout the diffraction formalism, including wave propagation operators, Fourier transforms, Optical Path Difference (OPD) definitions, and numerical propagation algorithms. Consistent use of a single convention is essential to avoid sign errors in simulated wavefronts and PSFs and when incorporating laboratory measurements or results from other analysis. Key results having implications for wave optics simulation are summarized in Table 1. The remainder of this document describes how the conventions in the table were derived through the specification of a sign convention for harmonic time dependence.</p>
+<p><strong>Table 1</strong>: Summary of harmonic time dependence sign convention and implications for wave optics simulation and phase retrieval.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Time convention</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\exp(-i\omega t)\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\exp(i\omega t)\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Spatial phasor contribution</p></td>
+<td><p><span class="math notranslate nohighlight">\(\displaystyle\frac{2\pi i}{\lambda}W\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\displaystyle\frac{-2\pi i}{\lambda}W\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Forward propagation</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fft()</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ifft()</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Positive OPD</p></td>
+<td><p>Longer path length</p></td>
+<td><p>Shorter path length</p></td>
+</tr>
+<tr class="row-odd"><td><p>Positive wavefront error</p></td>
+<td><p>Longer path length</p></td>
+<td><p>Shorter path length</p></td>
+</tr>
+<tr class="row-even"><td><p>Positive focus error</p></td>
+<td><p>Longer focal length</p></td>
+<td><p>Shorter focal length</p></td>
+</tr>
+<tr class="row-odd"><td><p>Positive tilt about <span class="math notranslate nohighlight">\(x\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(-v\)</span> translation</p></td>
+<td><p><span class="math notranslate nohighlight">\(+v\)</span> translation</p></td>
+</tr>
+<tr class="row-even"><td><p>Positive tilt about <span class="math notranslate nohighlight">\(y\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(+u\)</span> translation</p></td>
+<td><p><span class="math notranslate nohighlight">\(-u\)</span> translation</p></td>
+</tr>
+<tr class="row-odd"><td><p>Converging spherical wave</p></td>
+<td><p><span class="math notranslate nohighlight">\(\exp\left[-i\frac{k}{2z} (x^2 + y^2)\right]\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\exp\left[i\frac{k}{2z} (x^2 + y^2)\right]\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="coordinate-system">
+<h2>Coordinate System<a class="headerlink" href="#coordinate-system" title="Link to this heading">#</a></h2>
+<p>We begin with the right-handed coordinate frame depicted in Figure 1. A diffracting aperture lies in the <span class="math notranslate nohighlight">\((x,y)\)</span> plane with the optical axis <span class="math notranslate nohighlight">\(z\)</span> pointing in the direction of propagation. The diffracted wave field is observed in the <span class="math notranslate nohighlight">\((u,v)\)</span> plane which is parallel to the aperture plane and separated by some distance <span class="math notranslate nohighlight">\(+\Delta z\)</span>.</p>
+<figure class="align-center" id="id2">
+<img alt="../../_images/coords_3d.png" src="../../_images/coords_3d.png" style="width: 500px;" />
+<figcaption>
+<p><span class="caption-text"><strong>Figure 1</strong>: Coordinate system.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="wave-propagation-sign-convention">
+<h2>Wave Propagation Sign Convention<a class="headerlink" href="#wave-propagation-sign-convention" title="Link to this heading">#</a></h2>
+<p>The phase of a wave traveling in <span class="math notranslate nohighlight">\(+z\)</span> takes the form <span class="math notranslate nohighlight">\(\cos\left(kz-\omega t\right)\)</span> or equivalently <span class="math notranslate nohighlight">\(\cos\left(\omega t-kz\right)\)</span>. The choice of sign for the time component (harmonic time dependence) has downstream effects for wave optics simulations, including determining the sign convention for representing the complex pupil amplitude, the direction of Fourier transform used to model diffraction propagation, and whether positive OPD corresponds with longer or shorter path length.</p>
+<p>Under the convention used most commonly in physics and optics, the harmonic time dependence term is negative. In complex notation, this gives us</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-coords-0">
+<span class="eqno">(1)<a class="headerlink" href="#equation-resources-tech-notes-coords-0" title="Link to this equation">#</a></span>\[E(z,t) = E_0\exp\left(ikz\right) \exp\left(-i\omega t\right) \, ,\]</div>
+<p>corresponding with clockwise rotation in the complex plane. Extending Equation 1 to two dimensions gives</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-coords-1">
+<span class="eqno">(2)<a class="headerlink" href="#equation-resources-tech-notes-coords-1" title="Link to this equation">#</a></span>\[u(x,y,t) = f(x,y)\exp(-i\omega t) \, ,\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-coords-2">
+<span class="eqno">(3)<a class="headerlink" href="#equation-resources-tech-notes-coords-2" title="Link to this equation">#</a></span>\[f(x,y) = A(x,y)\exp\left[\frac{2\pi i}{\lambda}W(x,y)\right]\]</div>
+<p>is the complex pupil function with amplitude <span class="math notranslate nohighlight">\(A\)</span>, wavefront aberration <span class="math notranslate nohighlight">\(W\)</span>, and wavelength <span class="math notranslate nohighlight">\(\lambda\)</span>. Propagating this scalar field to an observation plane is described using the scalar diffraction integral derived from the wave equation. When the propagation distance is much larger than the aperture size and wavelength, the far-field (Fraunhofer) approximation may be applied. In the far-field, the quadratic phase terms associated with the propagation become negligible relative to the linear phase variation in the field and may therefore be omitted. The resulting field in the observation plane is given by</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-coords-3">
+<span class="eqno">(4)<a class="headerlink" href="#equation-resources-tech-notes-coords-3" title="Link to this equation">#</a></span>\[F(u,v) = \iint_{-\infty}^\infty f(x,y) \exp\left[\frac{-2\pi i}{\lambda z} \left(xu + yv\right)\right] \,dx \,dy \, .\]</div>
+<p>From the expression for the two-dimensional continuous Fourier transform</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-coords-4">
+<span class="eqno">(5)<a class="headerlink" href="#equation-resources-tech-notes-coords-4" title="Link to this equation">#</a></span>\[\displaystyle F(u,v) = \iint_{-\infty}^{\infty}f(x,y)\exp\left[-2\pi i\left(ux + vy\right)\right]\,dx \,dy\]</div>
+<p>we see that Equation 4 is simply the Fourier transform of the complex pupil function <span class="math notranslate nohighlight">\(f(x,y)\)</span> evaluated at spatial frequencies</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-coords-5">
+<span class="eqno">(6)<a class="headerlink" href="#equation-resources-tech-notes-coords-5" title="Link to this equation">#</a></span>\[f_x = u/(\lambda z)\, , \hspace{3em} f_y = v/(\lambda z) \, .\]</div>
+<p>Most practical applications of Equation ref{eq:fraunhofer} use the Fast Fourier Transform (FFT) implementation of the Discrete Fourier Transform (DFT) to propagate from pupil plane to image plane. Across common scientific computing environments (NumPy, SciPy, MATLAB, IDL, FFTW, FFTPACK) the Fourier transform sign convention is consistent: <code class="docutils literal notranslate"><span class="pre">fft()</span></code> has a negative complex exponential and <code class="docutils literal notranslate"><span class="pre">ifft()</span></code> has a positive complex exponential. If a custom DFT implementation is used, care should be taken to ensure the sign convention used matches the standard Fourier transform sign convention.</p>
+</section>
+<section id="wavefront-error-sign-convention">
+<h2>Wavefront Error Sign Convention<a class="headerlink" href="#wavefront-error-sign-convention" title="Link to this heading">#</a></h2>
+<p>The sign convention used in the representation of wavefront error follows directly from the convention chosen for harmonic time dependence in Section ref{3}. Taking <span class="math notranslate nohighlight">\(\exp\left(-i\omega t\right)\)</span> as the time-dependent component, we rewrite Eqs. (2) and (3) to represent a wave propagating in the <span class="math notranslate nohighlight">\(+z\)</span> direction as</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-coords-6">
+<span class="eqno">(7)<a class="headerlink" href="#equation-resources-tech-notes-coords-6" title="Link to this equation">#</a></span>\[u(x,y,t) = A(x,y)\exp\left(\frac{2\pi i}{\lambda}z\right) \exp\left(-i\omega t\right)\]</div>
+<p>with amplitude <span class="math notranslate nohighlight">\(A\)</span>, wavelength <span class="math notranslate nohighlight">\(\lambda\)</span>, and position along the optical axis <span class="math notranslate nohighlight">\(z\)</span>. From the spatial component of Equation ref{eq:full_phasor} we see that the spatial phase accumulating after traveling some distance <span class="math notranslate nohighlight">\(z\)</span> is</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-coords-7">
+<span class="eqno">(8)<a class="headerlink" href="#equation-resources-tech-notes-coords-7" title="Link to this equation">#</a></span>\[\phi = \frac{2\pi}{\lambda}z\]</div>
+<p>and that a wave traveling farther in <span class="math notranslate nohighlight">\(z\)</span> will have a more positive phase <span class="math notranslate nohighlight">\(\phi\)</span>.</p>
+<p>We define OPD as the aberrated optical path length minus the reference optical path length. <a class="footnote-reference brackets" href="#f1" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> In two-dimensions, the OPD evaluated at each pupil coordinate is:</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-coords-8">
+<span class="eqno">(9)<a class="headerlink" href="#equation-resources-tech-notes-coords-8" title="Link to this equation">#</a></span>\[W(x,y) = z(x,y) - z_{ref}(x,y) \, .\]</div>
+<p>Finally, noting that wavefront error is simply the phase corresponding to a given OPD:</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-coords-9">
+<span class="eqno">(10)<a class="headerlink" href="#equation-resources-tech-notes-coords-9" title="Link to this equation">#</a></span>\[\phi(x,y) = \frac{2\pi}{\lambda}W(x,y) \, ,\]</div>
+<p>it follows that longer path length or OPD corresponds with positive wavefront error and with a more positive phase.</p>
+<p>We now turn our attention to examining the impact of this sign convention on two of the most commonly observed optical aberrations: tilt and focus. Tilt in the pupil plane is represented by a linear phase ramp</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-coords-10">
+<span class="eqno">(11)<a class="headerlink" href="#equation-resources-tech-notes-coords-10" title="Link to this equation">#</a></span>\[\phi(x,y) = \frac{2\pi}{\lambda}\left(\theta_x x + \theta_y y\right)\]</div>
+<p>From Equation ref{eq:pupil}, the corresponding complex pupil function is</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-coords-11">
+<span class="eqno">(12)<a class="headerlink" href="#equation-resources-tech-notes-coords-11" title="Link to this equation">#</a></span>\[f(x,y) = A(x,y)\exp\left[\frac{2\pi i}{\lambda} \left(\theta_x x + \theta_y y\right)\right] \, .\]</div>
+<p>Substituting into Equation ref{eq:fraunhofer} gives</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-coords-12">
+<span class="eqno">(13)<a class="headerlink" href="#equation-resources-tech-notes-coords-12" title="Link to this equation">#</a></span>\[F(u,v) = \iint_{-\infty}^\infty A(x,y) \exp\left[\frac{-2\pi i}{\lambda z} \left(x\left(u-\theta_x z\right) + y\left(v-\theta_y z\right)\right)\right] \,dx \,dy \, .\]</div>
+<p>By the Fourier shift theorem, the sign of the observation plane shift follows directly from the sign of the angular deviation of the propagation vector due to the tilt:</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-coords-13">
+<span class="eqno">(14)<a class="headerlink" href="#equation-resources-tech-notes-coords-13" title="Link to this equation">#</a></span>\[u = \theta_x z\, , \hspace{3em} v=\theta_y z\, .\]</div>
+<p>Using the right hand rule, a positive rotation about <span class="math notranslate nohighlight">\(x\)</span> rotates the direction of propagation in <span class="math notranslate nohighlight">\(-y\)</span>, resulting in a shift in <span class="math notranslate nohighlight">\(-v\)</span> in the observation plane. For a rotation about <span class="math notranslate nohighlight">\(y\)</span>, the propagation direction rotates in <span class="math notranslate nohighlight">\(+x\)</span> and a corresponding shift in <span class="math notranslate nohighlight">\(+u\)</span> in the observation plane. Note that this asymmetry in sign arises from the geometry of the coordinate system. The Fourier shift theorem itself treats <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> symmetrically, and the sign of the image plane shift follows directly from the sign of the OPD slope, which is set by the right-hand rule.</p>
+<p>For focus, we return to the convention for wavefront error and OPD identified earlier: positive OPD corresponds with a longer path length. From Figure 2 we see that a wavefront with positive focus error has a focal point displaced by <span class="math notranslate nohighlight">\(+\Delta z\)</span> relative to the nominal focal point (longer focal length). Relative to the reference wavefront, rays near the edge of the pupil travel a longer optical path before reaching focus, producing a positive OPD.</p>
+<figure class="align-center" id="id3">
+<img alt="../../_images/focus_direction.png" src="../../_images/focus_direction.png" style="width: 500px;" />
+<figcaption>
+<p><span class="caption-text"><strong>Figure 2</strong>: Positive focus corresponds with a wavefront whose focal length is longer relative to a reference sphere. A wavefront with negative focus has a shorter focal length.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="validation-via-numerical-simulation">
+<h2>Validation via numerical simulation<a class="headerlink" href="#validation-via-numerical-simulation" title="Link to this heading">#</a></h2>
+<img alt="../../_images/array_indexing.png" class="align-center" src="../../_images/array_indexing.png" style="width: 500px;" />
+</section>
+<section id="tip-tilt">
+<h2>Tip/tilt<a class="headerlink" href="#tip-tilt" title="Link to this heading">#</a></h2>
+<p>A positive x-tilt rotates the yz plane clockwise about the x-axis resulting
+in a shift in the image plane in the positive y direction. A positive y-tilt
+rotates the xz plane clockwise about the y-axis resulting in a shift in the
+image plane in the negative x direction.</p>
+</section>
+<section id="focus">
+<h2>Focus<a class="headerlink" href="#focus" title="Link to this heading">#</a></h2>
+<p>A positive focus has the effect of shifting the focus point beyond the image plane (+z)
+while a negative focus has the effect of shifting the focus point in front of the image
+plane (-z).</p>
+<img alt="../../_images/focus_direction.png" class="align-center" src="../../_images/focus_direction.png" style="width: 450px;" />
+<p>We can test this by observing +/- defocused point spread functions of an
+imaging system with an asymmetric aperture (for example, in the shape of the letter
+P). We expect the positive focus image to have the same orientation as the aperture
+(consistent with observing the image before coming to focus) and the negative focus
+image to be flipped about both axes relative to the aperture (consistent with
+observing the image after passing through focus). The results of this exercise are
+presented below:</p>
+<p class="rubric">Footnotes</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="f1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Modern raytrace packages like Code V and Zemax use the opposite sign convention.</p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinate-system">Coordinate System</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wave-propagation-sign-convention">Wave Propagation Sign Convention</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wavefront-error-sign-convention">Wavefront Error Sign Convention</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validation-via-numerical-simulation">Validation via numerical simulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tip-tilt">Tip/tilt</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#focus">Focus</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2017-2026 California Institute of Technology.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Image.opd
-================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Image.opd
-

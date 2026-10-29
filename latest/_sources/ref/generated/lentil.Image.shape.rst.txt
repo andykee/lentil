@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Image.shape
-==================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Image.shape
-

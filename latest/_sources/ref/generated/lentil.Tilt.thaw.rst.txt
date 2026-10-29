@@ -1,6 +1,0 @@
-lentil.Tilt.thaw
-================
-
-.. currentmodule:: lentil
-
-.. automethod:: Tilt.thaw

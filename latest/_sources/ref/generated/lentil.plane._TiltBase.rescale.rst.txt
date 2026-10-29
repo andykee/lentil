@@ -1,6 +1,0 @@
-lentil.plane.\_TiltBase.rescale
-===============================
-
-.. currentmodule:: lentil.plane
-
-.. automethod:: _TiltBase.rescale

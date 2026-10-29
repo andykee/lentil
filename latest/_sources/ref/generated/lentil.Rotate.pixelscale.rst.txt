@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Rotate.pixelscale
-========================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Rotate.pixelscale
-

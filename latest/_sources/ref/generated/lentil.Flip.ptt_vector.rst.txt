@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Flip.ptt\_vector
-=======================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Flip.ptt_vector
-

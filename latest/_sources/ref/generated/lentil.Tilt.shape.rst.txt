@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Tilt.shape
-=================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Tilt.shape
-

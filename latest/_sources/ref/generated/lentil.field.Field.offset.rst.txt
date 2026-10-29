@@ -1,8 +1,0 @@
-:orphan:
-
-lentil.field.Field.offset
-=========================
-
-.. currentmodule:: lentil.field
-
-.. autoattribute:: lentil::field.Field.offset

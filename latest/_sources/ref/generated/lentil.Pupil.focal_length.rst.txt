@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Pupil.focal\_length
-==========================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Pupil.focal_length
-

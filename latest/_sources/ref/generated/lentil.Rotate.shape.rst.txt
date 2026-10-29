@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Rotate.shape
-===================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Rotate.shape
-

@@ -1,6 +1,0 @@
-lentil.radiometry.Spectrum.subtract
-===================================
-
-.. currentmodule:: lentil.radiometry
-
-.. automethod:: Spectrum.subtract

@@ -1,6 +1,0 @@
-﻿lentil.zernike\_basis
-=====================
-
-.. currentmodule:: lentil
-
-.. autofunction:: zernike_basis

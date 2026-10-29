@@ -1,6 +1,0 @@
-﻿lentil.normalize\_power
-=======================
-
-.. currentmodule:: lentil
-
-.. autofunction:: normalize_power

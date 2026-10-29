@@ -1,6 +1,0 @@
-﻿lentil.extent.array\_center
-===========================
-
-.. currentmodule:: lentil.extent
-
-.. autofunction:: array_center

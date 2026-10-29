@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Pupil.pixelscale
-=======================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Pupil.pixelscale
-

@@ -1,6 +1,0 @@
-lentil.Rotate.multiply
-======================
-
-.. currentmodule:: lentil
-
-.. automethod:: Rotate.multiply

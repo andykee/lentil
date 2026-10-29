@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Flip.frozen
-==================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Flip.frozen
-

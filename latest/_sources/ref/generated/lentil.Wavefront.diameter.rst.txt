@@ -1,8 +1,0 @@
-:orphan:
-
-lentil.Wavefront.diameter
-=========================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Wavefront.diameter

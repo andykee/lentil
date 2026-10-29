@@ -1,6 +1,0 @@
-lentil.Grism.freeze
-===================
-
-.. currentmodule:: lentil
-
-.. automethod:: Grism.freeze

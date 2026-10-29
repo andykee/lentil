@@ -1,6 +1,0 @@
-lentil.radiometry.Spectrum.multiply
-===================================
-
-.. currentmodule:: lentil.radiometry
-
-.. automethod:: Spectrum.multiply

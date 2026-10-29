@@ -1,6 +1,0 @@
-lentil.radiometry.Blackbody.crop
-================================
-
-.. currentmodule:: lentil.radiometry
-
-.. automethod:: Blackbody.crop

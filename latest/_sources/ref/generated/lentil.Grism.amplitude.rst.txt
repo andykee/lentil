@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Grism.amplitude
-======================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Grism.amplitude
-

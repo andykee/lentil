@@ -1,6 +1,0 @@
-lentil.Rotate.fit\_tilt
-=======================
-
-.. currentmodule:: lentil
-
-.. automethod:: Rotate.fit_tilt

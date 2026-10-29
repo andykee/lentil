@@ -1,6 +1,0 @@
-﻿lentil.zernike\_remove
-======================
-
-.. currentmodule:: lentil
-
-.. autofunction:: zernike_remove

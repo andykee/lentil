@@ -1,6 +1,0 @@
-﻿lentil.jitter
-=============
-
-.. currentmodule:: lentil
-
-.. autofunction:: jitter

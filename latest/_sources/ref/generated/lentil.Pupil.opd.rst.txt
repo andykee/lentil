@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Pupil.opd
-================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Pupil.opd
-

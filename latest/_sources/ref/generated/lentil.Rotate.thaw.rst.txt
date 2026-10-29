@@ -1,6 +1,0 @@
-lentil.Rotate.thaw
-==================
-
-.. currentmodule:: lentil
-
-.. automethod:: Rotate.thaw

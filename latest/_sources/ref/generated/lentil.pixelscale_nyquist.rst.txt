@@ -1,6 +1,0 @@
-﻿lentil.pixelscale\_nyquist
-==========================
-
-.. currentmodule:: lentil
-
-.. autofunction:: pixelscale_nyquist

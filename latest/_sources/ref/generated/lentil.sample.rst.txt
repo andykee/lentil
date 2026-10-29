@@ -1,6 +1,0 @@
-﻿lentil.sample
-=============
-
-.. currentmodule:: lentil
-
-.. autofunction:: sample

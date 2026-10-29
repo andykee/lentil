@@ -1,6 +1,0 @@
-lentil.radiometry.Spectrum.from\_csv
-====================================
-
-.. currentmodule:: lentil.radiometry
-
-.. automethod:: Spectrum.from_csv

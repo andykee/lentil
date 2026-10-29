@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.Wavefront.wavelength
-===========================
-
-.. currentmodule:: lentil
-
-.. autoattribute:: lentil::Wavefront.wavelength
-

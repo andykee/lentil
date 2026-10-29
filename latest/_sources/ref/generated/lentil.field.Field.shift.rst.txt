@@ -1,6 +1,0 @@
-lentil.field.Field.shift
-========================
-
-.. currentmodule:: lentil.field
-
-.. automethod:: Field.shift

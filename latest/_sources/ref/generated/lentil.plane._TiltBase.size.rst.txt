@@ -1,9 +1,0 @@
-:orphan:
-
-lentil.plane.\_TiltBase.size
-============================
-
-.. currentmodule:: lentil.plane
-
-.. autoattribute:: lentil::plane._TiltBase.size
-

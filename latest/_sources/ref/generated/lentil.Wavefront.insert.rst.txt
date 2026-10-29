@@ -1,6 +1,0 @@
-lentil.Wavefront.insert
-=======================
-
-.. currentmodule:: lentil
-
-.. automethod:: Wavefront.insert

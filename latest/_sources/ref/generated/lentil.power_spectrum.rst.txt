@@ -1,6 +1,0 @@
-﻿lentil.power\_spectrum
-======================
-
-.. currentmodule:: lentil
-
-.. autofunction:: power_spectrum
