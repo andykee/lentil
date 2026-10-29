@@ -52,7 +52,7 @@ from lentil.shape import (
 from lentil.util import (
 	centroid,
 	pad,
-    crop,
+	crop,
 	subarray,
 	boundary,
 	sample,
