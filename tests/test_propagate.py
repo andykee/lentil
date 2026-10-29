@@ -166,7 +166,7 @@ def test_propagate_shift_integer(pupil, shift):
     w = lentil.Wavefront(650e-9) * p
     psf_shift = lentil.propagate_dft(w, shape=npix, pixelscale=5e-6,
                                      oversample=oversample,
-                                     shift=shift).intensity
+                                     shift=shift, indexing='ij').intensity
 
     # an integer shift should exactly translate the PSF. compare the region
     # where the shifted and unshifted PSFs overlap
@@ -193,7 +193,7 @@ def test_propagate_shift_subpixel(pupil):
     psf[psf < 0.2] = 0  # threshold for centroiding
 
     center = npix//2 * oversample
-    observed_shift = np.asarray(lentil.util.centroid(psf, indexing='ij')) - center
+    observed_shift = np.asarray(lentil.util.centroid(psf, indexing='xy')) - center
 
     assert np.all(np.abs(observed_shift - shift*oversample)/oversample < 0.02)
 
@@ -227,7 +227,7 @@ def test_propagate_shift_tilt_additive(pupil):
     psf_shift = psf_shift/np.max(psf_shift)
     psf_shift[psf_shift < 0.2] = 0
 
-    delta = (np.asarray(lentil.util.centroid(psf_shift, indexing='ij')) -
-             np.asarray(lentil.util.centroid(psf, indexing='ij')))
+    delta = (np.asarray(lentil.util.centroid(psf_shift, indexing='xy')) -
+             np.asarray(lentil.util.centroid(psf, indexing='xy')))
 
     assert np.all(np.abs(delta - np.asarray(shift)*oversample)/oversample < 0.02)
