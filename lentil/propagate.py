@@ -6,10 +6,10 @@ from lentil.field import Field
 from lentil.wavefront import Wavefront
 
 
-def propagate_fft(wavefront, pixelscale, shape=None, oversample=2, 
+def propagate_fft(wavefront, pixelscale, shape=None, oversample=1,
                   scratch=None):
     """Propagate a Wavefront in the far-field using the FFT.
-    
+
     Parameters
     ----------
     wavefront : :class:`~lentil.Wavefront`
@@ -21,10 +21,10 @@ def propagate_fft(wavefront, pixelscale, shape=None, oversample=2,
         Shape of output Wavefront. If None (default), the wavefront shape is
         used.
     oversample : float, optional
-        Number of times to oversample the output plane. Default is 2.
+        Number of times to oversample the output plane. Default is 1.
     scratch : complex ndarray, optional
         A pre-allocated array used for padding. Providing a sufficiently
-        large scratch array can improve broadband propagation performance by 
+        large scratch array can improve broadband propagation performance by
         avoiding the repeated allocation of arrays of zeros.
 
     Returns
@@ -39,12 +39,12 @@ def propagate_fft(wavefront, pixelscale, shape=None, oversample=2,
 
     ptype_out = _propagate_ptype(wavefront.ptype, method='fraunhofer')
     pixelscale = np.broadcast_to(pixelscale, (2,))
-    fft_shape, prop_wavelength = _fft_shape(wavefront.pixelscale, 
-                                            pixelscale, 
-                                            wavefront.focal_length, 
-                                            wavefront.wavelength, 
+    fft_shape, prop_wavelength = _fft_shape(wavefront.pixelscale,
+                                            pixelscale,
+                                            wavefront.focal_length,
+                                            wavefront.wavelength,
                                             oversample)
-    
+
     # TODO: verify field_shape is smaller than fft_shape
     # TODO: what if field is bigger than fft_shape?
     # field_shape = wavefront.shape
@@ -56,21 +56,21 @@ def propagate_fft(wavefront, pixelscale, shape=None, oversample=2,
         shape = tuple(np.broadcast_to(shape, (2,)))
         if np.any(shape > fft_shape/oversample):
             raise ValueError(f'requested shape {tuple(shape)} is larger in at '
-                            f'least one dimension than maximum propagation '
-                            f'shape {tuple(fft_shape//oversample)}')
+                             f'least one dimension than maximum propagation '
+                             f'shape {tuple(fft_shape//oversample)}')
         else:
             shape_out = (shape[0] * oversample, shape[1]*oversample)
 
     out = Wavefront.empty(wavelength=prop_wavelength,
-                          pixelscale = pixelscale/oversample,
+                          pixelscale=pixelscale/oversample,
                           focal_length=wavefront.focal_length,
-                          shape = shape_out,
-                          ptype = ptype_out)
-    
+                          shape=shape_out,
+                          ptype=ptype_out)
+
     if scratch is not None:
         if not all(np.asarray(scratch.shape) > fft_shape):
-             raise ValueError(f'scratch must have shape greater than or '
-                              f'equal to {tuple(fft_shape)}')
+            raise ValueError(f'scratch must have shape greater than or '
+                             f'equal to {tuple(fft_shape)}')
 
         # zero out the portion of scratch that we're going to use for the
         # propagation and then insert the Wavefront field(s) into scratch
@@ -82,7 +82,7 @@ def propagate_fft(wavefront, pixelscale, shape=None, oversample=2,
     else:
         field = lentil.pad(wavefront.field, fft_shape)
         field = _fft2(field)
-    
+
     out.data.append(Field(data=field, pixelscale=pixelscale/oversample))
 
     return out
@@ -90,7 +90,7 @@ def propagate_fft(wavefront, pixelscale, shape=None, oversample=2,
 
 def scratch_shape(wavelength, dx, du, z, oversample):
     """Compute the scratch shape required for an FFT propagation
-    
+
     Parameters
     ----------
     wavelength : float or array_like
@@ -127,7 +127,7 @@ def _fft_shape(dx, du, z, wavelength, oversample):
     # Compute pad shape to satisfy requested sampling. Propagation wavelength
     # is recomputed to account for integer padding of input plane
     alpha = _dft_alpha(dx, du, z, wavelength, oversample)
-    fft_shape = np.round(np.reciprocal(alpha)).astype(int)       
+    fft_shape = np.round(np.reciprocal(alpha)).astype(int)
     prop_wavelength = np.min((fft_shape/oversample * dx * du)/z)
     return fft_shape, prop_wavelength
 
@@ -144,8 +144,8 @@ def _has_tilt(wavefront):
     return False
 
 
-def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None, 
-                  oversample=2, mask=None, shift=(0, 0)):
+def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
+                  oversample=1, mask=None, shift=(0, 0)):
     """Propagate a Wavefront in the far-field using the DFT.
 
     Parameters
@@ -164,14 +164,14 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
         result is placed in the appropriate location in the output plane.
         ``prop_shape`` should not be larger than ``prop``.
     oversample : float, optional
-        Number of times to oversample the output plane. Default is 2.
+        Number of times to oversample the output plane. Default is 1.
     mask : array_like or None, optional
         Array with shape ``shape * oversample`` that sets which part of the
         output plane is computed. Only the rectangular bounding box enclosing
         all nonzero values in ``mask`` is propagated; everything outside it
         is zero. Mask values are not applied to the result. If None
         (default), the full output plane is computed.
-    shift : (2,) 
+    shift : (2,)
         Number of pixels in (r,c) to shift the DC pixel in the output plane
         with the origin centrally located in the plane. Default is ``(0,0)``.
 
@@ -180,9 +180,9 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
     wavefront : :class:`~lentil.Wavefront`
         The propagated Wavefront
     """
-    
+
     ptype_out = _propagate_ptype(wavefront.ptype, method='fraunhofer')
-    
+
     shape = np.asarray(wavefront.shape) if shape is None else np.broadcast_to(shape, (2,))
     prop_shape = np.asarray(shape) if prop_shape is None else np.broadcast_to(prop_shape, (2,))
     shape_out = shape * oversample
@@ -196,7 +196,7 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
         mask_shift = _mask_shift(mask, threshold=0)
         out_extent = lentil.extent.array_extent(mask_shape, mask_shift)
     else:
-        out_extent = lentil.extent.array_extent(shape_out, shift=(0,0))
+        out_extent = lentil.extent.array_extent(shape_out, shift=(0, 0))
 
     shift = np.broadcast_to(shift, (2,)) * oversample
 
@@ -207,15 +207,15 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
     data = wavefront.data
 
     out = Wavefront.empty(wavelength=wavefront.wavelength,
-                          pixelscale = du/oversample,
+                          pixelscale=du/oversample,
                           focal_length=wavefront.focal_length,
-                          shape = shape_out,
-                          ptype = ptype_out)
-        
+                          shape=shape_out,
+                          ptype=ptype_out)
+
     for field in data:
         # compute the field shift from any embedded tilts. note the return value
         # is specified as (r, c)
-        field_shift = shift + field.shift(z=wavefront.focal_length, 
+        field_shift = shift + field.shift(z=wavefront.focal_length,
                                           wavelength=wavefront.wavelength,
                                           pixelscale=du, oversample=oversample,
                                           indexing='ij')
@@ -231,10 +231,10 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
 
             # compute additional shift rquired to offset any output clipping that
             # may have occurred due to a mask or extending beyond the full output
-            # shape. 
-            # NOTE: It appears the same functionality is available using 
+            # shape.
+            # NOTE: It appears the same functionality is available using
             # extent.intersection_shift() but there is an off by one error on only
-            # one of the shift dimensions for some reason that causes the tests to 
+            # one of the shift dimensions for some reason that causes the tests to
             # fail
             prop_center = lentil.extent.array_center(prop_extent)
             intersect_center = lentil.extent.array_center(intersect_extent)
@@ -275,9 +275,10 @@ def _propagate_ptype(ptype, method='fraunhofer'):
     if method == 'fraunhofer':
         if ptype not in (lentil.pupil, lentil.image):
             raise TypeError("Wavefront must have ptype 'pupil' "\
-                        "or 'image'")
-        
+                            "or 'image'")
+
         if ptype == lentil.pupil:
             return lentil.image
         else:
             return lentil.pupil
+
