@@ -1,6 +1,8 @@
 Coordinate System
 =================
 
+Overview
+--------
 Lentil adopts the widely used convention of aligning the z-axis along the direction
 of light propagation through an optical system. For a right-handed coordinate system,
 it follows that the remaining axes are oriented as shown in the figure below:
@@ -16,22 +18,26 @@ positive x-axis pointing to the right and the positive y-axis pointing up:
     :width: 225px
     :align: center
 
-Internally, data arrays are stored using the standard "matrix indexing" 
-(i.e., ``ij``) scheme with (0,0) in the upper left corner, columns increasing
-to the right, and rows increasing downwards:
+Angles are measured from +x increasing counterclockwise towards +y. Positive
+array values indicate more positive z (relative to the z-location of the plane)
+and negative values indicate more negative z. 
+
+Array storage
+-------------
+Lentil stores data in standard NumPy arrays with (0, 0) in the first row and
+column. The physical x-axis runs along columns with +x increasing with column
+index and the physical y-axis runs along rows with +y increasing with row
+index, measured from the center pixel at ``(nrows//2, ncols//2)``. This is the
+same convention used by `numpy.meshgrid`.
+
+Functions that accept or return coordinates take an ``indexing`` argument that
+controls only the order of those values: ``(x, y)`` for ``'xy'`` and
+``(r, c)`` for ``'ij'``. Indexing does not change how data is stored
+internally.
 
 .. image:: /_static/img/coords_2d_internal.png
     :width: 225px
     :align: center
-
-Positive array values indicate more positive z (relative to the z-location of
-the plane) and negative values indicate more negative z. 
-
-.. note::
-
-    Because Lentil stores physical (x, y) coordinates directly in arrays
-    ordered as (r, c), you can't infer physical orientation from the array
-    indices where data is stored. 
 
 Wavefront error sign convention
 -------------------------------
@@ -54,24 +60,18 @@ Plotting
 --------
 Matplotlib's ``imshow()`` method (and MATLAB's ``imagesc()`` method) place the
 origin in the upper left corner of the plotted image by default. This displays
-arrays in the standard "matrix indexing" (i.e., ``ij``) scheme with (0,0) in
+arrays in the standard "matrix indexing" (i.e., ``'ij'``) scheme with (0,0) in
 the upper left corner, columns increasing to the right, and rows increasing 
-downwards. Because this is also how Lentil stores its array data, plots made
-using this default behavior will be correctly oriented with respect to 
-Lentil's coordinate frame.
+downwards. Because Lentil stores data with +y increasing with row index,
+arrays plotted using the Matplotlib default will be flipped top to bottom.
+Plotting with ``origin='lower'`` displays arrays in their correct (physical)
+orientation:
+
+.. code:: python
+
+   ax.imshow(opd, origin='lower', extent=[-0.5, 0.5, -0.5, 0.5])
+
 
 .. image:: /_static/img/matplotlib_origin.png
     :width: 500px
     :align: center
-
-When using ``imshow()``, it can also be helpful to provide the ``extent``
-parameter, which defines the physical coordinates of the array being plotted.
-Extent ``should`` be given as ``(xmin, xmax, ymin, ymax)``:
-
-.. plot::
-    :context: reset
-    :include-source:
-    :scale: 50
-
-    fig, ax = plt.subplots()
-    ax.imshow(lentil.circle((256,256), 120), extent=[-0.5, 0.5, -0.5, 0.5])
