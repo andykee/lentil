@@ -583,7 +583,7 @@
 <div class="viewcode-block" id="propagate_dft">
 <a class="viewcode-back" href="../../ref/generated/lentil.propagate_dft.html#lentil.propagate_dft">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">propagate_dft</span><span class="p">(</span><span class="n">wavefront</span><span class="p">,</span> <span class="n">pixelscale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prop_shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
-                  <span class="n">oversample</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                  <span class="n">oversample</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
 <span class="w">    </span><span class="sd">"""Propagate a Wavefront in the far-field using the DFT.</span>
 
 <span class="sd">    Parameters</span>
@@ -603,6 +603,15 @@
 <span class="sd">        ``prop_shape`` should not be larger than ``prop``.</span>
 <span class="sd">    oversample : float, optional</span>
 <span class="sd">        Number of times to oversample the output plane. Default is 2.</span>
+<span class="sd">    mask : array_like or None, optional</span>
+<span class="sd">        Array with shape ``shape * oversample`` that sets which part of the</span>
+<span class="sd">        output plane is computed. Only the rectangular bounding box enclosing</span>
+<span class="sd">        all nonzero values in ``mask`` is propagated; everything outside it</span>
+<span class="sd">        is zero. Mask values are not applied to the result. If None</span>
+<span class="sd">        (default), the full output plane is computed.</span>
+<span class="sd">    shift : (2,) </span>
+<span class="sd">        Number of pixels in (r,c) to shift the DC pixel in the output plane</span>
+<span class="sd">        with the origin centrally located in the plane. Default is ``(0,0)``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -619,13 +628,15 @@
 
     <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">shape_out</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">shape_out</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'shape mismatch: mask shape </span><span class="si">{</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1"> != output shape </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">shape_out</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="n">mask_shape</span> <span class="o">=</span> <span class="n">_mask_shape</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">mask_shift</span> <span class="o">=</span> <span class="n">_mask_shift</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">out_extent</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">array_extent</span><span class="p">(</span><span class="n">mask_shape</span><span class="p">,</span> <span class="n">mask_shift</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">out_extent</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">array_extent</span><span class="p">(</span><span class="n">shape_out</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+
+    <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span> <span class="o">*</span> <span class="n">oversample</span>
 
     <span class="n">dx</span> <span class="o">=</span> <span class="n">wavefront</span><span class="o">.</span><span class="n">pixelscale</span>
     <span class="n">du</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">pixelscale</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
@@ -642,12 +653,12 @@
     <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="c1"># compute the field shift from any embedded tilts. note the return value</span>
         <span class="c1"># is specified as (r, c)</span>
-        <span class="n">shift</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">focal_length</span><span class="p">,</span> <span class="n">wavelength</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span>
-                            <span class="n">pixelscale</span><span class="o">=</span><span class="n">du</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="n">oversample</span><span class="p">,</span>
-                            <span class="n">indexing</span><span class="o">=</span><span class="s1">'ij'</span><span class="p">)</span>
-        
-        <span class="n">fix_shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fix</span><span class="p">(</span><span class="n">shift</span><span class="p">)</span>
-        <span class="n">subpx_shift</span> <span class="o">=</span> <span class="n">shift</span> <span class="o">-</span> <span class="n">fix_shift</span>
+        <span class="n">field_shift</span> <span class="o">=</span> <span class="n">shift</span> <span class="o">+</span> <span class="n">field</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">focal_length</span><span class="p">,</span> 
+                                          <span class="n">wavelength</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span>
+                                          <span class="n">pixelscale</span><span class="o">=</span><span class="n">du</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="n">oversample</span><span class="p">,</span>
+                                          <span class="n">indexing</span><span class="o">=</span><span class="s1">'ij'</span><span class="p">)</span>
+        <span class="n">fix_shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trunc</span><span class="p">(</span><span class="n">field_shift</span><span class="p">)</span>
+        <span class="n">subpx_shift</span> <span class="o">=</span> <span class="n">field_shift</span> <span class="o">-</span> <span class="n">fix_shift</span>
 
         <span class="n">prop_extent</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">array_extent</span><span class="p">(</span><span class="n">prop_shape_out</span><span class="p">,</span> <span class="n">fix_shift</span><span class="p">)</span>
 
