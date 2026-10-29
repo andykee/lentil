@@ -145,7 +145,7 @@ def _has_tilt(wavefront):
 
 
 def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None, 
-                  oversample=2, mask=None):
+                  oversample=2, mask=None, shift=(0, 0)):
     """Propagate a Wavefront in the far-field using the DFT.
 
     Parameters
@@ -165,6 +165,15 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
         ``prop_shape`` should not be larger than ``prop``.
     oversample : float, optional
         Number of times to oversample the output plane. Default is 2.
+    mask : array_like or None, optional
+        Array with shape ``shape * oversample`` that sets which part of the
+        output plane is computed. Only the rectangular bounding box enclosing
+        all nonzero values in ``mask`` is propagated; everything outside it
+        is zero. Mask values are not applied to the result. If None
+        (default), the full output plane is computed.
+    shift : (2,) 
+        Number of pixels in (r,c) to shift the DC pixel in the output plane
+        with the origin centrally located in the plane. Default is ``(0,0)``.
 
     Returns
     -------
@@ -181,13 +190,15 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
 
     if mask is not None:
         mask = np.asarray(mask)
-        if np.all(mask.shape != shape_out):
+        if mask.shape != tuple(shape_out):
             raise ValueError(f'shape mismatch: mask shape {mask.shape} != output shape {tuple(shape_out)}')
         mask_shape = _mask_shape(mask, threshold=0)
         mask_shift = _mask_shift(mask, threshold=0)
         out_extent = lentil.extent.array_extent(mask_shape, mask_shift)
     else:
         out_extent = lentil.extent.array_extent(shape_out, shift=(0,0))
+
+    shift = np.broadcast_to(shift, (2,)) * oversample
 
     dx = wavefront.pixelscale
     du = np.broadcast_to(pixelscale, (2,))
@@ -204,12 +215,12 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
     for field in data:
         # compute the field shift from any embedded tilts. note the return value
         # is specified as (r, c)
-        shift = field.shift(z=wavefront.focal_length, wavelength=wavefront.wavelength,
-                            pixelscale=du, oversample=oversample,
-                            indexing='ij')
-        
-        fix_shift = np.fix(shift)
-        subpx_shift = shift - fix_shift
+        field_shift = shift + field.shift(z=wavefront.focal_length, 
+                                          wavelength=wavefront.wavelength,
+                                          pixelscale=du, oversample=oversample,
+                                          indexing='ij')
+        fix_shift = np.trunc(field_shift)
+        subpx_shift = field_shift - fix_shift
 
         prop_extent = lentil.extent.array_extent(prop_shape_out, fix_shift)
 
