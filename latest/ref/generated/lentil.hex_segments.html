@@ -413,8 +413,8 @@
 <li class="toctree-l2"><a class="reference internal" href="lentil.boundary.html">lentil.boundary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.centroid.html">lentil.centroid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.pad.html">lentil.pad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.crop.html">lentil.crop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.subarray.html">lentil.subarray</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.window.html">lentil.window</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.sample.html">lentil.sample</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.rebin.html">lentil.rebin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.rescale.html">lentil.rescale</a></li>
@@ -492,7 +492,7 @@
 <h1>lentil.hex_segments<a class="headerlink" href="#lentil-hex-segments" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="lentil.hex_segments">
-<span class="sig-prename descclassname"><span class="pre">lentil.</span></span><span class="sig-name descname"><span class="pre">hex_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seg_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seg_gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">antialias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lentil/segmented.html#hex_segments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lentil.hex_segments" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">lentil.</span></span><span class="sig-name descname"><span class="pre">hex_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seg_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seg_gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">antialias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lentil/segmented.html#hex_segments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lentil.hex_segments" title="Link to this definition">#</a></dt>
 <dd><p>Draw a segmented aperture made up of hexagonal segments</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -500,9 +500,8 @@
 <li><p><strong>rings</strong> (<em>int</em>) – Number of segment rings. Must be &gt;= 1.</p></li>
 <li><p><strong>seg_radius</strong> (<em>float</em>) – Segment outscribing radius in pixels</p></li>
 <li><p><strong>seg_gap</strong> (<em>float</em>) – Spacing between adjacent segments in pixels</p></li>
-<li><p><strong>rotate</strong> (<em>bool</em><em>, </em><em>optional</em>) – Rotate segments so that flat sides are aligned with the Y direction
-instead of the default orientation which is aligned with the X
-direction.</p></li>
+<li><p><strong>rotate</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True (default), the segment mask is rotated so that flat sides are
+aligned with the X direction instead with the Y direction.</p></li>
 <li><p><strong>antialias</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True (default), the segment edges are antialiased.</p></li>
 <li><p><strong>flatten</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the individual segment masks are flattened into a single
 global mask. Default is False.</p></li>

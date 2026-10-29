@@ -579,7 +579,7 @@ image methods to the Model class:</p>
         <span class="n">flux</span> <span class="o">*=</span> <span class="n">qe</span>  <span class="c1"># flux is now in e-/s</span>
         <span class="k">return</span> <span class="n">flux</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">npix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nframes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">npix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nframes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
               <span class="n">tilt</span><span class="o">=</span><span class="s1">'phase'</span><span class="p">,</span> <span class="n">npix_chip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pixelate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">warn_saturate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
               <span class="n">wave_sampling</span><span class="o">=</span><span class="mf">25e-9</span><span class="p">,</span> <span class="n">flux_trim_tol</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">):</span>
 
@@ -617,7 +617,6 @@ image methods to the Model class:</p>
                                         <span class="n">oversample</span><span class="o">=</span><span class="n">oversample</span><span class="p">,</span>
                                         <span class="n">pixelate</span><span class="o">=</span><span class="n">pixelate</span><span class="p">,</span>
                                         <span class="n">collect_charge</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                        <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">,</span>
                                         <span class="n">warn_saturate</span><span class="o">=</span><span class="n">warn_saturate</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">nframes</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>

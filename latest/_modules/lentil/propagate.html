@@ -583,7 +583,7 @@
 <div class="viewcode-block" id="propagate_dft">
 <a class="viewcode-back" href="../../ref/generated/lentil.propagate_dft.html#lentil.propagate_dft">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">propagate_dft</span><span class="p">(</span><span class="n">wavefront</span><span class="p">,</span> <span class="n">pixelscale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prop_shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                  <span class="n">oversample</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
+                  <span class="n">oversample</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">'xy'</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Propagate a Wavefront in the far-field using the DFT.</span>
 
 <span class="sd">    Parameters</span>
@@ -610,8 +610,13 @@
 <span class="sd">        is zero. Mask values are not applied to the result. If None</span>
 <span class="sd">        (default), the full output plane is computed.</span>
 <span class="sd">    shift : (2,)</span>
-<span class="sd">        Number of pixels in (r,c) to shift the DC pixel in the output plane</span>
-<span class="sd">        with the origin centrally located in the plane. Default is ``(0,0)``.</span>
+<span class="sd">        Number of pixels to shift the DC pixel in the output plane with the</span>
+<span class="sd">        origin centrally located in the plane. Interpreted according to</span>
+<span class="sd">        `indexing`. Default is ``(0,0)``.</span>
+<span class="sd">    indexing : {'xy', 'ij'}, optional</span>
+<span class="sd">        Cartesian ('xy', default) or matrix ('ij') indexing of ``shift``.</span>
+<span class="sd">        With 'xy', ``shift = (x, y)`` where +x is increasing column and +y</span>
+<span class="sd">        is increasing row. With 'ij', ``shift = (r, c)``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -636,7 +641,13 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">out_extent</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">array_extent</span><span class="p">(</span><span class="n">shape_out</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 
-    <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span> <span class="o">*</span> <span class="n">oversample</span>
+    <span class="k">if</span> <span class="n">indexing</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'xy'</span><span class="p">,</span> <span class="s1">'ij'</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Valid values for indexing are 'xy' and 'ij'."</span><span class="p">)</span>
+
+    <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
+    <span class="k">if</span> <span class="n">indexing</span> <span class="o">==</span> <span class="s1">'xy'</span><span class="p">:</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="p">(</span><span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">shift</span><span class="p">)</span> <span class="o">*</span> <span class="n">oversample</span>
 
     <span class="n">dx</span> <span class="o">=</span> <span class="n">wavefront</span><span class="o">.</span><span class="n">pixelscale</span>
     <span class="n">du</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">pixelscale</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>

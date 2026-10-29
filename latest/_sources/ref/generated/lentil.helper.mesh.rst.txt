@@ -1,6 +1,0 @@
-﻿lentil.helper.mesh
-==================
-
-.. currentmodule:: lentil.helper
-
-.. autofunction:: mesh

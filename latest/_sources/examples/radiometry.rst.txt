@@ -121,7 +121,7 @@ image methods to the Model class:
             flux *= qe  # flux is now in e-/s
             return flux
 
-        def image(self, ts, npix=None, window=None, nframes=1, oversample=2,
+        def image(self, ts, npix=None, nframes=1, oversample=2,
                   tilt='phase', npix_chip=None, pixelate=True, warn_saturate=False,
                   wave_sampling=25e-9, flux_trim_tol=1e-2):
 
@@ -159,7 +159,6 @@ image methods to the Model class:
                                             oversample=oversample,
                                             pixelate=pixelate,
                                             collect_charge=False,
-                                            window=window,
                                             warn_saturate=warn_saturate)
 
             if nframes == 1:

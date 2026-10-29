@@ -431,34 +431,93 @@
                 <article class="bd-article">
                   
   <h1>Source code for lentil.util</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">map_coordinates</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
 
 
 <div class="viewcode-block" id="centroid">
 <a class="viewcode-back" href="../../ref/generated/lentil.centroid.html#lentil.centroid">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">centroid</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Compute image centroid location.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">centroid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'absolute'</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">'xy'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Compute array centroid location.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    img : array_like</span>
+<span class="sd">    x : array_like</span>
 <span class="sd">        Input array.</span>
+<span class="sd">    where: array_like of bool, optional</span>
+<span class="sd">        Elements to include in the centroid calculation. If None (default),</span>
+<span class="sd">        all finite and non-NaN values are used.</span>
+<span class="sd">    mode : {'absolute', 'center'}, optional</span>
+<span class="sd">        Specifies how the centroid is computed. If 'absolute' (default),</span>
+<span class="sd">        the absolute centroid within the input is returned. If 'center', the</span>
+<span class="sd">        centroid relative to the center of the input is returned.</span>
+<span class="sd">    indexing : {'xy', 'ij'}, optional</span>
+<span class="sd">        Cartesian ('xy', default) or matrix ('ij', default) indexing of mesh.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    tuple</span>
-<span class="sd">        ``(r,c)`` centroid location.</span>
-<span class="sd">    """</span>
+<span class="sd">    centroid : tuple</span>
+<span class="sd">        (r, c) or (x, y) centroid location</span>
 
-    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-    <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-    <span class="n">nr</span><span class="p">,</span> <span class="n">nc</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+<span class="sd">        :include-source:</span>
+<span class="sd">        :context: reset</span>
+<span class="sd">        :scale: 50</span>
+
+<span class="sd">        &gt;&gt;&gt; circ = lentil.circle(shape=(256, 256), radius=25, shift=(-80, 50))</span>
+<span class="sd">        &gt;&gt;&gt; plt.imshow(circ, cmap='gray')</span>
+
+<span class="sd">    .. code:: pycon</span>
+
+<span class="sd">        &gt;&gt;&gt; lentil.centroid(circ)</span>
+<span class="sd">        (48.0, 178.0)</span>
+<span class="sd">        &gt;&gt;&gt; lentil.centroid(circ, mode='center')</span>
+<span class="sd">        (-80.0, 50.0)</span>
+<span class="sd">        &gt;&gt;&gt; lentil.centroid(circ, mode='center', indexing='xy')</span>
+<span class="sd">        (50.0, -80.0)</span>
+
+<span class="sd">    """</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'absolute'</span><span class="p">,</span> <span class="s1">'center'</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Unknown kind </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">indexing</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'ij'</span><span class="p">,</span> <span class="s1">'xy'</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Valid values for indexing are 'xy' and 'ij'."</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">where</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">where</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">where</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">where</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">where</span><span class="p">])</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'Unmasked NaN in input'</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">,</span>
+                      <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">anorm</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">where</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">where</span><span class="p">])</span>
+
+    <span class="n">nr</span><span class="p">,</span> <span class="n">nc</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">nr</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">nc</span><span class="p">]</span>
 
-    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rr</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">img</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">img</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rr</span><span class="p">[</span><span class="n">where</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">anorm</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cc</span><span class="p">[</span><span class="n">where</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">anorm</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'center'</span><span class="p">:</span>
+        <span class="n">rc</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">-</span> <span class="n">rc</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="n">cc</span>
+
+    <span class="k">if</span> <span class="n">indexing</span> <span class="o">==</span> <span class="s1">'xy'</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'center'</span><span class="p">:</span>
+            <span class="n">r</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="p">,</span> <span class="n">r</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># absolute pixel coordinates (col, row); +y down</span>
+            <span class="n">r</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="p">,</span> <span class="n">r</span>
 
     <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">c</span></div>
 
@@ -466,66 +525,93 @@
 
 <div class="viewcode-block" id="pad">
 <a class="viewcode-back" href="../../ref/generated/lentil.pad.html#lentil.pad">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">pad</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Zero-pad an array.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Pad or crop an array about its center.</span>
 
-<span class="sd">    Note that pad works for both two and three dimensional arrays.</span>
+<span class="sd">    Note that pad accepts both two and three dimensional arrays.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    array : array_like</span>
+<span class="sd">    x : array_like</span>
 <span class="sd">        Array to be padded.</span>
-
-<span class="sd">    shape : tuple of ints</span>
+<span class="sd">    shape : array_like of ints</span>
 <span class="sd">        Shape of output array in ``(nrows, ncols)``.</span>
+<span class="sd">    fill : scalar</span>
+<span class="sd">        Fill value used when pad operation increases array size.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    padded : ndarray</span>
-<span class="sd">        Zero-padded array with shape ``(nrows, ncols)``. If ``array`` has a</span>
-<span class="sd">        third dimension, the return shape will be ``(nrows, ncols, depth)``.</span>
+<span class="sd">    padded_array : ndarray</span>
+<span class="sd">        Zero-padded array with shape ``(nrows, ncols)``. If ``x`` has a</span>
+<span class="sd">        third dimension, the return shape will be ``(depth, nrows, ncols)``.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`crop`</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+<span class="sd">        :include-source:</span>
+<span class="sd">        :context: reset</span>
+<span class="sd">        :scale: 50</span>
+
+<span class="sd">        &gt;&gt;&gt; circ = lentil.circle(shape=(128, 128), radius=64)</span>
+<span class="sd">        &gt;&gt;&gt; circ_pad = lentil.pad(circ, shape=(200, 200))</span>
+<span class="sd">        &gt;&gt;&gt; fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5, 2))</span>
+<span class="sd">        &gt;&gt;&gt; ax[0].imshow(circ, cmap='gray')</span>
+<span class="sd">        &gt;&gt;&gt; ax[0].set_title('Original array')</span>
+<span class="sd">        &gt;&gt;&gt; ax[1].imshow(circ_pad, cmap='gray')</span>
+<span class="sd">        &gt;&gt;&gt; ax[1].set_title('Padded array')</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">        :include-source:</span>
+<span class="sd">        :context: reset</span>
+<span class="sd">        :scale: 50</span>
+
+<span class="sd">        &gt;&gt;&gt; circ = lentil.circle(shape=(128, 128), radius=64)</span>
+<span class="sd">        &gt;&gt;&gt; circ_pad = lentil.pad(circ, shape=(110, 110))</span>
+<span class="sd">        &gt;&gt;&gt; fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5, 2))</span>
+<span class="sd">        &gt;&gt;&gt; ax[0].imshow(circ, cmap='gray')</span>
+<span class="sd">        &gt;&gt;&gt; ax[0].set_title('Original array')</span>
+<span class="sd">        &gt;&gt;&gt; ax[1].imshow(circ_pad, cmap='gray')</span>
+<span class="sd">        &gt;&gt;&gt; ax[1].set_title('Padded array')</span>
+
 <span class="sd">    """</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
 
-    <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+    <span class="n">squeeze</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="n">squeeze</span><span class="p">:</span>
+        <span class="n">out_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># a.ndim == 3</span>
+        <span class="n">out_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
-    <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c1"># The row and col indices here are 1 and 2 respectively since we've</span>
+    <span class="c1"># forced both x and out to have a 3rd dimension</span>
+    <span class="n">rmin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">out_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">rmax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">out_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">out_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">cmin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">out_shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">cmax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">out_shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">out_shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
 
+    <span class="c1"># Extract the overlapping region from the source array</span>
+    <span class="n">a_slc_r</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">rmin</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">rmax</span><span class="p">)</span>
+    <span class="n">a_slc_c</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">cmin</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">cmax</span><span class="p">)</span>
+    <span class="n">cropped</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="n">a_slc_r</span><span class="p">,</span> <span class="n">a_slc_c</span><span class="p">]</span>
 
-    <span class="n">dr</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="o">+</span><span class="n">offset</span><span class="p">]</span>
-    <span class="n">dc</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">offset</span><span class="p">]</span>
+    <span class="c1"># Pad the cropped region to the output shape</span>
+    <span class="n">pad_r_before</span> <span class="o">=</span> <span class="n">out_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">rmin</span>
+    <span class="n">pad_r_after</span> <span class="o">=</span> <span class="n">out_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">out_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">rmax</span>
+    <span class="n">pad_c_before</span> <span class="o">=</span> <span class="n">out_shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">cmin</span>
+    <span class="n">pad_c_after</span> <span class="o">=</span> <span class="n">out_shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">out_shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">cmax</span>
 
-    <span class="k">if</span> <span class="n">dr</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">rmin0</span> <span class="o">=</span> <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="o">+</span><span class="n">offset</span><span class="p">]</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">//</span><span class="mi">2</span>
-        <span class="n">rmax0</span> <span class="o">=</span> <span class="n">rmin0</span> <span class="o">+</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">rmin1</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">rmax1</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">rmin0</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">rmax0</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="o">+</span><span class="n">offset</span><span class="p">]</span>
-        <span class="n">rmin1</span> <span class="o">=</span> <span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="o">+</span><span class="n">offset</span><span class="p">])</span><span class="o">//</span><span class="mi">2</span>
-        <span class="n">rmax1</span> <span class="o">=</span> <span class="n">rmin1</span> <span class="o">+</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="o">+</span><span class="n">offset</span><span class="p">]</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">cropped</span><span class="p">,</span>
+                 <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">pad_r_before</span><span class="p">,</span> <span class="n">pad_r_after</span><span class="p">),</span> <span class="p">(</span><span class="n">pad_c_before</span><span class="p">,</span> <span class="n">pad_c_after</span><span class="p">)),</span>
+                 <span class="n">mode</span><span class="o">=</span><span class="s1">'constant'</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="n">fill</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">dc</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">cmin0</span> <span class="o">=</span> <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">offset</span><span class="p">]</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">//</span><span class="mi">2</span>
-        <span class="n">cmax0</span> <span class="o">=</span> <span class="n">cmin0</span> <span class="o">+</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">cmin1</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">cmax1</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">cmin0</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">cmax0</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">cmin1</span> <span class="o">=</span> <span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">offset</span><span class="p">])</span><span class="o">//</span><span class="mi">2</span>
-        <span class="n">cmax1</span> <span class="o">=</span> <span class="n">cmin1</span> <span class="o">+</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="n">offset</span><span class="p">]</span>
-
-    <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="n">padded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-        <span class="n">padded</span><span class="p">[</span><span class="n">rmin1</span><span class="p">:</span><span class="n">rmax1</span><span class="p">,</span> <span class="n">cmin1</span><span class="p">:</span><span class="n">cmax1</span><span class="p">]</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">rmin0</span><span class="p">:</span><span class="n">rmax0</span><span class="p">,</span> <span class="n">cmin0</span><span class="p">:</span><span class="n">cmax0</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">padded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">array</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-        <span class="n">padded</span><span class="p">[:,</span> <span class="n">rmin1</span><span class="p">:</span><span class="n">rmax1</span><span class="p">,</span> <span class="n">cmin1</span><span class="p">:</span><span class="n">cmax1</span><span class="p">]</span> <span class="o">=</span> <span class="n">array</span><span class="p">[:,</span> <span class="n">rmin0</span><span class="p">:</span><span class="n">rmax0</span><span class="p">,</span> <span class="n">cmin0</span><span class="p">:</span><span class="n">cmax0</span><span class="p">]</span>
-
-    <span class="k">return</span> <span class="n">padded</span></div>
+    <span class="c1"># only remove the depth axis added above</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">squeeze</span> <span class="k">else</span> <span class="n">out</span></div>
 
 
 
@@ -550,85 +636,149 @@
 <span class="sd">    -------</span>
 <span class="sd">    out : ndarray</span>
 <span class="sd">        Subarray extracted from the source array.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`crop`</span>
 <span class="sd">    """</span>
 
-    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-    <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    lentil.subarray() is deprecated and will be removed in a future release.</span>
+<span class="s2">    </span>
+<span class="s2">    Use lentil.crop() instead.</span>
+<span class="s2">    """</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'lentil.subarray() is deprecated and will be removed in a '</span>
+                  <span class="s1">'future release. Use lentil.crop() instead.'</span><span class="p">,</span>
+                  <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-    <span class="n">rmin</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">cmin</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">rmax</span> <span class="o">=</span> <span class="n">rmin</span> <span class="o">+</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">cmax</span> <span class="o">=</span> <span class="n">cmin</span> <span class="o">+</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
-    <span class="k">if</span> <span class="nb">any</span><span class="p">((</span><span class="n">rmin</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmin</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">rmax</span><span class="o">&gt;</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cmax</span><span class="o">&gt;</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'window lies outside of array'</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="n">rmin</span><span class="p">:</span><span class="n">rmax</span><span class="p">,</span> <span class="n">cmin</span><span class="p">:</span><span class="n">cmax</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">crop</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">shift</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'center'</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">'ij'</span><span class="p">)</span></div>
 
 
 
-<div class="viewcode-block" id="window">
-<a class="viewcode-back" href="../../ref/generated/lentil.window.html#lentil.window">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">window</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">slice</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Extract an appropriately sized, potentially windowed array</span>
+<div class="viewcode-block" id="crop">
+<a class="viewcode-back" href="../../ref/generated/lentil.crop.html#lentil.crop">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">crop</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'absolute'</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">'xy'</span><span class="p">,</span>
+         <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Extract a contiguous subarray from a larger array.</span>
+
+<span class="sd">    The subarray is extracted about the center of the source array unless</span>
+<span class="sd">    a shift is specified.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    img : array_like</span>
-<span class="sd">        Data to window</span>
-
-<span class="sd">    shape : array_like or None, optional</span>
-<span class="sd">        Output shape given as (nrows, ncols). If ``None`` (default), an</span>
-<span class="sd">        uncropped array is returned.</span>
-
-<span class="sd">    slice : array_like or None, optional</span>
-<span class="sd">        Indices of ``img`` array to return given as (r_start, r_end, c_start,</span>
-<span class="sd">        c_end). This definition follows standard numpy indexing.</span>
+<span class="sd">    x : array_like</span>
+<span class="sd">        Source array</span>
+<span class="sd">    shape : array_like of ints</span>
+<span class="sd">        Shape of subarray in ``(nrows, ncols)``.</span>
+<span class="sd">    shift : array_like of ints, optional</span>
+<span class="sd">        Subarray center shift. Default is None (subarray is extracted about</span>
+<span class="sd">        the center of the source array). Fractional shifts are rounded to the</span>
+<span class="sd">        nearest integer.</span>
+<span class="sd">    mode : {'absolute', 'center'}, optional</span>
+<span class="sd">        Specifies how the subarray center located. If 'absolute' (default)</span>
+<span class="sd">        the subarray is extracted about the location given by ``shift``. If</span>
+<span class="sd">        'center', the subarray is extracted about the center of the source</span>
+<span class="sd">        array shifted by ``shift``.</span>
+<span class="sd">    indexing : {'xy', 'ij'}, optional</span>
+<span class="sd">        Cartesian ('xy', default) or matrix ('ij') indexing of shift.</span>
+<span class="sd">    copy: bool, optional</span>
+<span class="sd">        If True, a copy is returned. If False (default), a view of the</span>
+<span class="sd">        original array is returned.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    data : ndarray</span>
-<span class="sd">        Trimmed and windowed ``img`` array</span>
+<span class="sd">    out : ndarray</span>
+<span class="sd">        Subarray extracted from the source array.</span>
 
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    * If ``img`` is a single value (img.size == 1), self.data is returned</span>
-<span class="sd">      regardless of what ``shape`` and ``slice`` are.</span>
-<span class="sd">    * If ``shape`` is given but ``slice`` is ``None``, the returned ndarray</span>
-<span class="sd">      is trimmed about the center of the array using :func:`lentil.pad`.</span>
-<span class="sd">    * If ``slice`` is given but ``shape`` is ``None``, the returned ndarray</span>
-<span class="sd">      is extracted from ``img`` according to the indices in ``slice``</span>
-<span class="sd">    * If both ``shape`` and ``slice`` are given, the returned ndarray is</span>
-<span class="sd">      extracted from ``img`` according to the indices in ``slice`` and the</span>
-<span class="sd">      following expressions must also be true:</span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`pad`</span>
 
-<span class="sd">    .. code::</span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. plot::</span>
+<span class="sd">        :include-source:</span>
+<span class="sd">        :context: reset</span>
+<span class="sd">        :scale: 50</span>
 
-<span class="sd">        shape[0] = (slice[1] - slice[0]) = (r_end - r_start)</span>
-<span class="sd">        shape[1] = (slice[3] - slice[2]) = (c_end - c_start)</span>
+<span class="sd">        &gt;&gt;&gt; circ = lentil.circle(shape=(128,128), radius=64)</span>
+<span class="sd">        &gt;&gt;&gt; circ_crop = lentil.crop(circ, shape=(110,110))</span>
+<span class="sd">        &gt;&gt;&gt; fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5,2))</span>
+<span class="sd">        &gt;&gt;&gt; ax[0].imshow(circ, cmap='gray')</span>
+<span class="sd">        &gt;&gt;&gt; ax[0].set_title('Original array')</span>
+<span class="sd">        &gt;&gt;&gt; ax[1].imshow(circ_crop, cmap='gray')</span>
+<span class="sd">        &gt;&gt;&gt; ax[1].set_title('Subarray')</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">        :include-source:</span>
+<span class="sd">        :context: reset</span>
+<span class="sd">        :scale: 50</span>
+
+<span class="sd">        &gt;&gt;&gt; circ = lentil.circle(shape=(128,128), radius=64)</span>
+<span class="sd">        &gt;&gt;&gt; circ_crop = lentil.crop(circ, shape=(64,64), shift=(32,32))</span>
+<span class="sd">        &gt;&gt;&gt; fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5,2))</span>
+<span class="sd">        &gt;&gt;&gt; ax[0].imshow(circ, cmap='gray')</span>
+<span class="sd">        &gt;&gt;&gt; ax[0].set_title('Original array')</span>
+<span class="sd">        &gt;&gt;&gt; ax[1].imshow(circ_crop, cmap='gray')</span>
+<span class="sd">        &gt;&gt;&gt; ax[1].set_title('Subarray')</span>
+
+<span class="sd">    .. plot::</span>
+<span class="sd">        :include-source:</span>
+<span class="sd">        :context: reset</span>
+<span class="sd">        :scale: 50</span>
+
+<span class="sd">        &gt;&gt;&gt; circ = lentil.circle(shape=(128,128), radius=64)</span>
+<span class="sd">        &gt;&gt;&gt; circ_crop = lentil.crop(circ, shape=(64,64), shift=(-32,-32), </span>
+<span class="sd">        ...                                  mode='center')</span>
+<span class="sd">        &gt;&gt;&gt; fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5,2))</span>
+<span class="sd">        &gt;&gt;&gt; ax[0].imshow(circ, cmap='gray')</span>
+<span class="sd">        &gt;&gt;&gt; ax[0].set_title('Original array')</span>
+<span class="sd">        &gt;&gt;&gt; ax[1].imshow(circ_crop, cmap='gray')</span>
+<span class="sd">        &gt;&gt;&gt; ax[1].set_title('Subarray')</span>
+
+<span class="sd">    Crop about an array's centroid with</span>
+
+<span class="sd">    .. code:: python</span>
+
+<span class="sd">        crop(x, shape, shift=lentil.centroid(x))</span>
 
 <span class="sd">    """</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
 
-    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">img</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'absolute'</span><span class="p">,</span> <span class="s1">'center'</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Unknown mode </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">slice</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">img</span>
-    <span class="k">elif</span> <span class="nb">slice</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># ensure size consistency</span>
-            <span class="k">assert</span><span class="p">(</span><span class="nb">slice</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nb">slice</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">assert</span><span class="p">(</span><span class="nb">slice</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="nb">slice</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">indexing</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'ij'</span><span class="p">,</span> <span class="s1">'xy'</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Valid values for indexing are 'xy' and 'ij'."</span><span class="p">)</span>
 
-        <span class="c1"># return the requested view. Note that numpy will implicitly handle a</span>
-        <span class="c1"># third dimension if one is present</span>
-        <span class="k">return</span> <span class="n">img</span><span class="p">[</span><span class="nb">slice</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="nb">slice</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">slice</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="nb">slice</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
-
+    <span class="k">if</span> <span class="n">shift</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">shift</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">indexing</span> <span class="o">==</span> <span class="s1">'xy'</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'center'</span><span class="p">:</span>
+                <span class="n">shift</span> <span class="o">=</span> <span class="p">(</span><span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># absolute pixel coordinates (col, row)</span>
+                <span class="n">shift</span> <span class="o">=</span> <span class="p">(</span><span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">'absolute'</span><span class="p">:</span>
+            <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">shift</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># return the padded array. Note that pad will handle a third dimension</span>
-        <span class="c1"># if one exists</span>
-        <span class="k">return</span> <span class="n">lentil</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span></div>
+        <span class="n">shift</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">nr</span><span class="p">,</span> <span class="n">nc</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+
+    <span class="n">rmin</span> <span class="o">=</span> <span class="n">nr</span><span class="o">//</span><span class="mi">2</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">cmin</span> <span class="o">=</span> <span class="n">nc</span><span class="o">//</span><span class="mi">2</span> <span class="o">-</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">rmax</span> <span class="o">=</span> <span class="n">rmin</span> <span class="o">+</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">cmax</span> <span class="o">=</span> <span class="n">cmin</span> <span class="o">+</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">any</span><span class="p">((</span><span class="n">rmin</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmin</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">rmax</span><span class="o">&gt;</span><span class="n">nr</span><span class="p">,</span> <span class="n">cmax</span><span class="o">&gt;</span><span class="n">nc</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'window lies outside of array'</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">copy</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">rmin</span><span class="p">:</span><span class="n">rmax</span><span class="p">,</span> <span class="n">cmin</span><span class="p">:</span><span class="n">cmax</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">rmin</span><span class="p">:</span><span class="n">rmax</span><span class="p">,</span> <span class="n">cmin</span><span class="p">:</span><span class="n">cmax</span><span class="p">]</span></div>
 
 
 
@@ -668,7 +818,7 @@
 
 <div class="viewcode-block" id="sample">
 <a class="viewcode-back" href="../../ref/generated/lentil.sample.html#lentil.sample">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">oversample</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">'ij'</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">oversample</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">'xy'</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Extract samples from an oversampled array.</span>
 
 <span class="sd">    The sampled axes are tiled into contiguous blocks of ``oversample``</span>
@@ -690,8 +840,8 @@
 <span class="sd">    axes : (2,) sequence of ints, optional</span>
 <span class="sd">        Axes over which to sample. If not provided, the last two axes are</span>
 <span class="sd">        used.</span>
-<span class="sd">    indexing : {'ij', 'xy'}, optional</span>
-<span class="sd">        Matrix (‘ij’, default) or cartesian (‘xy’) indexing of ``x`` grid.</span>
+<span class="sd">    indexing : {'xy', 'ij'}, optional</span>
+<span class="sd">        Cartesian ('xy', default) or matrix ('ij') indexing of ``x`` grid.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -700,6 +850,10 @@
 <span class="sd">        length is not a multiple of ``oversample``, samples taken beyond the</span>
 <span class="sd">        last whole block are ignored.</span>
 
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`rebin`</span>
+<span class="sd">    :func:`rescale`</span>
 <span class="sd">    """</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
@@ -711,7 +865,7 @@
     <span class="n">axes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">%</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">indexing</span> <span class="o">==</span> <span class="s1">'xy'</span><span class="p">:</span>
-        <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">offset</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">offset</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">offset</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">offset</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">oversample</span> <span class="o">=</span> <span class="p">(</span><span class="n">oversample</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">oversample</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span> <span class="o">*</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span>
@@ -754,8 +908,8 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
+<span class="sd">    :func:`sample`</span>
 <span class="sd">    :func:`rescale`</span>
-
 <span class="sd">    """</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 
@@ -826,6 +980,7 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
+<span class="sd">    :func:`sample`</span>
 <span class="sd">    :func:`rebin`</span>
 
 <span class="sd">    """</span>
@@ -941,21 +1096,7 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">sanitize_shape</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
-    <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">shape</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">shape</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">shape</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">():</span>
-            <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">sanitize_bandpass</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
-    <span class="n">vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">vec</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">():</span>
-        <span class="n">vec</span> <span class="o">=</span> <span class="n">vec</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">vec</span>
+<span class="n">normpow</span> <span class="o">=</span> <span class="n">normalize_power</span>
 </pre></div>
 
                 </article>

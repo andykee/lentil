@@ -10,7 +10,7 @@
     <link rel="icon" sizes="32x32" href="../../_static/favicon/favicon-32x32.png" type="image/png">
     <link rel="icon" sizes="48x48" href="../../_static/favicon/favicon-48x48.png" type="image/png">
     <link rel="apple-touch-icon" sizes="180x180" href="../../_static/favicon/apple-touch-icon-180x180.png" color="#000000" type="image/png">
-    <title>lentil.helper.mesh &#8212; Lentil 0.8.10 documentation</title>
+    <title>lentil.zernike_coeff_legacy &#8212; Lentil 0.8.10 documentation</title>
   
   
   
@@ -50,7 +50,7 @@
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'ref/generated/lentil.helper.mesh';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ref/generated/lentil.zernike_coeff_legacy';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.23.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://andykee.github.io/lentil/versions.json';
@@ -61,8 +61,8 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="lentil.helper.boundary_slice" href="lentil.helper.boundary_slice.html" />
-    <link rel="prev" title="lentil.fourier.dft2" href="lentil.fourier.dft2.html" />
+    <link rel="next" title="Wavefront errors" href="../wavefront_errors.html" />
+    <link rel="prev" title="lentil.zernike_coordinates" href="lentil.zernike_coordinates.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
@@ -400,37 +400,22 @@
 <li class="toctree-l1"><a class="reference internal" href="../planes.html">Planes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../wavefront.html">Wavefront</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../propagate.html">Propagation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../zernike.html">Zernike polynomials</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../zernike.html">Zernike polynomials</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lentil.zernike.html">lentil.zernike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.zernike_compose.html">lentil.zernike_compose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.zernike_fit.html">lentil.zernike_fit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.zernike_remove.html">lentil.zernike_remove</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.zernike_basis.html">lentil.zernike_basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.zernike_coordinates.html">lentil.zernike_coordinates</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">lentil.zernike_coeff_legacy</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../wavefront_errors.html">Wavefront errors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../imaging_artifacts.html">Imaging artifacts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../radiometry.html">Radiometry (<code class="docutils literal notranslate"><span class="pre">lentil.radiometry</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../detector.html">Detector (<code class="docutils literal notranslate"><span class="pre">lentil.detector</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../util.html">Utilities</a></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../internals.html">Internals</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="lentil.plane._TiltBase.html">lentil.plane._TiltBase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.ptype.ptype.html">lentil.ptype.ptype</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.ptype.PType_cls.rst.html">lentil.ptype.PType</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.field.Field.html">lentil.field.Field</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.field.boundary.html">lentil.field.boundary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.field.insert.html">lentil.field.insert</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.field.merge.html">lentil.field.merge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.field.overlap.html">lentil.field.overlap</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.field.reduce.html">lentil.field.reduce</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.extent.array_extent.html">lentil.extent.array_extent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.extent.array_center.html">lentil.extent.array_center</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.extent.intersect.html">lentil.extent.intersect</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.extent.intersection_extent.html">lentil.extent.intersection_extent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.extent.intersection_shape.html">lentil.extent.intersection_shape</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.extent.intersection_slices.html">lentil.extent.intersection_slices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.extent.intersection_shift.html">lentil.extent.intersection_shift</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.fourier.dft2.html">lentil.fourier.dft2</a></li>
-<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">lentil.helper.mesh</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.helper.boundary_slice.html">lentil.helper.boundary_slice</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.helper.slice_offset.html">lentil.helper.slice_offset</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.helper.gaussian2d.html">lentil.helper.gaussian2d</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.helper.get_rng.html">lentil.helper.get_rng</a></li>
-</ul>
-</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">Internals</a></li>
 </ul>
 </div>
 </nav></div>
@@ -475,9 +460,9 @@
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Lentil reference</a></li>
     
     
-    <li class="breadcrumb-item"><a href="../internals.html" class="nav-link">Internals</a></li>
+    <li class="breadcrumb-item"><a href="../zernike.html" class="nav-link">Zernike polynomials</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">lentil.helper.mesh</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">lentil.zernike_coeff_legacy</span></li>
   </ul>
 </nav>
 </div>
@@ -494,12 +479,63 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="lentil-helper-mesh">
-<h1>lentil.helper.mesh<a class="headerlink" href="#lentil-helper-mesh" title="Link to this heading">#</a></h1>
+  <section id="lentil-zernike-coeff-legacy">
+<h1>lentil.zernike_coeff_legacy<a class="headerlink" href="#lentil-zernike-coeff-legacy" title="Link to this heading">#</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="lentil.helper.mesh">
-<span class="sig-prename descclassname"><span class="pre">lentil.helper.</span></span><span class="sig-name descname"><span class="pre">mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lentil/helper.html#mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lentil.helper.mesh" title="Link to this definition">#</a></dt>
-<dd><p>Generate a standard mesh.</p>
+<dt class="sig sig-object py" id="lentil.zernike_coeff_legacy">
+<span class="sig-prename descclassname"><span class="pre">lentil.</span></span><span class="sig-name descname"><span class="pre">zernike_coeff_legacy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coeffs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'noll'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lentil/zernike.html#zernike_coeff_legacy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lentil.zernike_coeff_legacy" title="Link to this definition">#</a></dt>
+<dd><p>Convert Zernike coefficients between legacy and current
+orientation conventions.</p>
+<p>Lentil 0.8.10 and earlier computed Zernike polynomials in a coordinate
+system mirrored left-to-right (x -&gt; -x) relative to the current one.
+This results in cosine modes with odd azimuthal order (x tilt, x coma,
+…) and sine modes with even azimuthal order (45 degree astigmatism,
+…) having a flipped sign. All other modes are unaffected.</p>
+<p>This conversion is involutory so it converts legacy coefficients to the
+correct convention and correct coefficients to the legacy convention.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coeffs</strong> (<em>array_like</em>) – Zernike coefficients. The last axis indexes Zernike modes, so a
+stack of coefficient vectors (e.g. a time series) can be converted
+in a single call.</p></li>
+<li><p><strong>modes</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Zernike mode indices corresponding to the last axis of <code class="docutils literal notranslate"><span class="pre">coeffs</span></code>,
+e.g. the <code class="docutils literal notranslate"><span class="pre">modes</span></code> passed to <a class="reference internal" href="lentil.zernike_fit.html#lentil.zernike_fit" title="lentil.zernike_fit"><code class="xref py py-func docutils literal notranslate"><span class="pre">zernike_fit()</span></code></a>. If None
+(default), <code class="docutils literal notranslate"><span class="pre">coeffs[...,</span> <span class="pre">k]</span></code> is taken to be the coefficient for
+mode index <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">+</span> <span class="pre">1</span></code>, matching <a class="reference internal" href="lentil.zernike_compose.html#lentil.zernike_compose" title="lentil.zernike_compose"><code class="xref py py-func docutils literal notranslate"><span class="pre">zernike_compose()</span></code></a>.</p></li>
+<li><p><strong>order</strong> (<em>{'noll'</em><em>, </em><em>'fringe'</em><em>, </em><em>'ansi'}</em><em>, </em><em>optional</em>) – Zernike ordering scheme. Default is ‘noll’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Converted coefficients with the same shape as <code class="docutils literal notranslate"><span class="pre">coeffs</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The conversion is exact for masks with an even number of pixels in each
+dimension. Along any dimension with an odd number of pixels, the legacy
+coordinate origin was also offset half a pixel from the mask centroid.
+The effect of that offset on fitted coefficients is small but is not a
+sign change, so it is not undone by this function.</p>
+<p class="rubric">Examples</p>
+<p>Convert tip, tilt, and focus coefficients fit with lentil 0.8:</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lentil</span><span class="o">.</span><span class="n">zernike_coeff_legacy</span><span class="p">([</span><span class="mf">1e-8</span><span class="p">,</span> <span class="mf">2e-8</span><span class="p">,</span> <span class="mf">3e-8</span><span class="p">],</span> <span class="n">modes</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="go">array([-1.e-08, -2.e-08,  3.e-08])</span>
+</pre></div>
+</div>
+<p>Convert a full coefficient vector as used by <a class="reference internal" href="lentil.zernike_compose.html#lentil.zernike_compose" title="lentil.zernike_compose"><code class="xref py py-func docutils literal notranslate"><span class="pre">zernike_compose()</span></code></a>:</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">coeffs</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_coeff_legacy</span><span class="p">(</span><span class="n">legacy_coeffs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">opd</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_compose</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="lentil.zernike_compose.html#lentil.zernike_compose" title="lentil.zernike_compose"><code class="xref py py-func docutils literal notranslate"><span class="pre">zernike_compose()</span></code></a>, <a class="reference internal" href="lentil.zernike_fit.html#lentil.zernike_fit" title="lentil.zernike_fit"><code class="xref py py-func docutils literal notranslate"><span class="pre">zernike_fit()</span></code></a></p>
+</div>
+<p class="rubric">References</p>
+<p>[1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).</p>
 </dd></dl>
 
 </section>
@@ -527,7 +563,7 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lentil.helper.mesh"><code class="docutils literal notranslate"><span class="pre">mesh()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lentil.zernike_coeff_legacy"><code class="docutils literal notranslate"><span class="pre">zernike_coeff_legacy()</span></code></a></li>
 </ul>
   </nav></div>
 

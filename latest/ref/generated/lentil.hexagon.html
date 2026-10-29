@@ -413,8 +413,8 @@
 <li class="toctree-l2"><a class="reference internal" href="lentil.boundary.html">lentil.boundary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.centroid.html">lentil.centroid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.pad.html">lentil.pad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.crop.html">lentil.crop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.subarray.html">lentil.subarray</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.window.html">lentil.window</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.sample.html">lentil.sample</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.rebin.html">lentil.rebin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.rescale.html">lentil.rescale</a></li>
@@ -492,7 +492,7 @@
 <h1>lentil.hexagon<a class="headerlink" href="#lentil-hexagon" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="lentil.hexagon">
-<span class="sig-prename descclassname"><span class="pre">lentil.</span></span><span class="sig-name descname"><span class="pre">hexagon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">antialias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lentil/shape.html#hexagon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lentil.hexagon" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">lentil.</span></span><span class="sig-name descname"><span class="pre">hexagon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">antialias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xy'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lentil/shape.html#hexagon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lentil.hexagon" title="Link to this definition">#</a></dt>
 <dd><p>Draw a hexagon</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -500,10 +500,11 @@
 <li><p><strong>shape</strong> (<em>array_like</em>) – Size of output in pixels (nrows, ncols)</p></li>
 <li><p><strong>radius</strong> (<em>float</em>) – Radius of outscribing circle (which also equals the side length) in
 pixels.</p></li>
-<li><p><strong>shift</strong> (<em>tuple</em><em> of </em><em>floats</em><em>, </em><em>optional</em>) – How far to shift center in (rows, cols). Default is (0, 0).</p></li>
-<li><p><strong>rotate</strong> (<em>bool</em><em>, </em><em>optional</em>) – Rotate mask so that flat sides are aligned with the Y direction instead
-of the default orientation which is aligned with the X direction.</p></li>
+<li><p><strong>shift</strong> (<em>tuple</em><em> of </em><em>floats</em><em>, </em><em>optional</em>) – How far to shift center of hexagon. Default is (0, 0).</p></li>
+<li><p><strong>rotate</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True (default), the mask is rotated so that flat sides are aligned
+with the X direction instead with the Y direction.</p></li>
 <li><p><strong>antialias</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True (default), the shape edges are antialiased.</p></li>
+<li><p><strong>indexing</strong> (<em>{'xy'</em><em>, </em><em>'ij'}</em><em>, </em><em>optional</em>) – Cartesian (‘xy’, default) or matrix (‘ij’) or indexing of shift.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>

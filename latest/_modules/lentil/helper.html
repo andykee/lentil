@@ -437,21 +437,6 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
 
-<div class="viewcode-block" id="mesh">
-<a class="viewcode-back" href="../../ref/generated/lentil.helper.mesh.html#lentil.helper.mesh">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">mesh</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Generate a standard mesh."""</span>
-    <span class="n">nr</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">nc</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nr</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">nr</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                         <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nc</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">nc</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
-                         <span class="n">indexing</span><span class="o">=</span><span class="s1">'ij'</span><span class="p">)</span>
-    <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">rr</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">+</span> <span class="n">cc</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">rr</span> <span class="o">*</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="o">+</span> <span class="n">cc</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">c</span></div>
-
-
 
 <div class="viewcode-block" id="gaussian2d">
 <a class="viewcode-back" href="../../ref/generated/lentil.helper.gaussian2d.html#lentil.helper.gaussian2d">[docs]</a>

@@ -62,7 +62,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="lentil.rebin" href="lentil.rebin.html" />
-    <link rel="prev" title="lentil.window" href="lentil.window.html" />
+    <link rel="prev" title="lentil.subarray" href="lentil.subarray.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
@@ -413,8 +413,8 @@
 <li class="toctree-l2"><a class="reference internal" href="lentil.boundary.html">lentil.boundary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.centroid.html">lentil.centroid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.pad.html">lentil.pad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.crop.html">lentil.crop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.subarray.html">lentil.subarray</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.window.html">lentil.window</a></li>
 <li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">lentil.sample</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.rebin.html">lentil.rebin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.rescale.html">lentil.rescale</a></li>
@@ -492,7 +492,7 @@
 <h1>lentil.sample<a class="headerlink" href="#lentil-sample" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="lentil.sample">
-<span class="sig-prename descclassname"><span class="pre">lentil.</span></span><span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oversample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-2,</span> <span class="pre">-1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ij'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lentil/util.html#sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lentil.sample" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">lentil.</span></span><span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oversample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-2,</span> <span class="pre">-1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xy'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lentil/util.html#sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lentil.sample" title="Link to this definition">#</a></dt>
 <dd><p>Extract samples from an oversampled array.</p>
 <p>The sampled axes are tiled into contiguous blocks of <code class="docutils literal notranslate"><span class="pre">oversample</span></code>
 samples, with one sample being taken from each block. No averaging or
@@ -509,7 +509,7 @@ quantized to <code class="docutils literal notranslate"><span class="pre">1/over
 provided, their ordering is interpreted according to <code class="docutils literal notranslate"><span class="pre">indexing</span></code>.</p></li>
 <li><p><strong>axes</strong> (<em>(</em><em>2</em><em>,</em><em>) </em><em>sequence</em><em> of </em><em>ints</em><em>, </em><em>optional</em>) – Axes over which to sample. If not provided, the last two axes are
 used.</p></li>
-<li><p><strong>indexing</strong> (<em>{'ij'</em><em>, </em><em>'xy'}</em><em>, </em><em>optional</em>) – Matrix (‘ij’, default) or cartesian (‘xy’) indexing of <code class="docutils literal notranslate"><span class="pre">x</span></code> grid.</p></li>
+<li><p><strong>indexing</strong> (<em>{'xy'</em><em>, </em><em>'ij'}</em><em>, </em><em>optional</em>) – Cartesian (‘xy’, default) or matrix (‘ij’) indexing of <code class="docutils literal notranslate"><span class="pre">x</span></code> grid.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -521,6 +521,10 @@ last whole block are ignored.</p>
 <dd class="field-odd"><p>ndarray</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="lentil.rebin.html#lentil.rebin" title="lentil.rebin"><code class="xref py py-func docutils literal notranslate"><span class="pre">rebin()</span></code></a>, <a class="reference internal" href="lentil.rescale.html#lentil.rescale" title="lentil.rescale"><code class="xref py py-func docutils literal notranslate"><span class="pre">rescale()</span></code></a></p>
+</div>
 </dd></dl>
 
 </section>

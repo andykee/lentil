@@ -413,8 +413,8 @@
 <li class="toctree-l2"><a class="reference internal" href="lentil.boundary.html">lentil.boundary</a></li>
 <li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">lentil.centroid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.pad.html">lentil.pad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.crop.html">lentil.crop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.subarray.html">lentil.subarray</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lentil.window.html">lentil.window</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.sample.html">lentil.sample</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.rebin.html">lentil.rebin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.rescale.html">lentil.rescale</a></li>
@@ -492,19 +492,43 @@
 <h1>lentil.centroid<a class="headerlink" href="#lentil-centroid" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="lentil.centroid">
-<span class="sig-prename descclassname"><span class="pre">lentil.</span></span><span class="sig-name descname"><span class="pre">centroid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lentil/util.html#centroid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lentil.centroid" title="Link to this definition">#</a></dt>
-<dd><p>Compute image centroid location.</p>
+<span class="sig-prename descclassname"><span class="pre">lentil.</span></span><span class="sig-name descname"><span class="pre">centroid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">where</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'absolute'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xy'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lentil/util.html#centroid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lentil.centroid" title="Link to this definition">#</a></dt>
+<dd><p>Compute array centroid location.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>img</strong> (<em>array_like</em>) – Input array.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array_like</em>) – Input array.</p></li>
+<li><p><strong>where</strong> (<em>array_like</em><em> of </em><em>bool</em><em>, </em><em>optional</em>) – Elements to include in the centroid calculation. If None (default),
+all finite and non-NaN values are used.</p></li>
+<li><p><strong>mode</strong> (<em>{'absolute'</em><em>, </em><em>'center'}</em><em>, </em><em>optional</em>) – Specifies how the centroid is computed. If ‘absolute’ (default),
+the absolute centroid within the input is returned. If ‘center’, the
+centroid relative to the center of the input is returned.</p></li>
+<li><p><strong>indexing</strong> (<em>{'xy'</em><em>, </em><em>'ij'}</em><em>, </em><em>optional</em>) – Cartesian (‘xy’, default) or matrix (‘ij’, default) indexing of mesh.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">(r,c)</span></code> centroid location.</p>
+<dd class="field-even"><p><strong>centroid</strong> – (r, c) or (x, y) centroid location</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">circ</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">80</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">circ</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/lentil-centroid-1.png" class="plot-directive" height="333" src="../../_images/lentil-centroid-1.png" width="344" />
+</figure>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lentil</span><span class="o">.</span><span class="n">centroid</span><span class="p">(</span><span class="n">circ</span><span class="p">)</span>
+<span class="go">(48.0, 178.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lentil</span><span class="o">.</span><span class="n">centroid</span><span class="p">(</span><span class="n">circ</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'center'</span><span class="p">)</span>
+<span class="go">(-80.0, 50.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lentil</span><span class="o">.</span><span class="n">centroid</span><span class="p">(</span><span class="n">circ</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'center'</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">'xy'</span><span class="p">)</span>
+<span class="go">(50.0, -80.0)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>

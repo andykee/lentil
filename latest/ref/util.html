@@ -413,8 +413,8 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/lentil.boundary.html">lentil.boundary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/lentil.centroid.html">lentil.centroid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/lentil.pad.html">lentil.pad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/lentil.crop.html">lentil.crop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/lentil.subarray.html">lentil.subarray</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/lentil.window.html">lentil.window</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/lentil.sample.html">lentil.sample</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/lentil.rebin.html">lentil.rebin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/lentil.rescale.html">lentil.rescale</a></li>
@@ -491,7 +491,7 @@
 <h2>Shapes<a class="headerlink" href="#shapes" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/lentil.circle.html#lentil.circle" title="lentil.circle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">circle</span></code></a>(shape, radius[, shift, antialias])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/lentil.circle.html#lentil.circle" title="lentil.circle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">circle</span></code></a>(shape, radius[, shift, antialias, ...])</p></td>
 <td><p>Draw a circle</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/lentil.hexagon.html#lentil.hexagon" title="lentil.hexagon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hexagon</span></code></a>(shape, radius[, shift, rotate, ...])</p></td>
@@ -500,7 +500,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/lentil.rectangle.html#lentil.rectangle" title="lentil.rectangle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rectangle</span></code></a>(shape, width, height[, shift, ...])</p></td>
 <td><p>Draw a rectangle</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/lentil.spider.html#lentil.spider" title="lentil.spider"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spider</span></code></a>(shape, width[, angle, shift, antialias])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/lentil.spider.html#lentil.spider" title="lentil.spider"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spider</span></code></a>(shape, width[, angle, shift, ...])</p></td>
 <td><p>Draw a spider</p></td>
 </tr>
 </tbody>
@@ -514,17 +514,17 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/lentil.boundary.html#lentil.boundary" title="lentil.boundary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boundary</span></code></a>(x[, threshold])</p></td>
 <td><p>Find bounding row and column indices of data within an array.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/lentil.centroid.html#lentil.centroid" title="lentil.centroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">centroid</span></code></a>(img)</p></td>
-<td><p>Compute image centroid location.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/lentil.centroid.html#lentil.centroid" title="lentil.centroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">centroid</span></code></a>(x[, where, mode, indexing])</p></td>
+<td><p>Compute array centroid location.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/lentil.pad.html#lentil.pad" title="lentil.pad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pad</span></code></a>(array, shape)</p></td>
-<td><p>Zero-pad an array.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/lentil.pad.html#lentil.pad" title="lentil.pad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pad</span></code></a>(x, shape[, fill])</p></td>
+<td><p>Pad or crop an array about its center.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/lentil.subarray.html#lentil.subarray" title="lentil.subarray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subarray</span></code></a>(a, shape[, shift])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/lentil.crop.html#lentil.crop" title="lentil.crop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">crop</span></code></a>(x, shape[, shift, mode, indexing, copy])</p></td>
 <td><p>Extract a contiguous subarray from a larger array.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/lentil.window.html#lentil.window" title="lentil.window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">window</span></code></a>(img[, shape, slice])</p></td>
-<td><p>Extract an appropriately sized, potentially windowed array</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/lentil.subarray.html#lentil.subarray" title="lentil.subarray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subarray</span></code></a>(a, shape[, shift])</p></td>
+<td><p>Extract a contiguous subarray from a larger array.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/lentil.sample.html#lentil.sample" title="lentil.sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample</span></code></a>(x, oversample[, offset, axes, indexing])</p></td>
 <td><p>Extract samples from an oversampled array.</p></td>

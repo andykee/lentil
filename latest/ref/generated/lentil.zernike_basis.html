@@ -407,6 +407,7 @@
 <li class="toctree-l2"><a class="reference internal" href="lentil.zernike_remove.html">lentil.zernike_remove</a></li>
 <li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">lentil.zernike_basis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.zernike_coordinates.html">lentil.zernike_coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.zernike_coeff_legacy.html">lentil.zernike_coeff_legacy</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../wavefront_errors.html">Wavefront errors</a></li>
@@ -482,14 +483,13 @@
 <h1>lentil.zernike_basis<a class="headerlink" href="#lentil-zernike-basis" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="lentil.zernike_basis">
-<span class="sig-prename descclassname"><span class="pre">lentil.</span></span><span class="sig-name descname"><span class="pre">zernike_basis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectorize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'noll'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lentil/zernike.html#zernike_basis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lentil.zernike_basis" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">lentil.</span></span><span class="sig-name descname"><span class="pre">zernike_basis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectorize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'noll'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legacy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lentil/zernike.html#zernike_basis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lentil.zernike_basis" title="Link to this definition">#</a></dt>
 <dd><p>Compute a Zernike basis set for a given mask.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mask</strong> (<em>array_like</em>) – Mask defining the extent to compute the Zernike polynomial over. All
-nonzero entries are included in the result.</p></li>
-<li><p><strong>modes</strong> (<em>array_like</em>) – List of modes (Noll ordering) to return.</p></li>
+<li><p><strong>mask</strong> (<em>array_like</em>) – Binary mask defining the extent to compute the Zernike polynomial over.</p></li>
+<li><p><strong>modes</strong> (<em>array_like</em>) – List of modes to return.</p></li>
 <li><p><strong>vectorize</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the output is returned as a
 <code class="docutils literal notranslate"><span class="pre">(length(modes),</span> <span class="pre">modes.shape[0]*modes.shape[1])</span></code> array If False
 (default), the output is returned as a
@@ -497,18 +497,28 @@ nonzero entries are included in the result.</p></li>
 <li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True (default), the output is normalized according to [1]. If False,
 the output value ranges [-1, 1] over the mask.</p></li>
 <li><p><strong>order</strong> (<em>{'noll'</em><em>, </em><em>'fringe'</em><em>, </em><em>'ansi'}</em><em>, </em><em>optional</em>) – Zernike ordering scheme. Default is ‘noll’.</p></li>
-<li><p><strong>rho</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Radial coordinates of the mask. <code class="xref py py-attr docutils literal notranslate"><span class="pre">rho</span></code> should be 0 at the
+<li><p><strong>rho</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Radial coordinates of the mask array. <code class="xref py py-attr docutils literal notranslate"><span class="pre">rho</span></code> should be 0 at the
 origin and 1 at the edge of the circle.</p></li>
-<li><p><strong>theta</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Angular coordinates of the mask in radians.</p></li>
+<li><p><strong>theta</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Angular coordinates of the mask array in radians.</p></li>
+<li><p><strong>legacy</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, use the legacy Zernike mode orientation convention of Lentil
+v0.8.10 or earlier. Default is False. See warning below for more
+details.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Zernike basis set</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ndarray</p>
 </dd>
 </dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Lentil 0.8.10 and earlier computed Zernike polynomials in a coordinate
+system mirrored left-to-right (x -&gt; -x) relative to the current one.
+This results in cosine modes with odd azimuthal order (x tilt, x coma,
+…) and sine modes with even azimuthal order (45 degree astigmatism,
+…) having a flipped sign. All other modes are unaffected. The
+<a class="reference internal" href="lentil.zernike_coeff_legacy.html#lentil.zernike_coeff_legacy" title="lentil.zernike_coeff_legacy"><code class="xref py py-func docutils literal notranslate"><span class="pre">zernike_coeff_legacy()</span></code></a> function converts between current and legacy
+conventions.</p>
+</div>
 <p class="rubric">References</p>
 <p>[1] Noll, RJ. Zernike polynomials and atmospheric turbulence. J Opt Soc Am 66, 207-211  (1976).</p>
 </dd></dl>

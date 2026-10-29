@@ -1,0 +1,6 @@
+﻿lentil.crop
+===========
+
+.. currentmodule:: lentil
+
+.. autofunction:: crop

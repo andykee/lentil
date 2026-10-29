@@ -434,11 +434,12 @@
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">lentil._mesh</span>
 
 
 <div class="viewcode-block" id="circle">
 <a class="viewcode-back" href="../../ref/generated/lentil.circle.html#lentil.circle">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">circle</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">circle</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">'xy'</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Draw a circle</span>
 
 <span class="sd">    Parameters</span>
@@ -448,17 +449,19 @@
 <span class="sd">    radius : float</span>
 <span class="sd">        Radius of circle in pixels</span>
 <span class="sd">    shift : (2,) array_like, optional</span>
-<span class="sd">        How far to shift center in float (rows, cols). Default is (0, 0).</span>
+<span class="sd">        How far to shift center of circle. Default is (0, 0).</span>
 <span class="sd">    antialias : bool, optional</span>
 <span class="sd">        If True (default), the shape edges are antialiased.</span>
+<span class="sd">    indexing : {'xy', 'ij'}, optional</span>
+<span class="sd">        Cartesian ('xy', default) or matrix ('ij') or indexing of shift.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    ndarray</span>
 
 <span class="sd">    """</span>
-    <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">mesh</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">rr</span> <span class="o">-</span> <span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">cc</span> <span class="o">-</span> <span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">_mesh</span><span class="o">.</span><span class="n">mesh</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">shift</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="n">indexing</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">radius</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">r</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">antialias</span><span class="p">:</span>
         <span class="n">mask</span><span class="p">[</span><span class="n">mask</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
@@ -468,7 +471,8 @@
 
 <div class="viewcode-block" id="hexagon">
 <a class="viewcode-back" href="../../ref/generated/lentil.hexagon.html#lentil.hexagon">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">hexagon</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">rotate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hexagon</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">rotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">indexing</span><span class="o">=</span><span class="s1">'xy'</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Draw a hexagon</span>
 
 <span class="sd">    Parameters</span>
@@ -479,12 +483,14 @@
 <span class="sd">        Radius of outscribing circle (which also equals the side length) in</span>
 <span class="sd">        pixels.</span>
 <span class="sd">    shift : tuple of floats, optional</span>
-<span class="sd">        How far to shift center in (rows, cols). Default is (0, 0).</span>
+<span class="sd">        How far to shift center of hexagon. Default is (0, 0).</span>
 <span class="sd">    rotate : bool, optional</span>
-<span class="sd">        Rotate mask so that flat sides are aligned with the Y direction instead</span>
-<span class="sd">        of the default orientation which is aligned with the X direction.</span>
+<span class="sd">        If True (default), the mask is rotated so that flat sides are aligned</span>
+<span class="sd">        with the X direction instead with the Y direction.</span>
 <span class="sd">    antialias : bool, optional</span>
 <span class="sd">        If True (default), the shape edges are antialiased.</span>
+<span class="sd">    indexing : {'xy', 'ij'}, optional</span>
+<span class="sd">            Cartesian ('xy', default) or matrix ('ij') or indexing of shift.</span>
 <span class="sd">        </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -492,7 +498,7 @@
 
 <span class="sd">    """</span>
     <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
-    <span class="n">r</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">mesh</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">shift</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">_mesh</span><span class="o">.</span><span class="n">mesh</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">shift</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="n">indexing</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
 
     <span class="n">inner_radius</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
@@ -516,7 +522,8 @@
 
 <div class="viewcode-block" id="rectangle">
 <a class="viewcode-back" href="../../ref/generated/lentil.rectangle.html#lentil.rectangle">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">rectangle</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rectangle</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">indexing</span><span class="o">=</span><span class="s1">'xy'</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Draw a rectangle</span>
 
 <span class="sd">    Parameters</span>
@@ -528,12 +535,14 @@
 <span class="sd">    height : float</span>
 <span class="sd">        Height of rectangle in pixels</span>
 <span class="sd">    shift : tuple of floats, optional</span>
-<span class="sd">        How far to shift center in (rows, cols). Default is (0, 0).</span>
+<span class="sd">        How far to shift center of rectangle. Default is (0, 0).</span>
 <span class="sd">    angle : float, optional</span>
 <span class="sd">        Rotation of rectangle in degrees counterclockwise from horizontal.</span>
 <span class="sd">        Default is 0.</span>
 <span class="sd">    antialias : bool, optional</span>
 <span class="sd">        If True (default), the shape edges are antialiased.</span>
+<span class="sd">    indexing : {'xy', 'ij'}, optional</span>
+<span class="sd">            Cartesian ('xy', default) or matrix ('ij') or indexing of shift.</span>
 <span class="sd">        </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -541,7 +550,8 @@
 <span class="sd">    </span>
 <span class="sd">    """</span>
     <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
-    <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">mesh</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span>
+    <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">_mesh</span><span class="o">.</span><span class="n">mesh</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">shift</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span>
+                               <span class="n">indexing</span><span class="o">=</span><span class="n">indexing</span><span class="p">)</span>
     <span class="n">rect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
 
     <span class="n">width_clip</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">+</span> <span class="p">(</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">cc</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -558,7 +568,8 @@
 
 <div class="viewcode-block" id="spider">
 <a class="viewcode-back" href="../../ref/generated/lentil.spider.html#lentil.spider">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">spider</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">spider</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+           <span class="n">indexing</span><span class="o">=</span><span class="s1">'xy'</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Draw a spider</span>
 
 <span class="sd">    Parameters</span>
@@ -571,9 +582,11 @@
 <span class="sd">        Rotation of spider in degrees counterclockwise from horizontal.</span>
 <span class="sd">        Default is 0.</span>
 <span class="sd">    shift : tuple of floats, optional</span>
-<span class="sd">        How far to shift center in (rows, cols). Default is (0, 0).</span>
+<span class="sd">        How far to shift center of spider. Default is (0, 0).</span>
 <span class="sd">    antialias : bool, optional</span>
 <span class="sd">        If True (default), the spider edges are antialiased.</span>
+<span class="sd">    indexing : {'xy', 'ij'}, optional</span>
+<span class="sd">            Cartesian ('xy', default) or matrix ('ij') or indexing of shift.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -581,12 +594,16 @@
 
 <span class="sd">    """</span>
     <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
-    <span class="nb">len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>  <span class="c1"># max length when angle is a multiple of 45 deg</span>
+    <span class="nb">len</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
     <span class="n">shift_dist</span> <span class="o">=</span> <span class="nb">len</span> <span class="o">/</span> <span class="mi">2</span>
     <span class="n">shift_row</span> <span class="o">=</span> <span class="o">-</span><span class="n">shift_dist</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>
     <span class="n">shift_col</span> <span class="o">=</span> <span class="n">shift_dist</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">indexing</span> <span class="o">==</span> <span class="s1">'xy'</span><span class="p">:</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="p">[</span><span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
     <span class="n">shift</span> <span class="o">=</span> <span class="p">(</span><span class="n">shift</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">shift_row</span><span class="p">,</span> <span class="n">shift</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">shift_col</span><span class="p">)</span>
-    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">lentil</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="nb">len</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">antialias</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">lentil</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="n">shift</span><span class="p">,</span>
+                                <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span> <span class="n">antialias</span><span class="o">=</span><span class="n">antialias</span><span class="p">,</span> 
+                                <span class="n">indexing</span><span class="o">=</span><span class="s1">'ij'</span><span class="p">)</span></div>
 
 </pre></div>
 

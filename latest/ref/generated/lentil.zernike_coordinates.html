@@ -61,7 +61,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Wavefront errors" href="../wavefront_errors.html" />
+    <link rel="next" title="lentil.zernike_coeff_legacy" href="lentil.zernike_coeff_legacy.html" />
     <link rel="prev" title="lentil.zernike_basis" href="lentil.zernike_basis.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
@@ -407,6 +407,7 @@
 <li class="toctree-l2"><a class="reference internal" href="lentil.zernike_remove.html">lentil.zernike_remove</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lentil.zernike_basis.html">lentil.zernike_basis</a></li>
 <li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">lentil.zernike_coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lentil.zernike_coeff_legacy.html">lentil.zernike_coeff_legacy</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../wavefront_errors.html">Wavefront errors</a></li>
@@ -482,19 +483,26 @@
 <h1>lentil.zernike_coordinates<a class="headerlink" href="#lentil-zernike-coordinates" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="lentil.zernike_coordinates">
-<span class="sig-prename descclassname"><span class="pre">lentil.</span></span><span class="sig-name descname"><span class="pre">zernike_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lentil/zernike.html#zernike_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lentil.zernike_coordinates" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">lentil.</span></span><span class="sig-name descname"><span class="pre">zernike_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xy'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/lentil/zernike.html#zernike_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lentil.zernike_coordinates" title="Link to this definition">#</a></dt>
 <dd><p>Compute the Zernike coordinate system for a given mask.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mask</strong> (<em>array_like</em>) – Mask defining the extent to compute the Zernike polynomial over. All
-nonzero entries are included in the result.</p></li>
-<li><p><strong>shift</strong> (<em>(</em><em>2</em><em>,</em><em>) </em><em>array_like</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – x, y shift of the coordinate system origin in pixels. If None
-(default), shift is computed automatically to locate the origin at the
-mask centroid.</p></li>
-<li><p><strong>rotate</strong> (<em>float</em><em>, </em><em>optional</em>) – Angle to rotate coordinate system by in degrees. rotate is specified
+<li><p><strong>mask</strong> (<em>array_like</em>) – Binary mask defining the extent to compute the Zernike polynomial
+over.</p></li>
+<li><p><strong>shift</strong> (<em>(</em><em>2</em><em>,</em><em>) </em><em>array_like</em><em>, </em><em>optional</em>) – How far to shift center in float (rows, cols). If None (default),
+shift is computed automatically to locate the origin at the mask
+centroid.</p></li>
+<li><p><strong>angle</strong> (<em>float</em><em>, </em><em>optional</em>) – Angle to rotate coordinate system by in degrees. rotate is specified
 relative to the x-axis. Default is 0.</p></li>
+<li><p><strong>indexing</strong> (<em>{'ij'</em><em>, </em><em>'xy'}</em><em>, </em><em>optional</em>) – Cartesian (‘xy’, default) or matrix (‘ij’) or indexing of shift.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>rho, theta</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarrays</p>
 </dd>
 </dl>
 </dd></dl>

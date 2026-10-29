@@ -440,7 +440,7 @@
 
 <div class="viewcode-block" id="hex_segments">
 <a class="viewcode-back" href="../../ref/generated/lentil.hex_segments.html#lentil.hex_segments">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">hex_segments</span><span class="p">(</span><span class="n">rings</span><span class="p">,</span> <span class="n">seg_radius</span><span class="p">,</span> <span class="n">seg_gap</span><span class="p">,</span> <span class="n">rotate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hex_segments</span><span class="p">(</span><span class="n">rings</span><span class="p">,</span> <span class="n">seg_radius</span><span class="p">,</span> <span class="n">seg_gap</span><span class="p">,</span> <span class="n">rotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">flatten</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,)):</span>
 <span class="w">    </span><span class="sd">"""Draw a segmented aperture made up of hexagonal segments</span>
 
@@ -453,9 +453,8 @@
 <span class="sd">    seg_gap : float</span>
 <span class="sd">        Spacing between adjacent segments in pixels</span>
 <span class="sd">    rotate : bool, optional</span>
-<span class="sd">        Rotate segments so that flat sides are aligned with the Y direction </span>
-<span class="sd">        instead of the default orientation which is aligned with the X </span>
-<span class="sd">        direction.</span>
+<span class="sd">        If True (default), the segment mask is rotated so that flat sides are</span>
+<span class="sd">        aligned with the X direction instead with the Y direction.</span>
 <span class="sd">    antialias : bool, optional</span>
 <span class="sd">        If True (default), the segment edges are antialiased.</span>
 <span class="sd">    flatten : bool, optional</span>
