@@ -1,93 +1,179 @@
+import warnings
+
 import numpy as np
 from scipy.ndimage import map_coordinates
 import lentil
 
 
-def centroid(img):
-    """Compute image centroid location.
+def centroid(x, where=None, mode='absolute', indexing='xy'):
+    """Compute array centroid location.
 
     Parameters
     ----------
-    img : array_like
+    x : array_like
         Input array.
+    where: array_like of bool, optional
+        Elements to include in the centroid calculation. If None (default),
+        all finite and non-NaN values are used.
+    mode : {'absolute', 'center'}, optional
+        Specifies how the centroid is computed. If 'absolute' (default),
+        the absolute centroid within the input is returned. If 'center', the
+        centroid relative to the center of the input is returned.
+    indexing : {'xy', 'ij'}, optional
+        Cartesian ('xy', default) or matrix ('ij', default) indexing of mesh.
 
     Returns
     -------
-    tuple
-        ``(r,c)`` centroid location.
-    """
+    centroid : tuple
+        (r, c) or (x, y) centroid location
 
-    img = np.asarray(img)
-    img = img/np.sum(img)
-    nr, nc = img.shape
+    Examples
+    --------
+    .. plot::
+        :include-source:
+        :context: reset
+        :scale: 50
+
+        >>> circ = lentil.circle(shape=(256, 256), radius=25, shift=(-80, 50))
+        >>> plt.imshow(circ, cmap='gray')
+
+    .. code:: pycon
+
+        >>> lentil.centroid(circ)
+        (48.0, 178.0)
+        >>> lentil.centroid(circ, mode='center')
+        (-80.0, 50.0)
+        >>> lentil.centroid(circ, mode='center', indexing='xy')
+        (50.0, -80.0)
+
+    """
+    x = np.asarray(x)
+
+    if mode not in ('absolute', 'center'):
+        raise ValueError(f'Unknown kind {mode}')
+
+    if indexing not in ('ij', 'xy'):
+        raise ValueError("Valid values for indexing are 'xy' and 'ij'.")
+
+    if where is None:
+        where = np.isfinite(x)
+    else:
+        where = np.asarray(where, dtype=bool)
+
+    if np.isnan(x[where]).any():
+        warnings.warn('Unmasked NaN in input', RuntimeWarning,
+                      stacklevel=2)
+
+    anorm = x[where]/np.sum(x[where])
+
+    nr, nc = x.shape
     rr, cc = np.mgrid[0:nr, 0:nc]
 
-    r = np.dot(rr.ravel(), img.ravel())
-    c = np.dot(cc.ravel(), img.ravel())
+    r = np.dot(rr[where].ravel(), anorm.ravel())
+    c = np.dot(cc[where].ravel(), anorm.ravel())
+
+    if mode == 'center':
+        rc, cc = np.floor(np.asarray(x.shape)/2)
+        r = r - rc
+        c = c - cc
+
+    if indexing == 'xy':
+        if mode == 'center':
+            r, c = c, r
+        else:
+            # absolute pixel coordinates (col, row); +y down
+            r, c = c, r
 
     return r, c
 
 
-def pad(array, shape):
-    """Zero-pad an array.
+def pad(x, shape, fill=0):
+    """Pad or crop an array about its center.
 
-    Note that pad works for both two and three dimensional arrays.
+    Note that pad accepts both two and three dimensional arrays.
 
     Parameters
     ----------
-    array : array_like
+    x : array_like
         Array to be padded.
-
-    shape : tuple of ints
+    shape : array_like of ints
         Shape of output array in ``(nrows, ncols)``.
+    fill : scalar
+        Fill value used when pad operation increases array size.
 
     Returns
     -------
-    padded : ndarray
-        Zero-padded array with shape ``(nrows, ncols)``. If ``array`` has a
-        third dimension, the return shape will be ``(nrows, ncols, depth)``.
+    padded_array : ndarray
+        Zero-padded array with shape ``(nrows, ncols)``. If ``x`` has a
+        third dimension, the return shape will be ``(depth, nrows, ncols)``.
+
+    See Also
+    --------
+    :func:`crop`
+
+    Examples
+    --------
+    .. plot::
+        :include-source:
+        :context: reset
+        :scale: 50
+
+        >>> circ = lentil.circle(shape=(128, 128), radius=64)
+        >>> circ_pad = lentil.pad(circ, shape=(200, 200))
+        >>> fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5, 2))
+        >>> ax[0].imshow(circ, cmap='gray')
+        >>> ax[0].set_title('Original array')
+        >>> ax[1].imshow(circ_pad, cmap='gray')
+        >>> ax[1].set_title('Padded array')
+
+    .. plot::
+        :include-source:
+        :context: reset
+        :scale: 50
+
+        >>> circ = lentil.circle(shape=(128, 128), radius=64)
+        >>> circ_pad = lentil.pad(circ, shape=(110, 110))
+        >>> fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5, 2))
+        >>> ax[0].imshow(circ, cmap='gray')
+        >>> ax[0].set_title('Original array')
+        >>> ax[1].imshow(circ_pad, cmap='gray')
+        >>> ax[1].set_title('Padded array')
+
     """
+    x = np.atleast_2d(x)
+    shape = np.broadcast_to(np.asarray(shape, dtype=int), (2,))
 
-    array = np.asarray(array)
+    squeeze = x.ndim == 2
+    if squeeze:
+        out_shape = (1, int(shape[0]), int(shape[1]))
+        x = x[np.newaxis, :]
+    else:  # a.ndim == 3
+        out_shape = (x.shape[0], int(shape[0]), int(shape[1]))
 
-    offset = 0
-    if array.ndim == 3:
-        offset = 1
+    # The row and col indices here are 1 and 2 respectively since we've
+    # forced both x and out to have a 3rd dimension
+    rmin = min(x.shape[1] // 2, out_shape[1] // 2)
+    rmax = min(x.shape[1] - x.shape[1] // 2, out_shape[1] - out_shape[1] // 2)
+    cmin = min(x.shape[2] // 2, out_shape[2] // 2)
+    cmax = min(x.shape[2] - x.shape[2] // 2, out_shape[2] - out_shape[2] // 2)
 
+    # Extract the overlapping region from the source array
+    a_slc_r = slice(x.shape[1] // 2 - rmin, x.shape[1] // 2 + rmax)
+    a_slc_c = slice(x.shape[2] // 2 - cmin, x.shape[2] // 2 + cmax)
+    cropped = x[:, a_slc_r, a_slc_c]
 
-    dr = shape[0] - array.shape[0+offset]
-    dc = shape[1] - array.shape[1+offset]
+    # Pad the cropped region to the output shape
+    pad_r_before = out_shape[1] // 2 - rmin
+    pad_r_after = out_shape[1] - out_shape[1] // 2 - rmax
+    pad_c_before = out_shape[2] // 2 - cmin
+    pad_c_after = out_shape[2] - out_shape[2] // 2 - cmax
 
-    if dr <= 0:
-        rmin0 = (array.shape[0+offset] - shape[0])//2
-        rmax0 = rmin0 + shape[0]
-        rmin1 = 0
-        rmax1 = shape[0]
-    else:
-        rmin0 = 0
-        rmax0 = array.shape[0+offset]
-        rmin1 = (shape[0] - array.shape[0+offset])//2
-        rmax1 = rmin1 + array.shape[0+offset]
+    out = np.pad(cropped,
+                 ((0, 0), (pad_r_before, pad_r_after), (pad_c_before, pad_c_after)),
+                 mode='constant', constant_values=fill)
 
-    if dc <= 0:
-        cmin0 = (array.shape[1+offset] - shape[1])//2
-        cmax0 = cmin0 + shape[1]
-        cmin1 = 0
-        cmax1 = shape[1]
-    else:
-        cmin0 = 0
-        cmax0 = array.shape[1]
-        cmin1 = (shape[1] - array.shape[1+offset])//2
-        cmax1 = cmin1 + array.shape[1+offset]
-
-    if array.ndim < 3:
-        padded = np.zeros((shape[0], shape[1]), dtype=array.dtype)
-        padded[rmin1:rmax1, cmin1:cmax1] = array[rmin0:rmax0, cmin0:cmax0]
-    else:
-        padded = np.zeros((array.shape[0], shape[0], shape[1]), dtype=array.dtype)
-        padded[:, rmin1:rmax1, cmin1:cmax1] = array[:, rmin0:rmax0, cmin0:cmax0]
-
-    return padded
+    # only remove the depth axis added above
+    return out[0] if squeeze else out
 
 
 def subarray(a, shape, shift=(0,0)):
@@ -109,82 +195,146 @@ def subarray(a, shape, shift=(0,0)):
     -------
     out : ndarray
         Subarray extracted from the source array.
+
+    See Also
+    --------
+    :func:`crop`
     """
 
-    a = np.asarray(a)
-    shape = np.asarray(shape)
+    msg = """
+    lentil.subarray() is deprecated and will be removed in a future release.
+    
+    Use lentil.crop() instead.
+    """
+    warnings.warn('lentil.subarray() is deprecated and will be removed in a '
+                  'future release. Use lentil.crop() instead.',
+                  DeprecationWarning, stacklevel=2)
 
-    rmin = a.shape[0]//2 - shape[0]//2 + shift[0]
-    cmin = a.shape[1]//2 - shape[1]//2 + shift[1]
-    rmax = rmin + shape[0]
-    cmax = cmin + shape[1]
-
-    if any((rmin<0, cmin<0, rmax>a.shape[0], cmax>a.shape[1])):
-        raise ValueError('window lies outside of array')
-
-    return a[rmin:rmax, cmin:cmax]
+    return crop(x=a, shape=shape, shift=shift, mode='center', indexing='ij')
 
 
-def window(img, shape=None, slice=None):
-    """Extract an appropriately sized, potentially windowed array
+def crop(x, shape, shift=None, mode='absolute', indexing='xy',
+         copy=False):
+    """Extract a contiguous subarray from a larger array.
+
+    The subarray is extracted about the center of the source array unless
+    a shift is specified.
 
     Parameters
     ----------
-    img : array_like
-        Data to window
-
-    shape : array_like or None, optional
-        Output shape given as (nrows, ncols). If ``None`` (default), an
-        uncropped array is returned.
-
-    slice : array_like or None, optional
-        Indices of ``img`` array to return given as (r_start, r_end, c_start,
-        c_end). This definition follows standard numpy indexing.
+    x : array_like
+        Source array
+    shape : array_like of ints
+        Shape of subarray in ``(nrows, ncols)``.
+    shift : array_like of ints, optional
+        Subarray center shift. Default is None (subarray is extracted about
+        the center of the source array). Fractional shifts are rounded to the
+        nearest integer.
+    mode : {'absolute', 'center'}, optional
+        Specifies how the subarray center located. If 'absolute' (default)
+        the subarray is extracted about the location given by ``shift``. If
+        'center', the subarray is extracted about the center of the source
+        array shifted by ``shift``.
+    indexing : {'xy', 'ij'}, optional
+        Cartesian ('xy', default) or matrix ('ij') indexing of shift.
+    copy: bool, optional
+        If True, a copy is returned. If False (default), a view of the
+        original array is returned.
 
     Returns
     -------
-    data : ndarray
-        Trimmed and windowed ``img`` array
+    out : ndarray
+        Subarray extracted from the source array.
 
-    Notes
-    -----
-    * If ``img`` is a single value (img.size == 1), self.data is returned
-      regardless of what ``shape`` and ``slice`` are.
-    * If ``shape`` is given but ``slice`` is ``None``, the returned ndarray
-      is trimmed about the center of the array using :func:`lentil.pad`.
-    * If ``slice`` is given but ``shape`` is ``None``, the returned ndarray
-      is extracted from ``img`` according to the indices in ``slice``
-    * If both ``shape`` and ``slice`` are given, the returned ndarray is
-      extracted from ``img`` according to the indices in ``slice`` and the
-      following expressions must also be true:
+    See Also
+    --------
+    :func:`pad`
 
-    .. code::
+    Examples
+    --------
+    .. plot::
+        :include-source:
+        :context: reset
+        :scale: 50
 
-        shape[0] = (slice[1] - slice[0]) = (r_end - r_start)
-        shape[1] = (slice[3] - slice[2]) = (c_end - c_start)
+        >>> circ = lentil.circle(shape=(128,128), radius=64)
+        >>> circ_crop = lentil.crop(circ, shape=(110,110))
+        >>> fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5,2))
+        >>> ax[0].imshow(circ, cmap='gray')
+        >>> ax[0].set_title('Original array')
+        >>> ax[1].imshow(circ_crop, cmap='gray')
+        >>> ax[1].set_title('Subarray')
+
+    .. plot::
+        :include-source:
+        :context: reset
+        :scale: 50
+
+        >>> circ = lentil.circle(shape=(128,128), radius=64)
+        >>> circ_crop = lentil.crop(circ, shape=(64,64), shift=(32,32))
+        >>> fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5,2))
+        >>> ax[0].imshow(circ, cmap='gray')
+        >>> ax[0].set_title('Original array')
+        >>> ax[1].imshow(circ_crop, cmap='gray')
+        >>> ax[1].set_title('Subarray')
+
+    .. plot::
+        :include-source:
+        :context: reset
+        :scale: 50
+
+        >>> circ = lentil.circle(shape=(128,128), radius=64)
+        >>> circ_crop = lentil.crop(circ, shape=(64,64), shift=(-32,-32), 
+        ...                                  mode='center')
+        >>> fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(5,2))
+        >>> ax[0].imshow(circ, cmap='gray')
+        >>> ax[0].set_title('Original array')
+        >>> ax[1].imshow(circ_crop, cmap='gray')
+        >>> ax[1].set_title('Subarray')
+
+    Crop about an array's centroid with
+
+    .. code:: python
+
+        crop(x, shape, shift=lentil.centroid(x))
 
     """
+    x = np.asarray(x)
+    shape = np.asarray(shape)
 
-    img = np.asarray(img)
-    if img.size == 1:
-        return img
+    if mode not in ('absolute', 'center'):
+        raise ValueError(f'Unknown mode {mode}')
 
-    if shape is None and slice is None:
-        return img
-    elif slice is not None:
-        if shape is not None:
-            # ensure size consistency
-            assert(slice[1] - slice[0]) == shape[0]
-            assert(slice[3] - slice[2]) == shape[1]
+    if indexing not in ('ij', 'xy'):
+        raise ValueError("Valid values for indexing are 'xy' and 'ij'.")
 
-        # return the requested view. Note that numpy will implicitly handle a
-        # third dimension if one is present
-        return img[slice[0]:slice[1], slice[2]:slice[3]]
-
+    if shift is not None:
+        shift = np.round(shift).astype(int)
+        if indexing == 'xy':
+            if mode == 'center':
+                shift = (shift[1], shift[0])
+            else:
+                # absolute pixel coordinates (col, row)
+                shift = (shift[1], shift[0])
+        if mode == 'absolute':
+            shift = np.array(shift - np.array(x.shape[-2:])//2)
     else:
-        # return the padded array. Note that pad will handle a third dimension
-        # if one exists
-        return lentil.pad(img, shape)
+        shift = (0,0)
+
+    nr, nc = x.shape[-2:]
+
+    rmin = nr//2 - shape[0]//2 + shift[0]
+    cmin = nc//2 - shape[1]//2 + shift[1]
+    rmax = rmin + shape[0]
+    cmax = cmin + shape[1]
+
+    if any((rmin<0, cmin<0, rmax>nr, cmax>nc)):
+        raise ValueError('window lies outside of array')
+
+    if copy:
+        return np.copy(x[..., rmin:rmax, cmin:cmax])
+    else:
+        return x[..., rmin:rmax, cmin:cmax]
 
 
 def boundary(x, threshold=0):
@@ -218,7 +368,7 @@ def boundary(x, threshold=0):
     return rmin, rmax, cmin, cmax
 
 
-def sample(x, oversample, offset=0, axes=(-2, -1), indexing='ij'):
+def sample(x, oversample, offset=0, axes=(-2, -1), indexing='xy'):
     """Extract samples from an oversampled array.
 
     The sampled axes are tiled into contiguous blocks of ``oversample``
@@ -240,8 +390,8 @@ def sample(x, oversample, offset=0, axes=(-2, -1), indexing='ij'):
     axes : (2,) sequence of ints, optional
         Axes over which to sample. If not provided, the last two axes are
         used.
-    indexing : {'ij', 'xy'}, optional
-        Matrix (‘ij’, default) or cartesian (‘xy’) indexing of ``x`` grid.
+    indexing : {'xy', 'ij'}, optional
+        Cartesian ('xy', default) or matrix ('ij') indexing of ``x`` grid.
 
     Returns
     -------
@@ -250,6 +400,10 @@ def sample(x, oversample, offset=0, axes=(-2, -1), indexing='ij'):
         length is not a multiple of ``oversample``, samples taken beyond the
         last whole block are ignored.
 
+    See Also
+    --------
+    :func:`rebin`
+    :func:`rescale`
     """
     x = np.asarray(x)
 
@@ -261,7 +415,7 @@ def sample(x, oversample, offset=0, axes=(-2, -1), indexing='ij'):
     axes = tuple(int(a) % x.ndim for a in axes)
 
     if indexing == 'xy':
-        offset = (-offset[1], offset[0])
+        offset = (offset[1], offset[0])
         oversample = (oversample[1], oversample[0])
 
     idx = [slice(None)] * x.ndim
@@ -301,8 +455,8 @@ def rebin(img, factor):
 
     See Also
     --------
+    :func:`sample`
     :func:`rescale`
-
     """
     img = np.asarray(img)
 
@@ -370,6 +524,7 @@ def rescale(img, scale, shape=None, mask=None, order=3, mode='nearest',
 
     See Also
     --------
+    :func:`sample`
     :func:`rebin`
 
     """
@@ -475,18 +630,4 @@ def normalize_power(array, power=1):
     return array * np.sqrt(power/np.sum(np.abs(array)**2))
 
 
-def sanitize_shape(shape):
-    shape = np.asarray(shape)
-    if shape.size == 0:
-        shape = ()
-    else:
-        if shape.shape == ():
-            shape = np.append(shape, shape)
-    return tuple(shape)
-
-
-def sanitize_bandpass(vec):
-    vec = np.asarray(vec)
-    if vec.shape == ():
-        vec = vec[np.newaxis, ...]
-    return vec
+normpow = normalize_power

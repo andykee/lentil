@@ -145,7 +145,7 @@ def _has_tilt(wavefront):
 
 
 def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
-                  oversample=1, mask=None, shift=(0, 0)):
+                  oversample=1, mask=None, shift=(0, 0), indexing='xy'):
     """Propagate a Wavefront in the far-field using the DFT.
 
     Parameters
@@ -172,8 +172,13 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
         is zero. Mask values are not applied to the result. If None
         (default), the full output plane is computed.
     shift : (2,)
-        Number of pixels in (r,c) to shift the DC pixel in the output plane
-        with the origin centrally located in the plane. Default is ``(0,0)``.
+        Number of pixels to shift the DC pixel in the output plane with the
+        origin centrally located in the plane. Interpreted according to
+        `indexing`. Default is ``(0,0)``.
+    indexing : {'xy', 'ij'}, optional
+        Cartesian ('xy', default) or matrix ('ij') indexing of ``shift``.
+        With 'xy', ``shift = (x, y)`` where +x is increasing column and +y
+        is increasing row. With 'ij', ``shift = (r, c)``.
 
     Returns
     -------
@@ -198,7 +203,13 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
     else:
         out_extent = lentil.extent.array_extent(shape_out, shift=(0, 0))
 
-    shift = np.broadcast_to(shift, (2,)) * oversample
+    if indexing not in ('xy', 'ij'):
+        raise ValueError("Valid values for indexing are 'xy' and 'ij'.")
+
+    shift = np.broadcast_to(shift, (2,))
+    if indexing == 'xy':
+        shift = (shift[1], shift[0])
+    shift = np.asarray(shift) * oversample
 
     dx = wavefront.pixelscale
     du = np.broadcast_to(pixelscale, (2,))

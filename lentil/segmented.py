@@ -5,7 +5,7 @@ import numpy as np
 import lentil
 
 
-def hex_segments(rings, seg_radius, seg_gap, rotate=False, antialias=True,
+def hex_segments(rings, seg_radius, seg_gap, rotate=True, antialias=True,
                  flatten=False, pad=2, drop=(0,)):
     """Draw a segmented aperture made up of hexagonal segments
 
@@ -18,9 +18,8 @@ def hex_segments(rings, seg_radius, seg_gap, rotate=False, antialias=True,
     seg_gap : float
         Spacing between adjacent segments in pixels
     rotate : bool, optional
-        Rotate segments so that flat sides are aligned with the Y direction 
-        instead of the default orientation which is aligned with the X 
-        direction.
+        If True (default), the segment mask is rotated so that flat sides are
+        aligned with the X direction instead with the Y direction.
     antialias : bool, optional
         If True (default), the segment edges are antialiased.
     flatten : bool, optional

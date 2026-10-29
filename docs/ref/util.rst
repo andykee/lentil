@@ -24,8 +24,8 @@ Array manipulation
     boundary
     centroid
     pad
+    crop
     subarray
-    window
     sample
     rebin
     rescale

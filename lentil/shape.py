@@ -1,9 +1,10 @@
 import numpy as np
 
 import lentil
+import lentil._mesh
 
 
-def circle(shape, radius, shift=(0, 0), antialias=True):
+def circle(shape, radius, shift=(0, 0), antialias=True, indexing='xy'):
     """Draw a circle
 
     Parameters
@@ -13,24 +14,27 @@ def circle(shape, radius, shift=(0, 0), antialias=True):
     radius : float
         Radius of circle in pixels
     shift : (2,) array_like, optional
-        How far to shift center in float (rows, cols). Default is (0, 0).
+        How far to shift center of circle. Default is (0, 0).
     antialias : bool, optional
         If True (default), the shape edges are antialiased.
+    indexing : {'xy', 'ij'}, optional
+        Cartesian ('xy', default) or matrix ('ij') or indexing of shift.
 
     Returns
     -------
     ndarray
 
     """
-    rr, cc = lentil.helper.mesh(shape)
-    r = np.sqrt(np.square(rr - shift[0]) + np.square(cc - shift[1]))
+    x1, x2 = lentil._mesh.mesh(shape, shift=shift, indexing=indexing)
+    r = np.sqrt(x1**2 + x2**2)
     mask = np.clip(radius + 0.5 - r, 0.0, 1.0)
     if not antialias:
         mask[mask > 0] = 1
     return mask
 
 
-def hexagon(shape, radius, shift=(0, 0), rotate=False, antialias=True):
+def hexagon(shape, radius, shift=(0, 0), rotate=True, antialias=True,
+            indexing='xy'):
     """Draw a hexagon
 
     Parameters
@@ -41,12 +45,14 @@ def hexagon(shape, radius, shift=(0, 0), rotate=False, antialias=True):
         Radius of outscribing circle (which also equals the side length) in
         pixels.
     shift : tuple of floats, optional
-        How far to shift center in (rows, cols). Default is (0, 0).
+        How far to shift center of hexagon. Default is (0, 0).
     rotate : bool, optional
-        Rotate mask so that flat sides are aligned with the Y direction instead
-        of the default orientation which is aligned with the X direction.
+        If True (default), the mask is rotated so that flat sides are aligned
+        with the X direction instead with the Y direction.
     antialias : bool, optional
         If True (default), the shape edges are antialiased.
+    indexing : {'xy', 'ij'}, optional
+            Cartesian ('xy', default) or matrix ('ij') or indexing of shift.
         
     Returns
     -------
@@ -54,7 +60,7 @@ def hexagon(shape, radius, shift=(0, 0), rotate=False, antialias=True):
 
     """
     shape = np.broadcast_to(shape, (2,))
-    r, c = lentil.helper.mesh(shape, shift)
+    r, c = lentil._mesh.mesh(shape, shift=shift, indexing=indexing)
     mask = np.ones(shape)
 
     inner_radius = radius * np.sqrt(3)/2
@@ -75,7 +81,8 @@ def hexagon(shape, radius, shift=(0, 0), rotate=False, antialias=True):
     return mask
 
 
-def rectangle(shape, width, height, shift=(0,0), angle=0, antialias=True):
+def rectangle(shape, width, height, shift=(0,0), angle=0, antialias=True,
+              indexing='xy'):
     """Draw a rectangle
 
     Parameters
@@ -87,12 +94,14 @@ def rectangle(shape, width, height, shift=(0,0), angle=0, antialias=True):
     height : float
         Height of rectangle in pixels
     shift : tuple of floats, optional
-        How far to shift center in (rows, cols). Default is (0, 0).
+        How far to shift center of rectangle. Default is (0, 0).
     angle : float, optional
         Rotation of rectangle in degrees counterclockwise from horizontal.
         Default is 0.
     antialias : bool, optional
         If True (default), the shape edges are antialiased.
+    indexing : {'xy', 'ij'}, optional
+            Cartesian ('xy', default) or matrix ('ij') or indexing of shift.
         
     Returns
     -------
@@ -100,7 +109,8 @@ def rectangle(shape, width, height, shift=(0,0), angle=0, antialias=True):
     
     """
     shape = np.broadcast_to(shape, (2,))
-    rr, cc = lentil.helper.mesh(shape, shift, angle)
+    rr, cc = lentil._mesh.mesh(shape, shift=shift, angle=angle,
+                               indexing=indexing)
     rect = np.ones(shape)
 
     width_clip = np.clip(0.5 + (width/2) - np.abs(cc), 0, 1)
@@ -114,7 +124,8 @@ def rectangle(shape, width, height, shift=(0,0), angle=0, antialias=True):
     return rect
 
 
-def spider(shape, width, angle=0, shift=(0,0), antialias=True):
+def spider(shape, width, angle=0, shift=(0,0), antialias=True,
+           indexing='xy'):
     """Draw a spider
 
     Parameters
@@ -127,9 +138,11 @@ def spider(shape, width, angle=0, shift=(0,0), antialias=True):
         Rotation of spider in degrees counterclockwise from horizontal.
         Default is 0.
     shift : tuple of floats, optional
-        How far to shift center in (rows, cols). Default is (0, 0).
+        How far to shift center of spider. Default is (0, 0).
     antialias : bool, optional
         If True (default), the spider edges are antialiased.
+    indexing : {'xy', 'ij'}, optional
+            Cartesian ('xy', default) or matrix ('ij') or indexing of shift.
     
     Returns
     -------
@@ -137,9 +150,13 @@ def spider(shape, width, angle=0, shift=(0,0), antialias=True):
 
     """
     shape = np.broadcast_to(shape, (2,))
-    len = np.sqrt(2) * np.max(shape)/2  # max length when angle is a multiple of 45 deg
+    len = 2*np.max(shape)
     shift_dist = len / 2
     shift_row = -shift_dist * np.sin(np.deg2rad(angle))
     shift_col = shift_dist * np.cos(np.deg2rad(angle))
+    if indexing == 'xy':
+        shift = [shift[1], shift[0]]
     shift = (shift[0] + shift_row, shift[1] + shift_col)
-    return 1 - lentil.rectangle(shape, len, width, shift, angle, antialias)
+    return 1 - lentil.rectangle(shape, width=len, height=width, shift=shift,
+                                angle=angle, antialias=antialias, 
+                                indexing='ij')

@@ -544,12 +544,11 @@ class Plane(_PlaneBase):
             pixelscale = np.broadcast_to(self.pixelscale, (2,))
 
             # compute unmasked piston, x-tilt, y-tilt vector
-            r, c = lentil.helper.mesh(self.shape)
-            # note c is negative here. this is done to match Lentil's
-            # definition of what +x tilt and +y tilt look like. The columns of
-            # unmasked_ptt_vector should match the shapes returned by lentil.zernike for
-            # modes 1:3
-            unmasked_ptt_vector = np.einsum('ij,i->ij', [np.ones(r.size), r.ravel(), -c.ravel()],
+            x1, x2 = lentil._mesh.mesh(shape=self.shape, indexing='xy')
+            # map grids returned by mesh into vectors representing tilts about
+            # the x and y axes
+            rx, ry = -x2.ravel(), -x1.ravel()
+            unmasked_ptt_vector = np.einsum('ij,i->ij', [np.ones(x1.size), rx, ry],
                                             [1, pixelscale[0], pixelscale[1]])
 
             if self.size == 1:
