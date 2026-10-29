@@ -441,10 +441,10 @@
 
 <div class="viewcode-block" id="propagate_fft">
 <a class="viewcode-back" href="../../ref/generated/lentil.propagate_fft.html#lentil.propagate_fft">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">propagate_fft</span><span class="p">(</span><span class="n">wavefront</span><span class="p">,</span> <span class="n">pixelscale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">propagate_fft</span><span class="p">(</span><span class="n">wavefront</span><span class="p">,</span> <span class="n">pixelscale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                   <span class="n">scratch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Propagate a Wavefront in the far-field using the FFT.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    wavefront : :class:`~lentil.Wavefront`</span>
@@ -456,10 +456,10 @@
 <span class="sd">        Shape of output Wavefront. If None (default), the wavefront shape is</span>
 <span class="sd">        used.</span>
 <span class="sd">    oversample : float, optional</span>
-<span class="sd">        Number of times to oversample the output plane. Default is 2.</span>
+<span class="sd">        Number of times to oversample the output plane. Default is 1.</span>
 <span class="sd">    scratch : complex ndarray, optional</span>
 <span class="sd">        A pre-allocated array used for padding. Providing a sufficiently</span>
-<span class="sd">        large scratch array can improve broadband propagation performance by </span>
+<span class="sd">        large scratch array can improve broadband propagation performance by</span>
 <span class="sd">        avoiding the repeated allocation of arrays of zeros.</span>
 
 <span class="sd">    Returns</span>
@@ -474,12 +474,12 @@
 
     <span class="n">ptype_out</span> <span class="o">=</span> <span class="n">_propagate_ptype</span><span class="p">(</span><span class="n">wavefront</span><span class="o">.</span><span class="n">ptype</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'fraunhofer'</span><span class="p">)</span>
     <span class="n">pixelscale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">pixelscale</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
-    <span class="n">fft_shape</span><span class="p">,</span> <span class="n">prop_wavelength</span> <span class="o">=</span> <span class="n">_fft_shape</span><span class="p">(</span><span class="n">wavefront</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">,</span> 
-                                            <span class="n">pixelscale</span><span class="p">,</span> 
-                                            <span class="n">wavefront</span><span class="o">.</span><span class="n">focal_length</span><span class="p">,</span> 
-                                            <span class="n">wavefront</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span> 
+    <span class="n">fft_shape</span><span class="p">,</span> <span class="n">prop_wavelength</span> <span class="o">=</span> <span class="n">_fft_shape</span><span class="p">(</span><span class="n">wavefront</span><span class="o">.</span><span class="n">pixelscale</span><span class="p">,</span>
+                                            <span class="n">pixelscale</span><span class="p">,</span>
+                                            <span class="n">wavefront</span><span class="o">.</span><span class="n">focal_length</span><span class="p">,</span>
+                                            <span class="n">wavefront</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span>
                                             <span class="n">oversample</span><span class="p">)</span>
-    
+
     <span class="c1"># TODO: verify field_shape is smaller than fft_shape</span>
     <span class="c1"># TODO: what if field is bigger than fft_shape?</span>
     <span class="c1"># field_shape = wavefront.shape</span>
@@ -491,21 +491,21 @@
         <span class="n">shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,)))</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">shape</span> <span class="o">&gt;</span> <span class="n">fft_shape</span><span class="o">/</span><span class="n">oversample</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'requested shape </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s1"> is larger in at '</span>
-                            <span class="sa">f</span><span class="s1">'least one dimension than maximum propagation '</span>
-                            <span class="sa">f</span><span class="s1">'shape </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">fft_shape</span><span class="o">//</span><span class="n">oversample</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+                             <span class="sa">f</span><span class="s1">'least one dimension than maximum propagation '</span>
+                             <span class="sa">f</span><span class="s1">'shape </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">fft_shape</span><span class="o">//</span><span class="n">oversample</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">shape_out</span> <span class="o">=</span> <span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">oversample</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">oversample</span><span class="p">)</span>
 
     <span class="n">out</span> <span class="o">=</span> <span class="n">Wavefront</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">wavelength</span><span class="o">=</span><span class="n">prop_wavelength</span><span class="p">,</span>
-                          <span class="n">pixelscale</span> <span class="o">=</span> <span class="n">pixelscale</span><span class="o">/</span><span class="n">oversample</span><span class="p">,</span>
+                          <span class="n">pixelscale</span><span class="o">=</span><span class="n">pixelscale</span><span class="o">/</span><span class="n">oversample</span><span class="p">,</span>
                           <span class="n">focal_length</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">focal_length</span><span class="p">,</span>
-                          <span class="n">shape</span> <span class="o">=</span> <span class="n">shape_out</span><span class="p">,</span>
-                          <span class="n">ptype</span> <span class="o">=</span> <span class="n">ptype_out</span><span class="p">)</span>
-    
+                          <span class="n">shape</span><span class="o">=</span><span class="n">shape_out</span><span class="p">,</span>
+                          <span class="n">ptype</span><span class="o">=</span><span class="n">ptype_out</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">scratch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">scratch</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">fft_shape</span><span class="p">):</span>
-             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'scratch must have shape greater than or '</span>
-                              <span class="sa">f</span><span class="s1">'equal to </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">fft_shape</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'scratch must have shape greater than or '</span>
+                             <span class="sa">f</span><span class="s1">'equal to </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">fft_shape</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="c1"># zero out the portion of scratch that we're going to use for the</span>
         <span class="c1"># propagation and then insert the Wavefront field(s) into scratch</span>
@@ -517,7 +517,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">field</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">wavefront</span><span class="o">.</span><span class="n">field</span><span class="p">,</span> <span class="n">fft_shape</span><span class="p">)</span>
         <span class="n">field</span> <span class="o">=</span> <span class="n">_fft2</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
-    
+
     <span class="n">out</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Field</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">field</span><span class="p">,</span> <span class="n">pixelscale</span><span class="o">=</span><span class="n">pixelscale</span><span class="o">/</span><span class="n">oversample</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">out</span></div>
@@ -526,7 +526,7 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">scratch_shape</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">du</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">oversample</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Compute the scratch shape required for an FFT propagation</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    wavelength : float or array_like</span>
@@ -563,7 +563,7 @@
     <span class="c1"># Compute pad shape to satisfy requested sampling. Propagation wavelength</span>
     <span class="c1"># is recomputed to account for integer padding of input plane</span>
     <span class="n">alpha</span> <span class="o">=</span> <span class="n">_dft_alpha</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">du</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">,</span> <span class="n">oversample</span><span class="p">)</span>
-    <span class="n">fft_shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">alpha</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>       
+    <span class="n">fft_shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">alpha</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="n">prop_wavelength</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">((</span><span class="n">fft_shape</span><span class="o">/</span><span class="n">oversample</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">du</span><span class="p">)</span><span class="o">/</span><span class="n">z</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fft_shape</span><span class="p">,</span> <span class="n">prop_wavelength</span>
 
@@ -582,8 +582,8 @@
 
 <div class="viewcode-block" id="propagate_dft">
 <a class="viewcode-back" href="../../ref/generated/lentil.propagate_dft.html#lentil.propagate_dft">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">propagate_dft</span><span class="p">(</span><span class="n">wavefront</span><span class="p">,</span> <span class="n">pixelscale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prop_shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
-                  <span class="n">oversample</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">propagate_dft</span><span class="p">(</span><span class="n">wavefront</span><span class="p">,</span> <span class="n">pixelscale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prop_shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">oversample</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
 <span class="w">    </span><span class="sd">"""Propagate a Wavefront in the far-field using the DFT.</span>
 
 <span class="sd">    Parameters</span>
@@ -602,14 +602,14 @@
 <span class="sd">        result is placed in the appropriate location in the output plane.</span>
 <span class="sd">        ``prop_shape`` should not be larger than ``prop``.</span>
 <span class="sd">    oversample : float, optional</span>
-<span class="sd">        Number of times to oversample the output plane. Default is 2.</span>
+<span class="sd">        Number of times to oversample the output plane. Default is 1.</span>
 <span class="sd">    mask : array_like or None, optional</span>
 <span class="sd">        Array with shape ``shape * oversample`` that sets which part of the</span>
 <span class="sd">        output plane is computed. Only the rectangular bounding box enclosing</span>
 <span class="sd">        all nonzero values in ``mask`` is propagated; everything outside it</span>
 <span class="sd">        is zero. Mask values are not applied to the result. If None</span>
 <span class="sd">        (default), the full output plane is computed.</span>
-<span class="sd">    shift : (2,) </span>
+<span class="sd">    shift : (2,)</span>
 <span class="sd">        Number of pixels in (r,c) to shift the DC pixel in the output plane</span>
 <span class="sd">        with the origin centrally located in the plane. Default is ``(0,0)``.</span>
 
@@ -618,9 +618,9 @@
 <span class="sd">    wavefront : :class:`~lentil.Wavefront`</span>
 <span class="sd">        The propagated Wavefront</span>
 <span class="sd">    """</span>
-    
+
     <span class="n">ptype_out</span> <span class="o">=</span> <span class="n">_propagate_ptype</span><span class="p">(</span><span class="n">wavefront</span><span class="o">.</span><span class="n">ptype</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'fraunhofer'</span><span class="p">)</span>
-    
+
     <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">wavefront</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
     <span class="n">prop_shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="k">if</span> <span class="n">prop_shape</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">prop_shape</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
     <span class="n">shape_out</span> <span class="o">=</span> <span class="n">shape</span> <span class="o">*</span> <span class="n">oversample</span>
@@ -634,7 +634,7 @@
         <span class="n">mask_shift</span> <span class="o">=</span> <span class="n">_mask_shift</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">out_extent</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">array_extent</span><span class="p">(</span><span class="n">mask_shape</span><span class="p">,</span> <span class="n">mask_shift</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">out_extent</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">array_extent</span><span class="p">(</span><span class="n">shape_out</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">out_extent</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">array_extent</span><span class="p">(</span><span class="n">shape_out</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 
     <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,))</span> <span class="o">*</span> <span class="n">oversample</span>
 
@@ -645,15 +645,15 @@
     <span class="n">data</span> <span class="o">=</span> <span class="n">wavefront</span><span class="o">.</span><span class="n">data</span>
 
     <span class="n">out</span> <span class="o">=</span> <span class="n">Wavefront</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">wavelength</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span>
-                          <span class="n">pixelscale</span> <span class="o">=</span> <span class="n">du</span><span class="o">/</span><span class="n">oversample</span><span class="p">,</span>
+                          <span class="n">pixelscale</span><span class="o">=</span><span class="n">du</span><span class="o">/</span><span class="n">oversample</span><span class="p">,</span>
                           <span class="n">focal_length</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">focal_length</span><span class="p">,</span>
-                          <span class="n">shape</span> <span class="o">=</span> <span class="n">shape_out</span><span class="p">,</span>
-                          <span class="n">ptype</span> <span class="o">=</span> <span class="n">ptype_out</span><span class="p">)</span>
-        
+                          <span class="n">shape</span><span class="o">=</span><span class="n">shape_out</span><span class="p">,</span>
+                          <span class="n">ptype</span><span class="o">=</span><span class="n">ptype_out</span><span class="p">)</span>
+
     <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="c1"># compute the field shift from any embedded tilts. note the return value</span>
         <span class="c1"># is specified as (r, c)</span>
-        <span class="n">field_shift</span> <span class="o">=</span> <span class="n">shift</span> <span class="o">+</span> <span class="n">field</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">focal_length</span><span class="p">,</span> 
+        <span class="n">field_shift</span> <span class="o">=</span> <span class="n">shift</span> <span class="o">+</span> <span class="n">field</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">focal_length</span><span class="p">,</span>
                                           <span class="n">wavelength</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span>
                                           <span class="n">pixelscale</span><span class="o">=</span><span class="n">du</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="n">oversample</span><span class="p">,</span>
                                           <span class="n">indexing</span><span class="o">=</span><span class="s1">'ij'</span><span class="p">)</span>
@@ -669,10 +669,10 @@
 
             <span class="c1"># compute additional shift rquired to offset any output clipping that</span>
             <span class="c1"># may have occurred due to a mask or extending beyond the full output</span>
-            <span class="c1"># shape. </span>
-            <span class="c1"># NOTE: It appears the same functionality is available using </span>
+            <span class="c1"># shape.</span>
+            <span class="c1"># NOTE: It appears the same functionality is available using</span>
             <span class="c1"># extent.intersection_shift() but there is an off by one error on only</span>
-            <span class="c1"># one of the shift dimensions for some reason that causes the tests to </span>
+            <span class="c1"># one of the shift dimensions for some reason that causes the tests to</span>
             <span class="c1"># fail</span>
             <span class="n">prop_center</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">array_center</span><span class="p">(</span><span class="n">prop_extent</span><span class="p">)</span>
             <span class="n">intersect_center</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">array_center</span><span class="p">(</span><span class="n">intersect_extent</span><span class="p">)</span>
@@ -714,12 +714,13 @@
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">'fraunhofer'</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">ptype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">lentil</span><span class="o">.</span><span class="n">pupil</span><span class="p">,</span> <span class="n">lentil</span><span class="o">.</span><span class="n">image</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Wavefront must have ptype 'pupil' "</span>\
-                        <span class="s2">"or 'image'"</span><span class="p">)</span>
-        
+                            <span class="s2">"or 'image'"</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">ptype</span> <span class="o">==</span> <span class="n">lentil</span><span class="o">.</span><span class="n">pupil</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">lentil</span><span class="o">.</span><span class="n">image</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">lentil</span><span class="o">.</span><span class="n">pupil</span>
+
 </pre></div>
 
                 </article>
