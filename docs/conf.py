@@ -52,7 +52,6 @@ html_theme_options = {
     'show_prev_next': False,
     'github_url': 'https://github.com/andykee/lentil',
     "logo": {
-        "link": "docs",
         "image_light": "_static/logo-light.svg",
         "image_dark": "_static/logo-dark.svg",
     },
