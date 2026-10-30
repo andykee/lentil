@@ -144,14 +144,20 @@ def _has_tilt(wavefront):
     return False
 
 
-def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
-                  oversample=1, mask=None, shift=(0, 0), indexing='xy'):
+def propagate_dft(wavefront, *, to=None, pixelscale=None, shape=None,
+                  prop_shape=None, oversample=1, mask=None, shift=(0, 0),
+                  indexing='xy'):
     """Propagate a Wavefront in the far-field using the DFT.
 
     Parameters
     ----------
     wavefront : :class:`~lentil.Wavefront`
         Wavefront to propagate
+    to : :class:`~lentil.Plane`, optional
+        Plane to propagate to. The output is sampled on the plane's grid.
+        ``pixelscale`` and ``shape`` are taken from ``to`` if they are not
+        provided as additional parameters. The plane is **not** applied to the
+        result after propagation.
     pixelscale : float or (2,) float
         Physical sampling of output Wavefront. If a single value is supplied,
         the output is assumed to be uniformly sampled in both x and y.
@@ -187,6 +193,12 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
     """
 
     ptype_out = _propagate_ptype(wavefront.ptype, method='fraunhofer')
+
+    if to is not None:
+        pixelscale, shape = _to_plane(to, ptype_out, pixelscale, shape)
+    else:
+        if pixelscale is None:
+            raise ValueError("propagate_dft requires either 'pixelscale' or 'to'")
 
     shape = np.asarray(wavefront.shape) if shape is None else np.broadcast_to(shape, (2,))
     prop_shape = np.asarray(shape) if prop_shape is None else np.broadcast_to(prop_shape, (2,))
@@ -262,6 +274,26 @@ def propagate_dft(wavefront, pixelscale, shape=None, prop_shape=None,
                                   offset=intersect_shift))
 
     return out
+
+
+def _to_plane(plane, ptype_out, pixelscale, shape):
+    # resolve propagation setup from a target Plane
+    # if pixelscale or shape are explicitly provided they override the values
+    # extracted from plane
+
+    if plane.ptype not in (lentil.none, ptype_out):
+        raise TypeError(f"can't propagate to Plane with ptype '{plane.ptype}': "
+                        f"propagation result has ptype '{ptype_out}'")
+    pixelscale = pixelscale if pixelscale is not None else plane.pixelscale
+    shape = shape if shape is not None else plane.shape
+
+    if pixelscale is None:
+        raise ValueError("can't propagate to Plane with pixelscale = None")
+
+    if shape == ():
+        shape = None
+
+    return pixelscale, shape
 
 
 def _mask_shape(x, threshold=0):
