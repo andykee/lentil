@@ -145,8 +145,8 @@ def _has_tilt(wavefront):
 
 
 def propagate_dft(wavefront, *, to=None, pixelscale=None, shape=None,
-                  prop_shape=None, oversample=1, mask=None, shift=(0, 0),
-                  indexing='xy'):
+                  prop_shape=None, oversample=1, focal_length=None, mask=None,
+                  shift=(0, 0), indexing='xy'):
     """Propagate a Wavefront in the far-field using the DFT.
 
     Parameters
@@ -171,6 +171,13 @@ def propagate_dft(wavefront, *, to=None, pixelscale=None, shape=None,
         ``prop_shape`` should not be larger than ``prop``.
     oversample : float, optional
         Number of times to oversample the output plane. Default is 1.
+    focal_length : float, optional
+        Effective focal length of the optic performing the propagation. For a
+        pupil -> image propagation it sets the plate scale. For an image ->
+        pupil propagation it is the focal length of the collimating optic and
+        sets the output pupil size. If None (default), the Wavefront's focal
+        length is used. The returned Wavefront carries this focal length
+        forward.
     mask : array_like or None, optional
         Array with shape ``shape * oversample`` that sets which part of the
         output plane is computed. Only the rectangular bounding box enclosing
@@ -225,21 +232,22 @@ def propagate_dft(wavefront, *, to=None, pixelscale=None, shape=None,
 
     dx = wavefront.pixelscale
     du = np.broadcast_to(pixelscale, (2,))
-    z = wavefront.focal_length
+    z = wavefront.focal_length if focal_length is None else focal_length
 
     data = wavefront.data
 
     out = Wavefront.empty(wavelength=wavefront.wavelength,
                           pixelscale=du/oversample,
-                          focal_length=wavefront.focal_length,
+                          focal_length=z,
+                          diameter=_magnification_diameter(wavefront,
+                                                           ptype_out, z),
                           shape=shape_out,
                           ptype=ptype_out)
 
     for field in data:
-        # compute the field shift from any embedded tilts. note the return value
-        # is specified as (r, c)
-        field_shift = shift + field.shift(z=wavefront.focal_length,
-                                          wavelength=wavefront.wavelength,
+        # compute the field shift from any embedded tilts. note the return
+        # value is specified as (r, c)
+        field_shift = shift + field.shift(z=z, wavelength=wavefront.wavelength,
                                           pixelscale=du, oversample=oversample,
                                           indexing='ij')
         fix_shift = np.trunc(field_shift)
@@ -294,6 +302,15 @@ def _to_plane(plane, ptype_out, pixelscale, shape):
         shape = None
 
     return pixelscale, shape
+
+
+def _magnification_diameter(wavefront, ptype_out, z):
+    # an image -> pupil propagation with a new focal length rescales the beam
+    # diameter by f2/f1
+    d, f = wavefront.diameter, wavefront.focal_length
+    if ptype_out == lentil.pupil and d is not None and f is not None:
+        return d * z / f
+    return d
 
 
 def _mask_shape(x, threshold=0):

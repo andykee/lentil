@@ -33,7 +33,7 @@ class _PlaneBase:
         self.__freeze_attrs__ = ['amplitude', 'opd']
 
         return self
-    
+
     def __repr__(self):
         return f'{self.__class__.__name__}()'
 
@@ -48,14 +48,14 @@ class _PlaneBase:
 
     def __opd__(self):
         return self._opd
-    
+
     def __mul__(self, wavefront):
         """This function should be implemented by a subclass of _Planebase"""
         raise NotImplementedError
-    
+
     def __rmul__(self, other):
         return self.__mul__(other)
-    
+
     @property
     def ptype(self):
         """Plane type
@@ -143,7 +143,7 @@ class _PlaneBase:
 
         """
         return self._pixelscale
-    
+
     @property
     def diameter(self):
         """Plane diameter
@@ -201,7 +201,7 @@ class _PlaneBase:
             return 1
         else:
             return self.mask.shape[0]
-        
+
     @property
     def frozen(self):
         """Freeze (cache) state
@@ -214,7 +214,7 @@ class _PlaneBase:
         :func:`~lentil.Plane.thaw`
         """
         return self._frozen
-    
+
     def freeze(self, inplace=True):
         """Cache properties defined in ``Plane.__freeze_attrs__``.
 
@@ -285,8 +285,8 @@ class _PlaneBase:
         Parameters
         ----------
         scale : float
-            Scale factor for interpolation. Scale factors less than 1 shrink the
-            Plane while scale factors greater than 1 grow it.
+            Scale factor for interpolation. Scale factors less than 1 shrink
+            the Plane while scale factors greater than 1 grow it.
 
         Returns
         -------
@@ -304,13 +304,14 @@ class _PlaneBase:
         plane = copy.deepcopy(self)
 
         if plane.amplitude.ndim > 1:
-            plane.amplitude = lentil.rescale(plane.amplitude, scale=scale, shape=None,
-                                             mask=None, order=3, mode='nearest',
-                                             unitary=False)/scale
+            plane.amplitude = lentil.rescale(plane.amplitude, scale=scale,
+                                             shape=None, mask=None, order=3,
+                                             mode='nearest', unitary=False)/scale
 
         if plane.opd.ndim > 1:
-            plane.opd = lentil.rescale(plane.opd, scale=scale, shape=None, mask=None,
-                                       order=3, mode='nearest', unitary=False)
+            plane.opd = lentil.rescale(plane.opd, scale=scale, shape=None,
+                                       mask=None, order=3, mode='nearest',
+                                       unitary=False)
 
         if plane._mask is not None:
             if plane._mask.ndim == 2:
@@ -337,8 +338,8 @@ class _PlaneBase:
 
         The following Plane attributes are resampled:
 
-        * `Plane.amplitude` is resampled via 3rd order spline interpolation. The
-          result is scaled to preserve total power.
+        * `Plane.amplitude` is resampled via 3rd order spline interpolation.
+          The result is scaled to preserve total power.
         * `Plane.opd` is resampled via 3rd order spline interpolation.
         * `Plane.mask` is resampled via 0-order nearest neighbor interpolation.
         * `Plane.pixelscale` is adjusted appropriately.
@@ -397,7 +398,7 @@ class _PlaneBase:
              stacklevel=2)
 
         return self.__mul__(wavefront)
-    
+
 
 def _enforce_ptype(ptype, valid_ptypes):
     ptype = lentil.ptype(ptype)
@@ -405,14 +406,14 @@ def _enforce_ptype(ptype, valid_ptypes):
         valid = ptype in valid_ptypes
     except TypeError:
         valid = ptype == valid_ptypes
-    
+
     if not valid:
         try:
-            vpt = ', '.join(map(str,valid_ptypes))
+            vpt = ', '.join(map(str, valid_ptypes))
         except TypeError:
             vpt = str(valid_ptypes)
         raise ValueError(f"ptype must be one of the following: {vpt}")
-    
+
 
 class Plane(_PlaneBase):
     """
@@ -491,6 +492,7 @@ class Plane(_PlaneBase):
         out = lentil.Wavefront.empty(wavelength=wavefront.wavelength,
                                      pixelscale=pixelscale,
                                      focal_length=wavefront.focal_length,
+                                     diameter=wavefront.diameter,
                                      shape=shape,
                                      ptype=ptype)
 
@@ -783,8 +785,9 @@ class Pupil(Plane):
     def __mul__(self, wavefront):
         wavefront = super().__mul__(wavefront)
 
-        # we inherit the plane's focal length as the wavefront's focal length
-        wavefront.focal_length = self.focal_length
+        if self.focal_length is not None:
+            wavefront.focal_length = self.focal_length
+            wavefront.diameter = self.diameter
 
         return wavefront
 
