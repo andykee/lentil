@@ -7,3 +7,6 @@ Planes
     :toctree: generated/
 
     Plane
+    Pupil
+    Image
+    Grism

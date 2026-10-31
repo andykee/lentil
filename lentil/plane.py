@@ -974,7 +974,7 @@ class DispersiveTilt(_TiltBase):
     The basic geometry of spectral dispersion is illustrated in the figure
     below:
 
-    .. image:: /_static/img/grism_geometry.png
+    .. image:: /_static/svg/grism_geometry.svg
         :align: center
         :width: 400px
 
@@ -1133,7 +1133,7 @@ class Grism(DispersiveTilt):
     position of the source. This basic geometry is illustrated in the figure
     below:
 
-    .. image:: /_static/img/grism_geometry.png
+    .. image:: /_static/svg/grism_geometry.svg
         :align: center
         :width: 400px
 

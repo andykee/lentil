@@ -462,7 +462,7 @@ class Spectrum:
 
         Two different first/last bin edge methods are available:
 
-        .. image:: /_static/img/spectrum_bin.png
+        .. image:: /_static/svg/spectrum_bin.svg
 
         ========= =============================================== ==================================================================================
         ends      Left edge for ``wave[0]``                       Right edge for ``wave[-1]``

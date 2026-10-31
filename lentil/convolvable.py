@@ -33,17 +33,33 @@ def jitter(img, scale, pixelscale=1, oversample=1):
     --------
     Apply 2 pixels jitter to a 5x oversmapled PSF:
 
-    .. code:: pycon
+    .. plot::
+        :context: reset
 
-        >>> import lentil
-        >>> import matplotlib.pyplot as plt
-        >>> psf = ...  # PSF calculation details omitted
-        >>> psf_jitter = lentil.jitter(psf, scale=2, oversample=5)
-        >>> plt.subplot(121), plt.imshow(psf)
-        >>> plt.subplot(122), plt.imshow(psf_jitter)
+        mask = lentil.circle((256, 256), 120)
+        opd = lentil.zernike_compose(mask, [0, 0, 0, -300e-9, 50e-9, -100e-9, 50e-9])
+        pupil = lentil.Pupil(amplitude=mask, opd=opd, focal_length=10, pixelscale=1 / 240)
+        w = lentil.Wavefront(650e-9)
+        w *= pupil
+        w = lentil.propagate_dft(w, pixelscale=5e-6, shape=64, oversample=5)
+        psf = w.intensity
 
-    ..plot:: _img/python/jitter.py
+    .. plot::
+        :context:
+        :include-source:
+        :nofigs:
+
+        psf_jitter = lentil.jitter(psf, scale=2, oversample=5)
+
+    .. plot::
+        :context:
         :scale: 50
+
+        fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(4,2))
+        ax[0].imshow(psf, cmap=psf_cmap)
+        ax[0].set_title('Input image'); ax[0].axis('off')
+        ax[1].imshow(psf_jitter, cmap=psf_cmap)
+        ax[1].set_title('Jitter image'); ax[1].axis('off')
 
     Apply 10 um jitter to a 5x oversampled PSF. Note that because we are
     specifying jitter in terms of linear distance on the focal plane, we must
@@ -51,20 +67,23 @@ def jitter(img, scale, pixelscale=1, oversample=1):
     the oversampling factor, ensuring the convolution kernel is appropriately
     sized:
 
-    .. code:: pycon
+    .. plot::
+        :context: close-figs
+        :include-source:
+        :nofigs:
 
-        >>> import lentil
-        >>> import matplotlib.pyplot as plt
-        >>> psf = ...  # PSF calculation details omitted
-        >>> psf_jitter = lentil.jitter(psf,
-        ...                            scale=10e-6,
-        ...                            pixelscale=5e-6,
-        ...                            oversample=5)
-        >>> plt.subplot(121), plt.imshow(psf)
-        >>> plt.subplot(122), plt.imshow(psf_jitter)
+        psf_jitter = lentil.jitter(psf, scale=10e-6, pixelscale=5e-6,
+                                   oversample=5)
 
-    .. plot:: _img/python/jitter.py
+    .. plot::
+        :context:
         :scale: 50
+
+        fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(4,2))
+        ax[0].imshow(psf, cmap=psf_cmap)
+        ax[0].set_title('Input image'); ax[0].axis('off')
+        ax[1].imshow(psf_jitter, cmap=psf_cmap)
+        ax[1].set_title('Jitter image'); ax[1].axis('off')
 
     References
     ----------
@@ -119,35 +138,56 @@ def smear(img, distance, angle=None, pixelscale=1, oversample=1):
     --------
     Apply 25 pixels smear at 30 degrees to a 5x oversampled PSF:
 
-    .. code:: pycon
+    .. plot::
+        :context: reset
 
-        >>> import matplotlib.pyplot as plt
-        >>> import lentil
-        >>> psf = ...  # PSF calculation details omitted
-        >>> psf_smear = lentil.smear(psf, distance=25,
-        ...                          angle=30)
-        >>> plt.subplot(121), plt.imshow(psf)
-        >>> plt.subplot(122), plt.imshow(psf_smear)
+        mask = lentil.circle((256, 256), 120)
+        opd = lentil.zernike_compose(mask, [0, 0, 0, -300e-9, 50e-9, -100e-9, 50e-9])
+        pupil = lentil.Pupil(amplitude=mask, opd=opd, focal_length=10, pixelscale=1 / 240)
+        w = lentil.Wavefront(650e-9)
+        w *= pupil
+        w = lentil.propagate_dft(w, pixelscale=5e-6, shape=64, oversample=5)
+        psf = w.intensity    
 
-    .. plot:: _img/python/smear_directional.py
+    .. plot::
+        :context: close-figs
+        :include-source:
+        :nofigs:
+
+        psf_smear = lentil.smear(psf, distance=25, angle=30,
+                                 oversample=5)
+
+    .. plot::
+        :context:
         :scale: 50
+
+        fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(4,2))
+        ax[0].imshow(psf, cmap=psf_cmap)
+        ax[0].set_title('Input image'); ax[0].axis('off')
+        ax[1].imshow(psf_smear, cmap=psf_cmap)
+        ax[1].set_title('Smeared image'); ax[1].axis('off')
 
     Apply 50 um smear at a random angle to a 5x oversampled PSF. Note that
     because we are specifying smear in terms of linear distance on the focal
     plane, we must also provide the detector pixelscale:
 
-    .. code:: pycon
+    .. plot::
+        :context: close-figs
+        :include-source:
+        :nofigs:
 
-        >>> import lentil
-        >>> import matplotlib.pyplot as plt
-        >>> psf = ...  # PSF calculation details omitted
-        >>> psf_smear = lentil.smear(psf, distance=5e-5,
-        ...                          pixelscale=5e-6, oversample=5)
-        >>> plt.subplot(121), plt.imshow(psf)
-        >>> plt.subplot(122), plt.imshow(psf_smear)
+        psf_smear = lentil.smear(psf, distance=50e-6,
+                                 pixelscale=5e-6, oversample=5)
 
-    .. plot:: _img/python/smear.py
+    .. plot::
+        :context:
         :scale: 50
+
+        fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(4,2))
+        ax[0].imshow(psf, cmap=psf_cmap)
+        ax[0].set_title('Input image'); ax[0].axis('off')
+        ax[1].imshow(psf_smear, cmap=psf_cmap)
+        ax[1].set_title('Smeared image'); ax[1].axis('off')
 
     References
     ----------
