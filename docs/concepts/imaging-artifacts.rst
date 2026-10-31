@@ -27,16 +27,20 @@ operation. Note this approach is only valid if the motion occurs randomly in
 all directions during one integration time.
 
 .. plot::
-    :context: close-figs
+    :context:
     :include-source:
-    :scale: 50
+    :nofigs:
 
     psf_jitter = lentil.jitter(psf, scale=2, oversample=5)
 
+.. plot::
+    :context:
+    :scale: 50
+
     fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(4,2))
-    ax[0].imshow(psf, cmap='turbo')
+    ax[0].imshow(psf, cmap=psf_cmap)
     ax[0].set_title('Input image'); ax[0].axis('off')
-    ax[1].imshow(psf_jitter, cmap='turbo')
+    ax[1].imshow(psf_jitter, cmap=psf_cmap)
     ax[1].set_title('Jitter image'); ax[1].axis('off')
 
 If the jitter being modeled is not sufficiently random during a typical integration time, a
@@ -53,15 +57,19 @@ directional blur over some physical distance or number of pixels:
 .. plot::
     :context: close-figs
     :include-source:
-    :scale: 50
+    :nofigs:
 
     psf_smear = lentil.smear(psf, distance=5e-5, pixelscale=5e-6,
                              oversample=5)
 
+.. plot::
+    :context:
+    :scale: 50
+
     fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(4,2))
-    ax[0].imshow(psf, cmap='turbo')
+    ax[0].imshow(psf, cmap=psf_cmap)
     ax[0].set_title('Input image'); ax[0].axis('off')
-    ax[1].imshow(psf_smear, cmap='turbo')
+    ax[1].imshow(psf_smear, cmap=psf_cmap)
     ax[1].set_title('Smeared image'); ax[1].axis('off')
 
 
@@ -71,14 +79,18 @@ be provided:
 .. plot::
     :context: close-figs
     :include-source:
-    :scale: 50
+    :nofigs:
 
     psf_smear = lentil.smear(psf, distance=10.2, oversample=5)
 
+.. plot::
+    :context:
+    :scale: 50
+
     fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(4,2))
-    ax[0].imshow(psf, cmap='turbo')
+    ax[0].imshow(psf, cmap=psf_cmap)
     ax[0].set_title('Input image'); ax[0].axis('off')
-    ax[1].imshow(psf_smear, cmap='turbo')
+    ax[1].imshow(psf_smear, cmap=psf_cmap)
     ax[1].set_title('Smeared image'); ax[1].axis('off')
 
 The default behavior is to choose a new random smear direction each time :func:`smear`
@@ -87,13 +99,17 @@ is called, but a static direction can optionally be specified as needed:
 .. plot::
     :context: close-figs
     :include-source:
-    :scale: 50
+    :nofigs:
 
     psf_smear = lentil.smear(psf, distance=25, oversample=5,
                              angle=30)
 
+.. plot::
+    :context:
+    :scale: 50
+
     fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(4,2))
-    ax[0].imshow(psf, cmap='turbo')
+    ax[0].imshow(psf, cmap=psf_cmap)
     ax[0].set_title('Input image'); ax[0].axis('off')
-    ax[1].imshow(psf_smear, cmap='turbo')
+    ax[1].imshow(psf_smear, cmap=psf_cmap)
     ax[1].set_title('Smeared image'); ax[1].axis('off')

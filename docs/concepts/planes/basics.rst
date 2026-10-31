@@ -18,7 +18,7 @@ common set of attributes. The most commonly used attributes are:
   provided, it is automatically created from the nonzero values in 
   ``amplitude``.
 
-.. plot:: _img/python/segmask.py
+.. plot:: _plot/segmask.py
     :scale: 50
 
 * ``pixelscale`` - defines the physical sampling of the above attributes. A 
@@ -48,29 +48,37 @@ Plane creation
 Create a new plane with
 
 .. plot::
+    :context: reset
     :include-source:
-    :scale: 50
+    :nofigs:
 
     p = lentil.Plane(amplitude=lentil.circle((256,256), 120))
-    plt.imshow(p.amplitude, cmap='gray')
+
+.. plot::
+    :context: close-figs
+    :scale: 50
+
+    fig, ax = plt.subplots()
+    ax.imshow(p.amplitude, cmap='gray', origin='lower',
+              extent=[-128, 127, -128, 127])
 
 Once a plane is defined, its attributes can be modified at any time:
 
-.. code-block:: python
+.. plot::
+    :context:
+    :include-source:
+    :nofigs:
 
     p = lentil.Plane(amplitude=lentil.circle((256,256), 120))
-    p.opd = 2e-6 * lentil.zernike(p.mask, index=4)
-    plt.imshow(p.opd, cmap='RdBu_r')
+    p.opd = 2e-6 * lentil.zernike(p.mask, index=7)
 
 .. plot::
+    :context: close-figs
     :scale: 50
 
-    import matplotlib
-    p = lentil.Plane(amplitude=lentil.circle((256,256), 120))
-    p.opd = 2e-6 * lentil.zernike(p.mask, index=4)
-    opd = p.opd
-    opd[np.where(opd == 0)] = np.nan
-    plt.imshow(opd, cmap='RdBu_r')
+    fig, ax = plt.subplots()
+    ax.imshow(p.opd, cmap='RdBu_r', origin='lower',
+              extent=[-128, 127, -128, 127])
 
 
 Resampling and rescaling

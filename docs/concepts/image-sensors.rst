@@ -53,16 +53,11 @@ the pixel MTF (the sinc function), the data should be resampled to native detect
 sampling using :func:`rescale`. The :func:`detector.pixelate` function combines the 
 convolution and resampling operations into a single method.
 
-.. code-block:: pycon
+.. code-block:: python
 
-    >>> import matplotlib.pyplot as plt
-    >>> import lentil
-    >>> psf = ...  # PSF calculation details omitted
-    >>> psf_pixelate = lentil.detector.pixelate(psf, oversample=2)
-    >>> plt.subplot(121), plt.imshow(psf, cmap='inferno')
-    >>> plt.subplot(122), plt.imshow(psf_pixelate, cmap='inferno')
+    psf_pixelate = lentil.detector.pixelate(psf, oversample=5)
 
-.. plot:: _img/python/pixelate.py
+.. plot:: _plot/pixelate.py
     :scale: 50
 
 .. Noise sources

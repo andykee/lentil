@@ -437,7 +437,7 @@ class Plane(_PlaneBase):
         ``mask`` has 3 dimensions, the plane is assumed to be segmented with
         the individual segment masks inserted along the first dimension.
 
-        .. plot:: _img/python/segmask.py
+        .. plot:: _plot/segmask.py
             :scale: 50
 
     pixelscale : float or (2,) array_like, optional
@@ -750,7 +750,7 @@ class Pupil(Plane):
         ``mask`` has 3 dimensions, the plane is assumed to be segmented with
         the individual segment masks inserted along the first dimension.
 
-        .. plot:: _img/python/segmask.py
+        .. plot:: _plot/segmask.py
             :scale: 50
     pixelscale : float
         Physical sampling of each pixel in the pupil

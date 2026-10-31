@@ -174,7 +174,7 @@ in a shift in the image plane in the positive y direction. A positive y-tilt
 rotates the xz plane clockwise about the y-axis resulting in a shift in the
 image plane in the negative x direction.
 
-.. plot:: user/plots/tilt_images.py
+.. plot:: _plot/tilt_images.py
     :scale: 50
 
 Focus
@@ -189,13 +189,13 @@ plane (-z).
 
 We can test this by observing +/- defocused point spread functions of an
 imaging system with an asymmetric aperture (for example, in the shape of the letter
-P). We expect the positive focus image to have the same orientation as the aperture
+F). We expect the positive focus image to have the same orientation as the aperture
 (consistent with observing the image before coming to focus) and the negative focus
 image to be flipped about both axes relative to the aperture (consistent with
 observing the image after passing through focus). The results of this exercise are
 presented below:
 
-.. plot:: user/plots/focus_images.py
+.. plot:: _plot/focus_images.py
     :scale: 50
 
 

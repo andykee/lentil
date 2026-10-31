@@ -61,25 +61,40 @@ Wavefront error maps are easily computed using either the :func:`~lentil.zernike
 astigmatism over a circular aperture with :func:`~lentil.zernike`:
 
 .. plot::
+    :context: reset
     :include-source:
+    :nofigs:
+
+    mask = lentil.circle((256,256), 120, antialias=False)
+    astig = 100e-9 * lentil.zernike(mask, index=6)
+
+.. plot::
+    :context: close-figs
     :scale: 50
 
-    >>> mask = lentil.circle((256,256), 120, antialias=False)
-    >>> astig = 100e-9 * lentil.zernike(mask, index=6)
-    >>> plt.imshow(astig)
-
+    fig, ax = plt.subplots()
+    ax.imshow(astig, cmap='RdBu_r', origin='lower',
+              extent=[-128, 127, -128, 127])
 
 Any arbitrary combination of Zernike polynomials can be represented by providing a 
 list of coefficients to the :func:`~lentil.zernike_compose` function:
 
 .. plot::
+    :context: reset
     :include-source:
+    :nofigs:
+
+    mask = lentil.circle((256,256), 120, antialias=False)
+    coeff = np.random.uniform(low=-200e-9, high=200e-9, size=10)
+    z = lentil.zernike_compose(mask, coeff)
+
+.. plot::
+    :context: close-figs
     :scale: 50
 
-    >>> mask = lentil.circle((256,256), 120, antialias=False)
-    >>> coeff = np.random.uniform(low=-200e-9, high=200e-9, size=10)
-    >>> z = lentil.zernike_compose(mask, coeff)
-    >>> plt.imshow(z)
+    fig, ax = plt.subplots()
+    ax.imshow(z, cmap='RdBu_r', origin='lower',
+              extent=[-128, 127, -128, 127])
 
 For models requiring many random trials, it may make more sense to pre-compute the
 Zernike modes once and accumulate the error map for each new state. We can do this by
@@ -92,27 +107,30 @@ indices 4 and 6) so now the first entry in ``coeff`` corresponds to focus and th
 second corresponds to astigmatism.
 
 .. plot::
+    :context: reset
     :include-source:
+    :nofigs:
+
+    mask = lentil.circle((256,256), 120, antialias=False)
+    coeff = [200e-9, -100e-9]
+    basis = lentil.zernike_basis(mask, modes=(4,6))
+    z = np.einsum('ijk,i->jk', basis, coeff)
+
+.. plot::
+    :context: close-figs
     :scale: 50
 
-    >>> mask = lentil.circle((256,256), 120, antialias=False)
-    >>> coeff = [200e-9, -100e-9]
-    >>> basis = lentil.zernike_basis(mask, modes=(4,6))
-    >>> z = np.einsum('ijk,i->jk', basis, coeff)
-    >>> plt.imshow(z)
+    fig, ax = plt.subplots()
+    ax.imshow(z, cmap='RdBu_r', origin='lower',
+              extent=[-128, 127, -128, 127])
 
 It's also possible to achieve the same result using Numpy's
 `tensordot <https://numpy.org/doc/stable/reference/generated/numpy.tensordot.html>`_:
 
-.. plot::
-    :include-source:
-    :scale: 50
+.. code:: python
 
-    >>> mask = lentil.circle((256,256), 120, antialias=False)
-    >>> coeff = [200e-9, -100e-9]
-    >>> basis = lentil.zernike_basis(mask, modes=(4,6))
-    >>> z = np.tensordot(basis, coeff, axes=(0,0))
-    >>> plt.imshow(z)
+    z = np.tensordot(basis, coeff, axes=(0,0))
+
 
 Normalization
 ~~~~~~~~~~~~~
@@ -161,24 +179,40 @@ example, if we have an off-centered sub-aperture but wish to compute focus relat
 the center of the defined array:
 
 .. plot::
+    :context: reset
     :include-source:
-    :scale: 50
+    :nofigs:
 
-    >>> mask = lentil.circle((256,256), radius=50, shift=(0,60), antialias=False)
-    >>> rho, theta = lentil.zernike_coordinates(mask, shift=(0,60))
-    >>> z4 = lentil.zernike(mask, 4, rho=rho, theta=theta)
-    >>> plt.imshow(z4, origin='lower')
-
-If we wish to align a tilt mode with one side of a hexagon:
+    mask = lentil.circle((256,256), radius=50, shift=(0,60), antialias=False)
+    rho, theta = lentil.zernike_coordinates(mask, shift=(0,60))
+    z4 = lentil.zernike(mask, 4, rho=rho, theta=theta)
 
 .. plot::
-    :include-source:
+    :context: close-figs
     :scale: 50
 
-    >>> mask = lentil.hexagon((256,256), radius=120)
-    >>> rho, theta = lentil.zernike_coordinates(mask, shift=(0,0), rotate=30)
-    >>> z2 = lentil.zernike(mask, 2, rho=rho, theta=theta)
-    >>> plt.imshow(z2, origin='lower')
+    fig, ax = plt.subplots()
+    ax.imshow(z4, cmap='RdBu_r', origin='lower',
+              extent=[-128, 127, -128, 127])
+
+To align a tilt mode with one side of a hexagon:
+
+.. plot::
+    :context: reset
+    :include-source:
+    :nofigs:
+
+    mask = lentil.hexagon((256,256), radius=120)
+    rho, theta = lentil.zernike_coordinates(mask, shift=(0,0), angle=30)
+    z2 = lentil.zernike(mask, 2, rho=rho, theta=theta)
+
+.. plot::
+    :context: close-figs
+    :scale: 50
+
+    fig, ax = plt.subplots()
+    ax.imshow(z2, cmap='RdBu_r', origin='lower',
+              extent=[-128, 127, -128, 127])
 
 Wavefront Influence Functions
 -----------------------------
@@ -217,21 +251,29 @@ wavefront map:
     >>> theta = np.dot(S, dx)
     >>> theta.reshape((256,256))
 
-Surface roughness
------------------
+Power spectrum wavefront error
+------------------------------
 Random optical surface errors that result from the manufacturing and figuring process
 are typically small in magnitude and are commonly expressed through their power
 spectral density (PSD). The :func:`~lentil.power_spectrum` function computes random
 wavefront error map given a PSD:
 
 .. plot::
+    :context: reset
     :include-source:
+    :nofigs:
+
+    mask = lentil.circle((256, 256), 120)
+    w = lentil.power_spectrum(mask, pixelscale=1/120, rms=25e-9, 
+                              half_power_freq=8, exp=3)
+
+.. plot::
+    :context: close-figs
     :scale: 50
 
-    >>> mask = lentil.circle((256, 256), 120)
-    >>> w = lentil.power_spectrum(mask, pixelscale=1/120, rms=25e-9, 
-    ...                           half_power_freq=8, exp=3)
-    >>> plt.imshow(w, origin='lower')
+    fig, ax = plt.subplots()
+    ax.imshow(w, cmap='RdBu_r', origin='lower',
+              extent=[-128, 127, -128, 127])
 
 
 .. Chromatic Aberrations

@@ -202,10 +202,13 @@ plot_pre_code = """
 import lentil
 import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm, PowerNorm, AsinhNorm
 import numpy as np
 np.random.seed(12345)
 
 # set up the OPD colormap to display NaNs as light gray
 opd_cmap = matplotlib.colormaps.get_cmap('RdBu_r')
 opd_cmap.set_bad(color='#dddddd')
+
+psf_cmap = matplotlib.colormaps.get_cmap('turbo')
 """
