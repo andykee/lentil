@@ -25,7 +25,7 @@ common set of attributes. The most commonly used attributes are:
   simple example of how to calculate the pixelscale for a discretely sampled 
   circular aperture is given below:
 
-  .. image:: /_static/img/pixelscale.png
+  .. image:: /_static/svg/pixelscale.svg
     :width: 450px
     :align: center
 

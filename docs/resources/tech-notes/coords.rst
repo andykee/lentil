@@ -31,7 +31,7 @@ Coordinate System
 
 We begin with the right-handed coordinate frame depicted in Figure 1. A diffracting aperture lies in the :math:`(x,y)` plane with the optical axis :math:`z` pointing in the direction of propagation. The diffracted wave field is observed in the :math:`(u,v)` plane which is parallel to the aperture plane and separated by some distance :math:`+\Delta z`.
 
-.. figure:: /_static/img/coords_3d.png
+.. figure:: /_static/svg/coords_3d.svg
     :width: 500px
     :align: center
 
@@ -152,7 +152,7 @@ Using the right hand rule, a positive rotation about :math:`x` rotates the direc
 
 For focus, we return to the convention for wavefront error and OPD identified earlier: positive OPD corresponds with a longer path length. From Figure 2 we see that a wavefront with positive focus error has a focal point displaced by :math:`+\Delta z` relative to the nominal focal point (longer focal length). Relative to the reference wavefront, rays near the edge of the pupil travel a longer optical path before reaching focus, producing a positive OPD.
 
-.. figure:: /_static/img/focus_direction.png
+.. figure:: /_static/svg/focus_direction.svg
     :width: 500px
     :align: center
 
@@ -161,7 +161,7 @@ For focus, we return to the convention for wavefront error and OPD identified ea
 Validation via numerical simulation
 -----------------------------------
 
-.. image:: /_static/img/array_indexing.png
+.. image:: /_static/svg/array_indexing.svg
         :width: 500px
         :align: center
 
@@ -183,7 +183,7 @@ A positive focus has the effect of shifting the focus point beyond the image pla
 while a negative focus has the effect of shifting the focus point in front of the image
 plane (-z).
 
-.. image:: /_static/img/focus_direction.png
+.. image:: /_static/svg/focus_direction.svg
     :width: 450px
     :align: center
 

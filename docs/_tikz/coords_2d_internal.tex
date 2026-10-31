@@ -1,0 +1,25 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{textcomp}
+
+\begin{document}
+
+\begin{tikzpicture}
+
+\draw [thick, fill=gray, fill opacity=0.1] (0,0) -- (3,0) -- (3,3) -- (0,3) -- cycle;
+\draw[-latex] (0,3) -- (3.5,3);
+\node [right] at (3.5, 3) {$+c$};
+\draw[-latex] (0,3) -- (0,-0.5);
+\node [below] at (0,-0.5) {$+r$};
+%\node [below] at (1.5,-1) {Matrix indexing (\texttt{\textquotesingle ij\textquotesingle})};
+\node [above left] at (0.5,2.95) {\texttt{(0,0)}};
+
+\draw[-latex, dashed, color=gray] (-0.25,1.5) -- (3.5,1.5);
+\node [right, color=gray, font=\scriptsize] at (3.5, 1.5) {$+x$};
+\draw[-latex, dashed, color=gray]  (1.5,3.25) -- (1.5,-0.5);
+\node [below, color=gray, font=\scriptsize] at (1.5, -0.5) {$+y$};
+\draw[-latex, dashed, color=gray] (2.25,1.5) arc [start angle=0, end angle=-90, radius=0.75];
+\node [color=gray, font=\scriptsize] at (2.25, 0.75) {$+\theta$};
+
+\end{tikzpicture}
+\end{document}
