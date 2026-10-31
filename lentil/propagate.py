@@ -126,7 +126,7 @@ def _dft_alpha(dx, du, wavelength, z, oversample):
 def _fft_shape(dx, du, z, wavelength, oversample):
     # Compute pad shape to satisfy requested sampling. Propagation wavelength
     # is recomputed to account for integer padding of input plane
-    alpha = _dft_alpha(dx, du, z, wavelength, oversample)
+    alpha = _dft_alpha(dx, du, wavelength, z, oversample)
     fft_shape = np.round(np.reciprocal(alpha)).astype(int)
     prop_wavelength = np.min((fft_shape/oversample * dx * du)/z)
     return fft_shape, prop_wavelength
