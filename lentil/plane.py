@@ -686,7 +686,7 @@ def _can_mul_ptype(wavefront_ptype, plane_ptype):
 
 def _mul_result_ptype(wavefront_ptype, plane_ptype):
     """Return the type that results from multiplication"""
-    if _can_mul_ptype:
+    if _can_mul_ptype(wavefront_ptype, plane_ptype):
         return _mul_ptype_table[wavefront_ptype][plane_ptype]
     raise TypeError(f"{wavefront_ptype} and {plane_ptype} cannot be type \
                     multiplied together")
