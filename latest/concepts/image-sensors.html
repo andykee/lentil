@@ -61,7 +61,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Guides" href="../guides/index.html" />
+    <link rel="next" title="Imaging Artifacts" href="imaging-artifacts.html" />
     <link rel="prev" title="Radiometry" href="radiometry.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
@@ -423,22 +423,25 @@
 
 
 
-<li class="toctree-l2 has-children"><a class="reference internal" href="numerical-diffraction-propagation/index.html">Numerical Diffraction Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="numerical-diffraction-propagation/basics.html">Basics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="numerical-diffraction-propagation/sampling.html">Sampling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="numerical-diffraction-propagation/tilt-propagation.html">Propagation with large tilts</a></li>
-<li class="toctree-l3"><a class="reference internal" href="numerical-diffraction-propagation/segmented-propagation.html">Propagation with segmented apertures</a></li>
-<li class="toctree-l3"><a class="reference internal" href="numerical-diffraction-propagation/near-field.html">Near-field Propagation</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="diffraction/index.html">Diffraction Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="diffraction/basics.html">Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diffraction/sampling.html">Sampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diffraction/output.html">Controlling the output plane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diffraction/tilt.html">Propagation with large tilts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diffraction/segmented.html">Propagation with segmented apertures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diffraction/broadband.html">Broadband propagation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diffraction/multi.html">Multi-plane propagation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diffraction/near-field.html">Near-field propagation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="radiometry.html">Radiometry</a></li>
 <li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">Image Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imaging-artifacts.html">Imaging Artifacts</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../guides/index.html">Guides</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../guides/numerical-diffraction-propagation/index.html">Numerical Diffraction Propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/diffraction/index.html">Numerical Diffraction Propagation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/focal-plane-modeling/index.html">Focal Plane Modeling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../guides/imaging-artifacts.html">Imaging Artifacts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/patterns/index.html">Useful Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/performance.html">Optimizing Performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/extending-lentil.html">Extending Lentil</a></li>
@@ -554,12 +557,7 @@ function implements this convolution. After convolving the image plane intensity
 the pixel MTF (the sinc function), the data should be resampled to native detector
 sampling using <code class="xref py py-func docutils literal notranslate"><span class="pre">rescale()</span></code>. The <code class="xref py py-func docutils literal notranslate"><span class="pre">detector.pixelate()</span></code> function combines the
 convolution and resampling operations into a single method.</p>
-<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">lentil</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">psf</span> <span class="o">=</span> <span class="o">...</span>  <span class="c1"># PSF calculation details omitted</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">psf_pixelate</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">pixelate</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'inferno'</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">),</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">psf_pixelate</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'inferno'</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">psf_pixelate</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">pixelate</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default">

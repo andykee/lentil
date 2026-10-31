@@ -1,2 +1,0 @@
-Propagation with segmented apertures
-====================================

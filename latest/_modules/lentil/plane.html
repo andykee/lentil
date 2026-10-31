@@ -415,22 +415,25 @@
 
 
 
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../concepts/numerical-diffraction-propagation/index.html">Numerical Diffraction Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../concepts/numerical-diffraction-propagation/basics.html">Basics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../concepts/numerical-diffraction-propagation/sampling.html">Sampling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../concepts/numerical-diffraction-propagation/tilt-propagation.html">Propagation with large tilts</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../concepts/numerical-diffraction-propagation/segmented-propagation.html">Propagation with segmented apertures</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../concepts/numerical-diffraction-propagation/near-field.html">Near-field Propagation</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../concepts/diffraction/index.html">Diffraction Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/diffraction/basics.html">Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/diffraction/sampling.html">Sampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/diffraction/output.html">Controlling the output plane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/diffraction/tilt.html">Propagation with large tilts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/diffraction/segmented.html">Propagation with segmented apertures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/diffraction/broadband.html">Broadband propagation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/diffraction/multi.html">Multi-plane propagation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/diffraction/near-field.html">Near-field propagation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/radiometry.html">Radiometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/image-sensors.html">Image Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/imaging-artifacts.html">Imaging Artifacts</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../guides/index.html">Guides</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../guides/numerical-diffraction-propagation/index.html">Numerical Diffraction Propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/diffraction/index.html">Numerical Diffraction Propagation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../guides/focal-plane-modeling/index.html">Focal Plane Modeling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../guides/imaging-artifacts.html">Imaging Artifacts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../guides/patterns/index.html">Useful Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../guides/performance.html">Optimizing Performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../guides/extending-lentil.html">Extending Lentil</a></li>
@@ -541,7 +544,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__freeze_attrs__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'amplitude'</span><span class="p">,</span> <span class="s1">'opd'</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="bp">self</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">()'</span>
 
@@ -556,14 +559,14 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__opd__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_opd</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavefront</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""This function should be implemented by a subclass of _Planebase"""</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-    
+
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">ptype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Plane type</span>
@@ -651,7 +654,7 @@
 
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pixelscale</span>
-    
+
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">diameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Plane diameter</span>
@@ -709,7 +712,7 @@
             <span class="k">return</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        
+
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">frozen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Freeze (cache) state</span>
@@ -722,7 +725,7 @@
 <span class="sd">        :func:`~lentil.Plane.thaw`</span>
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frozen</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">freeze</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Cache properties defined in ``Plane.__freeze_attrs__``.</span>
 
@@ -793,8 +796,8 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        scale : float</span>
-<span class="sd">            Scale factor for interpolation. Scale factors less than 1 shrink the</span>
-<span class="sd">            Plane while scale factors greater than 1 grow it.</span>
+<span class="sd">            Scale factor for interpolation. Scale factors less than 1 shrink</span>
+<span class="sd">            the Plane while scale factors greater than 1 grow it.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -812,13 +815,14 @@
         <span class="n">plane</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">plane</span><span class="o">.</span><span class="n">amplitude</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">plane</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">rescale</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                             <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">,</span>
-                                             <span class="n">unitary</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">/</span><span class="n">scale</span>
+            <span class="n">plane</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">rescale</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span>
+                                             <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                             <span class="n">mode</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">,</span> <span class="n">unitary</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">/</span><span class="n">scale</span>
 
         <span class="k">if</span> <span class="n">plane</span><span class="o">.</span><span class="n">opd</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">plane</span><span class="o">.</span><span class="n">opd</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">rescale</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">opd</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                       <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">,</span> <span class="n">unitary</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">plane</span><span class="o">.</span><span class="n">opd</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">rescale</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">opd</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                       <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">,</span>
+                                       <span class="n">unitary</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">plane</span><span class="o">.</span><span class="n">_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">plane</span><span class="o">.</span><span class="n">_mask</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
@@ -845,8 +849,8 @@
 
 <span class="sd">        The following Plane attributes are resampled:</span>
 
-<span class="sd">        * `Plane.amplitude` is resampled via 3rd order spline interpolation. The</span>
-<span class="sd">          result is scaled to preserve total power.</span>
+<span class="sd">        * `Plane.amplitude` is resampled via 3rd order spline interpolation.</span>
+<span class="sd">          The result is scaled to preserve total power.</span>
 <span class="sd">        * `Plane.opd` is resampled via 3rd order spline interpolation.</span>
 <span class="sd">        * `Plane.mask` is resampled via 0-order nearest neighbor interpolation.</span>
 <span class="sd">        * `Plane.pixelscale` is adjusted appropriately.</span>
@@ -905,7 +909,7 @@
              <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">wavefront</span><span class="p">)</span>
-    
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_enforce_ptype</span><span class="p">(</span><span class="n">ptype</span><span class="p">,</span> <span class="n">valid_ptypes</span><span class="p">):</span>
     <span class="n">ptype</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">ptype</span><span class="p">(</span><span class="n">ptype</span><span class="p">)</span>
@@ -913,14 +917,14 @@
         <span class="n">valid</span> <span class="o">=</span> <span class="n">ptype</span> <span class="ow">in</span> <span class="n">valid_ptypes</span>
     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
         <span class="n">valid</span> <span class="o">=</span> <span class="n">ptype</span> <span class="o">==</span> <span class="n">valid_ptypes</span>
-    
+
     <span class="k">if</span> <span class="ow">not</span> <span class="n">valid</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">vpt</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="n">valid_ptypes</span><span class="p">))</span>
+            <span class="n">vpt</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">valid_ptypes</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
             <span class="n">vpt</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">valid_ptypes</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ptype must be one of the following: </span><span class="si">{</span><span class="n">vpt</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    
+
 
 <div class="viewcode-block" id="Plane">
 <a class="viewcode-back" href="../../api/generated/lentil.Plane.html#lentil.Plane">[docs]</a>
@@ -946,7 +950,7 @@
 <span class="sd">        ``mask`` has 3 dimensions, the plane is assumed to be segmented with</span>
 <span class="sd">        the individual segment masks inserted along the first dimension.</span>
 
-<span class="sd">        .. plot:: _img/python/segmask.py</span>
+<span class="sd">        .. plot:: _plot/segmask.py</span>
 <span class="sd">            :scale: 50</span>
 
 <span class="sd">    pixelscale : float or (2,) array_like, optional</span>
@@ -1001,6 +1005,7 @@
         <span class="n">out</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">Wavefront</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">wavelength</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">wavelength</span><span class="p">,</span>
                                      <span class="n">pixelscale</span><span class="o">=</span><span class="n">pixelscale</span><span class="p">,</span>
                                      <span class="n">focal_length</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">focal_length</span><span class="p">,</span>
+                                     <span class="n">diameter</span><span class="o">=</span><span class="n">wavefront</span><span class="o">.</span><span class="n">diameter</span><span class="p">,</span>
                                      <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span>
                                      <span class="n">ptype</span><span class="o">=</span><span class="n">ptype</span><span class="p">)</span>
 
@@ -1262,7 +1267,7 @@
 <span class="sd">        ``mask`` has 3 dimensions, the plane is assumed to be segmented with</span>
 <span class="sd">        the individual segment masks inserted along the first dimension.</span>
 
-<span class="sd">        .. plot:: _img/python/segmask.py</span>
+<span class="sd">        .. plot:: _plot/segmask.py</span>
 <span class="sd">            :scale: 50</span>
 <span class="sd">    pixelscale : float</span>
 <span class="sd">        Physical sampling of each pixel in the pupil</span>
@@ -1297,8 +1302,9 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wavefront</span><span class="p">):</span>
         <span class="n">wavefront</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">wavefront</span><span class="p">)</span>
 
-        <span class="c1"># we inherit the plane's focal length as the wavefront's focal length</span>
-        <span class="n">wavefront</span><span class="o">.</span><span class="n">focal_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">focal_length</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">focal_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">wavefront</span><span class="o">.</span><span class="n">focal_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">focal_length</span>
+            <span class="n">wavefront</span><span class="o">.</span><span class="n">diameter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diameter</span>
 
         <span class="k">return</span> <span class="n">wavefront</span>
 

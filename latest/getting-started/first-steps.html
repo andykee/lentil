@@ -419,22 +419,25 @@
 
 
 
-<li class="toctree-l2 has-children"><a class="reference internal" href="../concepts/numerical-diffraction-propagation/index.html">Numerical Diffraction Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../concepts/numerical-diffraction-propagation/basics.html">Basics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../concepts/numerical-diffraction-propagation/sampling.html">Sampling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../concepts/numerical-diffraction-propagation/tilt-propagation.html">Propagation with large tilts</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../concepts/numerical-diffraction-propagation/segmented-propagation.html">Propagation with segmented apertures</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../concepts/numerical-diffraction-propagation/near-field.html">Near-field Propagation</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../concepts/diffraction/index.html">Diffraction Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/diffraction/basics.html">Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/diffraction/sampling.html">Sampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/diffraction/output.html">Controlling the output plane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/diffraction/tilt.html">Propagation with large tilts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/diffraction/segmented.html">Propagation with segmented apertures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/diffraction/broadband.html">Broadband propagation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/diffraction/multi.html">Multi-plane propagation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/diffraction/near-field.html">Near-field propagation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/radiometry.html">Radiometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/image-sensors.html">Image Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/imaging-artifacts.html">Imaging Artifacts</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../guides/index.html">Guides</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../guides/numerical-diffraction-propagation/index.html">Numerical Diffraction Propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/diffraction/index.html">Numerical Diffraction Propagation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/focal-plane-modeling/index.html">Focal Plane Modeling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../guides/imaging-artifacts.html">Imaging Artifacts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/patterns/index.html">Useful Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/performance.html">Optimizing Performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/extending-lentil.html">Extending Lentil</a></li>
@@ -538,24 +541,21 @@ centered over the primary, a focal length of 20 m, and a focal plane with
 </pre></div>
 </div>
 <p>Now we can define the system amplitude and plot it:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circ</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
-<span class="n">obsc</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">128</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">circ</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+<span class="n">obsc</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">120</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">amplitude</span> <span class="o">=</span> <span class="n">circ</span> <span class="o">-</span> <span class="n">obsc</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default">
-<img alt="../_images/first-steps-1.png" class="plot-directive" height="333" src="../_images/first-steps-1.png" width="344" />
+<img alt="../_images/first-steps-2.png" class="plot-directive" height="329" src="../_images/first-steps-2.png" width="350" />
 </figure>
 <p>We’ll create some wavefront error using a small number of Zernike modes:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">300e-9</span><span class="p">,</span> <span class="mf">50e-9</span><span class="p">,</span> <span class="o">-</span><span class="mf">100e-9</span><span class="p">,</span> <span class="mf">50e-9</span><span class="p">]</span>
 <span class="n">opd</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_compose</span><span class="p">(</span><span class="n">mask</span><span class="o">=</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">coeffs</span><span class="o">=</span><span class="n">coeffs</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">opd</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 </pre></div>
 </div>
 <figure class="align-default">
-<img alt="../_images/first-steps-2.png" class="plot-directive" height="321" src="../_images/first-steps-2.png" width="342" />
+<img alt="../_images/first-steps-4.png" class="plot-directive" height="336" src="../_images/first-steps-4.png" width="398" />
 </figure>
 <p>Next we’ll define the system’s pupil plane. Note that the <code class="docutils literal notranslate"><span class="pre">pixelscale</span></code>
 attribute represents the physical sampling of each pixel in the pupil (in
@@ -574,11 +574,10 @@ created above by multiplying the two objects together:</p>
 <p>Now we can propagate the wavefront to the image plane using a discrete
 Fourier transform and plot the resulting image plane intensity:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">wf</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">propagate_dft</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">),</span> <span class="n">pixelscale</span><span class="o">=</span><span class="mf">5e-6</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wf</span><span class="o">.</span><span class="n">intensity</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'inferno'</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default">
-<img alt="../_images/first-steps-5.png" class="plot-directive" height="332" src="../_images/first-steps-5.png" width="340" />
+<img alt="../_images/first-steps-8.png" class="plot-directive" height="349" src="../_images/first-steps-8.png" width="368" />
 </figure>
 <p>With a little extra code, we can perform a broadband propagation including
 many wavelengths in the simulation:</p>
@@ -588,20 +587,18 @@ many wavelengths in the simulation:</p>
     <span class="n">wf</span> <span class="o">=</span> <span class="n">wf</span> <span class="o">*</span> <span class="n">pupil</span>
     <span class="n">wf</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">propagate_dft</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">),</span> <span class="n">pixelscale</span><span class="o">=</span><span class="mf">5e-6</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">img</span> <span class="o">+=</span> <span class="n">wf</span><span class="o">.</span><span class="n">intensity</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'inferno'</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default">
-<img alt="../_images/first-steps-6.png" class="plot-directive" height="332" src="../_images/first-steps-6.png" width="340" />
+<img alt="../_images/first-steps-10.png" class="plot-directive" height="349" src="../_images/first-steps-10.png" width="368" />
 </figure>
 <p>Finally, let’s convolve the oversampled image with the MTF of a square pixel
 and resample the image to native detector sampling:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">img_det</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">pixelate</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img_det</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'inferno'</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default">
-<img alt="../_images/first-steps-7.png" class="plot-directive" height="331" src="../_images/first-steps-7.png" width="332" />
+<img alt="../_images/first-steps-12.png" class="plot-directive" height="349" src="../_images/first-steps-12.png" width="368" />
 </figure>
 </section>
 

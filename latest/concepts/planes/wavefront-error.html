@@ -424,22 +424,25 @@
 
 
 
-<li class="toctree-l2 has-children"><a class="reference internal" href="../numerical-diffraction-propagation/index.html">Numerical Diffraction Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../numerical-diffraction-propagation/basics.html">Basics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../numerical-diffraction-propagation/sampling.html">Sampling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../numerical-diffraction-propagation/tilt-propagation.html">Propagation with large tilts</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../numerical-diffraction-propagation/segmented-propagation.html">Propagation with segmented apertures</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../numerical-diffraction-propagation/near-field.html">Near-field Propagation</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../diffraction/index.html">Diffraction Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../diffraction/basics.html">Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../diffraction/sampling.html">Sampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../diffraction/output.html">Controlling the output plane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../diffraction/tilt.html">Propagation with large tilts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../diffraction/segmented.html">Propagation with segmented apertures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../diffraction/broadband.html">Broadband propagation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../diffraction/multi.html">Multi-plane propagation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../diffraction/near-field.html">Near-field propagation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="../radiometry.html">Radiometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image-sensors.html">Image Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../imaging-artifacts.html">Imaging Artifacts</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../guides/index.html">Guides</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../guides/numerical-diffraction-propagation/index.html">Numerical Diffraction Propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/diffraction/index.html">Numerical Diffraction Propagation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../guides/focal-plane-modeling/index.html">Focal Plane Modeling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../guides/imaging-artifacts.html">Imaging Artifacts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../guides/patterns/index.html">Useful Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../guides/performance.html">Optimizing Performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../guides/extending-lentil.html">Extending Lentil</a></li>
@@ -564,24 +567,22 @@ by specifying the <code class="docutils literal notranslate"><span class="pre">o
 <p>Wavefront error maps are easily computed using either the <code class="xref py py-func docutils literal notranslate"><span class="pre">zernike()</span></code> or
 <code class="xref py py-func docutils literal notranslate"><span class="pre">zernike_compose()</span></code> functions. For example, we can represent 100 nm of
 astigmatism over a circular aperture with <code class="xref py py-func docutils literal notranslate"><span class="pre">zernike()</span></code>:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">,</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">astig</span> <span class="o">=</span> <span class="mf">100e-9</span> <span class="o">*</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">astig</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">,</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">astig</span> <span class="o">=</span> <span class="mf">100e-9</span> <span class="o">*</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default">
-<img alt="../../_images/wavefront-error-1.png" class="plot-directive" height="333" src="../../_images/wavefront-error-1.png" width="344" />
+<img alt="../../_images/wavefront-error-2.png" class="plot-directive" height="329" src="../../_images/wavefront-error-2.png" width="350" />
 </figure>
 <p>Any arbitrary combination of Zernike polynomials can be represented by providing a
 list of coefficients to the <code class="xref py py-func docutils literal notranslate"><span class="pre">zernike_compose()</span></code> function:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">,</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">coeff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=-</span><span class="mf">200e-9</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">200e-9</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_compose</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">coeff</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">,</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">coeff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">low</span><span class="o">=-</span><span class="mf">200e-9</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">200e-9</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_compose</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">coeff</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default">
-<img alt="../../_images/wavefront-error-2.png" class="plot-directive" height="333" src="../../_images/wavefront-error-2.png" width="344" />
+<img alt="../../_images/wavefront-error-4.png" class="plot-directive" height="329" src="../../_images/wavefront-error-4.png" width="350" />
 </figure>
 <p>For models requiring many random trials, it may make more sense to pre-compute the
 Zernike modes once and accumulate the error map for each new state. We can do this by
@@ -590,28 +591,20 @@ each independent term using Numpy’s <a class="reference external" href="https:
 <p>Note that in this case we are only computing the Zernike modes we intend to use (Noll
 indices 4 and 6) so now the first entry in <code class="docutils literal notranslate"><span class="pre">coeff</span></code> corresponds to focus and the
 second corresponds to astigmatism.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">,</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">coeff</span> <span class="o">=</span> <span class="p">[</span><span class="mf">200e-9</span><span class="p">,</span> <span class="o">-</span><span class="mf">100e-9</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">basis</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_basis</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ijk,i-&gt;jk'</span><span class="p">,</span> <span class="n">basis</span><span class="p">,</span> <span class="n">coeff</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">,</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">coeff</span> <span class="o">=</span> <span class="p">[</span><span class="mf">200e-9</span><span class="p">,</span> <span class="o">-</span><span class="mf">100e-9</span><span class="p">]</span>
+<span class="n">basis</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_basis</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ijk,i-&gt;jk'</span><span class="p">,</span> <span class="n">basis</span><span class="p">,</span> <span class="n">coeff</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default">
-<img alt="../../_images/wavefront-error-3.png" class="plot-directive" height="333" src="../../_images/wavefront-error-3.png" width="344" />
+<img alt="../../_images/wavefront-error-6.png" class="plot-directive" height="329" src="../../_images/wavefront-error-6.png" width="350" />
 </figure>
 <p>It’s also possible to achieve the same result using Numpy’s
 <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.tensordot.html">tensordot</a>:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">,</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">coeff</span> <span class="o">=</span> <span class="p">[</span><span class="mf">200e-9</span><span class="p">,</span> <span class="o">-</span><span class="mf">100e-9</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">basis</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_basis</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="n">coeff</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span><span class="n">basis</span><span class="p">,</span> <span class="n">coeff</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
 </pre></div>
 </div>
-<figure class="align-default">
-<img alt="../../_images/wavefront-error-4.png" class="plot-directive" height="333" src="../../_images/wavefront-error-4.png" width="344" />
-</figure>
 <section id="normalization">
 <h3>Normalization<a class="headerlink" href="#normalization" title="Link to this heading">#</a></h3>
 <p>Each of Lentil’s Zernike functions accepts a <code class="docutils literal notranslate"><span class="pre">normalize</span></code> parameter. If <code class="docutils literal notranslate"><span class="pre">normalize</span></code>
@@ -653,22 +646,23 @@ This is accomplished by using <code class="xref py py-func docutils literal notr
 <code class="docutils literal notranslate"><span class="pre">theta</span></code>, and providing these definitions to the appropriate Zernike function. For
 example, if we have an off-centered sub-aperture but wish to compute focus relative to
 the center of the defined array:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">60</span><span class="p">),</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_coordinates</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">60</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z4</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">z4</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">60</span><span class="p">),</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">rho</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_coordinates</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">60</span><span class="p">))</span>
+<span class="n">z4</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default">
-<img alt="../../_images/wavefront-error-5.png" class="plot-directive" height="329" src="../../_images/wavefront-error-5.png" width="344" />
+<img alt="../../_images/wavefront-error-8.png" class="plot-directive" height="329" src="../../_images/wavefront-error-8.png" width="350" />
 </figure>
-<p>If we wish to align a tilt mode with one side of a hexagon:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">hexagon</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_coordinates</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">rotate</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">z2</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">z2</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+<p>To align a tilt mode with one side of a hexagon:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">hexagon</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+<span class="n">rho</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_coordinates</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">angle</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">z2</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">)</span>
 </pre></div>
 </div>
+<figure class="align-default">
+<img alt="../../_images/wavefront-error-10.png" class="plot-directive" height="329" src="../../_images/wavefront-error-10.png" width="350" />
+</figure>
 </section>
 </section>
 <section id="wavefront-influence-functions">
@@ -701,20 +695,19 @@ wavefront map:</p>
 </pre></div>
 </div>
 </section>
-<section id="surface-roughness">
-<h2>Surface roughness<a class="headerlink" href="#surface-roughness" title="Link to this heading">#</a></h2>
+<section id="power-spectrum-wavefront-error">
+<h2>Power spectrum wavefront error<a class="headerlink" href="#power-spectrum-wavefront-error" title="Link to this heading">#</a></h2>
 <p>Random optical surface errors that result from the manufacturing and figuring process
 are typically small in magnitude and are commonly expressed through their power
 spectral density (PSD). The <code class="xref py py-func docutils literal notranslate"><span class="pre">power_spectrum()</span></code> function computes random
 wavefront error map given a PSD:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">power_spectrum</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">pixelscale</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="mi">120</span><span class="p">,</span> <span class="n">rms</span><span class="o">=</span><span class="mf">25e-9</span><span class="p">,</span>
-<span class="gp">... </span>                          <span class="n">half_power_freq</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">exp</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">'lower'</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="mi">120</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">power_spectrum</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">pixelscale</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="mi">120</span><span class="p">,</span> <span class="n">rms</span><span class="o">=</span><span class="mf">25e-9</span><span class="p">,</span>
+                          <span class="n">half_power_freq</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">exp</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default">
-<img alt="../../_images/wavefront-error-7.png" class="plot-directive" height="329" src="../../_images/wavefront-error-7.png" width="344" />
+<img alt="../../_images/wavefront-error-12.png" class="plot-directive" height="329" src="../../_images/wavefront-error-12.png" width="350" />
 </figure>
 </section>
 </section>
@@ -750,7 +743,7 @@ wavefront error map given a PSD:</p>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wavefront-influence-functions">Wavefront Influence Functions</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#surface-roughness">Surface roughness</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#power-spectrum-wavefront-error">Power spectrum wavefront error</a></li>
 </ul>
   </nav></div>
 

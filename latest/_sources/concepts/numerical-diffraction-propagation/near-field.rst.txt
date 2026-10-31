@@ -1,2 +1,0 @@
-Near-field Propagation
-======================

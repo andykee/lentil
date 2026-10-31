@@ -4,9 +4,8 @@ Guides
 .. toctree::
     :hidden:
 
-    numerical-diffraction-propagation/index
+    diffraction/index
     focal-plane-modeling/index
-    imaging-artifacts
     patterns/index
     performance
     extending-lentil
@@ -15,9 +14,8 @@ Guides
 
 Check out one of the following guides to get strted:
 
-* :doc:`numerical-diffraction-propagation/index`
+* :doc:`diffraction/index`
 * :doc:`focal-plane-modeling/index`
-* :doc:`imaging-artifacts`
 * :doc:`patterns/index`
 * :doc:`performance`
 * :doc:`extending-lentil`
