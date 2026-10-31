@@ -7,14 +7,14 @@ Lentil adopts the widely used convention of aligning the z-axis along the direct
 of light propagation through an optical system. For a right-handed coordinate system,
 it follows that the remaining axes are oriented as shown in the figure below:
 
-.. image:: /_static/img/coords_3d.png
+.. image:: /_static/svg/coords_3d.svg
     :width: 500px
     :align: center
 
 When viewing a plane in 2D, the z-axis comes out of the screen with the
 positive x-axis pointing to the right and the positive y-axis pointing up:
 
-.. image:: /_static/img/coords_2d.png
+.. image:: /_static/svg/coords_2d.svg
     :width: 225px
     :align: center
 
@@ -35,8 +35,8 @@ controls only the order of those values: ``(x, y)`` for ``'xy'`` and
 ``(r, c)`` for ``'ij'``. Indexing does not change how data is stored
 internally.
 
-.. image:: /_static/img/coords_2d_internal.png
-    :width: 225px
+.. image:: /_static/svg/coords_2d_internal.svg
+    :width: 250px
     :align: center
 
 Wavefront error sign convention
@@ -72,6 +72,6 @@ orientation:
    ax.imshow(opd, origin='lower', extent=[-0.5, 0.5, -0.5, 0.5])
 
 
-.. image:: /_static/img/matplotlib_origin.png
+.. image:: /_static/svg/matplotlib_origin.svg
     :width: 500px
     :align: center

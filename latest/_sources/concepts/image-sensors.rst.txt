@@ -28,7 +28,7 @@ Lentil's :func:`detector.collect_charge` function models the charge collection p
 for a monochromatic sensor and the :func:`detector.collect_charge_bayer` models the same 
 process for a sensor with a `Bayer filter <https://en.wikipedia.org/wiki/Bayer_filter>`_.
 
-.. image:: /_static/img/bayer.png
+.. image:: /_static/svg/bayer.svg
     :width: 550px
     :align: center
 

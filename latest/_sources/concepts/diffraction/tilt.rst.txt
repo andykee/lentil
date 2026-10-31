@@ -9,15 +9,15 @@ any other phase. When this tilt is large, it causes two problems:
   wrong place in the image plane.
 * **Cost.** The output plane must be large enough to contain the shifted PSF.
 
-.. image:: /_static/img/propagate_tilt_phase_wrap.png
+.. image:: /_static/svg/propagate_tilt_phase_wrap.svg
     :width: 650px
     :align: center
 
 Lentil avoids both issues by removing tilt from a plane's OPD and applying it
 grometrically as a shift in the output plane.
 
-.. image:: /_static/img/propagate_tilt_angle.png
-    :width: 600px
+.. image:: /_static/svg/propagate_fit_tilt.svg
+    :width: 550px
     :align: center
 
 How it works
@@ -34,7 +34,7 @@ whole-pixel part of the displacement moves the computed region
 (``prop_shape``). The DFT applies the fractional part exactly, so the
 result is not snapped to the output grid.
 
-.. image:: /_static/img/propagate_tilt_angle_steps.png
+.. image:: /_static/svg/propagate_fit_tilt_steps.svg
     :width: 600px
     :align: center
 

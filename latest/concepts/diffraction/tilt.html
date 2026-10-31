@@ -527,10 +527,10 @@ it will alias to a smaller tilt and the resulting PSF will appear in the
 wrong place in the image plane.</p></li>
 <li><p><strong>Cost.</strong> The output plane must be large enough to contain the shifted PSF.</p></li>
 </ul>
-<img alt="../../_images/propagate_tilt_phase_wrap.png" class="align-center" src="../../_images/propagate_tilt_phase_wrap.png" style="width: 650px;" />
+<img alt="../../_images/propagate_tilt_phase_wrap.svg" class="align-center" src="../../_images/propagate_tilt_phase_wrap.svg" style="width: 650px;" />
 <p>Lentil avoids both issues by removing tilt from a plane’s OPD and applying it
 grometrically as a shift in the output plane.</p>
-<img alt="../../_images/propagate_tilt_angle.png" class="align-center" src="../../_images/propagate_tilt_angle.png" style="width: 600px;" />
+<img alt="../../_images/propagate_fit_tilt.svg" class="align-center" src="../../_images/propagate_fit_tilt.svg" style="width: 550px;" />
 <section id="how-it-works">
 <h2>How it works<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h2>
 <p>Calling a plane’s <a class="reference internal" href="../../api/generated/lentil.Plane.fit_tilt.html#lentil.Plane.fit_tilt" title="lentil.Plane.fit_tilt"><code class="xref py py-func docutils literal notranslate"><span class="pre">fit_tilt()</span></code></a> method fits tip and tilt to
@@ -543,7 +543,7 @@ converts the attached tilts into a displacement in the output plane. The
 whole-pixel part of the displacement moves the computed region
 (<code class="docutils literal notranslate"><span class="pre">prop_shape</span></code>). The DFT applies the fractional part exactly, so the
 result is not snapped to the output grid.</p>
-<img alt="../../_images/propagate_tilt_angle_steps.png" class="align-center" src="../../_images/propagate_tilt_angle_steps.png" style="width: 600px;" />
+<img alt="../../_images/propagate_fit_tilt_steps.svg" class="align-center" src="../../_images/propagate_fit_tilt_steps.svg" style="width: 600px;" />
 </section>
 <section id="using-fit-tilt">
 <h2>Using <code class="docutils literal notranslate"><span class="pre">fit_tilt()</span></code><a class="headerlink" href="#using-fit-tilt" title="Link to this heading">#</a></h2>

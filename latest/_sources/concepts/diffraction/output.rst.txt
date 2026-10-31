@@ -4,7 +4,7 @@ Controlling the output plane
 exact region of the output plane that is computed. This can significantly
 improve propagation performance in some circumstances.
 
-.. image:: /_static/img/propagate_npix_prop.png
+.. image:: /_static/svg/propagate_prop_shape.svg
     :width: 450px
     :align: center
 
