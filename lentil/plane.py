@@ -670,8 +670,8 @@ _mul_ptype_table = {
     },
     lentil.image: {
         lentil.image: lentil.image,
-        lentil.tilt: lentil.pupil,
-        lentil.transform: lentil.pupil
+        lentil.tilt: lentil.image,
+        lentil.transform: lentil.image
     }
 }
 
