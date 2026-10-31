@@ -1,0 +1,6 @@
+﻿lentil.translation\_defocus
+===========================
+
+.. currentmodule:: lentil
+
+.. autofunction:: translation_defocus

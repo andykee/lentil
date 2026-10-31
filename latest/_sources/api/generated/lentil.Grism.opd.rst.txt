@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Grism.opd
+================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Grism.opd
+

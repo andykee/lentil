@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.field.Field.shape
+========================
+
+.. currentmodule:: lentil.field
+
+.. autoattribute:: lentil::field.Field.shape
+

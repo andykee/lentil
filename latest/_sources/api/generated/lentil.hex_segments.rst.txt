@@ -1,0 +1,6 @@
+﻿lentil.hex\_segments
+====================
+
+.. currentmodule:: lentil
+
+.. autofunction:: hex_segments

@@ -1,0 +1,6 @@
+﻿lentil.propagate\_dft
+=====================
+
+.. currentmodule:: lentil
+
+.. autofunction:: propagate_dft

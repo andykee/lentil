@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Pupil.ptype
+==================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Pupil.ptype
+

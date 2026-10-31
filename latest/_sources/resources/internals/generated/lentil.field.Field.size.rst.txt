@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.field.Field.size
+=======================
+
+.. currentmodule:: lentil.field
+
+.. autoattribute:: lentil::field.Field.size
+

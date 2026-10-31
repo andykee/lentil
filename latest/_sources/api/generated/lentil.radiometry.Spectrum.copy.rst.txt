@@ -1,0 +1,6 @@
+lentil.radiometry.Spectrum.copy
+===============================
+
+.. currentmodule:: lentil.radiometry
+
+.. automethod:: Spectrum.copy

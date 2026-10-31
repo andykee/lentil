@@ -1,0 +1,6 @@
+lentil.plane.\_TiltBase.thaw
+============================
+
+.. currentmodule:: lentil.plane
+
+.. automethod:: _TiltBase.thaw

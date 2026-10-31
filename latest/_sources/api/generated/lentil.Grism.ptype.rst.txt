@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Grism.ptype
+==================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Grism.ptype
+

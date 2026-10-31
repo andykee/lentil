@@ -1,0 +1,6 @@
+﻿lentil.field.reduce
+===================
+
+.. currentmodule:: lentil.field
+
+.. autofunction:: reduce

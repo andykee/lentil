@@ -1,0 +1,6 @@
+lentil.DispersiveTilt.freeze
+============================
+
+.. currentmodule:: lentil
+
+.. automethod:: DispersiveTilt.freeze

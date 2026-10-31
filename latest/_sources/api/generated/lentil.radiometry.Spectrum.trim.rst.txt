@@ -1,0 +1,6 @@
+lentil.radiometry.Spectrum.trim
+===============================
+
+.. currentmodule:: lentil.radiometry
+
+.. automethod:: Spectrum.trim

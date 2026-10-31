@@ -1,0 +1,47 @@
+﻿lentil.radiometry.Blackbody
+===========================
+
+.. currentmodule:: lentil.radiometry
+
+.. autoclass:: Blackbody
+
+
+.. rubric:: Attributes
+
+.. autosummary::
+    :toctree:
+    
+    ~Blackbody.value
+    ~Blackbody.valueunit
+    ~Blackbody.wave
+    ~Blackbody.waveunit
+
+
+
+
+.. rubric:: Methods
+
+.. autosummary::
+    :toctree:
+    
+    ~Blackbody.add
+    ~Blackbody.append
+    ~Blackbody.asarray
+    ~Blackbody.bin
+    ~Blackbody.copy
+    ~Blackbody.crop
+    ~Blackbody.divide
+    ~Blackbody.ends
+    ~Blackbody.from_csv
+    ~Blackbody.integrate
+    ~Blackbody.multiply
+    ~Blackbody.pad
+    ~Blackbody.power
+    ~Blackbody.resample
+    ~Blackbody.sample
+    ~Blackbody.sample_vegamag
+    ~Blackbody.subtract
+    ~Blackbody.to
+    ~Blackbody.trim
+    ~Blackbody.vegamag
+

@@ -1,0 +1,6 @@
+lentil.radiometry.Blackbody.resample
+====================================
+
+.. currentmodule:: lentil.radiometry
+
+.. automethod:: Blackbody.resample

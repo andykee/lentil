@@ -1,0 +1,6 @@
+lentil.Pupil.resample
+=====================
+
+.. currentmodule:: lentil
+
+.. automethod:: Pupil.resample

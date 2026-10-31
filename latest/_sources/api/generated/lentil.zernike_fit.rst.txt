@@ -1,0 +1,6 @@
+﻿lentil.zernike\_fit
+===================
+
+.. currentmodule:: lentil
+
+.. autofunction:: zernike_fit

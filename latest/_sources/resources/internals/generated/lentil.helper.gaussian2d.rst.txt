@@ -1,0 +1,6 @@
+﻿lentil.helper.gaussian2d
+========================
+
+.. currentmodule:: lentil.helper
+
+.. autofunction:: gaussian2d

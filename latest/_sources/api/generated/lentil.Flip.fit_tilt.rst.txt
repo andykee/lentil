@@ -1,0 +1,6 @@
+lentil.Flip.fit\_tilt
+=====================
+
+.. currentmodule:: lentil
+
+.. automethod:: Flip.fit_tilt

@@ -1,0 +1,6 @@
+﻿lentil.rescale
+==============
+
+.. currentmodule:: lentil
+
+.. autofunction:: rescale

@@ -1,0 +1,6 @@
+lentil.radiometry.Blackbody.subtract
+====================================
+
+.. currentmodule:: lentil.radiometry
+
+.. automethod:: Blackbody.subtract

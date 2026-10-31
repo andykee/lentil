@@ -1,0 +1,6 @@
+lentil.Image.multiply
+=====================
+
+.. currentmodule:: lentil
+
+.. automethod:: Image.multiply

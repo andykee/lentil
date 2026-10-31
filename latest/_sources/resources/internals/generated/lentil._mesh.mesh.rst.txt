@@ -1,0 +1,6 @@
+﻿lentil.\_mesh.mesh
+==================
+
+.. currentmodule:: lentil._mesh
+
+.. autofunction:: mesh

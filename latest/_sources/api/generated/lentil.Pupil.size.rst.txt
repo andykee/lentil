@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Pupil.size
+=================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Pupil.size
+

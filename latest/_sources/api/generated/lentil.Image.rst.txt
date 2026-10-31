@@ -1,0 +1,40 @@
+﻿lentil.Image
+============
+
+.. currentmodule:: lentil
+
+.. autoclass:: Image
+
+
+.. rubric:: Attributes
+
+.. autosummary::
+    :toctree:
+    
+    ~Image.amplitude
+    ~Image.diameter
+    ~Image.frozen
+    ~Image.global_mask
+    ~Image.mask
+    ~Image.opd
+    ~Image.pixelscale
+    ~Image.ptt_vector
+    ~Image.ptype
+    ~Image.shape
+    ~Image.size
+
+
+
+
+.. rubric:: Methods
+
+.. autosummary::
+    :toctree:
+    
+    ~Image.fit_tilt
+    ~Image.freeze
+    ~Image.multiply
+    ~Image.resample
+    ~Image.rescale
+    ~Image.thaw
+

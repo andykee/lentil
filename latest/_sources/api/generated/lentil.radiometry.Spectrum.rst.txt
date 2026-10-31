@@ -1,0 +1,45 @@
+﻿lentil.radiometry.Spectrum
+==========================
+
+.. currentmodule:: lentil.radiometry
+
+.. autoclass:: Spectrum
+
+
+.. rubric:: Attributes
+
+.. autosummary::
+    :toctree:
+    
+    ~Spectrum.value
+    ~Spectrum.valueunit
+    ~Spectrum.wave
+    ~Spectrum.waveunit
+
+
+
+
+.. rubric:: Methods
+
+.. autosummary::
+    :toctree:
+    
+    ~Spectrum.add
+    ~Spectrum.append
+    ~Spectrum.asarray
+    ~Spectrum.bin
+    ~Spectrum.copy
+    ~Spectrum.crop
+    ~Spectrum.divide
+    ~Spectrum.ends
+    ~Spectrum.from_csv
+    ~Spectrum.integrate
+    ~Spectrum.multiply
+    ~Spectrum.pad
+    ~Spectrum.power
+    ~Spectrum.resample
+    ~Spectrum.sample
+    ~Spectrum.subtract
+    ~Spectrum.to
+    ~Spectrum.trim
+

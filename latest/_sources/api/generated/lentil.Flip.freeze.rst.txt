@@ -1,0 +1,6 @@
+lentil.Flip.freeze
+==================
+
+.. currentmodule:: lentil
+
+.. automethod:: Flip.freeze

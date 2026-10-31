@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Grism.frozen
+===================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Grism.frozen
+

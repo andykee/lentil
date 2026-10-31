@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Tilt.global\_mask
+========================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Tilt.global_mask
+

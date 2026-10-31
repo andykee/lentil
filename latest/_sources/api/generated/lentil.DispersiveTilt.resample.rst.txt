@@ -1,0 +1,6 @@
+lentil.DispersiveTilt.resample
+==============================
+
+.. currentmodule:: lentil
+
+.. automethod:: DispersiveTilt.resample

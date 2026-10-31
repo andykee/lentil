@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.radiometry.Blackbody.valueunit
+=====================================
+
+.. currentmodule:: lentil.radiometry
+
+.. autoattribute:: lentil::radiometry.Blackbody.valueunit
+

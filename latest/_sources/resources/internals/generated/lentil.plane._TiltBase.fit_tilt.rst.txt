@@ -1,0 +1,6 @@
+lentil.plane.\_TiltBase.fit\_tilt
+=================================
+
+.. currentmodule:: lentil.plane
+
+.. automethod:: _TiltBase.fit_tilt

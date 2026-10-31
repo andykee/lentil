@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Tilt.size
+================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Tilt.size
+

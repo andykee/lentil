@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.DispersiveTilt.ptt\_vector
+=================================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::DispersiveTilt.ptt_vector
+

@@ -61,8 +61,8 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Detector modeling (lentil.detector)" href="detector.html" />
-    <link rel="prev" title="Utilities" href="util.html" />
+    <link rel="next" title="lentil.radiometry.Spectrum" href="generated/lentil.radiometry.Spectrum.html" />
+    <link rel="prev" title="lentil.hex_segments" href="generated/lentil.hex_segments.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
@@ -269,6 +269,10 @@
   
 
   
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -449,7 +453,31 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../resources/index.html">Resources</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../resources/internals/index.html">Internals</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../resources/internals/index.html">Internals</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.plane._TiltBase.html">lentil.plane._TiltBase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.ptype.ptype.html">lentil.ptype.ptype</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.ptype.PType_cls.rst.html">lentil.ptype.PType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.field.Field.html">lentil.field.Field</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.field.boundary.html">lentil.field.boundary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.field.insert.html">lentil.field.insert</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.field.merge.html">lentil.field.merge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.field.overlap.html">lentil.field.overlap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.field.reduce.html">lentil.field.reduce</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.extent.array_extent.html">lentil.extent.array_extent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.extent.array_center.html">lentil.extent.array_center</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.extent.intersect.html">lentil.extent.intersect</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.extent.intersection_extent.html">lentil.extent.intersection_extent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.extent.intersection_shape.html">lentil.extent.intersection_shape</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.extent.intersection_slices.html">lentil.extent.intersection_slices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.extent.intersection_shift.html">lentil.extent.intersection_shift</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.fourier.dft2.html">lentil.fourier.dft2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil._mesh.mesh.html">lentil._mesh.mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.helper.boundary_slice.html">lentil.helper.boundary_slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.helper.slice_offset.html">lentil.helper.slice_offset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.helper.gaussian2d.html">lentil.helper.gaussian2d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/internals/generated/lentil.helper.get_rng.html">lentil.helper.get_rng</a></li>
+</ul>
+</details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../resources/tech-notes/index.html">Technical notes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../resources/tech-notes/coords.html">A consistent coordinate system for wave optics simulations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../resources/tech-notes/resampling.html">Resampling oversampled images to native detector sampling</a></li>
@@ -465,17 +493,91 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="planes.html">Planes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="generated/lentil.Plane.html">lentil.Plane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.Pupil.html">lentil.Pupil</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.Image.html">lentil.Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.Grism.html">lentil.Grism</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2"><a class="reference internal" href="transforms.html">Plane transforms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="wavefront.html">Wavefront</a></li>
-<li class="toctree-l2"><a class="reference internal" href="propagate.html">Propagation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="zernike.html">Zernike polynomials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="wavefront-error.html">Wavefront errors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="imaging-artifacts.html">Imaging artifacts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="util.html">Utilities</a></li>
-<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">Radiometry (<code class="docutils literal notranslate"><span class="pre">lentil.radiometry</span></code>)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="detector.html">Detector modeling (<code class="docutils literal notranslate"><span class="pre">lentil.detector</span></code>)</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="transforms.html">Plane transforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.Tilt.html">lentil.Tilt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.DispersiveTilt.html">lentil.DispersiveTilt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.Rotate.html">lentil.Rotate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.Flip.html">lentil.Flip</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="wavefront.html">Wavefront</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.Wavefront.html">lentil.Wavefront</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="propagate.html">Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.propagate_dft.html">lentil.propagate_dft</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.propagate_fft.html">lentil.propagate_fft</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="zernike.html">Zernike polynomials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.zernike.html">lentil.zernike</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.zernike_compose.html">lentil.zernike_compose</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.zernike_fit.html">lentil.zernike_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.zernike_remove.html">lentil.zernike_remove</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.zernike_basis.html">lentil.zernike_basis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.zernike_coordinates.html">lentil.zernike_coordinates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.zernike_coeff_legacy.html">lentil.zernike_coeff_legacy</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="wavefront-error.html">Wavefront errors</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.power_spectrum.html">lentil.power_spectrum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.translation_defocus.html">lentil.translation_defocus</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="imaging-artifacts.html">Imaging artifacts</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.jitter.html">lentil.jitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.smear.html">lentil.smear</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="util.html">Utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.circle.html">lentil.circle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.hexagon.html">lentil.hexagon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.rectangle.html">lentil.rectangle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.spider.html">lentil.spider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.boundary.html">lentil.boundary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.centroid.html">lentil.centroid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.pad.html">lentil.pad</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.crop.html">lentil.crop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.subarray.html">lentil.subarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.sample.html">lentil.sample</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.rebin.html">lentil.rebin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.rescale.html">lentil.rescale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.min_sampling.html">lentil.min_sampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.pixelscale_nyquist.html">lentil.pixelscale_nyquist</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.normalize_power.html">lentil.normalize_power</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.hex_segments.html">lentil.hex_segments</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a aria-current="page" class="current reference internal" href="#">Radiometry (<code class="docutils literal notranslate"><span class="pre">lentil.radiometry</span></code>)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.radiometry.Spectrum.html">lentil.radiometry.Spectrum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.radiometry.Blackbody.html">lentil.radiometry.Blackbody</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.radiometry.Material.html">lentil.radiometry.Material</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.radiometry.path_transmission.html">lentil.radiometry.path_transmission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.radiometry.path_emission.html">lentil.radiometry.path_emission</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.radiometry.planck_radiance.html">lentil.radiometry.planck_radiance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.radiometry.planck_exitance.html">lentil.radiometry.planck_exitance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.radiometry.vegaflux.html">lentil.radiometry.vegaflux</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="detector.html">Detector modeling (<code class="docutils literal notranslate"><span class="pre">lentil.detector</span></code>)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.detector.collect_charge.html">lentil.detector.collect_charge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.detector.collect_charge_bayer.html">lentil.detector.collect_charge_bayer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.detector.pixel.html">lentil.detector.pixel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.detector.pixelate.html">lentil.detector.pixelate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.detector.shot_noise.html">lentil.detector.shot_noise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.detector.read_noise.html">lentil.detector.read_noise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.detector.charge_diffusion.html">lentil.detector.charge_diffusion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.detector.dark_current.html">lentil.detector.dark_current</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.detector.rule07_dark_current.html">lentil.detector.rule07_dark_current</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.detector.adc.html">lentil.detector.adc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/lentil.detector.cosmic_rays.html">lentil.detector.cosmic_rays</a></li>
+</ul>
+</details></li>
 </ul>
 </details></li>
 </ul>
@@ -514,6 +616,43 @@
                   
   <section id="radiometry-lentil-radiometry">
 <h1>Radiometry (<code class="docutils literal notranslate"><span class="pre">lentil.radiometry</span></code>)<a class="headerlink" href="#radiometry-lentil-radiometry" title="Link to this heading">#</a></h1>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/lentil.radiometry.Spectrum.html#lentil.radiometry.Spectrum" title="lentil.radiometry.Spectrum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">radiometry.Spectrum</span></code></a>(wave, value[, waveunit, ...])</p></td>
+<td><p>Class for representing spectral quantities.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/lentil.radiometry.Blackbody.html#lentil.radiometry.Blackbody" title="lentil.radiometry.Blackbody"><code class="xref py py-obj docutils literal notranslate"><span class="pre">radiometry.Blackbody</span></code></a>(wave, temp[, waveunit, ...])</p></td>
+<td><p>Class for representing a blackbody emitter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/lentil.radiometry.Material.html#lentil.radiometry.Material" title="lentil.radiometry.Material"><code class="xref py py-obj docutils literal notranslate"><span class="pre">radiometry.Material</span></code></a>([transmission, ...])</p></td>
+<td><p>Class for representing a material with radiometric properties.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/lentil.radiometry.path_transmission.html#lentil.radiometry.path_transmission" title="lentil.radiometry.path_transmission"><code class="xref py py-obj docutils literal notranslate"><span class="pre">radiometry.path_transmission</span></code></a>(iterable)</p></td>
+<td><p>Construct a common transmission from an iterable of <code class="xref py py-class docutils literal notranslate"><span class="pre">Spectrum</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code> objects or numeric types</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/lentil.radiometry.path_emission.html#lentil.radiometry.path_emission" title="lentil.radiometry.path_emission"><code class="xref py py-obj docutils literal notranslate"><span class="pre">radiometry.path_emission</span></code></a>(iterable[, emission])</p></td>
+<td><p>Construct a common emission from an iterable of <code class="xref py py-class docutils literal notranslate"><span class="pre">Material</span></code> objects</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/lentil.radiometry.planck_radiance.html#lentil.radiometry.planck_radiance" title="lentil.radiometry.planck_radiance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">radiometry.planck_radiance</span></code></a>(wave, temp[, ...])</p></td>
+<td><p>Compute the Planck law spectral radiance from a blackbody radiator at the given temperature.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/lentil.radiometry.planck_exitance.html#lentil.radiometry.planck_exitance" title="lentil.radiometry.planck_exitance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">radiometry.planck_exitance</span></code></a>(wave, temp[, ...])</p></td>
+<td><p>Compute the Planck law spectral exitance from a blackbody radiator at the given temperature.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/lentil.radiometry.vegaflux.html#lentil.radiometry.vegaflux" title="lentil.radiometry.vegaflux"><code class="xref py py-obj docutils literal notranslate"><span class="pre">radiometry.vegaflux</span></code></a>(band[, waveunit, valueunit])</p></td>
+<td><p>Get the flux of Vega in a desired observing band.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 </section>
 
 
@@ -526,6 +665,24 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utilities">Utilities</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

@@ -1,0 +1,6 @@
+﻿lentil.pad
+==========
+
+.. currentmodule:: lentil
+
+.. autofunction:: pad

@@ -1,0 +1,6 @@
+lentil.Tilt.rescale
+===================
+
+.. currentmodule:: lentil
+
+.. automethod:: Tilt.rescale

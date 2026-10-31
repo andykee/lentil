@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Tilt.amplitude
+=====================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Tilt.amplitude
+

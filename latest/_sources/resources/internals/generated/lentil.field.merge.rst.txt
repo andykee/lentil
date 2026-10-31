@@ -1,0 +1,6 @@
+﻿lentil.field.merge
+==================
+
+.. currentmodule:: lentil.field
+
+.. autofunction:: merge

@@ -1,0 +1,6 @@
+lentil.radiometry.Spectrum.to
+=============================
+
+.. currentmodule:: lentil.radiometry
+
+.. automethod:: Spectrum.to

@@ -1,0 +1,6 @@
+﻿lentil.extent.intersection\_slices
+==================================
+
+.. currentmodule:: lentil.extent
+
+.. autofunction:: intersection_slices

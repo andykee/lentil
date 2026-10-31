@@ -1,0 +1,6 @@
+lentil.Tilt.multiply
+====================
+
+.. currentmodule:: lentil
+
+.. automethod:: Tilt.multiply

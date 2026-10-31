@@ -1,0 +1,6 @@
+lentil.Rotate.freeze
+====================
+
+.. currentmodule:: lentil
+
+.. automethod:: Rotate.freeze

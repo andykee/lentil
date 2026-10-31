@@ -1,0 +1,9 @@
+:orphan:
+
+lentil.Flip.shape
+=================
+
+.. currentmodule:: lentil
+
+.. autoattribute:: lentil::Flip.shape
+

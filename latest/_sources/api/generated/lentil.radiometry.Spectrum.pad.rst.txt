@@ -1,0 +1,6 @@
+lentil.radiometry.Spectrum.pad
+==============================
+
+.. currentmodule:: lentil.radiometry
+
+.. automethod:: Spectrum.pad

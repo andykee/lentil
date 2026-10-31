@@ -1,0 +1,6 @@
+lentil.DispersiveTilt.multiply
+==============================
+
+.. currentmodule:: lentil
+
+.. automethod:: DispersiveTilt.multiply

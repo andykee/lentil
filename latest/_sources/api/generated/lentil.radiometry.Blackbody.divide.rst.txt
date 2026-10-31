@@ -1,0 +1,6 @@
+lentil.radiometry.Blackbody.divide
+==================================
+
+.. currentmodule:: lentil.radiometry
+
+.. automethod:: Blackbody.divide

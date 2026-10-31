@@ -1,0 +1,6 @@
+lentil.Grism.multiply
+=====================
+
+.. currentmodule:: lentil
+
+.. automethod:: Grism.multiply
