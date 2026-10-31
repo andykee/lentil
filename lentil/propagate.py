@@ -166,9 +166,9 @@ def propagate_dft(wavefront, *, to=None, pixelscale=None, shape=None,
         used.
     prop_shape : int or (2,) tuple of ints, optional
         Shape of propagation output. If None (default),
-        ``prop_shape = prop``. If ``prop_shape != prop``, the propagation
+        ``prop_shape = shape``. If ``prop_shape != shape``, the propagation
         result is placed in the appropriate location in the output plane.
-        ``prop_shape`` should not be larger than ``prop``.
+        ``prop_shape`` should not be larger than ``shape``.
     oversample : float, optional
         Number of times to oversample the output plane. Default is 1.
     focal_length : float, optional
