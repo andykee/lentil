@@ -7,9 +7,9 @@ Zernike polynomials
     :toctree: generated/
 
     zernike
-	zernike_compose
-	zernike_fit
-	zernike_remove
-	zernike_basis
-	zernike_coordinates
+    zernike_compose
+    zernike_fit
+    zernike_remove
+    zernike_basis
+    zernike_coordinates
     zernike_coeff_legacy

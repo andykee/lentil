@@ -20,7 +20,7 @@ def centroid(x, where=None, mode='absolute', indexing='xy'):
         the absolute centroid within the input is returned. If 'center', the
         centroid relative to the center of the input is returned.
     indexing : {'xy', 'ij'}, optional
-        Cartesian ('xy', default) or matrix ('ij', default) indexing of mesh.
+        Cartesian ('xy', default) or matrix ('ij') indexing of mesh.
 
     Returns
     -------
@@ -43,7 +43,7 @@ def centroid(x, where=None, mode='absolute', indexing='xy'):
         (48.0, 178.0)
         >>> lentil.centroid(circ, mode='center')
         (-80.0, 50.0)
-        >>> lentil.centroid(circ, mode='center', indexing='xy')
+        >>> lentil.centroid(circ, mode='center', indexing='ij')
         (50.0, -80.0)
 
     """
@@ -78,11 +78,7 @@ def centroid(x, where=None, mode='absolute', indexing='xy'):
         c = c - cc
 
     if indexing == 'xy':
-        if mode == 'center':
-            r, c = c, r
-        else:
-            # absolute pixel coordinates (col, row); +y down
-            r, c = c, r
+        r, c = c, r
 
     return r, c
 

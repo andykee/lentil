@@ -19,7 +19,7 @@ def hex_segments(rings, seg_radius, seg_gap, rotate=True, antialias=True,
         Spacing between adjacent segments in pixels
     rotate : bool, optional
         If True (default), the segment mask is rotated so that flat sides are
-        aligned with the X direction instead with the Y direction.
+        aligned with the X direction instead of the Y direction.
     antialias : bool, optional
         If True (default), the segment edges are antialiased.
     flatten : bool, optional
@@ -28,8 +28,8 @@ def hex_segments(rings, seg_radius, seg_gap, rotate=True, antialias=True,
     pad : int, optional
         Number of additional pixels to zero-pad output by. Default is 2.
     drop : list_like, optional
-        Segments to exclude from output. 0 represents the central segment. 
-    
+        Segments to exclude from output. 0 represents the central segment.
+
     Returns
     -------
     ndarray
@@ -62,20 +62,24 @@ def hex_segments(rings, seg_radius, seg_gap, rotate=True, antialias=True,
     mask = []
 
     if 0 not in drop:
-        mask.append(lentil.hexagon(shape, seg_radius, shift=(0, 0), antialias=antialias, rotate=rotate))
+        mask.append(lentil.hexagon(shape, seg_radius, shift=(0, 0),
+                                   antialias=antialias, rotate=rotate,
+                                   indexing='ij'))
 
     seg = 1
     for ring in range(1, rings+1):
         for h in hex_ring(ring):
             r, c = hex_to_rc(h, seg_radius + seg_gap/2, rotate)
             if seg not in drop:
-                mask.append(lentil.hexagon(shape, seg_radius, shift=(r, c), antialias=antialias, rotate=rotate))
+                mask.append(lentil.hexagon(shape, seg_radius, shift=(r, c),
+                                           antialias=antialias, rotate=rotate,
+                                           indexing='ij'))
             seg += 1
-    
+
     mask = np.asarray(mask)
     if flatten:
         mask = np.sum(mask, axis=0)
-    
+
     return mask
 
 
@@ -83,6 +87,8 @@ def hex_segments(rings, seg_radius, seg_gap, rotate=True, antialias=True,
 # exactly from http://www.redblobgames.com/grids/hexagons/
 
 _Hex = collections.namedtuple("Hex", ["q", "r", "s"])
+
+
 def Hex(q, r, s):
     assert not (round(q + r + s) != 0), "q + r + s must be 0"
     return _Hex(q, r, s)
@@ -92,7 +98,7 @@ def hex_add(a, b):
     return Hex(a.q + b.q, a.r + b.r, a.s + b.s)
 
 
-hex_directions = [Hex(1, 0, -1), Hex(1, -1, 0), Hex(0, -1, 1), 
+hex_directions = [Hex(1, 0, -1), Hex(1, -1, 0), Hex(0, -1, 1),
                   Hex(-1, 0, 1), Hex(-1, 1, 0), Hex(0, 1, -1)]
 
 
@@ -116,17 +122,16 @@ def hex_ring(radius):
 
 
 def hex_to_xy(hex, radius, rotate=False):
-    if rotate:
+    if not rotate:
         x = radius * (np.sqrt(3) * hex.q + np.sqrt(3)/2 * hex.r)
         y = radius * (3/2 * hex.r)
     else:
         x = radius * (3/2 * hex.q)
         y = radius * (np.sqrt(3)/2 * hex.q + np.sqrt(3) * hex.r)
-        
+
     return x, y
 
 
 def hex_to_rc(hex, radius, rotate=False):
     x, y = hex_to_xy(hex, radius, rotate)
     return -y, x
-

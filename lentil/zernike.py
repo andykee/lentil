@@ -87,7 +87,7 @@ def _zernike(mask, index, normalize, order, rho, theta, legacy):
         n, m = noll_to_nm(index)
     elif order == 'fringe':
         n, m = fringe_to_nm(index)
-    elif order =='ansi':
+    elif order == 'ansi':
         n, m = ansi_to_nm(index)
     else:
         raise ValueError('Unknown order', order)
@@ -103,7 +103,7 @@ def _zernike(mask, index, normalize, order, rho, theta, legacy):
 
     if m == 0:
         if n == 0:
-            Z = mask
+            Z = mask.astype(float)
         else:
             if normalize:
                 Z = np.sqrt(n+1) * R(m, n, rho) * mask
@@ -121,7 +121,7 @@ def _zernike(mask, index, normalize, order, rho, theta, legacy):
             sin_m_theta = np.sin(m*theta)
         else:
             sin_m_theta = np.sin(np.abs(m)*theta)
-        
+
         if normalize:
             Z = np.sqrt(2) * np.sqrt(n+1) * R(m, n, rho) * sin_m_theta * mask
         else:
@@ -130,6 +130,7 @@ def _zernike(mask, index, normalize, order, rho, theta, legacy):
     #out[mask_slice] = Z
     out = Z
     return out
+
 
 def R(m, n, rho):
 
@@ -537,7 +538,7 @@ def fringe_to_nm(j):
     """
     if j < 1:
         raise ValueError('Fringe index must be greater than zero')
-    
+
     # https://github.com/arielmission-space/PAOS/blob/main/paos/classes/zernike.py
     m_n = 2 * (np.ceil(np.sqrt(j)) - 1)
     g_s = (m_n / 2) ** 2 + 1
@@ -548,26 +549,28 @@ def fringe_to_nm(j):
 
 def zernike_coordinates(mask, shift=None, angle=0, indexing='xy'):
     """Compute the Zernike coordinate system for a given mask.
-    
+
     Parameters
     ----------
     mask : array_like
-        Binary mask defining the extent to compute the Zernike polynomial 
-        over.
+        Binary mask defining the extent to compute the Zernike polynomial
+        over. Nonzero values are treated as inside the mask.
     shift : (2,) array_like, optional
-        How far to shift center in float (rows, cols). If None (default),
-        shift is computed automatically to locate the origin at the mask
-        centroid.
+        How far to shift the origin from the center of the array. If None
+        (default), shift is computed automatically to locate the origin at the
+        mask centroid.
     angle: float, optional
-        Angle to rotate coordinate system by in degrees. rotate is specified 
-        relative to the x-axis. Default is 0.
+        Angle to rotate coordinate system by in degrees, from the +x axis
+        toward the +y axis. Default is 0.
     indexing : {'ij', 'xy'}, optional
-        Cartesian ('xy', default) or matrix ('ij') or indexing of shift.
-    
+        Cartesian ('xy', default) or matrix ('ij') indexing of shift.
+
     Returns
     -------
     rho, theta : ndarrays
-    
+        Normalized radius and angle. theta is measured from +x (increasing
+        column) toward +y (increasing row).
+
     """
     mask = np.asarray(mask, dtype=bool)
 
@@ -579,14 +582,15 @@ def zernike_coordinates(mask, shift=None, angle=0, indexing='xy'):
     if indexing == 'ij':
         shift = (shift[1], shift[0])
 
-    x1,x2 = lentil._mesh.mesh(shape=mask.shape, shift=shift, angle=angle, indexing='xy')
+    x1, x2 = lentil._mesh.mesh(shape=mask.shape, shift=shift, angle=angle,
+                               indexing='xy')
 
     r = np.abs(x1+1j*x2)
     rho = r/np.max(r*mask)  # rho is defined to be 1 on the edge of the aperture
     theta = np.angle(x1 + 1j*x2)
-    
-    rho[np.where(rho==0)] = 1e-99
-    theta[np.where(theta==0)] = 1e-99
+
+    rho[np.where(rho == 0)] = 1e-99
+    theta[np.where(theta == 0)] = 1e-99
 
     return rho, theta
 
@@ -596,7 +600,8 @@ def _zernike_coordinates_legacy(mask):
     mask = np.asarray(mask, dtype=bool)
     center = np.asarray(mask.shape)/2
     centroid = np.asarray(lentil.centroid(mask, indexing='ij'))
-    rr, cc = lentil._mesh.mesh(mask.shape, shift=centroid-center, indexing='ij')
+    rr, cc = lentil._mesh.mesh(mask.shape, shift=centroid-center,
+                               indexing='ij')
     r = np.abs(rr + 1j*cc)
     rho = r/np.max(r*mask)
     theta = np.angle(-cc - 1j*rr)
@@ -612,7 +617,7 @@ def zernike_coeff_legacy(coeffs, modes=None, order='noll'):
     This results in cosine modes with odd azimuthal order (x tilt, x coma,
     ...) and sine modes with even azimuthal order (45 degree astigmatism,
     ...) having a flipped sign. All other modes are unaffected.
-    
+
     This conversion is involutory so it converts legacy coefficients to the
     correct convention and correct coefficients to the legacy convention.
 
@@ -650,14 +655,7 @@ def zernike_coeff_legacy(coeffs, modes=None, order='noll'):
     .. code:: pycon
 
         >>> lentil.zernike_coeff_legacy([1e-8, 2e-8, 3e-8], modes=[2, 3, 4])
-        array([-1.e-08, -2.e-08,  3.e-08])
-
-    Convert a full coefficient vector as used by :func:`zernike_compose`:
-
-    .. code:: pycon
-
-        >>> coeffs = lentil.zernike_coeff_legacy(legacy_coeffs)
-        >>> opd = lentil.zernike_compose(mask, coeffs)
+        array([-1.e-08, 2.e-08, 3.e-08])
 
     See Also
     --------
