@@ -1301,7 +1301,7 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_mul_result_ptype</span><span class="p">(</span><span class="n">wavefront_ptype</span><span class="p">,</span> <span class="n">plane_ptype</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Return the type that results from multiplication"""</span>
-    <span class="k">if</span> <span class="n">_can_mul_ptype</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">_can_mul_ptype</span><span class="p">(</span><span class="n">wavefront_ptype</span><span class="p">,</span> <span class="n">plane_ptype</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">_mul_ptype_table</span><span class="p">[</span><span class="n">wavefront_ptype</span><span class="p">][</span><span class="n">plane_ptype</span><span class="p">]</span>
     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">wavefront_ptype</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">plane_ptype</span><span class="si">}</span><span class="s2"> cannot be type </span><span class="se">\</span>
 <span class="s2">                    multiplied together"</span><span class="p">)</span>
