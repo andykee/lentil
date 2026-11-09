@@ -4,7 +4,7 @@
 # Copyright (c) 2020-2026, California Institute of Technology ("Caltech"). 
 # U.S. Government sponsorship acknowledged.
 
-__version__ = '0.8.10'
+__version__ = '0.8.11'
 
 from lentil.ptype import ptype
 
