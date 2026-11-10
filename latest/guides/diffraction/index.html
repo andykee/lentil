@@ -61,7 +61,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Focal Plane Modeling" href="../focal-plane-modeling/index.html" />
+    <link rel="next" title="Simple diffraction simulation" href="simple.html" />
     <link rel="prev" title="Guides" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
@@ -436,13 +436,30 @@
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Guides</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">Numerical Diffraction Propagation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../focal-plane-modeling/index.html">Focal Plane Modeling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../patterns/index.html">Useful Patterns</a></li>
+<li class="toctree-l2 current active has-children"><a aria-current="page" class="current reference internal" href="#">Numerical Diffraction Propagation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="simple.html">Simple diffraction simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="broadband.html">Broadband diffraction simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="segmented.html">Segmented aperture diffraction simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tilt.html">Diffraction simulation with large tilt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dispersion.html">Modeling dispersion</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../focal-plane-modeling/index.html">Focal Plane Modeling</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../focal-plane-modeling/bayer.html">Modeling a Bayer detector</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../patterns/index.html">Useful Patterns</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../patterns/bandpass.html">Bandpass and flux resampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../patterns/radiometry.html">Performing radiometrically correct propagations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../patterns/matlab.html">MATLAB interface class</a></li>
+</ul>
+</details></li>
 <li class="toctree-l2"><a class="reference internal" href="../performance.html">Optimizing Performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending-lentil.html">Extending Lentil</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../integrations/index.html">Integrations</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../integrations/matlab.html">MATLAB</a></li>
+
+
 <li class="toctree-l3"><a class="reference internal" href="../integrations/macos.html">MACOS</a></li>
 </ul>
 </details></li>
@@ -478,6 +495,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../resources/tech-notes/coords.html">A consistent coordinate system for wave optics simulations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../resources/tech-notes/resampling.html">Resampling oversampled images to native detector sampling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../resources/tech-notes/fourier.html">Discrete Fourier transform algorithms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../resources/tech-notes/pixel-mtf.html">Pixel MTF</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="../../resources/release.html">Release notes</a></li>
@@ -612,6 +630,13 @@
                   
   <section id="numerical-diffraction-propagation">
 <h1>Numerical Diffraction Propagation<a class="headerlink" href="#numerical-diffraction-propagation" title="Link to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p><a class="reference internal" href="simple.html"><span class="doc">Simple diffraction simulation</span></a></p>
+<p><a class="reference internal" href="broadband.html"><span class="doc">Broadband diffraction simulation</span></a></p>
+<p><a class="reference internal" href="segmented.html"><span class="doc">Segmented aperture diffraction simulation</span></a></p>
+<p><a class="reference internal" href="tilt.html"><span class="doc">Diffraction simulation with large tilt</span></a></p>
+<p><a class="reference internal" href="dispersion.html"><span class="doc">Modeling dispersion</span></a></p>
 </section>
 
 

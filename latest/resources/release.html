@@ -62,7 +62,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Contributing" href="contributing.html" />
-    <link rel="prev" title="Discrete Fourier transform algorithms" href="tech-notes/fourier.html" />
+    <link rel="prev" title="Pixel MTF" href="tech-notes/pixel-mtf.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
@@ -440,13 +440,30 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../guides/index.html">Guides</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../guides/diffraction/index.html">Numerical Diffraction Propagation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../guides/focal-plane-modeling/index.html">Focal Plane Modeling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../guides/patterns/index.html">Useful Patterns</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guides/diffraction/index.html">Numerical Diffraction Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/diffraction/simple.html">Simple diffraction simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/diffraction/broadband.html">Broadband diffraction simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/diffraction/segmented.html">Segmented aperture diffraction simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/diffraction/tilt.html">Diffraction simulation with large tilt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/diffraction/dispersion.html">Modeling dispersion</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guides/focal-plane-modeling/index.html">Focal Plane Modeling</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/focal-plane-modeling/bayer.html">Modeling a Bayer detector</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guides/patterns/index.html">Useful Patterns</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/patterns/bandpass.html">Bandpass and flux resampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/patterns/radiometry.html">Performing radiometrically correct propagations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/patterns/matlab.html">MATLAB interface class</a></li>
+</ul>
+</details></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/performance.html">Optimizing Performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/extending-lentil.html">Extending Lentil</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../guides/integrations/index.html">Integrations</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../guides/integrations/matlab.html">MATLAB</a></li>
+
+
 <li class="toctree-l3"><a class="reference internal" href="../guides/integrations/macos.html">MACOS</a></li>
 </ul>
 </details></li>
@@ -482,6 +499,7 @@
 <li class="toctree-l3"><a class="reference internal" href="tech-notes/coords.html">A consistent coordinate system for wave optics simulations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tech-notes/resampling.html">Resampling oversampled images to native detector sampling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tech-notes/fourier.html">Discrete Fourier transform algorithms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tech-notes/pixel-mtf.html">Pixel MTF</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">Release notes</a></li>
@@ -616,6 +634,16 @@
                   
   <section id="release-notes">
 <h1>Release notes<a class="headerlink" href="#release-notes" title="Link to this heading">#</a></h1>
+<section id="v0-8-11">
+<h2>v0.8.11<a class="headerlink" href="#v0-8-11" title="Link to this heading">#</a></h2>
+<p>Released November 9, 2026</p>
+<ul class="simple">
+<li><p>Standardize around <cite>‘xy</cite> indexing for mesh and backend coordinate system</p></li>
+<li><p>Coordinate system bugfix in Zernike code</p></li>
+<li><p>New <cite>shift</cite> parameter in <cite>propagate_dft()</cite></p></li>
+<li><p>Deploy multiversion documentation</p></li>
+</ul>
+</section>
 <section id="v0-8-10">
 <h2>v0.8.10<a class="headerlink" href="#v0-8-10" title="Link to this heading">#</a></h2>
 <p>Released October 15, 2026</p>
@@ -964,6 +992,7 @@ RMS</p></li>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-11">v0.8.11</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-10">v0.8.10</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-9">v0.8.9</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-8-8">v0.8.8</a></li>

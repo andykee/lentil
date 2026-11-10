@@ -436,13 +436,30 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../guides/index.html">Guides</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../guides/diffraction/index.html">Numerical Diffraction Propagation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../guides/focal-plane-modeling/index.html">Focal Plane Modeling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../guides/patterns/index.html">Useful Patterns</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guides/diffraction/index.html">Numerical Diffraction Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/diffraction/simple.html">Simple diffraction simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/diffraction/broadband.html">Broadband diffraction simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/diffraction/segmented.html">Segmented aperture diffraction simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/diffraction/tilt.html">Diffraction simulation with large tilt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/diffraction/dispersion.html">Modeling dispersion</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guides/focal-plane-modeling/index.html">Focal Plane Modeling</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/focal-plane-modeling/bayer.html">Modeling a Bayer detector</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guides/patterns/index.html">Useful Patterns</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guides/patterns/bandpass.html">Bandpass and flux resampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/patterns/radiometry.html">Performing radiometrically correct propagations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guides/patterns/matlab.html">MATLAB interface class</a></li>
+</ul>
+</details></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/performance.html">Optimizing Performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guides/extending-lentil.html">Extending Lentil</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../guides/integrations/index.html">Integrations</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../guides/integrations/matlab.html">MATLAB</a></li>
+
+
 <li class="toctree-l3"><a class="reference internal" href="../guides/integrations/macos.html">MACOS</a></li>
 </ul>
 </details></li>
@@ -478,6 +495,7 @@
 <li class="toctree-l3"><a class="reference internal" href="tech-notes/coords.html">A consistent coordinate system for wave optics simulations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tech-notes/resampling.html">Resampling oversampled images to native detector sampling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tech-notes/fourier.html">Discrete Fourier transform algorithms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tech-notes/pixel-mtf.html">Pixel MTF</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="release.html">Release notes</a></li>
@@ -612,6 +630,31 @@
                   
   <section id="how-to-cite">
 <h1>How to Cite<a class="headerlink" href="#how-to-cite" title="Link to this heading">#</a></h1>
+<p>If Lentil has been significant in your research and you would like to
+acknowledge the project in a publication, we suggest citing the following
+reference:</p>
+<ul class="simple">
+<li><p>Kee, A., Troy, M., Nissly, C. et al. “Lentil: an open-source
+library for fast optical propagation” in [Modeling, Systems Engineering, and
+Project Management for Astronomy XI], 13092, International Society for Optics
+and Photonics, SPIE (2024).</p></li>
+</ul>
+<p><em>BibTeX:</em></p>
+<div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@inproceedings</span><span class="p">{</span><span class="nl">lentil2024</span><span class="p">,</span>
+<span class="w">    </span><span class="na">author</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">{Andrew G. Kee and Mitchell Troy and Carl Nissly and</span>
+<span class="s">                    Jonathan A. Tesch and Siddarayappa Bikkannavar and</span>
+<span class="s">                    David C. Redding}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">title</span><span class="w">        </span><span class="p">=</span><span class="w"> </span><span class="s">{{Lentil: an open-source library for fast optical</span>
+<span class="s">                    propagation}}</span><span class="w"> </span><span class="p">,</span>
+<span class="w">    </span><span class="na">volume</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">{13099}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">booktitle</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">{Modeling, Systems Engineering, and Project Management</span>
+<span class="s">                    for Astronomy XI}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">organization</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{International Society for Optics and Photonics}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">publisher</span><span class="w">    </span><span class="p">=</span><span class="w"> </span><span class="s">{SPIE}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">year</span><span class="w">         </span><span class="p">=</span><span class="w"> </span><span class="s">{2024}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
 
 

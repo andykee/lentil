@@ -7,3 +7,4 @@ Technical notes
     coords
     resampling
     fourier
+    pixel-mtf

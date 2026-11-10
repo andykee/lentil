@@ -269,6 +269,10 @@
   
 
   
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -436,13 +440,30 @@
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Guides</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="diffraction/index.html">Numerical Diffraction Propagation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="focal-plane-modeling/index.html">Focal Plane Modeling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="patterns/index.html">Useful Patterns</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="diffraction/index.html">Numerical Diffraction Propagation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="diffraction/simple.html">Simple diffraction simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diffraction/broadband.html">Broadband diffraction simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diffraction/segmented.html">Segmented aperture diffraction simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diffraction/tilt.html">Diffraction simulation with large tilt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diffraction/dispersion.html">Modeling dispersion</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="focal-plane-modeling/index.html">Focal Plane Modeling</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="focal-plane-modeling/bayer.html">Modeling a Bayer detector</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="patterns/index.html">Useful Patterns</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="patterns/bandpass.html">Bandpass and flux resampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="patterns/radiometry.html">Performing radiometrically correct propagations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="patterns/matlab.html">MATLAB interface class</a></li>
+</ul>
+</details></li>
 <li class="toctree-l2"><a class="reference internal" href="performance.html">Optimizing Performance</a></li>
 <li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">Extending Lentil</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="integrations/index.html">Integrations</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="integrations/matlab.html">MATLAB</a></li>
+
+
 <li class="toctree-l3"><a class="reference internal" href="integrations/macos.html">MACOS</a></li>
 </ul>
 </details></li>
@@ -478,6 +499,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../resources/tech-notes/coords.html">A consistent coordinate system for wave optics simulations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../resources/tech-notes/resampling.html">Resampling oversampled images to native detector sampling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../resources/tech-notes/fourier.html">Discrete Fourier transform algorithms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resources/tech-notes/pixel-mtf.html">Pixel MTF</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="../resources/release.html">Release notes</a></li>
@@ -612,6 +634,93 @@
                   
   <section id="extending-lentil">
 <h1>Extending Lentil<a class="headerlink" href="#extending-lentil" title="Link to this heading">#</a></h1>
+<section id="subclassing-existing-planes">
+<h2>Subclassing existing planes<a class="headerlink" href="#subclassing-existing-planes" title="Link to this heading">#</a></h2>
+<p>Lentil planes are designed to be subclassed, allowing users to easily modify
+default behavior. A number of special methods are provided for easy operator
+overloading:</p>
+<section id="customizing-static-plane-attributes">
+<span id="user-extend-custom-plane-attr"></span><h3>Customizing static plane attributes<a class="headerlink" href="#customizing-static-plane-attributes" title="Link to this heading">#</a></h3>
+<p>Static plane attributes are those which are not expected to change or evolve.
+These attributes are typically defined in a call to the subclassed plane’s
+parent <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PlaneSubclass</span><span class="p">(</span><span class="n">lentil</span><span class="o">.</span><span class="n">Plane</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">focal_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="n">lentil</span><span class="o">.</span><span class="n">pupil</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="customizing-dynamic-plane-attributes">
+<h3>Customizing dynamic plane attributes<a class="headerlink" href="#customizing-dynamic-plane-attributes" title="Link to this heading">#</a></h3>
+<p>The following methods can be defined to create dynamic plane attributes. These
+are commonly used when a plane attribute is stateful and needs to be
+recomputed at the time of attribute access.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="lentil.object.__amp__">
+<span class="sig-prename descclassname"><span class="pre">object.</span></span><span class="sig-name descname"><span class="pre">__amp__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lentil.object.__amp__" title="Link to this definition">#</a></dt>
+<dd><p>Called when the plane’s <code class="docutils literal notranslate"><span class="pre">amplitude</span></code> attribute is accessed. The
+<code class="docutils literal notranslate"><span class="pre">__amp__()</span></code> method should return a Numpy array.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lentil.object.__mask__">
+<span class="sig-prename descclassname"><span class="pre">object.</span></span><span class="sig-name descname"><span class="pre">__mask__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lentil.object.__mask__" title="Link to this definition">#</a></dt>
+<dd><p>Called when the plane’s <code class="docutils literal notranslate"><span class="pre">mask</span></code> attribute is accessed. The
+<code class="docutils literal notranslate"><span class="pre">__mask__()</span></code> method should return a Numpy array.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="lentil.object.__opd__">
+<span class="sig-prename descclassname"><span class="pre">object.</span></span><span class="sig-name descname"><span class="pre">__opd__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lentil.object.__opd__" title="Link to this definition">#</a></dt>
+<dd><p>Called when the plane’s <code class="docutils literal notranslate"><span class="pre">opd</span></code> attribute is accessed. The
+<code class="docutils literal notranslate"><span class="pre">__opd__()</span></code> method should return a Numpy array.</p>
+</dd></dl>
+
+<p>Below is a simple example implementing a tip/tilt mirror where the plane’s
+<code class="docutils literal notranslate"><span class="pre">opd</span></code> attribute depends on the state of the <code class="docutils literal notranslate"><span class="pre">x</span></code> attribute. The logic for
+computing the <code class="docutils literal notranslate"><span class="pre">opd</span></code> attribute is defined by the <code class="docutils literal notranslate"><span class="pre">__opd__()</span></code> method:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">TipTiltMirror</span><span class="p">(</span><span class="n">lentil</span><span class="o">.</span><span class="n">Plane</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">amplitude</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span><span class="mi">120</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tt_basis</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_basis</span><span class="p">(</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">amplitude</span><span class="o">=</span><span class="n">amplitude</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__opd__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">'ijk,i-&gt;jk'</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tt_basis</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tt</span> <span class="o">=</span> <span class="n">TipTiltMirror</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tt</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-6</span><span class="p">,</span> <span class="mf">3e-6</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tt</span><span class="o">.</span><span class="n">opd</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/extending-lentil-1.png" class="plot-directive" height="322" src="../_images/extending-lentil-1.png" width="370" />
+</figure>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Numerical diffraction propagation calculations can repeatedly access
+the opd, amplitude, and mask attributes. Because these attributes
+remain fixed during a propagation, it is inefficient to recalculate
+them each time the attribute is accessed. To mitigate this, the plane’s
+<code class="docutils literal notranslate"><span class="pre">freeze()</span></code> method can be used to temporarily cache these attributes.
+For more information, see <a class="reference internal" href="performance.html#user-performance-freeze"><span class="std std-ref">Freezing planes with computationally expensive attribute access</span></a></p>
+</div>
+</section>
+<section id="customizing-how-a-plane-interacts-with-a-wavefront">
+<h3>Customizing how a plane interacts with a wavefront<a class="headerlink" href="#customizing-how-a-plane-interacts-with-a-wavefront" title="Link to this heading">#</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="lentil.object.__mul__">
+<span class="sig-prename descclassname"><span class="pre">object.</span></span><span class="sig-name descname"><span class="pre">__mul__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavefront</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lentil.object.__mul__" title="Link to this definition">#</a></dt>
+<dd><p>Called when a plane is multiplied with a wavefront.</p>
+</dd></dl>
+
+<span class="target" id="user-extend-tiltinterface"></span></section>
+</section>
 </section>
 
 
@@ -624,6 +733,37 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subclassing-existing-planes">Subclassing existing planes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-static-plane-attributes">Customizing static plane attributes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-dynamic-plane-attributes">Customizing dynamic plane attributes</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lentil.object.__amp__"><code class="docutils literal notranslate"><span class="pre">object.__amp__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lentil.object.__mask__"><code class="docutils literal notranslate"><span class="pre">object.__mask__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lentil.object.__opd__"><code class="docutils literal notranslate"><span class="pre">object.__opd__()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#customizing-how-a-plane-interacts-with-a-wavefront">Customizing how a plane interacts with a wavefront</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lentil.object.__mul__"><code class="docutils literal notranslate"><span class="pre">object.__mul__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
