@@ -1,6 +1,15 @@
 Release notes
 =============
 
+v0.8.11
+-------
+Released November 9, 2026
+
+* Standardize around `'xy` indexing for mesh and backend coordinate system
+* Coordinate system bugfix in Zernike code
+* New `shift` parameter in `propagate_dft()`
+* Deploy multiversion documentation
+
 v0.8.10
 -------
 Released October 15, 2026
