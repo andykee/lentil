@@ -169,13 +169,14 @@ the discretely sampled mode spans [-0.5 0.5] before multiplying by the error mag
 
 Defining custom Zernike coordinates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-By default, all of Lentil's Zernike functions place the center of the coordinate system
-at the centroid of the supplied mask with its axes aligned with Lentil's
-:ref:`user.coordinates`. This works as expected for the vast majority of
-needs, but in some cases it may be desirable to manually define the coordinate system.
-This is accomplished by using :func:`~lentil.zernike_coordinates` to compute ``rho`` and
-``theta``, and providing these definitions to the appropriate Zernike function. For
-example, if we have an off-centered sub-aperture but wish to compute focus relative to
+By default, all of Lentil's Zernike functions place the center of the
+coordinate system at the centroid of the supplied mask with its axes aligned
+with Lentil's :doc:`coordinate frame<../coordinate-system>`. This works as
+expected for the vast majority of needs, but in some cases it may be desirable
+to manually define the coordinate system. This is accomplished by using
+:func:`~lentil.zernike_coordinates` to compute ``rho`` and ``theta``, and
+providing these definitions to the appropriate Zernike function. For example,
+if we have an off-centered sub-aperture but wish to compute focus relative to
 the center of the defined array:
 
 .. plot::

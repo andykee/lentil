@@ -32,7 +32,7 @@ Modeling dispersion
     w3 = lentil.propagate_dft(w2, shape=shape, prop_shape=(32, 32), 
                             pixelscale=5.5e-6, oversample=oversample)
     ax[0].imshow(w3.intensity, cmap='turbo')
-    ax[0].set_title('$\lambda$ = 475 nm')
+    ax[0].set_title(r'$\lambda$ = 475 nm')
     ax[0].axis('off')
 
     # dispersed PSF @ 625 nm
@@ -42,7 +42,7 @@ Modeling dispersion
     w3 = lentil.propagate_dft(w2, shape=shape, prop_shape=(32, 32), 
                             pixelscale=5.5e-6, oversample=oversample)
     ax[1].imshow(w3.intensity, cmap='turbo')
-    ax[1].set_title('$\lambda$ = 625 nm')
+    ax[1].set_title(r'$\lambda$ = 625 nm')
     ax[1].axis('off')
 
     # broadband dispersion
@@ -57,5 +57,5 @@ Modeling dispersion
 
 
     ax[2].imshow(out, cmap='turbo')
-    ax[2].set_title('$\lambda$ = [475 625] nm')
+    ax[2].set_title(r'$\lambda$ = [475 625] nm')
     ax[2].axis('off')

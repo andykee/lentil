@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=6a604523" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/lentil.css?v=4b1efdef" />
   
   <!-- So that users can add custom icons -->
@@ -49,7 +49,7 @@
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../../_static/design-tabs.js?v=fcb327ea"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'concepts/diffraction/tilt';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
@@ -675,8 +675,8 @@ result is not snapped to the output grid.</p>
 <li><p><a class="reference internal" href="../../api/generated/lentil.Plane.fit_tilt.html#lentil.Plane.fit_tilt" title="lentil.Plane.fit_tilt"><code class="xref py py-func docutils literal notranslate"><span class="pre">fit_tilt()</span></code></a> returns a copy. Pass <code class="docutils literal notranslate"><span class="pre">inplace=True</span></code> to
 modify the plane in-place.</p></li>
 <li><p>The returned plane is frozen with the tilt-removed OPD cached. Calling
-<a class="reference internal" href="../../api/generated/lentil.Plane.thaw.html#lentil.Plane.thaw" title="lentil.Plane.thaw"><code class="xref py py-func docutils literal notranslate"><span class="pre">thaw()</span></code></a> brings the fitted tilt back. See
-<span class="xref std std-doc">../guides/performance</span>.</p></li>
+<a class="reference internal" href="../../api/generated/lentil.Plane.thaw.html#lentil.Plane.thaw" title="lentil.Plane.thaw"><code class="xref py py-func docutils literal notranslate"><span class="pre">thaw()</span></code></a> discards the cached OPD and returns to evaluating
+the plane’s OPD at runtime.</p></li>
 <li><p>On a segmented plane, tilt is computed independently for each segment. See
 <a class="reference internal" href="segmented.html"><span class="doc">Propagation with segmented apertures</span></a>.</p></li>
 </ul>

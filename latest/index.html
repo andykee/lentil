@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=6a604523" />
     <link rel="stylesheet" type="text/css" href="_static/css/lentil.css?v=4b1efdef" />
   
   <!-- So that users can add custom icons -->
@@ -49,7 +49,7 @@
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="_static/design-tabs.js?v=fcb327ea"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
@@ -637,11 +637,25 @@
 </div>
 <section id="lentil">
 <h1>Lentil<a class="headerlink" href="#lentil" title="Link to this heading">#</a></h1>
+<figure class="align-default">
+<img alt="_images/intro_banner.png" class="plot-directive" src="_images/intro_banner.png" style="width: 100%;" />
+</figure>
 <p>Lentil is an Python package for developing high-performance diffraction
-simulations. Lentil provides an easy to use framework for modeling optical
-systems and simulating the wave propagation of light through them. Lentil was
-originally developed at NASA’s Jet Propulsion Library and is now available as
-open-source software.</p>
+simulations. Lentil was originally developed at NASA’s Jet Propulsion Library
+and is now available as open-source software. Lentil makes it easy to</p>
+<ul class="simple">
+<li><p>Model <a class="reference internal" href="concepts/planes/basics.html"><span class="doc">optical systems</span></a> using a suite of
+pre-built <a class="reference internal" href="concepts/planes/types.html"><span class="doc">planes</span></a> and
+<a class="reference internal" href="concepts/planes/transforms.html"><span class="doc">optical transformations</span></a></p></li>
+<li><p>Numerically simulate <a class="reference internal" href="concepts/diffraction/basics.html"><span class="doc">diffraction propagation</span></a>
+including <a class="reference internal" href="concepts/diffraction/multi.html"><span class="doc">multi-plane propagation</span></a></p></li>
+<li><p>Easily represent optical systems with
+<a class="reference internal" href="concepts/diffraction/segmented.html"><span class="doc">segmented apertures</span></a></p></li>
+<li><p>Work with <a class="reference internal" href="concepts/radiometry.html"><span class="doc">spectral data</span></a> to accurately represent
+the radiometry of an imaging system</p></li>
+<li><p>Model common <a class="reference internal" href="concepts/image-sensors.html"><span class="doc">focal plane effects</span></a> and
+<a class="reference internal" href="concepts/imaging-artifacts.html"><span class="doc">dynamic imaging artifacts</span></a></p></li>
+</ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Lentil is under active development and new features continue to be added.
@@ -649,9 +663,6 @@ Until Lentil reaches version 1.0, the API is not guaranteed to be stable, but
 changes breaking backwards compatibility will be noted in the
 <a class="reference internal" href="resources/release.html"><span class="doc">release notes</span></a>.</p>
 </div>
-<section id="highlights">
-<h2>Highlights<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
-</section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
 <p>Install Lentil with pip:</p>
@@ -691,7 +702,6 @@ the <a class="reference internal" href="guides/index.html"><span class="doc">gui
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#highlights">Highlights</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learn-more">Learn more</a></li>
 </ul>

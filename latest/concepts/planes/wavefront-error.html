@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=6a604523" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/lentil.css?v=4b1efdef" />
   
   <!-- So that users can add custom icons -->
@@ -49,7 +49,7 @@
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../../_static/design-tabs.js?v=fcb327ea"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'concepts/planes/wavefront-error';</script>
     <script>
@@ -754,13 +754,14 @@ the discretely sampled mode spans [-0.5 0.5] before multiplying by the error mag
 </section>
 <section id="defining-custom-zernike-coordinates">
 <h3>Defining custom Zernike coordinates<a class="headerlink" href="#defining-custom-zernike-coordinates" title="Link to this heading">#</a></h3>
-<p>By default, all of Lentil’s Zernike functions place the center of the coordinate system
-at the centroid of the supplied mask with its axes aligned with Lentil’s
-<span class="xref std std-ref">user.coordinates</span>. This works as expected for the vast majority of
-needs, but in some cases it may be desirable to manually define the coordinate system.
-This is accomplished by using <a class="reference internal" href="../../api/generated/lentil.zernike_coordinates.html#lentil.zernike_coordinates" title="lentil.zernike_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">zernike_coordinates()</span></code></a> to compute <code class="docutils literal notranslate"><span class="pre">rho</span></code> and
-<code class="docutils literal notranslate"><span class="pre">theta</span></code>, and providing these definitions to the appropriate Zernike function. For
-example, if we have an off-centered sub-aperture but wish to compute focus relative to
+<p>By default, all of Lentil’s Zernike functions place the center of the
+coordinate system at the centroid of the supplied mask with its axes aligned
+with Lentil’s <a class="reference internal" href="../coordinate-system.html"><span class="doc">coordinate frame</span></a>. This works as
+expected for the vast majority of needs, but in some cases it may be desirable
+to manually define the coordinate system. This is accomplished by using
+<a class="reference internal" href="../../api/generated/lentil.zernike_coordinates.html#lentil.zernike_coordinates" title="lentil.zernike_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">zernike_coordinates()</span></code></a> to compute <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">theta</span></code>, and
+providing these definitions to the appropriate Zernike function. For example,
+if we have an off-centered sub-aperture but wish to compute focus relative to
 the center of the defined array:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">circle</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">60</span><span class="p">),</span> <span class="n">antialias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">rho</span><span class="p">,</span> <span class="n">theta</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">zernike_coordinates</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">60</span><span class="p">))</span>

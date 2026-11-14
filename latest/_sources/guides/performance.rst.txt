@@ -9,9 +9,9 @@ Custom planes may :ref:`implement stateful or otherwise custom attributes
 <user.extend.custom_plane_attr>` that are dynamically computed at 
 runtime. Although these attributes remain fixed during a propagation, they may
 be unnecessarily recalculated each time they are accessed (for example, when 
-performing a :ref:`broadband propagation <user.diffraction.broadband>`). To 
-mitigate this performance imapct, it can be beneficial to operate on a copy of
-the plane where its dynamic attributes are cached or "frozen". A plane's 
+performing a :doc:`broadband propagation <../concepts/diffraction/broadband>`).
+To mitigate this performance imapct, it can be beneficial to operate on a copy
+of the plane where its dynamic attributes are cached or "frozen". A plane's 
 :func:`~lentil.Plane.freeze` method makes this simple:
 
 .. code-block:: python

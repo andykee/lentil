@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
     <link rel="stylesheet" type="text/css" href="../_static/css/lentil.css?v=4b1efdef" />
   
   <!-- So that users can add custom icons -->
@@ -49,7 +49,7 @@
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'getting-started/first-steps';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
@@ -634,15 +634,17 @@
 model diffraction and other imaging effects. It can be used to create models
 with varying levels of complexity - from simple prototypes to extremely
 high-fidelity models of ground or space telescopes.</p>
-<p>Lentil uses one or more <span class="xref std std-ref">Plane</span> objects to numericlly model
-an optical system. A <span class="xref std std-ref">Wavefront</span> object representing a
-discretely sampled monochromatic plane wave is then propagated from plane
-to plane using one of the available <span class="xref std std-ref">numerical diffraction propagation
-routines</span>. The resulting complex field can be visualized,
-analyzed, or further propagated through an optical model. Finally, Lentil
-includes a number of additional tools for <span class="xref std std-ref">representing common imaging
-artifacts</span>, <span class="xref std std-ref">modeling focal plane arrays</span> including many common noise sources, and
-<span class="xref std std-ref">working with radiometric quantities</span>.</p>
+<p>Lentil uses one or more <a class="reference internal" href="../concepts/planes/basics.html"><span class="doc">Plane</span></a> objects to
+numericlly model an optical system. A <a class="reference internal" href="../concepts/wavefront.html"><span class="doc">Wavefront</span></a>
+object representing a  discretely sampled monochromatic plane wave is then
+propagated from plane  to plane using one of the available
+<a class="reference internal" href="../concepts/diffraction/index.html"><span class="doc">numerical diffraction propagation routines</span></a>.
+The resulting complex field can be visualized, analyzed, or further propagated
+through an optical model. Finally, Lentil includes a number of additional tools
+for <a class="reference internal" href="../concepts/imaging-artifacts.html"><span class="doc">representing common imaging artifacts</span></a>,
+<a class="reference internal" href="../concepts/image-sensors.html"><span class="doc">modeling focal plane arrays</span></a> including many
+common noise sources, and
+<a class="reference internal" href="../concepts/radiometry.html"><span class="doc">working with radiometric quantities</span></a>.</p>
 <p>Below, we’ll walk through the steps to develop a very simple Lentil model of
 an imaging system with a single pupil and image plane. The imaging system has
 a 1 m diameter primary mirror, a secondary mirror obscuration of 0.33 m

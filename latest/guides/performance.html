@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
     <link rel="stylesheet" type="text/css" href="../_static/css/lentil.css?v=4b1efdef" />
   
   <!-- So that users can add custom icons -->
@@ -49,7 +49,7 @@
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'guides/performance';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
@@ -639,9 +639,9 @@
 <p>Custom planes may <a class="reference internal" href="extending-lentil.html#user-extend-custom-plane-attr"><span class="std std-ref">implement stateful or otherwise custom attributes</span></a> that are dynamically computed at
 runtime. Although these attributes remain fixed during a propagation, they may
 be unnecessarily recalculated each time they are accessed (for example, when
-performing a <span class="xref std std-ref">broadband propagation</span>). To
-mitigate this performance imapct, it can be beneficial to operate on a copy of
-the plane where its dynamic attributes are cached or “frozen”. A plane’s
+performing a <a class="reference internal" href="../concepts/diffraction/broadband.html"><span class="doc">broadband propagation</span></a>).
+To mitigate this performance imapct, it can be beneficial to operate on a copy
+of the plane where its dynamic attributes are cached or “frozen”. A plane’s
 <a class="reference internal" href="../api/generated/lentil.Plane.freeze.html#lentil.Plane.freeze" title="lentil.Plane.freeze"><code class="xref py py-func docutils literal notranslate"><span class="pre">freeze()</span></code></a> method makes this simple:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frozen_pupil</span> <span class="o">=</span> <span class="n">pupil</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span>
 

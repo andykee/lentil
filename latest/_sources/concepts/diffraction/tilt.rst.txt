@@ -52,8 +52,8 @@ Using ``fit_tilt()``
 * :func:`~lentil.Plane.fit_tilt` returns a copy. Pass ``inplace=True`` to
   modify the plane in-place.
 * The returned plane is frozen with the tilt-removed OPD cached. Calling
-  :func:`~lentil.Plane.thaw` brings the fitted tilt back. See
-  :doc:`../guides/performance`.
+  :func:`~lentil.Plane.thaw` discards the cached OPD and returns to evaluating
+  the plane's OPD at runtime.
 * On a segmented plane, tilt is computed independently for each segment. See
   :doc:`segmented`.
 

@@ -36,7 +36,7 @@ develop a separate MATLAB class that mimics the interface of a Lentil class and 
 any data formatting issues that arise between MATLAB and Python. In this way, the model
 logic all resides within the Python code, and the MATLAB code is only responsible for
 managing the interface between languages. An example following this approach is
-available :ref:`here<examples.matlab_interface>`.
+available :doc:`here<../patterns/matlab>`.
 
 Finally, a few links that may be helpful when developing a MATLAB interface:
 
