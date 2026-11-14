@@ -42,7 +42,7 @@ sampling at the shortest wavelength in the band. See :doc:`sampling` for more.
 Performance
 -----------
 * Use the smallest ``prop_shape`` that holds the PSF. See
-  :doc:`output-plane`.
+  :doc:`output`.
 * Freeze planes whose OPD is expensive to compute so it is computed once
   instead of once per wavelength.
 * For large output planes, :func:`~lentil.propagate_fft` with a

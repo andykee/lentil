@@ -6,16 +6,17 @@ model diffraction and other imaging effects. It can be used to create models
 with varying levels of complexity - from simple prototypes to extremely 
 high-fidelity models of ground or space telescopes.
 
-Lentil uses one or more :ref:`Plane<user.planes>` objects to numericlly model 
-an optical system. A :ref:`Wavefront<user.wavefront>` object representing a 
-discretely sampled monochromatic plane wave is then propagated from plane 
-to plane using one of the available :ref:`numerical diffraction propagation 
-routines<user.diffraction>`. The resulting complex field can be visualized, 
-analyzed, or further propagated through an optical model. Finally, Lentil 
-includes a number of additional tools for :ref:`representing common imaging 
-artifacts<user.artifacts>`, :ref:`modeling focal plane arrays
-<user.image_sensors>` including many common noise sources, and 
-:ref:`working with radiometric quantities<user.radiometry>`.
+Lentil uses one or more :doc:`Plane<../concepts/planes/basics>` objects to
+numericlly model an optical system. A :doc:`Wavefront<../concepts/wavefront>`
+object representing a  discretely sampled monochromatic plane wave is then
+propagated from plane  to plane using one of the available 
+:doc:`numerical diffraction propagation routines<../concepts/diffraction/index>`.
+The resulting complex field can be visualized, analyzed, or further propagated
+through an optical model. Finally, Lentil includes a number of additional tools
+for :doc:`representing common imaging artifacts<../concepts/imaging-artifacts>`,
+:doc:`modeling focal plane arrays <../concepts/image-sensors>` including many
+common noise sources, and 
+:doc:`working with radiometric quantities<../concepts/radiometry>`.
 
 Below, we'll walk through the steps to develop a very simple Lentil model of 
 an imaging system with a single pupil and image plane. The imaging system has 

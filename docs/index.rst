@@ -11,11 +11,24 @@
 
 Lentil
 ======
+.. plot:: _plot/intro_banner.py
+  :width: 100%
+
 Lentil is an Python package for developing high-performance diffraction
-simulations. Lentil provides an easy to use framework for modeling optical
-systems and simulating the wave propagation of light through them. Lentil was
-originally developed at NASA's Jet Propulsion Library and is now available as
-open-source software.
+simulations. Lentil was originally developed at NASA's Jet Propulsion Library
+and is now available as open-source software. Lentil makes it easy to
+
+* Model :doc:`optical systems<concepts/planes/basics>` using a suite of
+  pre-built :doc:`planes<concepts/planes/types>` and
+  :doc:`optical transformations<concepts/planes/transforms>`
+* Numerically simulate :doc:`diffraction propagation<concepts/diffraction/basics>`
+  including :doc:`multi-plane propagation<concepts/diffraction/multi>`
+* Easily represent optical systems with
+  :doc:`segmented apertures<concepts/diffraction/segmented>`
+* Work with :doc:`spectral data<concepts/radiometry>` to accurately represent
+  the radiometry of an imaging system
+* Model common :doc:`focal plane effects<concepts/image-sensors>` and
+  :doc:`dynamic imaging artifacts<concepts/imaging-artifacts>`
 
 .. note::
     
@@ -23,10 +36,6 @@ open-source software.
     Until Lentil reaches version 1.0, the API is not guaranteed to be stable, but
     changes breaking backwards compatibility will be noted in the 
     :doc:`release notes <resources/release>`.
-
-Highlights
-----------
-
 
 
 Installation
