@@ -153,11 +153,16 @@ def idft2(F, alpha, shape=None, shift=(0,0), unitary=True, out=None):
         Number of pixels in (x,y) to shift the DC pixel in the output plane with
         the origin centrally located in the plane. Default is `[0,0]`.
     unitary : bool, optional
-        Normalization flag. If ``True``, a normalization is performed on the
-        output such that the DFT operation is unitary and energy is conserved
-        through the Fourier transform operation (Parseval's theorem). In this
-        way, the energy in in a limited-area DFT is a fraction of the total
-        energy corresponding to the limited area. Default is ``True``.
+        Normalization flag. If ``True``, the output is scaled by
+        ``sqrt(abs(alpha[0]*alpha[1]))`` such that the DFT operation is
+        unitary and energy is conserved through the Fourier transform
+        operation (Parseval's theorem). In this way, the energy in in a
+        limited-area DFT is a fraction of the total energy corresponding to
+        the limited area. If ``False``, the output is scaled by
+        ``abs(alpha[0]*alpha[1])`` so that ``idft2()`` inverts
+        ``dft2(..., unitary=False)``. When ``alpha = 1/F.shape`` this is
+        equivalent to the ``1/F.size`` normalization used by
+        :func:`numpy.fft.ifft2`. Default is ``True``.
 
     Returns
     -------
@@ -192,14 +197,21 @@ def idft2(F, alpha, shape=None, shift=(0,0), unitary=True, out=None):
 
     """
     F = np.asarray(F)
-    N = F.size
     # will allocate memory for F if out == None
     F = dft2(np.conj(F), alpha, shape, shift, unitary=unitary, out=out)
     np.conj(F, out=F)
     if unitary:
         # unitary normalization already handled by dft2
         return F
-    return np.divide(F, N, out=F)
+    return _inverse_normalize(F, alpha)
+
+
+def _inverse_normalize(F, alpha):
+    # non-unitary inverse normalization. This reduces to the conventional
+    # 1/F.size when alpha = 1/F.shape but remains correct when F does not span
+    # the full period (e.g. a cropped spectrum)
+    alpha_row, alpha_col = np.broadcast_to(alpha, (2,))
+    return np.multiply(F, np.abs(alpha_row * alpha_col), out=F)
 
 
 def czt2(f, alpha, shape=None, shift=(0, 0), offset=(0, 0), unitary=True,
@@ -413,10 +425,14 @@ def iczt2(F, alpha, shape=None, shift=(0, 0), unitary=True, out=None, *,
         Number of pixels in (r,c) to shift the DC pixel in the output plane
         with the origin centrally located in the plane. Default is ``(0,0)``.
     unitary : bool, optional
-        Normalization flag. If ``True``, a normalization is performed on the
-        output such that the DFT operation is unitary and energy is conserved
-        through the Fourier transform operation (Parseval's theorem). Default
-        is ``True``.
+        Normalization flag. If ``True``, the output is scaled by
+        ``sqrt(abs(alpha[0]*alpha[1]))`` such that the DFT operation is
+        unitary and energy is conserved through the Fourier transform
+        operation (Parseval's theorem). If ``False``, the output is scaled by
+        ``abs(alpha[0]*alpha[1])`` so that ``iczt2()`` inverts
+        ``czt2(..., unitary=False)``. When ``alpha = 1/F.shape`` this is
+        equivalent to the ``1/F.size`` normalization used by
+        :func:`numpy.fft.ifft2`. Default is ``True``.
     out : ndarray or None
         A location into which the result is stored. If provided, out.shape ==
         shape and out.dtype == np.complex. If not provided or None, a
@@ -445,7 +461,6 @@ def iczt2(F, alpha, shape=None, shift=(0, 0), unitary=True, out=None, *,
 
     """
     F = np.asarray(F)
-    N = F.size
     # will allocate memory for F if out == None
     F = czt2(np.conj(F), alpha, shape, shift, unitary=unitary, out=out,
              workers=workers)
@@ -453,4 +468,4 @@ def iczt2(F, alpha, shape=None, shift=(0, 0), unitary=True, out=None, *,
     if unitary:
         # unitary normalization already handled by czt2
         return F
-    return np.divide(F, N, out=F)
+    return _inverse_normalize(F, alpha)

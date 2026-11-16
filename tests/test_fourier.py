@@ -89,6 +89,36 @@ def test_inverse_unitary(fwd, inv, shape):
     assert np.allclose(f, f_dft)
 
 
+def test_inverse_zoom(fwd, inv):
+    # m x n input zero padded to an M x N period at alpha = 1/(M, N)
+    m, n = 8, 6
+    M, N = 20, 15
+    f = np.random.rand(m, n) + 1j * np.random.rand(m, n)
+
+    F = fwd(f, [1/M, 1/N], shape=(M, N), unitary=False)
+    f_inv = inv(F, [1/M, 1/N], shape=(m, n), unitary=False)
+
+    assert np.allclose(f, f_inv)
+
+
+def test_inv_cropped_spectrum(inv):
+    # inverting a cropped spectrum must give the same result as inverting the
+    # full spectrum with the discarded frequencies set to zero
+    n, k = 16, 8
+    F = np.random.rand(n, n) + 1j * np.random.rand(n, n)
+    crop = slice((n-k)//2, (n+k)//2)
+
+    F_masked = np.zeros_like(F)
+    F_masked[crop, crop] = F[crop, crop]
+
+    f_cropped = inv(F[crop, crop], 1/n, shape=n, unitary=False)
+    f_masked = inv(F_masked, 1/n, unitary=False)
+    f_fft = np.fft.fftshift(np.fft.ifft2(np.fft.ifftshift(F_masked)))
+
+    assert np.allclose(f_cropped, f_masked)
+    assert np.allclose(f_cropped, f_fft)
+
+
 def test_fwd_unitary(fwd):
     n = 10
     f = np.random.rand(n, n) + 1j * np.random.rand(n, n)
