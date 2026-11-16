@@ -99,18 +99,10 @@ def translation_defocus(mask, f_number, translation):
 
     """
     mask = np.asarray(mask)
-
-    rmin, rmax, cmin, cmax = lentil.boundary(mask)
-    extent = max(rmax-rmin, cmax-cmin)
-
-    circlemask = lentil.circle(mask.shape, np.ceil(extent/2), antialias=False)
-
     coeff = translation/(8*f_number**2)  # p-v defocus
+    z4 = lentil.zernike(mask, 4, normalize=False) / 2
 
-    z4 = lentil.zernike(circlemask, 4)
-    z4 = z4/(z4.max() - z4.min())  # normalize p-v = 1
-
-    return z4*mask*coeff
+    return z4 * coeff
 
 
 # def kolmogorov_wfe():
