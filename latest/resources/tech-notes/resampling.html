@@ -50,6 +50,7 @@
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../../_static/design-tabs.js?v=fcb327ea"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'resources/tech-notes/resampling';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.24.0';
@@ -268,6 +269,10 @@
     </div>
   
 
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
   
 </div>
 
@@ -630,27 +635,137 @@
                   
   <section id="resampling-oversampled-images-to-native-detector-sampling">
 <h1>Resampling oversampled images to native detector sampling<a class="headerlink" href="#resampling-oversampled-images-to-native-detector-sampling" title="Link to this heading">#</a></h1>
-<figure class="align-default">
-<img alt="../../_images/resampling-1.png" class="plot-directive" height="306" src="../../_images/resampling-1.png" width="306" />
+<p>Diffraction calculations are usually performed on a grid that is finer than the
+detector’s pixel pitch. Oversampling ensures the intensity is not aliased (the
+optical cutoff frequency of a typical imaging system lies above the detector’s
+Nyquist frequency) and makes it possible to represent effects that occur on
+sub-pixel scales. This note describes two equivalent approaches for resampling
+oversampled data to a detector’s native sampling.</p>
+<section id="pixel-integration-is-convolution-followed-by-sampling">
+<h2>Pixel integration is convolution followed by sampling<a class="headerlink" href="#pixel-integration-is-convolution-followed-by-sampling" title="Link to this heading">#</a></h2>
+<p>Before we describe the two resampling approaches it is worth exploring the
+spatial aspect of how a detector digitizes a light field. An ideal square pixel
+with pitch <span class="math notranslate nohighlight">\(p\)</span> and a 100% fill factor collects all of the power falling
+on its area (integration). For a detector with <span class="math notranslate nohighlight">\(N_r\)</span> rows and
+<span class="math notranslate nohighlight">\(N_c\)</span> columns, the signal in the pixel in row <span class="math notranslate nohighlight">\(r\)</span> and column
+<span class="math notranslate nohighlight">\(c\)</span> (<span class="math notranslate nohighlight">\(r = 0 \ldots N_r - 1\)</span>, <span class="math notranslate nohighlight">\(c = 0 \ldots N_c - 1\)</span>) is</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-resampling-0">
+<span class="eqno">(1)<a class="headerlink" href="#equation-resources-tech-notes-resampling-0" title="Link to this equation">#</a></span>\[P[r,c] = \iint_{-\infty}^{\infty} I(u,v) \,
+         \Pi\left(\frac{u-u_c}{p}\right) \Pi\left(\frac{v-v_r}{p}\right)
+         \, du \, dv \, ,\]</div>
+<p>where <span class="math notranslate nohighlight">\(I(u,v)\)</span> is the irradiance in the image plane, <span class="math notranslate nohighlight">\(\Pi\)</span> is the
+rectangle function, and <span class="math notranslate nohighlight">\((u_c, v_r)\)</span> is the center of the pixel.
+Equation 1 is a two-dimensional convolution of the image plane intensity
+with the pixel aperture function. Defining the pixel aperture function as
+<span class="math notranslate nohighlight">\(\Pi_{px} = \Pi(u/p)\Pi(v/p)\)</span>, equation 1 becomes</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-resampling-1">
+<span class="eqno">(2)<a class="headerlink" href="#equation-resources-tech-notes-resampling-1" title="Link to this equation">#</a></span>\[P[r,c] = \left(I * \Pi_{px}\right)(u_c, v_r) \, .\]</div>
+<p>Integrating the image over each pixel is exactly equivalent to convolving the
+image with the pixel aperture and then point-sampling the result at the
+pixel centers. The rest of this note will show how to implement both of these
+approaches using built-in lentil functions. Let <span class="math notranslate nohighlight">\(f\)</span> be the oversampled
+PSF computed with an oversampling factor of <span class="math notranslate nohighlight">\(M = 100\)</span> (Figure 1(a)) on
+a <span class="math notranslate nohighlight">\(N_r \times N_c = 12 \times 12\)</span> detector grid with pixels spaced
+<span class="math notranslate nohighlight">\(p/M\)</span> (Figure 1 (b)).</p>
+<figure class="align-default" id="id1">
+<img alt="../../_images/resampling-1.png" class="plot-directive" src="../../_images/resampling-1.png" style="width: 70%;" />
+<figcaption>
+<p><span class="caption-text"><strong>Figure 1</strong>: Oversampled PSF</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
 </figure>
-<figure class="align-default">
+</section>
+<section id="method-1-rebinning">
+<h2>Method 1: Rebinning<a class="headerlink" href="#method-1-rebinning" title="Link to this heading">#</a></h2>
+<p>The direct (rebinning) approach evaluates the integral in Equation 1 by summing
+the <span class="math notranslate nohighlight">\(M \times M\)</span> block of oversampled samples that fall inside each
+pixel:</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-resampling-2">
+<span class="eqno">(3)<a class="headerlink" href="#equation-resources-tech-notes-resampling-2" title="Link to this equation">#</a></span>\[P[r,c] = \sum_{i=0}^{M-1} \sum_{j=0}^{M-1} f[rM + i, \, cM + j] \, ,\]</div>
+<p>where <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span> index the sub-pixel samples within each block.
+This functionality is provided by lentil’s <a class="reference internal" href="../../api/generated/lentil.rebin.html#lentil.rebin" title="lentil.rebin"><code class="xref py py-func docutils literal notranslate"><span class="pre">rebin()</span></code></a> function:</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">psf_rebin</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">rebin</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default" id="id3">
 <img alt="../../_images/resampling-2.png" class="plot-directive" height="306" src="../../_images/resampling-2.png" width="306" />
+<figcaption>
+<p><span class="caption-text"><strong>Figure 2</strong>: Rebinned PSF at native detector sampling.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+</figcaption>
 </figure>
-<figure class="align-default">
+</section>
+<section id="method-2-pixel-mtf-convolution-and-sampling">
+<h2>Method 2: Pixel MTF convolution and sampling<a class="headerlink" href="#method-2-pixel-mtf-convolution-and-sampling" title="Link to this heading">#</a></h2>
+<p>The second approach implements Equation 2 by first convolving the oversampled
+image with the pixel aperture and then extracting one sample per pixel.</p>
+<p><strong>1. Convolution:</strong> For a square pixel with 100% fill factor, its aperture
+function is a <span class="math notranslate nohighlight">\(\mathrm{rect}()\)</span> function in the spatial domain or a
+<span class="math notranslate nohighlight">\(\mathrm{sinc}()\)</span> function in the frequency domain. By the convolution
+theorem, we can evaluate Equation 2 by multiplying the image spectrum with
+the frequency domain representation of the pixel aperture function:</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-resampling-3">
+<span class="eqno">(4)<a class="headerlink" href="#equation-resources-tech-notes-resampling-3" title="Link to this equation">#</a></span>\[g = \mathcal{F}^{-1}\left\{ \mathcal{F}\{f\} \cdot
+    \mathrm{sinc}(M\nu_x) \, \mathrm{sinc}(M\nu_y) \right\} \, ,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\nu_x, \nu_y\)</span> are frequencies in cycles per oversampled image
+sample.</p>
+<p><strong>2. Sample:</strong> Select one sample from each oversampled <span class="math notranslate nohighlight">\(M \times M\)</span>
+block:</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-resampling-4">
+<span class="eqno">(5)<a class="headerlink" href="#equation-resources-tech-notes-resampling-4" title="Link to this equation">#</a></span>\[s[r,c] = g[rM + q_y, \, cM + q_x] \, , \qquad q = \lfloor M/2 \rfloor + \mathrm{offset} \, ,\]</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">offset</span></code> selects the sub-pixel phasing (details below). Note that
+because <span class="math notranslate nohighlight">\(g\)</span> holds pixel averages of <span class="math notranslate nohighlight">\(f\)</span>, the result must be
+multiplied by <span class="math notranslate nohighlight">\(M^2\)</span> to recover the power in each pixel:</p>
+<div class="math notranslate nohighlight" id="equation-resources-tech-notes-resampling-5">
+<span class="eqno">(6)<a class="headerlink" href="#equation-resources-tech-notes-resampling-5" title="Link to this equation">#</a></span>\[P[r,c] = M^2 \, s[r,c] \, .\]</div>
+<p>These operations are implemented in lentil via the <a class="reference internal" href="../../api/generated/lentil.detector.pixel.html#lentil.detector.pixel" title="lentil.detector.pixel"><code class="xref py py-func docutils literal notranslate"><span class="pre">lentil.detector.pixel()</span></code></a> and
+<a class="reference internal" href="../../api/generated/lentil.sample.html#lentil.sample" title="lentil.sample"><code class="xref py py-func docutils literal notranslate"><span class="pre">sample()</span></code></a> functions:</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">psf_pixel</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">pixel</span><span class="p">(</span><span class="n">psf</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psf_pixel_sample</span> <span class="o">=</span> <span class="n">lentil</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">psf_pixel</span><span class="p">,</span> <span class="n">oversample</span><span class="o">=</span><span class="n">oversample</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">psf_pixel_sample</span> <span class="o">*=</span> <span class="mi">100</span><span class="o">**</span><span class="mi">2</span>
+</pre></div>
+</div>
+<figure class="align-default" id="id5">
 <img alt="../../_images/resampling-3.png" class="plot-directive" height="306" src="../../_images/resampling-3.png" width="306" />
+<figcaption>
+<p><span class="caption-text"><strong>Figure 3</strong>: PSF convolved with the pixel MTF and then sampled at
+native detector sampling.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+</figcaption>
 </figure>
-<figure class="align-default">
-<img alt="../../_images/resampling-4.png" class="plot-directive" height="306" src="../../_images/resampling-4.png" width="306" />
+</section>
+<section id="pixel-phasing">
+<h2>Pixel phasing<a class="headerlink" href="#pixel-phasing" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">offset</span></code> argument to <a class="reference internal" href="../../api/generated/lentil.sample.html#lentil.sample" title="lentil.sample"><code class="xref py py-func docutils literal notranslate"><span class="pre">lentil.sample()</span></code></a> chooses which sample within
+each block is kept. This is equivalent to shifting the pixel grid relative to
+the image in steps of <span class="math notranslate nohighlight">\(1/M\)</span> pixel. An offset of <span class="math notranslate nohighlight">\(+o\)</span> samples moves
+the image by <span class="math notranslate nohighlight">\(-o/M\)</span> pixels in the resampled result. Figure 7 shows the
+natively sampled PSF for offsets of <span class="math notranslate nohighlight">\(\pm 15\)</span> samples (<span class="math notranslate nohighlight">\(\pm 0.15\)</span>
+pixel) in each axis. All nine images are computed from the same convolved
+array <span class="math notranslate nohighlight">\(g\)</span>, and each contains the same total power. This makes method 2 a
+convenient way to generate PSFs at many sub-pixel positions, for example to
+model pointing jitter or dithered observations, from a single diffraction
+calculation.</p>
+<figure class="align-default" id="id7">
+<img alt="../../_images/resampling-4.png" class="plot-directive" height="583" src="../../_images/resampling-4.png" width="586" />
+<figcaption>
+<p><span class="caption-text"><strong>Figure 7</strong>: Natively sampled PSF for nine pixel phasings. The
+offset in <span class="math notranslate nohighlight">\(y\)</span> varies down the rows and the offset in
+<span class="math notranslate nohighlight">\(x\)</span> varies across the columns, in steps of 0.15 pixel.</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
+</figcaption>
 </figure>
-<figure class="align-default">
-<img alt="../../_images/resampling-5.png" class="plot-directive" height="306" src="../../_images/resampling-5.png" width="306" />
-</figure>
-<figure class="align-default">
-<img alt="../../_images/resampling-6.png" class="plot-directive" height="306" src="../../_images/resampling-6.png" width="306" />
-</figure>
-<figure class="align-default">
-<img alt="../../_images/resampling-7.png" class="plot-directive" height="583" src="../../_images/resampling-7.png" width="586" />
-</figure>
+<p>Rebinning can produce exactly the same phasings by shifting the block
+boundaries, i.e. by cropping the oversampled array <span class="math notranslate nohighlight">\(o\)</span> samples later
+before calling <a class="reference internal" href="../../api/generated/lentil.rebin.html#lentil.rebin" title="lentil.rebin"><code class="xref py py-func docutils literal notranslate"><span class="pre">lentil.rebin()</span></code></a>.</p>
+</section>
+<section id="edge-effects">
+<h2>Edge effects<a class="headerlink" href="#edge-effects" title="Link to this heading">#</a></h2>
+<p>The Fourier transform in Equation 4 performs a <em>circular</em> convolution so values
+near an edge of the array wrap around to the opposite edge. With <code class="docutils literal notranslate"><span class="pre">offset=0</span></code>
+and odd <span class="math notranslate nohighlight">\(M\)</span> the pixel-sized window stays within its own block, so only
+the small ringing of the band-limited kernel wraps. For any other phasing, the
+windows of the edge pixels extend past the array and pick up samples from the
+far side. To avoid this effect, compute the oversampled PSF over a field at
+least one native pixel larger than needed on each side, resample, and then crop
+the edge pixels.</p>
+</section>
 </section>
 
 
@@ -663,6 +778,28 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pixel-integration-is-convolution-followed-by-sampling">Pixel integration is convolution followed by sampling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#method-1-rebinning">Method 1: Rebinning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#method-2-pixel-mtf-convolution-and-sampling">Method 2: Pixel MTF convolution and sampling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pixel-phasing">Pixel phasing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edge-effects">Edge effects</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
