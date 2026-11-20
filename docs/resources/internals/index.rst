@@ -49,6 +49,9 @@ Fourier transforms
     :toctree: generated/
 
     fourier.dft2
+    fourier.idft2
+    fourier.czt2
+    fourier.iczt2
 
 Helper functions
 ----------------
